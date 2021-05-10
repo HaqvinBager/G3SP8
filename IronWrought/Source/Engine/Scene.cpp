@@ -48,6 +48,7 @@ CScene::CScene(const unsigned int aGameObjectCount)
 	, myPXScene(nullptr)
 	, myPlayer(nullptr)
 	, myCanvas(nullptr)
+	, myActiveCamera(ESceneCamera::NoCamera)
 #ifdef _DEBUG
 	, myGrid(nullptr)
 #endif
@@ -286,9 +287,41 @@ void CScene::Receive(const SMessage& aMessage)
 
 //SETUP END
 //SETTERS START
-void CScene::MainCamera(CCameraComponent* aMainCamera)
+void CScene::MainCamera(const ESceneCamera aCameraType)
 {
-	myMainCamera = aMainCamera;
+	ESceneCamera previousCameraType = myActiveCamera;
+
+	if (myCameras.find(aCameraType) != myCameras.end())
+	{
+		if (myCameras[aCameraType] != nullptr)
+		{
+			if(aCameraType != previousCameraType)
+				myCameras[aCameraType]->GameObject().Active(false);
+		}
+	}
+
+	myActiveCamera = aCameraType;
+	myMainCamera = myCameras[aCameraType];
+
+	if (myCameras[myActiveCamera]->GameObject().Active() == false)
+	{
+		if (aCameraType != previousCameraType)
+			myCameras[myActiveCamera]->GameObject().Active(true);
+	}
+}
+
+CCameraComponent* CScene::MainCamera()
+{
+	if (myActiveCamera == ESceneCamera::NoCamera)
+		return nullptr;
+
+	return myCameras[myActiveCamera];
+}
+
+
+void CScene::AddCamera(CCameraComponent* aCamera, const ESceneCamera aCameraType)
+{
+	myCameras[aCameraType] = aCamera;
 }
 
 void CScene::Player(CGameObject* aPlayerObject)
@@ -312,10 +345,6 @@ void CScene::ShouldRenderLineInstance(const bool aShouldRender)
 }
 //SETTERS END
 //GETTERS START
-CCameraComponent* CScene::MainCamera()
-{
-	return myMainCamera;
-}
 
 CGameObject* CScene::Player()
 {
@@ -392,7 +421,6 @@ std::vector<CBoxLight*> CScene::CullBoxLights(CGameObject* /*aGameObject*/)
 {
 	return myBoxLights;
 }
-
 
 std::pair<unsigned int, std::array<CPointLight*, LIGHTCOUNT>> CScene::CullLights(CGameObject* aGameObject)
 {

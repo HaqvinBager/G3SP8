@@ -3,10 +3,13 @@
 class CCameraComponent;
 class CGameObject;
 #define PI 3.14159265f
+
+
+
 class CCameraControllerComponent : public CComponent
 {
 public:
-	enum class ECameraMode
+	enum class ECameraMode //This Enum exists in Scene.h as well. If you add anything here, add the same to Scene.h ESceneCamera enum as well! //Axel Savage 2021-05-10
 	{
 		PlayerFirstPerson,
 		FreeCam,

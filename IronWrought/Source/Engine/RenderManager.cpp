@@ -130,6 +130,10 @@ void CRenderManager::Render(CScene& aScene)
 
 	CEnvironmentLight* environmentlight = aScene.EnvironmentLight();
 	CCameraComponent* maincamera = aScene.MainCamera();
+
+	if (maincamera == nullptr)
+		return;
+
 	//CBoxLight* boxLight = aScene.CullBoxLights(nullptr)[0]; // For BoxLight shadow mapping
 
 	std::vector<CGameObject*> gameObjects = aScene.CullGameObjects(maincamera);

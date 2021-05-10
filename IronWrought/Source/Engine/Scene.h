@@ -6,6 +6,7 @@
 #include "EngineDefines.h"
 #include "PhysXWrapper.h"
 #include "PostMaster.h"
+//#include <CameraControllerComponent.h>
 
 class CModelComponent;
 class CCamera;
@@ -29,6 +30,14 @@ class CInstancedModelComponent;
 class CPlayerControllerComponent;
 
 typedef std::pair<unsigned int, std::array<CPointLight*, LIGHTCOUNT>> LightPair;
+
+enum class ESceneCamera {
+	PlayerFirstPerson,
+	FreeCam,
+	MenuCam,
+	UnlockCursor,
+	NoCamera
+};
 
 class CScene : public IObserver {
 	friend class CEngine;
@@ -69,7 +78,8 @@ private:
 
 public:
 //SETTERS START
-	void MainCamera(CCameraComponent* aMainCamera);
+	void AddCamera(CCameraComponent* aCamera, const ESceneCamera aCameraType);
+	void MainCamera(const ESceneCamera aCameraType);
 	void Player(CGameObject* aPlayerObject);
 	bool EnvironmentLight(CEnvironmentLight* anEnvironmentLight);
 	void ShouldRenderLineInstance(const bool aShouldRender);
@@ -193,7 +203,12 @@ private:
 	CEnvironmentLight* myEnvironmentLight;
 	SNavMesh* myNavMesh;
 	CLineInstance* myNavMeshGrid;
+
+
+	ESceneCamera myActiveCamera;
 	CCameraComponent* myMainCamera;
+	std::unordered_map<ESceneCamera, CCameraComponent*> myCameras;
+
 	PxScene* myPXScene;
 	CCanvas* myCanvas;
 	CGameObject* myPlayer;

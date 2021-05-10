@@ -9,6 +9,7 @@
 
 CModelComponent::CModelComponent(CGameObject& aParent, const std::string& aFBXPath) : CBehaviour(aParent) {
 	myModel = CModelFactory::GetInstance()->GetModel(aFBXPath);
+	std::cout << "Add - ModelComponent: " << aFBXPath << std::endl;
 	myModelPath = aFBXPath;
 	myRenderWithAlpha = false;
 	std::vector<std::string> materialNames = myModel->GetModelData().myMaterialNames;

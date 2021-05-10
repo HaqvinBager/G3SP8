@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "SceneManager.h"
+#include "EngineDefines.h"
 #include "EnvironmentLight.h"
 #include "CameraComponent.h"
 #include "InstancedModelComponent.h"
@@ -50,7 +51,7 @@ CScene* CSceneManager::CreateEmpty()
 	CGameObject* camera = new CGameObject(0);
 	camera->AddComponent<CCameraComponent>(*camera);//Default Fov is 70.0f
 	camera->AddComponent<CCameraControllerComponent>(*camera); //Default speed is 2.0f
-	camera->myTransform->Position({ 0.0f, 1.0f, 0.0f });
+	camera->myTransform->Position({ 0.0f, 10.0f, 0.0f });
 
 	CGameObject* envLight = new CGameObject(1);
 	envLight->AddComponent<CEnvironmentLightComponent>(*envLight, "Cubemap_Inside");
@@ -59,7 +60,8 @@ CScene* CSceneManager::CreateEmpty()
 	envLight->GetComponent<CEnvironmentLightComponent>()->GetEnvironmentLight()->SetDirection({ 0.0f,1.0f,1.0f });
 
 	emptyScene->AddInstance(camera);
-	emptyScene->MainCamera(camera->GetComponent<CCameraComponent>());
+	emptyScene->AddCamera(camera->GetComponent<CCameraComponent>(), ESceneCamera::FreeCam);
+	emptyScene->MainCamera(ESceneCamera::FreeCam);
 	emptyScene->EnvironmentLight(envLight->GetComponent<CEnvironmentLightComponent>()->GetEnvironmentLight());
 	emptyScene->AddInstance(envLight);
 
@@ -105,10 +107,10 @@ CScene* CSceneManager::CreateScene(const std::string& aSceneJson)
 			AddPickups(*scene, sceneData["healthPickups"].GetArray());
 			if (sceneData.HasMember("triggerEvents"))
 				AddTriggerEvents(*scene, sceneData["triggerEvents"].GetArray());
-			//if (sceneName.find("Layout") != std::string::npos)//Om Unity Scene Namnet inneh�ller nyckelordet "Layout"
-			//{
-			//	AddPlayer(*scene, sceneData["player"].GetObjectW());
-			//}
+			if (sceneName.find("Layout") != std::string::npos)//Om Unity Scene Namnet inneh�ller nyckelordet "Layout"
+			{
+				AddPlayer(*scene, sceneData["player"].GetObjectW());
+			}
 			AddEnemyComponents(*scene, sceneData["enemies"].GetArray());
 		}
 	}
@@ -168,6 +170,11 @@ CScene* CSceneManager::Instantiate()
 		CMainSingleton::PostMaster().Unsubscribe(EMessageType::ComponentAdded, ourLastInstantiatedScene);
 
 	ourLastInstantiatedScene = new CScene(); //Creates a New scene and Leaves total ownership of the Previous scene over to the hands of Engine!
+
+	//Create Cameras
+
+
+
 	CMainSingleton::PostMaster().Subscribe(EMessageType::ComponentAdded, ourLastInstantiatedScene);
 	return ourLastInstantiatedScene;
 }
@@ -497,7 +504,7 @@ void CSceneManager::AddPlayer(CScene& aScene, RapidObject someData)
 
 	CGameObject* camera = CCameraControllerComponent::CreatePlayerFirstPersonCamera(player);//new CGameObject(1000);
 	camera->myTransform->Rotation(playerRot);
-	std::string modelPath = ASSETPATH("Assets/Graphics/Character/Main_Character/CH_PL_SK.fbx");
+	std::string modelPath = ASSETPATH("Assets/IronWrought/Mesh/Main_Character/CH_PL_SK.fbx");
 	camera->AddComponent<CModelComponent>(*camera, modelPath);
 	AnimationLoader::AddAnimationsToGameObject(camera, modelPath);
 	CGameObject* gravityGloveSlot = new CGameObject(PLAYER_GLOVE_ID);
@@ -511,12 +518,13 @@ void CSceneManager::AddPlayer(CScene& aScene, RapidObject someData)
 
 	player->AddComponent<CPlayerControllerComponent>(*player, 0.09f, 0.035f, CEngine::GetInstance()->GetPhysx().GetPlayerReportBack());// CPlayerControllerComponent constructor sets position of camera child object.
 
-	camera->AddComponent<CVFXSystemComponent>(*camera, ASSETPATH("Assets/Graphics/VFX/JSON/VFXSystem_Player.json"));
+	//camera->AddComponent<CVFXSystemComponent>(*camera, ASSETPATH("Assets/Graphics/VFX/JSON/VFXSystem_Player.json"));
 
 	//aScene.AddInstance(model);
 	aScene.AddInstance(camera);
 	aScene.AddInstance(gravityGloveSlot);
-	aScene.MainCamera(camera->GetComponent<CCameraComponent>());
+	aScene.AddCamera(camera->GetComponent<CCameraComponent>(), ESceneCamera::PlayerFirstPerson);
+	aScene.MainCamera(ESceneCamera::PlayerFirstPerson);
 	aScene.Player(player);
 }
 

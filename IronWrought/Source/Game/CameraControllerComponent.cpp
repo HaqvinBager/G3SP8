@@ -68,14 +68,20 @@ void CCameraControllerComponent::Update()
 		return;
 
 #ifdef  _DEBUG
-	if (Input::GetInstance()->IsKeyPressed(/*std::toupper(myToggleFreeCam)*/myToggleFreeCam)) {
+	if (Input::GetInstance()->IsKeyPressed(myToggleFreeCam)) {
 		myCameraMode = myCameraMode == ECameraMode::FreeCam ? ECameraMode::PlayerFirstPerson : ECameraMode::FreeCam;
 		// So that the camera returns to the parent gameobject on return to ECameraMode::PlayerFirstPerson
 		if (myCameraMode == ECameraMode::FreeCam)
+		{
+			//CEngine::GetInstance()->GetActiveScene().MainCamera(nullptr);
 			myPositionBeforeFreeCam = GameObject().myTransform->Position();
+		}
 		else
+		{
 			GameObject().myTransform->Position(myPositionBeforeFreeCam);
+		}
 	}
+
 #endif
 	switch (myCameraMode)
 	{
@@ -83,10 +89,12 @@ void CCameraControllerComponent::Update()
 			break;
 
 		case ECameraMode::FreeCam:
+			CEngine::GetInstance()->GetActiveScene().MainCamera(ESceneCamera::FreeCam);
 			UpdateFreeCam();
 			break;
 
 		case ECameraMode::PlayerFirstPerson:
+			CEngine::GetInstance()->GetActiveScene().MainCamera(ESceneCamera::PlayerFirstPerson);
 			UpdatePlayerFirstPerson();
 			break;
 

@@ -99,14 +99,19 @@ void CPlayerControllerComponent::Update()
 {
 #ifdef _DEBUG
 	if (myCamera->IsFreeCamMode() || myCamera->IsCursorUnlocked())
+	{
+	/*	CGameObject* playerGameObject = CEngine::GetInstance()->GetActiveScene().FindObjectWithID(-28554);
+		if(myController != nullptr && playerGameObject != nullptr)
+			myController->SetPosition(playerGameObject->myTransform->WorldPosition());*/
+
 		return;
+	}
 #endif
 
 	GameObject().myTransform->Position(myController->GetPosition());
 	myAnimationComponentController->Update(myMovement);
 
 	ControllerUpdate();
-
 	BoundsCheck();
 
 
