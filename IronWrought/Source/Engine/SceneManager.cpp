@@ -70,7 +70,8 @@ CScene* CSceneManager::CreateEmpty()
 
 CScene* CSceneManager::CreateScene(const std::string& aSceneJson)
 {
-	CScene* scene = Instantiate();
+	//CScene* scene = Instantiate();
+	CScene* scene = CreateEmpty();
 
 	Binary::SLevelData binLevelData = CBinReader::Load(ASSETPATH("Assets/Generated/" + aSceneJson + "/" + aSceneJson + ".bin"));
 
@@ -104,10 +105,10 @@ CScene* CSceneManager::CreateScene(const std::string& aSceneJson)
 			AddPickups(*scene, sceneData["healthPickups"].GetArray());
 			if (sceneData.HasMember("triggerEvents"))
 				AddTriggerEvents(*scene, sceneData["triggerEvents"].GetArray());
-			if (sceneName.find("Layout") != std::string::npos)//Om Unity Scene Namnet inneh�ller nyckelordet "Layout"
-			{
-				AddPlayer(*scene, sceneData["player"].GetObjectW());
-			}
+			//if (sceneName.find("Layout") != std::string::npos)//Om Unity Scene Namnet inneh�ller nyckelordet "Layout"
+			//{
+			//	AddPlayer(*scene, sceneData["player"].GetObjectW());
+			//}
 			AddEnemyComponents(*scene, sceneData["enemies"].GetArray());
 		}
 	}
@@ -145,7 +146,7 @@ CScene* CSceneManager::CreateScene(const std::string& aSceneJson)
 
 	CEngine::GetInstance()->GetPhysx().Cooking(scene->ActiveGameObjects(), scene);
 
-	scene->InitCanvas(ASSETPATH("Assets/Graphics/UI/JSON/UI_HUD.json"));
+	//scene->InitCanvas(ASSETPATH("Assets/IronWrought/Textures/UI/JSON/UI_HUD.json"));
 
 	return scene;
 }

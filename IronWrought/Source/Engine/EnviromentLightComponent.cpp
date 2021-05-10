@@ -8,7 +8,7 @@
 CEnvironmentLightComponent::CEnvironmentLightComponent(CGameObject& aParent, std::string aCubeMapName, DirectX::SimpleMath::Vector3 aColor, float anIntensity, DirectX::SimpleMath::Vector3 aDirection)
 	: CComponent(aParent)
 {
-	myEnvironmentLight = CLightFactory::GetInstance()->CreateEnvironmentLight(ASSETPATH("Assets/Cubemaps/" + aCubeMapName + ".dds"));
+	myEnvironmentLight = CLightFactory::GetInstance()->CreateEnvironmentLight(ASSETPATH("Assets/IronWrought/Texture/Cubemap/" + aCubeMapName + ".dds"));
 	myEnvironmentLight->SetColor(aColor);
 	myEnvironmentLight->SetIntensity(anIntensity);
 	//not sure if this work! We want to set the direction of this transform!

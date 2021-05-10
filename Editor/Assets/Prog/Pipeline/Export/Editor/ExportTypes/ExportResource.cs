@@ -42,7 +42,7 @@ public class ExportResource
 
         foreach (string assetPath in allAssetPaths)
         {
-            if (assetPath.Contains("Graphics"))
+            if (assetPath.Contains("Mesh"))
             {
                 Object asset = AssetDatabase.LoadAssetAtPath<Object>(assetPath);
                 if (asset != null)

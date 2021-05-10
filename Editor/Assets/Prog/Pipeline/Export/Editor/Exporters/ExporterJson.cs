@@ -57,11 +57,11 @@ public class ExporterJson
     [MenuItem("Export/Export")]
     public static void ExportJson()
     {  
-        if(GameObject.FindObjectOfType<PlayerSpawnPosition>() == null)
-        {
-            Debug.LogError("Export Cancelled. Please place a PlayerSpawnPosition Prefab in your Layout Scene");
-            return;
-        }
+        //if(GameObject.FindObjectOfType<PlayerSpawnPosition>() == null)
+        //{
+        //    Debug.LogError("Export Cancelled. Please place a PlayerSpawnPosition Prefab in your Layout Scene");
+        //    return;
+        //}
 
         //string sceneName = SceneManager.GetActiveScene().name;
        // string baseSceneName = sceneName.Substring(0, sceneName.LastIndexOf('_') + 2);

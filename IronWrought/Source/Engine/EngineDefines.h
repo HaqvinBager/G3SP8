@@ -12,7 +12,7 @@
 #ifdef EXCELSIOR_BUILD
 #define ASSETPATH(path) std::string(path).c_str() // EXCELSIOR
 #else
-#define ASSETPATH(path) std::string("../../SP7UnityEditor/").append(path)//UNITY
+#define ASSETPATH(path) std::string("../../Editor/").append(path)//UNITY
 #endif 
 
 #define PLAYER_CAMERA_ID 1000

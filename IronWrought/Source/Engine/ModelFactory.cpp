@@ -17,7 +17,7 @@
 #pragma comment(lib, "ModelLoader_Release.lib")
 #endif
 
-#define USING_FBX_MATERIALS
+//#define USING_FBX_MATERIALS
 
 #define ALLOW_ANIMATIONS
 
@@ -622,7 +622,7 @@ ID3D11ShaderResourceView* CModelFactory::GetShaderResourceView(ID3D11Device* aDe
 	if (FAILED(result))
 	{
 		std::string errorTexturePath = aTexturePath.substr(aTexturePath.length() - 6);
-		errorTexturePath = "Assets/ErrorTextures/Checkboard_128x128" + errorTexturePath;
+		errorTexturePath = ASSETPATH("Assets/IronWrought/Texture/ErrorTextures/Checkboard_128x128" + errorTexturePath);
 
 		wchar_t* wideErrorPath = new wchar_t[errorTexturePath.length() + 1];
 		std::copy(errorTexturePath.begin(), errorTexturePath.end(), wideErrorPath);

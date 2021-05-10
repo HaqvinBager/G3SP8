@@ -27,8 +27,6 @@
 	#include <TextFactory.h>
 	#include <TextInstance.h>
 	#include "EnemyComponent.h"
-	
-	void TEMP_VFX(CScene* aScene);
 #endif
 
 CInGameState::CInGameState(CStateStack& aStateStack, const CStateStack::EState aState)
@@ -49,15 +47,12 @@ void CInGameState::Awake()
 	CJsonReader::Get()->InitFromGenerated();
 	myEnemyAnimationController = new CEnemyAnimationController();
 	CScene* scene = CSceneManager::CreateEmpty();
-#ifndef NDEBUG
-	TEMP_VFX(scene);
-#endif
+
 	CEngine::GetInstance()->AddScene(myState, scene);
 	CMainSingleton::PostMaster().Subscribe("Level_1-1", this);
 	CMainSingleton::PostMaster().Subscribe("Level_1-2", this);
 	CMainSingleton::PostMaster().Subscribe("Level_2-1", this);
 	CMainSingleton::PostMaster().Subscribe("Level_2-2", this);
-
 }
 
 
@@ -178,15 +173,3 @@ void CInGameState::DEBUGFunctionality()
 	}
 #endif
 }
-
-#ifndef NDEBUG
-	void TEMP_VFX(CScene* aScene)
-	{
-		static int id = 500;
-		CGameObject* abilityObject = new CGameObject(id++);
-		abilityObject->AddComponent<CVFXSystemComponent>(*abilityObject, ASSETPATH("Assets/Graphics/VFX/JSON/VFXSystem_ToLoad.json"));
-	
-		aScene->AddInstance(abilityObject);
-		aScene->SetVFXTester(abilityObject);
-	}
-#endif
