@@ -1,0 +1,1976 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <FxCompile Include="VertexShader.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="FullscreenPixelShader_Bloom.hlsl">
+      <Filter>Shaders\Fullscreen</Filter>
+    </FxCompile>
+    <FxCompile Include="FullscreenPixelShader_Copy.hlsl">
+      <Filter>Shaders\Fullscreen</Filter>
+    </FxCompile>
+    <FxCompile Include="FullscreenPixelShader_GaussianBlurHorizontal.hlsl">
+      <Filter>Shaders\Fullscreen</Filter>
+    </FxCompile>
+    <FxCompile Include="FullscreenPixelShader_GaussianBlurVertical.hlsl">
+      <Filter>Shaders\Fullscreen</Filter>
+    </FxCompile>
+    <FxCompile Include="FullscreenPixelShader_Luminance.hlsl">
+      <Filter>Shaders\Fullscreen</Filter>
+    </FxCompile>
+    <FxCompile Include="FullscreenPixelShader_Vignette.hlsl">
+      <Filter>Shaders\Fullscreen</Filter>
+    </FxCompile>
+    <FxCompile Include="FullscreenVertexShader.hlsl">
+      <Filter>Shaders\Fullscreen</Filter>
+    </FxCompile>
+    <FxCompile Include="ParticleGeometryShader.hlsl">
+      <Filter>Shaders\Particle</Filter>
+    </FxCompile>
+    <FxCompile Include="ParticlePixelShader.hlsl">
+      <Filter>Shaders\Particle</Filter>
+    </FxCompile>
+    <FxCompile Include="ParticleVertexShader.hlsl">
+      <Filter>Shaders\Particle</Filter>
+    </FxCompile>
+    <FxCompile Include="SpriteVertexShader.hlsl">
+      <Filter>Shaders\Sprite</Filter>
+    </FxCompile>
+    <FxCompile Include="SpritePixelShader.hlsl">
+      <Filter>Shaders\Sprite</Filter>
+    </FxCompile>
+    <FxCompile Include="SpriteGeometryShader.hlsl">
+      <Filter>Shaders\Sprite</Filter>
+    </FxCompile>
+    <FxCompile Include="SpriteVFXTextureBlendingPixelShader.hlsl">
+      <Filter>Shaders\Sprite</Filter>
+    </FxCompile>
+    <FxCompile Include="VFXTextureBlendVertexShader.hlsl">
+      <Filter>Shaders\VFX</Filter>
+    </FxCompile>
+    <FxCompile Include="VFXTextureBlendPixelShader.hlsl">
+      <Filter>Shaders\VFX</Filter>
+    </FxCompile>
+    <FxCompile Include="OutlinePixelShader.hlsl">
+      <Filter>Shaders\Outline</Filter>
+    </FxCompile>
+    <FxCompile Include="OutlineVertexShader.hlsl">
+      <Filter>Shaders\Outline</Filter>
+    </FxCompile>
+    <FxCompile Include="LinePixelShader.hlsl">
+      <Filter>Shaders\Line</Filter>
+    </FxCompile>
+    <FxCompile Include="LineVertexShader.hlsl">
+      <Filter>Shaders\Line</Filter>
+    </FxCompile>
+    <FxCompile Include="SpriteVFXSphericalTextureBlendingPixelShader.hlsl">
+      <Filter>Shaders\Sprite</Filter>
+    </FxCompile>
+    <FxCompile Include="SpriteVFXTexturePixelShader.hlsl">
+      <Filter>Shaders\Sprite</Filter>
+    </FxCompile>
+    <FxCompile Include="RenderPassColorPixelShader.hlsl">
+      <Filter>Shaders\Render Passes</Filter>
+    </FxCompile>
+    <FxCompile Include="RenderPassNormalPixelShader.hlsl">
+      <Filter>Shaders\Render Passes</Filter>
+    </FxCompile>
+    <FxCompile Include="RenderPassRoughnessPixelShader.hlsl">
+      <Filter>Shaders\Render Passes</Filter>
+    </FxCompile>
+    <FxCompile Include="RenderPassMetalnessPixelShader.hlsl">
+      <Filter>Shaders\Render Passes</Filter>
+    </FxCompile>
+    <FxCompile Include="RenderPassAmbientOcclusionPixelShader.hlsl">
+      <Filter>Shaders\Render Passes</Filter>
+    </FxCompile>
+    <FxCompile Include="PBRPixelShader.hlsl">
+      <Filter>Shaders\PBR</Filter>
+    </FxCompile>
+    <FxCompile Include="AnimatedVertexShader.hlsl">
+      <Filter>Shaders\Animation</Filter>
+    </FxCompile>
+    <FxCompile Include="InstancedVertexShader.hlsl">
+      <Filter>Shaders\Instanced</Filter>
+    </FxCompile>
+    <FxCompile Include="DeferredLightEnvironmentShader.hlsl">
+      <Filter>Shaders\Deferred</Filter>
+    </FxCompile>
+    <FxCompile Include="DeferredLightPointShader.hlsl">
+      <Filter>Shaders\Deferred</Filter>
+    </FxCompile>
+    <FxCompile Include="DeferredModelVertexShader.hlsl">
+      <Filter>Shaders\Deferred</Filter>
+    </FxCompile>
+    <FxCompile Include="GBufferPixelShader.hlsl">
+      <Filter>Shaders\Deferred</Filter>
+    </FxCompile>
+    <FxCompile Include="FullscreenPixelShader_GammaCorrection.hlsl">
+      <Filter>Shaders\Fullscreen</Filter>
+    </FxCompile>
+    <FxCompile Include="DeferredVertexShader.hlsl">
+      <Filter>Shaders\Deferred</Filter>
+    </FxCompile>
+    <FxCompile Include="DeferredInstancedModelVertexShader.hlsl">
+      <Filter>Shaders\Deferred</Filter>
+    </FxCompile>
+    <FxCompile Include="DeferredRenderPassFullscreenPixelShader_GammaCorrection.hlsl">
+      <Filter>Shaders\Deferred Render Passes</Filter>
+    </FxCompile>
+    <FxCompile Include="DeferredRenderPassGBufferPixelShader.hlsl">
+      <Filter>Shaders\Deferred Render Passes</Filter>
+    </FxCompile>
+    <FxCompile Include="DeferredRenderPassShader_Albedo.hlsl">
+      <Filter>Shaders\Deferred Render Passes</Filter>
+    </FxCompile>
+    <FxCompile Include="DeferredRenderPassShader_AO.hlsl">
+      <Filter>Shaders\Deferred Render Passes</Filter>
+    </FxCompile>
+    <FxCompile Include="DeferredRenderPassShader_Emissive.hlsl">
+      <Filter>Shaders\Deferred Render Passes</Filter>
+    </FxCompile>
+    <FxCompile Include="DeferredRenderPassShader_Metalness.hlsl">
+      <Filter>Shaders\Deferred Render Passes</Filter>
+    </FxCompile>
+    <FxCompile Include="DeferredRenderPassShader_Normal.hlsl">
+      <Filter>Shaders\Deferred Render Passes</Filter>
+    </FxCompile>
+    <FxCompile Include="DeferredRenderPassShader_Roughness.hlsl">
+      <Filter>Shaders\Deferred Render Passes</Filter>
+    </FxCompile>
+    <FxCompile Include="DeferredVertexPaintVertexShader.hlsl">
+      <Filter>Shaders\Vertex Paint</Filter>
+    </FxCompile>
+    <FxCompile Include="DeferredVertexPaintPixelShader.hlsl">
+      <Filter>Shaders\Vertex Paint</Filter>
+    </FxCompile>
+    <FxCompile Include="DeferredAnimationVertexShader.hlsl">
+      <Filter>Shaders\Deferred</Filter>
+    </FxCompile>
+    <FxCompile Include="DecalPixelShader.hlsl">
+      <Filter>Shaders\Decal</Filter>
+    </FxCompile>
+    <FxCompile Include="DecalVertexShader.hlsl">
+      <Filter>Shaders\Decal</Filter>
+    </FxCompile>
+    <FxCompile Include="FullscreenPixelShader_CopyDepth.hlsl">
+      <Filter>Shaders\Fullscreen</Filter>
+    </FxCompile>
+    <FxCompile Include="FullscreenPixelShader_CopyGBuffer.hlsl">
+      <Filter>Shaders\Fullscreen</Filter>
+    </FxCompile>
+    <FxCompile Include="Decal_AlbedoPixelShader.hlsl">
+      <Filter>Shaders\Decal</Filter>
+    </FxCompile>
+    <FxCompile Include="Decal_NormalPixelShader.hlsl">
+      <Filter>Shaders\Decal</Filter>
+    </FxCompile>
+    <FxCompile Include="Decal_VertexNormalPixelShader.hlsl">
+      <Filter>Shaders\Decal</Filter>
+    </FxCompile>
+    <FxCompile Include="Decal_MaterialPixelShader.hlsl">
+      <Filter>Shaders\Decal</Filter>
+    </FxCompile>
+    <FxCompile Include="FullscreenPixelShader_Tonemap.hlsl">
+      <Filter>Shaders\Fullscreen</Filter>
+    </FxCompile>
+    <FxCompile Include="PointLightGeometryShader.hlsl">
+      <Filter>Shaders\PointLight</Filter>
+    </FxCompile>
+    <FxCompile Include="PointLightVertexShader.hlsl">
+      <Filter>Shaders\PointLight</Filter>
+    </FxCompile>
+    <FxCompile Include="FullscreenPixelShader_Tonemap.hlsl">
+      <Filter>Shaders\Fullscreen</Filter>
+    </FxCompile>
+    <FxCompile Include="SkyboxVertexShader.hlsl">
+      <Filter>Shaders\Skybox</Filter>
+    </FxCompile>
+    <FxCompile Include="SkyboxPixelShader.hlsl">
+      <Filter>Shaders\Skybox</Filter>
+    </FxCompile>
+    <FxCompile Include="BoxLightVertexShader.hlsl">
+      <Filter>Shaders\BoxLight</Filter>
+    </FxCompile>
+    <FxCompile Include="DeferredLightSpotShader.hlsl">
+      <Filter>Shaders\Deferred</Filter>
+    </FxCompile>
+    <FxCompile Include="DeferredLightBoxShader.hlsl">
+      <Filter>Shaders\Deferred</Filter>
+    </FxCompile>
+    <FxCompile Include="BoxVolumetricLightPixelShader.hlsl">
+      <Filter>Shaders\Volumetric Light</Filter>
+    </FxCompile>
+    <FxCompile Include="DirectionalVolumetricLightPixelShader.hlsl">
+      <Filter>Shaders\Volumetric Light</Filter>
+    </FxCompile>
+    <FxCompile Include="PointVolumetricLightPixelShader.hlsl">
+      <Filter>Shaders\Volumetric Light</Filter>
+    </FxCompile>
+    <FxCompile Include="SpotVolumetricLightPixelShader.hlsl">
+      <Filter>Shaders\Volumetric Light</Filter>
+    </FxCompile>
+    <FxCompile Include="FullscreenPixelShader_BilateralBlurHorizontal.hlsl">
+      <Filter>Shaders\Fullscreen</Filter>
+    </FxCompile>
+    <FxCompile Include="FullscreenPixelShader_BilateralBlurVertical.hlsl">
+      <Filter>Shaders\Fullscreen</Filter>
+    </FxCompile>
+    <FxCompile Include="FullscreenPixelShader_DepthAwareUpsample.hlsl">
+      <Filter>Shaders\Fullscreen</Filter>
+    </FxCompile>
+    <FxCompile Include="FullscreenPixelShader_DepthDownSample.hlsl">
+      <Filter>Shaders\Fullscreen</Filter>
+    </FxCompile>
+    <FxCompile Include="SpotLightGeometryShader.hlsl">
+      <Filter>Shaders\SpotLight</Filter>
+    </FxCompile>
+    <FxCompile Include="SpotLightVertexShader.hlsl">
+      <Filter>Shaders\SpotLight</Filter>
+    </FxCompile>
+    <FxCompile Include="FullscreenPixelShader_FXAA.hlsl">
+      <Filter>Shaders\Fullscreen</Filter>
+    </FxCompile>
+    <FxCompile Include="FullscreenPixelShader_BrokenScreenEffect.hlsl">
+      <Filter>Shaders\Fullscreen</Filter>
+    </FxCompile>
+    <FxCompile Include="ShadowAlphaPixelShader.hlsl">
+      <Filter>Shaders\Shadows</Filter>
+    </FxCompile>
+    <FxCompile Include="RenderPassEmissivePixelShader.hlsl">
+      <Filter>Shaders\Render Passes</Filter>
+    </FxCompile>
+    <FxCompile Include="FullscreenPixelShader_SSAO.hlsl">
+      <Filter>Shaders\Fullscreen</Filter>
+    </FxCompile>
+    <FxCompile Include="FullscreenPixelShader_SSAOBlur.hlsl">
+      <Filter>Shaders\Fullscreen</Filter>
+    </FxCompile>
+    <FxCompile Include="FullscreenPixelShader_Multiply.hlsl">
+      <Filter>Shaders\Fullscreen</Filter>
+    </FxCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="AnimationComponent.cpp">
+      <Filter>GameObject and Component\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="CameraComponent.cpp">
+      <Filter>GameObject and Component\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="CapsuleColliderComponent.cpp">
+      <Filter>GameObject and Component\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="CircleColliderComponent.cpp">
+      <Filter>GameObject and Component\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="AnimMathFunc.cpp">
+      <Filter>Animation</Filter>
+    </ClCompile>
+    <ClCompile Include="Audio.cpp">
+      <Filter>Audio</Filter>
+    </ClCompile>
+    <ClCompile Include="AudioChannel.cpp">
+      <Filter>Audio</Filter>
+    </ClCompile>
+    <ClCompile Include="EnviromentLightComponent.cpp">
+      <Filter>GameObject and Component\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="FMod.cpp">
+      <Filter>Audio</Filter>
+    </ClCompile>
+    <ClCompile Include="FModWrapper.cpp">
+      <Filter>Audio</Filter>
+    </ClCompile>
+    <ClCompile Include="DL_Debug.cpp">
+      <Filter>Debug Tools</Filter>
+    </ClCompile>
+    <ClCompile Include="DL_StackWalker.cpp">
+      <Filter>Debug Tools</Filter>
+    </ClCompile>
+    <ClCompile Include="Debug.cpp">
+      <Filter>Debug Tools</Filter>
+    </ClCompile>
+    <ClCompile Include="ForwardRenderer.cpp">
+      <Filter>Renderers</Filter>
+    </ClCompile>
+    <ClCompile Include="FullscreenRenderer.cpp">
+      <Filter>Renderers</Filter>
+    </ClCompile>
+    <ClCompile Include="FullscreenTexture.cpp">
+      <Filter>Renderers</Filter>
+    </ClCompile>
+    <ClCompile Include="FullscreenTextureFactory.cpp">
+      <Filter>Renderers</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject.cpp">
+      <Filter>GameObject and Component</Filter>
+    </ClCompile>
+    <ClCompile Include="Camera.cpp">
+      <Filter>Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="CameraFactory.cpp">
+      <Filter>Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="CollisionManager.cpp">
+      <Filter>Collision</Filter>
+    </ClCompile>
+    <ClCompile Include="LightFactory.cpp">
+      <Filter>Light</Filter>
+    </ClCompile>
+    <ClCompile Include="EnvironmentLight.cpp">
+      <Filter>Light</Filter>
+    </ClCompile>
+    <ClCompile Include="Line.cpp">
+      <Filter>Debug Tools</Filter>
+    </ClCompile>
+    <ClCompile Include="LineFactory.cpp">
+      <Filter>Debug Tools</Filter>
+    </ClCompile>
+    <ClCompile Include="LineInstance.cpp">
+      <Filter>Debug Tools</Filter>
+    </ClCompile>
+    <ClCompile Include="ModelFactory.cpp">
+      <Filter>Model</Filter>
+    </ClCompile>
+    <ClCompile Include="Model.cpp">
+      <Filter>Model</Filter>
+    </ClCompile>
+    <ClCompile Include="ParticleRenderer.cpp">
+      <Filter>Renderers</Filter>
+    </ClCompile>
+    <ClCompile Include="ModelComponent.cpp">
+      <Filter>GameObject and Component\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="PointLightComponent.cpp">
+      <Filter>GameObject and Component\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="PointLight.cpp">
+      <Filter>Light</Filter>
+    </ClCompile>
+    <ClCompile Include="RectangleColliderComponent.cpp">
+      <Filter>GameObject and Component\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderManager.cpp">
+      <Filter>Renderers</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderStateManager.cpp">
+      <Filter>Renderers</Filter>
+    </ClCompile>
+    <ClCompile Include="SpriteInstance.cpp">
+      <Filter>Sprite</Filter>
+    </ClCompile>
+    <ClCompile Include="SpriteFactory.cpp">
+      <Filter>Sprite</Filter>
+    </ClCompile>
+    <ClCompile Include="Sprite.cpp">
+      <Filter>Sprite</Filter>
+    </ClCompile>
+    <ClCompile Include="Text.cpp">
+      <Filter>Text</Filter>
+    </ClCompile>
+    <ClCompile Include="TextFactory.cpp">
+      <Filter>Text</Filter>
+    </ClCompile>
+    <ClCompile Include="TextInstance.cpp">
+      <Filter>Text</Filter>
+    </ClCompile>
+    <ClCompile Include="VFXBase.cpp">
+      <Filter>VFX</Filter>
+    </ClCompile>
+    <ClCompile Include="TransformComponent.cpp">
+      <Filter>GameObject and Component\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="TriangleColliderComponent.cpp">
+      <Filter>GameObject and Component\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="Component.cpp">
+      <Filter>GameObject and Component</Filter>
+    </ClCompile>
+    <ClCompile Include="stdafx.cpp">
+      <Filter>Precompiled</Filter>
+    </ClCompile>
+    <ClCompile Include="StackWalker.cpp">
+      <Filter>Debug Tools</Filter>
+    </ClCompile>
+    <ClCompile Include="Input.cpp">
+      <Filter>Input</Filter>
+    </ClCompile>
+    <ClCompile Include="InputMapper.cpp">
+      <Filter>Input</Filter>
+    </ClCompile>
+    <ClCompile Include="PostMaster.cpp">
+      <Filter>Post Master</Filter>
+    </ClCompile>
+    <ClCompile Include="WindowHandler.cpp">
+      <Filter>Engine Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Timer.cpp">
+      <Filter>Engine Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene.cpp">
+      <Filter>Engine Core</Filter>
+    </ClCompile>
+    <ClCompile Include="MainSingleton.cpp">
+      <Filter>Engine Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine.cpp">
+      <Filter>Engine Core</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectXFramework.cpp">
+      <Filter>Engine Core</Filter>
+    </ClCompile>
+    <ClCompile Include="SpriteRenderer.cpp">
+      <Filter>Renderers</Filter>
+    </ClCompile>
+    <ClCompile Include="VFXRenderer.cpp">
+      <Filter>Renderers</Filter>
+    </ClCompile>
+    <ClCompile Include="Button.cpp">
+      <Filter>UI</Filter>
+    </ClCompile>
+    <ClCompile Include="Canvas.cpp">
+      <Filter>UI</Filter>
+    </ClCompile>
+    <ClCompile Include="NavmeshLoader.cpp">
+      <Filter>Navmesh and Pathfinding</Filter>
+    </ClCompile>
+    <ClCompile Include="AStar.cpp">
+      <Filter>Navmesh and Pathfinding</Filter>
+    </ClCompile>
+    <ClCompile Include="StringID.cpp">
+      <Filter>StringID</Filter>
+    </ClCompile>
+    <ClCompile Include="StringIDLoader.cpp">
+      <Filter>StringID</Filter>
+    </ClCompile>
+    <ClCompile Include="AnimatedUIElement.cpp">
+      <Filter>Sprite</Filter>
+    </ClCompile>
+    <ClCompile Include="AudioManager.cpp">
+      <Filter>Audio</Filter>
+    </ClCompile>
+    <ClCompile Include="TextRenderer.cpp">
+      <Filter>Renderers</Filter>
+    </ClCompile>
+    <ClCompile Include="InstancedModelComponent.cpp">
+      <Filter>GameObject and Component\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="animationLoader.cpp">
+      <Filter>Animation</Filter>
+    </ClCompile>
+    <ClCompile Include="PerlinNoise.cpp">
+      <Filter>Utility</Filter>
+    </ClCompile>
+    <ClCompile Include="Collider.cpp">
+      <Filter>GameObject and Component</Filter>
+    </ClCompile>
+    <ClCompile Include="ContactReportCallback.cpp">
+      <Filter>PhysX</Filter>
+    </ClCompile>
+    <ClCompile Include="PhysXWrapper.cpp">
+      <Filter>PhysX</Filter>
+    </ClCompile>
+    <ClCompile Include="RigidDynamicBody.cpp">
+      <Filter>PhysX</Filter>
+    </ClCompile>
+    <ClCompile Include="RigidBodyComponent.cpp">
+      <Filter>GameObject and Component\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="DeferredRenderer.cpp">
+      <Filter>Renderers</Filter>
+    </ClCompile>
+    <ClCompile Include="GBuffer.cpp">
+      <Filter>Renderers</Filter>
+    </ClCompile>
+    <ClCompile Include="SceneManager.cpp">
+      <Filter>Engine Core</Filter>
+    </ClCompile>
+    <ClCompile Include="ImguiManager.cpp">
+      <Filter>Imgui\Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="Builders.cpp">
+      <Filter>Imgui\Blueprints</Filter>
+    </ClCompile>
+    <ClCompile Include="Drawing.cpp">
+      <Filter>Imgui\Blueprints</Filter>
+    </ClCompile>
+    <ClCompile Include="Widgets.cpp">
+      <Filter>Imgui\Blueprints</Filter>
+    </ClCompile>
+    <ClCompile Include="ImguiManager.cpp">
+      <Filter>Imgui\Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="SceneManager.cpp">
+      <Filter>Engine Core</Filter>
+    </ClCompile>
+    <ClCompile Include="State.cpp" />
+    <ClCompile Include="StateStack.cpp" />
+    <ClCompile Include="MaterialHandler.cpp">
+      <Filter>Model</Filter>
+    </ClCompile>
+    <ClCompile Include="NodeType.cpp">
+      <Filter>Imgui\Node Editor\Nodes\Base Type</Filter>
+    </ClCompile>
+    <ClCompile Include="NodeInstance.cpp">
+      <Filter>Imgui\Node Editor\Nodes</Filter>
+    </ClCompile>
+    <ClCompile Include="GraphManager.cpp">
+      <Filter>Imgui\Node Editor\Node Editor Managers</Filter>
+    </ClCompile>
+    <ClCompile Include="NodeTypeMathAbs.cpp">
+      <Filter>Imgui\Node Editor\Nodes\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="NodeTypeMathAdd.cpp">
+      <Filter>Imgui\Node Editor\Nodes\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="NodeTypeMathAtan2.cpp">
+      <Filter>Imgui\Node Editor\Nodes\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="NodeTypeMathCeil.cpp">
+      <Filter>Imgui\Node Editor\Nodes\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="NodeTypeMathCos.cpp">
+      <Filter>Imgui\Node Editor\Nodes\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="NodeTypeMathFloor.cpp">
+      <Filter>Imgui\Node Editor\Nodes\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="NodeTypeMathLerp.cpp">
+      <Filter>Imgui\Node Editor\Nodes\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="NodeTypeMathMax.cpp">
+      <Filter>Imgui\Node Editor\Nodes\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="ImguiManager.cpp">
+      <Filter>Imgui\Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="SceneManager.cpp">
+      <Filter>Engine Core</Filter>
+    </ClCompile>
+    <ClCompile Include="NodeTypeMathMin.cpp">
+      <Filter>Imgui\Node Editor\Nodes\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="NodeTypeMathMul.cpp">
+      <Filter>Imgui\Node Editor\Nodes\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="NodeTypeMathSaturate.cpp">
+      <Filter>Imgui\Node Editor\Nodes\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="NodeTypeMathSin.cpp">
+      <Filter>Imgui\Node Editor\Nodes\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="NodeTypeMathSmoothstep.cpp">
+      <Filter>Imgui\Node Editor\Nodes\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="NodeTypeMathSub.cpp">
+      <Filter>Imgui\Node Editor\Nodes\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="NodeTypeMathToDegrees.cpp">
+      <Filter>Imgui\Node Editor\Nodes\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="NodeTypeMathToRadians.cpp">
+      <Filter>Imgui\Node Editor\Nodes\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="JsonReader.cpp">
+      <Filter>Utility</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Includes\ImGui\Core\imgui_impl_dx11.cpp">
+      <Filter>Imgui\Imgui Implementations</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Includes\ImGui\Core\imgui_impl_win32.cpp">
+      <Filter>Imgui\Imgui Implementations</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Includes\ImGui\Core\imgui.cpp">
+      <Filter>Imgui\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Includes\ImGui\Core\imgui_demo.cpp">
+      <Filter>Imgui\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Includes\ImGui\Core\imgui_draw.cpp">
+      <Filter>Imgui\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Includes\ImGui\Core\imgui_widgets.cpp">
+      <Filter>Imgui\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Includes\ImGui\NodeEditor\crude_json.cpp">
+      <Filter>Imgui\Node Editor\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Includes\ImGui\NodeEditor\imgui_canvas.cpp">
+      <Filter>Imgui\Node Editor\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Includes\ImGui\NodeEditor\imgui_node_editor.cpp">
+      <Filter>Imgui\Node Editor\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Includes\ImGui\NodeEditor\imgui_node_editor_api.cpp">
+      <Filter>Imgui\Node Editor\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="DecisionNode.cpp">
+      <Filter>Decision Tree</Filter>
+    </ClCompile>
+    <ClCompile Include="ActionNode.cpp">
+      <Filter>Decision Tree</Filter>
+    </ClCompile>
+    <ClCompile Include="FloatDecisionNode.cpp">
+      <Filter>Decision Tree</Filter>
+    </ClCompile>
+    <ClCompile Include="PrintActionNode.cpp">
+      <Filter>Decision Tree</Filter>
+    </ClCompile>
+    <ClCompile Include="DecisionTreeManager.cpp">
+      <Filter>Decision Tree</Filter>
+    </ClCompile>
+    <ClCompile Include="NodeTypeVolumeTrigger.cpp">
+      <Filter>Imgui\Node Editor\Nodes\Trigger</Filter>
+    </ClCompile>
+    <ClCompile Include="NodeTypeForEachGameObject.cpp">
+      <Filter>Imgui\Node Editor\Nodes\Game Object</Filter>
+    </ClCompile>
+    <ClCompile Include="GraphNodeCollisionManager.cpp">
+      <Filter>Imgui\Node Editor\Node Editor Managers\NodeType Managers</Filter>
+    </ClCompile>
+    <ClCompile Include="GraphNodeTimerManager.cpp">
+      <Filter>Imgui\Node Editor\Node Editor Managers\NodeType Managers</Filter>
+    </ClCompile>
+    <ClCompile Include="DecalRenderer.cpp">
+      <Filter>Renderers</Filter>
+    </ClCompile>
+    <ClCompile Include="DecalComponent.cpp">
+      <Filter>GameObject and Component\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="State.cpp" />
+    <ClCompile Include="StateStack.cpp" />
+    <ClCompile Include="AnimationController.cpp">
+      <Filter>Animation</Filter>
+    </ClCompile>
+    <ClCompile Include="CStateMachineComponent.cpp">
+      <Filter>GameObject and Component\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="Decal.cpp">
+      <Filter>Decal</Filter>
+    </ClCompile>
+    <ClCompile Include="DecalFactory.cpp">
+      <Filter>Decal</Filter>
+    </ClCompile>
+    <ClCompile Include="ShadowRenderer.cpp">
+      <Filter>Renderers</Filter>
+    </ClCompile>
+    <ClCompile Include="LoadScene.cpp">
+      <Filter>Imgui\Windows</Filter>
+    </ClCompile>
+    <ClCompile Include="Window.cpp">
+      <Filter>Imgui\Windows</Filter>
+    </ClCompile>
+    <ClCompile Include="NodeTypeStartDefault.cpp">
+      <Filter>Imgui\Node Editor\Nodes\Start</Filter>
+    </ClCompile>
+    <ClCompile Include="NodeTypeInputGetMousePosition.cpp">
+      <Filter>Imgui\Node Editor\Nodes\Input</Filter>
+    </ClCompile>
+    <ClCompile Include="NodeTypeDecisionTreeRun.cpp">
+      <Filter>Imgui\Node Editor\Nodes\Decision Tree</Filter>
+    </ClCompile>
+    <ClCompile Include="NodeTypeDecisionFloat.cpp">
+      <Filter>Imgui\Node Editor\Nodes\Decision Tree\Decision</Filter>
+    </ClCompile>
+    <ClCompile Include="NodeTypeActionPrint.cpp">
+      <Filter>Imgui\Node Editor\Nodes\Decision Tree\Action</Filter>
+    </ClCompile>
+    <ClCompile Include="NodeTypeGameObjectGetPosition.cpp">
+      <Filter>Imgui\Node Editor\Nodes\Game Object</Filter>
+    </ClCompile>
+    <ClCompile Include="NodeTypeGameObjectSetPosition.cpp">
+      <Filter>Imgui\Node Editor\Nodes\Game Object</Filter>
+    </ClCompile>
+    <ClCompile Include="NodeTypeTimeDeltaTotal.cpp">
+      <Filter>Imgui\Node Editor\Nodes\Time</Filter>
+    </ClCompile>
+    <ClCompile Include="NodeTypeTimeTimer.cpp">
+      <Filter>Imgui\Node Editor\Nodes\Time</Filter>
+    </ClCompile>
+    <ClCompile Include="NodeTypeDebugPrint.cpp">
+      <Filter>Imgui\Node Editor\Nodes\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="NodeTypeStartKeyboardInput.cpp">
+      <Filter>Imgui\Node Editor\Nodes\Start</Filter>
+    </ClCompile>
+    <ClCompile Include="NodeTypeGameObjectMove.cpp">
+      <Filter>Imgui\Node Editor\Nodes\Game Object</Filter>
+    </ClCompile>
+    <ClCompile Include="NodeTypeVariableSetBool.cpp">
+      <Filter>Imgui\Node Editor\Nodes\Variables\Set</Filter>
+    </ClCompile>
+    <ClCompile Include="NodeTypeVariableSetFloat.cpp">
+      <Filter>Imgui\Node Editor\Nodes\Variables\Set</Filter>
+    </ClCompile>
+    <ClCompile Include="NodeTypeVariableSetInt.cpp">
+      <Filter>Imgui\Node Editor\Nodes\Variables\Set</Filter>
+    </ClCompile>
+    <ClCompile Include="NodeTypeVariableGetBool.cpp">
+      <Filter>Imgui\Node Editor\Nodes\Variables\Get</Filter>
+    </ClCompile>
+    <ClCompile Include="NodeTypeVariableGetFloat.cpp">
+      <Filter>Imgui\Node Editor\Nodes\Variables\Get</Filter>
+    </ClCompile>
+    <ClCompile Include="NodeTypeVariableGetInt.cpp">
+      <Filter>Imgui\Node Editor\Nodes\Variables\Get</Filter>
+    </ClCompile>
+    <ClCompile Include="NodeDataManager.cpp">
+      <Filter>Imgui\Node Editor\Utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="NodeTypeStartGetCustom.cpp">
+      <Filter>Imgui\Node Editor\Nodes\Start</Filter>
+    </ClCompile>
+    <ClCompile Include="NodeTypeStartSetCustom.cpp">
+      <Filter>Imgui\Node Editor\Nodes\Start</Filter>
+    </ClCompile>
+    <ClCompile Include="VFXSystemComponent.cpp">
+      <Filter>GameObject and Component\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="ParticleEmitter.cpp">
+      <Filter>VFX\Particles</Filter>
+    </ClCompile>
+    <ClCompile Include="VFXMeshFactory.cpp">
+      <Filter>VFX</Filter>
+    </ClCompile>
+    <ClCompile Include="ParticleEmitterFactory.cpp">
+      <Filter>VFX\Particles</Filter>
+    </ClCompile>
+    <ClCompile Include="NodeTypeDecisionCoinFlip.cpp">
+      <Filter>Imgui\Node Editor\Nodes\Decision Tree\Decision</Filter>
+    </ClCompile>
+    <ClCompile Include="FlipACoinDecision.cpp">
+      <Filter>Decision Tree</Filter>
+    </ClCompile>
+    <ClCompile Include="NodeTypeUtilitiesBranching.cpp">
+      <Filter>Imgui\Node Editor\Nodes\Utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="NodeTypeGameObjectRotate.cpp">
+      <Filter>Imgui\Node Editor\Nodes\Game Object</Filter>
+    </ClCompile>
+    <ClCompile Include="NodeTypeGameObjectSetRotation.cpp">
+      <Filter>Imgui\Node Editor\Nodes\Game Object</Filter>
+    </ClCompile>
+    <ClCompile Include="NodeTypeGameObjectGetRotation.cpp">
+      <Filter>Imgui\Node Editor\Nodes\Game Object</Filter>
+    </ClCompile>
+    <ClCompile Include="CameraSetting.cpp">
+      <Filter>Imgui\Windows</Filter>
+    </ClCompile>
+    <ClCompile Include="CharacterController.cpp">
+      <Filter>PhysX</Filter>
+    </ClCompile>
+    <ClCompile Include="NodeTypeAudioPlayStep.cpp">
+      <Filter>Imgui\Node Editor\Nodes\Audio</Filter>
+    </ClCompile>
+    <ClCompile Include="NodeTypeAudioPlayRobotAttack.cpp">
+      <Filter>Imgui\Node Editor\Nodes\Audio</Filter>
+    </ClCompile>
+    <ClCompile Include="NodeTypeAudioPlayRobotDeath.cpp">
+      <Filter>Imgui\Node Editor\Nodes\Audio</Filter>
+    </ClCompile>
+    <ClCompile Include="NodeTypeAudioPlayRobotSearching.cpp">
+      <Filter>Imgui\Node Editor\Nodes\Audio</Filter>
+    </ClCompile>
+    <ClCompile Include="NodeTypeAudioPlayRobotPatrolling.cpp">
+      <Filter>Imgui\Node Editor\Nodes\Audio</Filter>
+    </ClCompile>
+    <ClCompile Include="NodeTypeAudioPlayRobotIdle.cpp">
+      <Filter>Imgui\Node Editor\Nodes\Audio</Filter>
+    </ClCompile>
+    <ClCompile Include="NodeTypeAudioPlayResearcherReactionExplosives.cpp">
+      <Filter>Imgui\Node Editor\Nodes\Audio</Filter>
+    </ClCompile>
+    <ClCompile Include="VFXEffect.cpp">
+      <Filter>VFX</Filter>
+    </ClCompile>
+    <ClCompile Include="NodeTypeVFXPlayVFX.cpp">
+      <Filter>Imgui\Node Editor\Nodes\VFX</Filter>
+    </ClCompile>
+    <ClCompile Include="NodeTypeVFXStopVFX.cpp">
+      <Filter>Imgui\Node Editor\Nodes\VFX</Filter>
+    </ClCompile>
+    <ClCompile Include="NodeTypeVariableGetVector3.cpp">
+      <Filter>Imgui\Node Editor\Nodes\Variables\Get</Filter>
+    </ClCompile>
+    <ClCompile Include="NodeTypeVariableSetVector3.cpp">
+      <Filter>Imgui\Node Editor\Nodes\Variables\Set</Filter>
+    </ClCompile>
+    <ClCompile Include="NodeTypeAudioPlaySFX.cpp">
+      <Filter>Imgui\Node Editor\Nodes\Audio</Filter>
+    </ClCompile>
+    <ClCompile Include="JsonWriter.cpp">
+      <Filter>Utility</Filter>
+    </ClCompile>
+    <ClCompile Include="PlayerAnimationController.cpp" />
+    <ClCompile Include="NodeTypeVector3Add.cpp">
+      <Filter>Imgui\Node Editor\Nodes\Vector3</Filter>
+    </ClCompile>
+    <ClCompile Include="NodeTypeVector3Join.cpp">
+      <Filter>Imgui\Node Editor\Nodes\Vector3</Filter>
+    </ClCompile>
+    <ClCompile Include="NodeTypeVector3Split.cpp">
+      <Filter>Imgui\Node Editor\Nodes\Vector3</Filter>
+    </ClCompile>
+    <ClCompile Include="NodeTypeVector3Distance.cpp">
+      <Filter>Imgui\Node Editor\Nodes\Vector3</Filter>
+    </ClCompile>
+    <ClCompile Include="NodeTypeVector3Dot.cpp">
+      <Filter>Imgui\Node Editor\Nodes\Vector3</Filter>
+    </ClCompile>
+    <ClCompile Include="NodeTypeMathGreater.cpp">
+      <Filter>Imgui\Node Editor\Nodes\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="NodeTypeVector3Cross.cpp">
+      <Filter>Imgui\Node Editor\Nodes\Vector3</Filter>
+    </ClCompile>
+    <ClCompile Include="NodeTypeVector3Sub.cpp">
+      <Filter>Imgui\Node Editor\Nodes\Vector3</Filter>
+    </ClCompile>
+    <ClCompile Include="NodeTypeGameObjectMoveToPosition.cpp">
+      <Filter>Imgui\Node Editor\Nodes\Game Object</Filter>
+    </ClCompile>
+    <ClCompile Include="NodeTypeGameObjectGetChildPosition.cpp">
+      <Filter>Imgui\Node Editor\Nodes\Game Object</Filter>
+    </ClCompile>
+    <ClCompile Include="VFXEditorWindow.cpp">
+      <Filter>Imgui\Windows</Filter>
+    </ClCompile>
+    <ClCompile Include="NodeTypeStartSphereOnTriggerExit.cpp">
+      <Filter>Imgui\Node Editor\Nodes\Start</Filter>
+    </ClCompile>
+    <ClCompile Include="NodeTypeStartSphereOnTriggerEnter.cpp">
+      <Filter>Imgui\Node Editor\Nodes\Start</Filter>
+    </ClCompile>
+    <ClCompile Include="NodeTypeStartSphereOnTriggerStay.cpp">
+      <Filter>Imgui\Node Editor\Nodes\Start</Filter>
+    </ClCompile>
+    <ClCompile Include="NodeTypePlayerGetPosition.cpp">
+      <Filter>Imgui\Node Editor\Nodes\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="PlayerControlWindow.cpp">
+      <Filter>Imgui\Windows</Filter>
+    </ClCompile>
+    <ClCompile Include="BoxColliderComponent.cpp">
+      <Filter>GameObject and Component\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="GravityGloveEditor.cpp" />
+    <ClCompile Include="BoxLight.cpp">
+      <Filter>Light</Filter>
+    </ClCompile>
+    <ClCompile Include="BoxLightComponent.cpp">
+      <Filter>GameObject and Component\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="SpotLight.cpp">
+      <Filter>Light</Filter>
+    </ClCompile>
+    <ClCompile Include="SpotLightComponent.cpp">
+      <Filter>GameObject and Component\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="LightRenderer.cpp">
+      <Filter>Renderers</Filter>
+    </ClCompile>
+    <ClCompile Include="NodeTypeAudioPlayResearcherEvent.cpp">
+      <Filter>Imgui\Node Editor\Nodes\Audio</Filter>
+    </ClCompile>
+    <ClCompile Include="NodeTypeActionPatrol.cpp">
+      <Filter>Imgui\Node Editor\Nodes\Decision Tree\Action</Filter>
+    </ClCompile>
+    <ClCompile Include="NodeTypeAddForce.cpp">
+      <Filter>Imgui\Node Editor\Nodes\Game Object</Filter>
+    </ClCompile>
+    <ClCompile Include="NodeTypeEnemySpawn.cpp">
+      <Filter>Imgui\Node Editor\Nodes\Game Object</Filter>
+    </ClCompile>
+    <ClCompile Include="SphereColliderComponent.cpp">
+      <Filter>GameObject and Component\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="ConvexMeshColliderComponent.cpp">
+      <Filter>GameObject and Component\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="PlayerReportCallback.cpp">
+      <Filter>PhysX</Filter>
+    </ClCompile>
+    <ClCompile Include="NodeTypeUtilityInvertBool.cpp" />
+    <ClCompile Include="NodeTypeGameObjectRotateDegrees.cpp">
+      <Filter>Imgui\Node Editor\Nodes\Game Object</Filter>
+    </ClCompile>
+    <ClCompile Include="EnemyReportCallback.cpp" />
+    <ClCompile Include="EnvironmentLightWindow.cpp">
+      <Filter>Imgui\Windows</Filter>
+    </ClCompile>
+    <ClCompile Include="PostMasterHelpers.cpp" />
+    <ClCompile Include="PostProcessingWindow.cpp">
+      <Filter>Imgui\Windows</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="AnimationComponent.h">
+      <Filter>GameObject and Component\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="CameraComponent.h">
+      <Filter>GameObject and Component\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="CapsuleColliderComponent.h">
+      <Filter>GameObject and Component\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="CircleColliderComponent.h">
+      <Filter>GameObject and Component\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="AnimationController.h">
+      <Filter>Animation</Filter>
+    </ClInclude>
+    <ClInclude Include="AnimMathFunc.h">
+      <Filter>Animation</Filter>
+    </ClInclude>
+    <ClInclude Include="Audio.h">
+      <Filter>Audio</Filter>
+    </ClInclude>
+    <ClInclude Include="AudioChannel.h">
+      <Filter>Audio</Filter>
+    </ClInclude>
+    <ClInclude Include="EnviromentLightComponent.h">
+      <Filter>GameObject and Component\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="FMod.h">
+      <Filter>Audio</Filter>
+    </ClInclude>
+    <ClInclude Include="FModWrapper.h">
+      <Filter>Audio</Filter>
+    </ClInclude>
+    <ClInclude Include="DL_Debug.h">
+      <Filter>Debug Tools</Filter>
+    </ClInclude>
+    <ClInclude Include="DL_StackWalker.h">
+      <Filter>Debug Tools</Filter>
+    </ClInclude>
+    <ClInclude Include="Debug.h">
+      <Filter>Debug Tools</Filter>
+    </ClInclude>
+    <ClInclude Include="ForwardRenderer.h">
+      <Filter>Renderers</Filter>
+    </ClInclude>
+    <ClInclude Include="FullscreenRenderer.h">
+      <Filter>Renderers</Filter>
+    </ClInclude>
+    <ClInclude Include="FullscreenTexture.h">
+      <Filter>Renderers</Filter>
+    </ClInclude>
+    <ClInclude Include="FullscreenTextureFactory.h">
+      <Filter>Renderers</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject.h">
+      <Filter>GameObject and Component</Filter>
+    </ClInclude>
+    <ClInclude Include="Behaviour.h">
+      <Filter>GameObject and Component</Filter>
+    </ClInclude>
+    <ClInclude Include="Camera.h">
+      <Filter>Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="CameraFactory.h">
+      <Filter>Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="CollisionManager.h">
+      <Filter>Collision</Filter>
+    </ClInclude>
+    <ClInclude Include="DebugTimerUtility.h">
+      <Filter>Debug Tools</Filter>
+    </ClInclude>
+    <ClInclude Include="LightFactory.h">
+      <Filter>Light</Filter>
+    </ClInclude>
+    <ClInclude Include="EnvironmentLight.h">
+      <Filter>Light</Filter>
+    </ClInclude>
+    <ClInclude Include="Line.h">
+      <Filter>Debug Tools</Filter>
+    </ClInclude>
+    <ClInclude Include="LineFactory.h">
+      <Filter>Debug Tools</Filter>
+    </ClInclude>
+    <ClInclude Include="LineInstance.h">
+      <Filter>Debug Tools</Filter>
+    </ClInclude>
+    <ClInclude Include="ModelMath.h">
+      <Filter>Model</Filter>
+    </ClInclude>
+    <ClInclude Include="ModelFactory.h">
+      <Filter>Model</Filter>
+    </ClInclude>
+    <ClInclude Include="Model.h">
+      <Filter>Model</Filter>
+    </ClInclude>
+    <ClInclude Include="ParticleRenderer.h">
+      <Filter>Renderers</Filter>
+    </ClInclude>
+    <ClInclude Include="ModelComponent.h">
+      <Filter>GameObject and Component\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="PointLightComponent.h">
+      <Filter>GameObject and Component\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="PointLight.h">
+      <Filter>Light</Filter>
+    </ClInclude>
+    <ClInclude Include="RectangleColliderComponent.h">
+      <Filter>GameObject and Component\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderManager.h">
+      <Filter>Renderers</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderStateManager.h">
+      <Filter>Renderers</Filter>
+    </ClInclude>
+    <ClInclude Include="SpriteInstance.h">
+      <Filter>Sprite</Filter>
+    </ClInclude>
+    <ClInclude Include="SpriteFactory.h">
+      <Filter>Sprite</Filter>
+    </ClInclude>
+    <ClInclude Include="Sprite.h">
+      <Filter>Sprite</Filter>
+    </ClInclude>
+    <ClInclude Include="Text.h">
+      <Filter>Text</Filter>
+    </ClInclude>
+    <ClInclude Include="TextFactory.h">
+      <Filter>Text</Filter>
+    </ClInclude>
+    <ClInclude Include="TextInstance.h">
+      <Filter>Text</Filter>
+    </ClInclude>
+    <ClInclude Include="VFXBase.h">
+      <Filter>VFX</Filter>
+    </ClInclude>
+    <ClInclude Include="TransformComponent.h">
+      <Filter>GameObject and Component\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="TriangleColliderComponent.h">
+      <Filter>GameObject and Component\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="Component.h">
+      <Filter>GameObject and Component</Filter>
+    </ClInclude>
+    <ClInclude Include="stdafx.h">
+      <Filter>Precompiled</Filter>
+    </ClInclude>
+    <ClInclude Include="StackWalker.h">
+      <Filter>Debug Tools</Filter>
+    </ClInclude>
+    <ClInclude Include="RandomNumberGenerator.h">
+      <Filter>Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="Heap.h">
+      <Filter>Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="Input.h">
+      <Filter>Input</Filter>
+    </ClInclude>
+    <ClInclude Include="InputMapper.h">
+      <Filter>Input</Filter>
+    </ClInclude>
+    <ClInclude Include="InputObserver.h">
+      <Filter>Input</Filter>
+    </ClInclude>
+    <ClInclude Include="PostMaster.h">
+      <Filter>Post Master</Filter>
+    </ClInclude>
+    <ClInclude Include="Message.h">
+      <Filter>Post Master</Filter>
+    </ClInclude>
+    <ClInclude Include="Observer.h">
+      <Filter>Post Master</Filter>
+    </ClInclude>
+    <ClInclude Include="MessageType.h">
+      <Filter>Post Master</Filter>
+    </ClInclude>
+    <ClInclude Include="WinInclude.h">
+      <Filter>Engine Core</Filter>
+    </ClInclude>
+    <ClInclude Include="WindowHandler.h">
+      <Filter>Engine Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Timer.h">
+      <Filter>Engine Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene.h">
+      <Filter>Engine Core</Filter>
+    </ClInclude>
+    <ClInclude Include="MainSingleton.h">
+      <Filter>Engine Core</Filter>
+    </ClInclude>
+    <ClInclude Include="EngineException.h">
+      <Filter>Engine Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine.h">
+      <Filter>Engine Core</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectXFramework.h">
+      <Filter>Engine Core</Filter>
+    </ClInclude>
+    <ClInclude Include="SpriteRenderer.h">
+      <Filter>Renderers</Filter>
+    </ClInclude>
+    <ClInclude Include="VFXRenderer.h">
+      <Filter>Renderers</Filter>
+    </ClInclude>
+    <ClInclude Include="Button.h">
+      <Filter>UI</Filter>
+    </ClInclude>
+    <ClInclude Include="JsonReader.h">
+      <Filter>Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="Canvas.h">
+      <Filter>UI</Filter>
+    </ClInclude>
+    <ClInclude Include="NavmeshLoader.h">
+      <Filter>Navmesh and Pathfinding</Filter>
+    </ClInclude>
+    <ClInclude Include="AStar.h">
+      <Filter>Navmesh and Pathfinding</Filter>
+    </ClInclude>
+    <ClInclude Include="Funneling.h">
+      <Filter>Navmesh and Pathfinding</Filter>
+    </ClInclude>
+    <ClInclude Include="StringID.hpp">
+      <Filter>StringID</Filter>
+    </ClInclude>
+    <ClInclude Include="StringIDLoader.h">
+      <Filter>StringID</Filter>
+    </ClInclude>
+    <ClInclude Include="AnimatedUIElement.h">
+      <Filter>Sprite</Filter>
+    </ClInclude>
+    <ClInclude Include="AudioManager.h">
+      <Filter>Audio</Filter>
+    </ClInclude>
+    <ClInclude Include="TextRenderer.h">
+      <Filter>Renderers</Filter>
+    </ClInclude>
+    <ClInclude Include="EngineDefines.h">
+      <Filter>Engine Core</Filter>
+    </ClInclude>
+    <ClInclude Include="InstancedModelComponent.h">
+      <Filter>GameObject and Component\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="animationLoader.h">
+      <Filter>Animation</Filter>
+    </ClInclude>
+    <ClInclude Include="Utility.h">
+      <Filter>Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="MouseTracker.h">
+      <Filter>Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="PerlinNoise.h">
+      <Filter>Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="Collider.h">
+      <Filter>GameObject and Component</Filter>
+    </ClInclude>
+    <ClInclude Include="ContactReportCallback.h">
+      <Filter>PhysX</Filter>
+    </ClInclude>
+    <ClInclude Include="PhysXWrapper.h">
+      <Filter>PhysX</Filter>
+    </ClInclude>
+    <ClInclude Include="RigidDynamicBody.h">
+      <Filter>PhysX</Filter>
+    </ClInclude>
+    <ClInclude Include="RigidBodyComponent.h">
+      <Filter>GameObject and Component\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="DeferredRenderer.h">
+      <Filter>Renderers</Filter>
+    </ClInclude>
+    <ClInclude Include="GBuffer.h">
+      <Filter>Renderers</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneManager.h">
+      <Filter>Engine Core</Filter>
+    </ClInclude>
+    <ClInclude Include="FolderUtility.h">
+      <Filter>Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="ImguiManager.h">
+      <Filter>Imgui\Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="Builders.h">
+      <Filter>Imgui\Blueprints</Filter>
+    </ClInclude>
+    <ClInclude Include="Drawing.h">
+      <Filter>Imgui\Blueprints</Filter>
+    </ClInclude>
+    <ClInclude Include="Math2D.h">
+      <Filter>Imgui\Blueprints</Filter>
+    </ClInclude>
+    <ClInclude Include="Widgets.h">
+      <Filter>Imgui\Blueprints</Filter>
+    </ClInclude>
+    <ClInclude Include="ImguiManager.h">
+      <Filter>Imgui\Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneManager.h">
+      <Filter>Engine Core</Filter>
+    </ClInclude>
+    <ClInclude Include="NodeTypes.h">
+      <Filter>Imgui\Node Editor\Nodes\Base Type</Filter>
+    </ClInclude>
+    <ClInclude Include="State.h" />
+    <ClInclude Include="StateStack.h" />
+    <ClInclude Include="MaterialHandler.h">
+      <Filter>Model</Filter>
+    </ClInclude>
+    <ClInclude Include="NodeType.h">
+      <Filter>Imgui\Node Editor\Nodes\Base Type</Filter>
+    </ClInclude>
+    <ClInclude Include="NodeInstance.h">
+      <Filter>Imgui\Node Editor\Nodes</Filter>
+    </ClInclude>
+    <ClInclude Include="GraphManager.h">
+      <Filter>Imgui\Node Editor\Node Editor Managers</Filter>
+    </ClInclude>
+    <ClInclude Include="NodeTypeMathAbs.h">
+      <Filter>Imgui\Node Editor\Nodes\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="NodeTypeMathAdd.h">
+      <Filter>Imgui\Node Editor\Nodes\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="NodeTypeMathAtan2.h">
+      <Filter>Imgui\Node Editor\Nodes\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="NodeTypeMathCeil.h">
+      <Filter>Imgui\Node Editor\Nodes\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="NodeTypeMathCos.h">
+      <Filter>Imgui\Node Editor\Nodes\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="NodeTypeMathFloor.h">
+      <Filter>Imgui\Node Editor\Nodes\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="NodeTypeMathLerp.h">
+      <Filter>Imgui\Node Editor\Nodes\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="NodeTypeMathMax.h">
+      <Filter>Imgui\Node Editor\Nodes\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="NodeTypeMathMin.h">
+      <Filter>Imgui\Node Editor\Nodes\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="NodeTypeMathMul.h">
+      <Filter>Imgui\Node Editor\Nodes\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="NodeTypeMathSaturate.h">
+      <Filter>Imgui\Node Editor\Nodes\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="NodeTypeMathSin.h">
+      <Filter>Imgui\Node Editor\Nodes\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="NodeTypeMathSmoothstep.h">
+      <Filter>Imgui\Node Editor\Nodes\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="NodeTypeMathSub.h">
+      <Filter>Imgui\Node Editor\Nodes\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="NodeTypeMathToDegrees.h">
+      <Filter>Imgui\Node Editor\Nodes\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="NodeTypeMathToRadians.h">
+      <Filter>Imgui\Node Editor\Nodes\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Includes\ImGui\Core\imgui_impl_dx11.h">
+      <Filter>Imgui\Imgui Implementations</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Includes\ImGui\Core\imgui_impl_win32.h">
+      <Filter>Imgui\Imgui Implementations</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Includes\ImGui\Core\imgui.h">
+      <Filter>Imgui\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Includes\ImGui\Core\imgui_internal.h">
+      <Filter>Imgui\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Includes\ImGui\Core\imstb_rectpack.h">
+      <Filter>Imgui\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Includes\ImGui\Core\imstb_textedit.h">
+      <Filter>Imgui\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Includes\ImGui\Core\imstb_truetype.h">
+      <Filter>Imgui\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Includes\ImGui\NodeEditor\crude_json.h">
+      <Filter>Imgui\Node Editor\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Includes\ImGui\NodeEditor\imgui_bezier_math.h">
+      <Filter>Imgui\Node Editor\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Includes\ImGui\NodeEditor\imgui_canvas.h">
+      <Filter>Imgui\Node Editor\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Includes\ImGui\NodeEditor\imgui_extra_math.h">
+      <Filter>Imgui\Node Editor\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Includes\ImGui\NodeEditor\imgui_node_editor.h">
+      <Filter>Imgui\Node Editor\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Includes\ImGui\NodeEditor\imgui_node_editor_internal.h">
+      <Filter>Imgui\Node Editor\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Includes\ImGui\Core\imconfig.h">
+      <Filter>Imgui\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="ActionNode.h">
+      <Filter>Decision Tree</Filter>
+    </ClInclude>
+    <ClInclude Include="BaseDecisionNode.h">
+      <Filter>Decision Tree</Filter>
+    </ClInclude>
+    <ClInclude Include="DecisionNode.h">
+      <Filter>Decision Tree</Filter>
+    </ClInclude>
+    <ClInclude Include="FloatDecisionNode.h">
+      <Filter>Decision Tree</Filter>
+    </ClInclude>
+    <ClInclude Include="PrintActionNode.h">
+      <Filter>Decision Tree</Filter>
+    </ClInclude>
+    <ClInclude Include="DecisionTreeManager.h">
+      <Filter>Decision Tree</Filter>
+    </ClInclude>
+    <ClInclude Include="NodeTypeVolumeTrigger.h">
+      <Filter>Imgui\Node Editor\Nodes\Trigger</Filter>
+    </ClInclude>
+    <ClInclude Include="NodeTypeForEachGameObject.h">
+      <Filter>Imgui\Node Editor\Nodes\Game Object</Filter>
+    </ClInclude>
+    <ClInclude Include="GraphNodeCollisionManager.h">
+      <Filter>Imgui\Node Editor\Node Editor Managers\NodeType Managers</Filter>
+    </ClInclude>
+    <ClInclude Include="GraphNodeTimerManager.h">
+      <Filter>Imgui\Node Editor\Node Editor Managers\NodeType Managers</Filter>
+    </ClInclude>
+    <ClInclude Include="State.h" />
+    <ClInclude Include="StateStack.h" />
+    <ClInclude Include="CStateMachineComponent.h">
+      <Filter>GameObject and Component\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="DecalRenderer.h">
+      <Filter>Renderers</Filter>
+    </ClInclude>
+    <ClInclude Include="DecalComponent.h">
+      <Filter>GameObject and Component\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="Decal.h">
+      <Filter>Decal</Filter>
+    </ClInclude>
+    <ClInclude Include="DecalFactory.h">
+      <Filter>Decal</Filter>
+    </ClInclude>
+    <ClInclude Include="ShadowRenderer.h">
+      <Filter>Renderers</Filter>
+    </ClInclude>
+    <ClInclude Include="LoadScene.h">
+      <Filter>Imgui\Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="Window.h">
+      <Filter>Imgui\Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="ImGuiWindows.h">
+      <Filter>Imgui\Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="NodeTypeStartDefault.h">
+      <Filter>Imgui\Node Editor\Nodes\Start</Filter>
+    </ClInclude>
+    <ClInclude Include="NodeTypeGameObjectMove.h">
+      <Filter>Imgui\Node Editor\Nodes\Game Object</Filter>
+    </ClInclude>
+    <ClInclude Include="NodeTypeInputGetMousePosition.h">
+      <Filter>Imgui\Node Editor\Nodes\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="NodeTypeDecisionTreeRun.h">
+      <Filter>Imgui\Node Editor\Nodes\Decision Tree</Filter>
+    </ClInclude>
+    <ClInclude Include="NodeTypeDecisionFloat.h">
+      <Filter>Imgui\Node Editor\Nodes\Decision Tree\Decision</Filter>
+    </ClInclude>
+    <ClInclude Include="NodeTypeActionPrint.h">
+      <Filter>Imgui\Node Editor\Nodes\Decision Tree\Action</Filter>
+    </ClInclude>
+    <ClInclude Include="NodeTypeGameObjectGetPosition.h">
+      <Filter>Imgui\Node Editor\Nodes\Game Object</Filter>
+    </ClInclude>
+    <ClInclude Include="NodeTypeGameObjectSetPosition.h">
+      <Filter>Imgui\Node Editor\Nodes\Game Object</Filter>
+    </ClInclude>
+    <ClInclude Include="NodeTypeTimeDeltaTotal.h">
+      <Filter>Imgui\Node Editor\Nodes\Time</Filter>
+    </ClInclude>
+    <ClInclude Include="NodeTypeTimeTimer.h">
+      <Filter>Imgui\Node Editor\Nodes\Time</Filter>
+    </ClInclude>
+    <ClInclude Include="NodeTypeDebugPrint.h">
+      <Filter>Imgui\Node Editor\Nodes\Debug</Filter>
+    </ClInclude>
+    <ClInclude Include="NodeTypeStartKeyboardInput.h">
+      <Filter>Imgui\Node Editor\Nodes\Start</Filter>
+    </ClInclude>
+    <ClInclude Include="NodeTypeVariableSetBool.h">
+      <Filter>Imgui\Node Editor\Nodes\Variables\Set</Filter>
+    </ClInclude>
+    <ClInclude Include="NodeTypeVariableSetFloat.h">
+      <Filter>Imgui\Node Editor\Nodes\Variables\Set</Filter>
+    </ClInclude>
+    <ClInclude Include="NodeTypeVariableSetInt.h">
+      <Filter>Imgui\Node Editor\Nodes\Variables\Set</Filter>
+    </ClInclude>
+    <ClInclude Include="NodeTypeVariableGetBool.h">
+      <Filter>Imgui\Node Editor\Nodes\Variables\Get</Filter>
+    </ClInclude>
+    <ClInclude Include="NodeTypeVariableGetFloat.h">
+      <Filter>Imgui\Node Editor\Nodes\Variables\Get</Filter>
+    </ClInclude>
+    <ClInclude Include="NodeTypeVariableGetInt.h">
+      <Filter>Imgui\Node Editor\Nodes\Variables\Get</Filter>
+    </ClInclude>
+    <ClInclude Include="NodeDataManager.h">
+      <Filter>Imgui\Node Editor\Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="GraphicsHelpers.h">
+      <Filter>Renderers</Filter>
+    </ClInclude>
+    <ClInclude Include="NodeTypeStartGetCustom.h">
+      <Filter>Imgui\Node Editor\Nodes\Start</Filter>
+    </ClInclude>
+    <ClInclude Include="NodeTypeStartSetCustom.h">
+      <Filter>Imgui\Node Editor\Nodes\Start</Filter>
+    </ClInclude>
+    <ClInclude Include="VFXSystemComponent.h">
+      <Filter>GameObject and Component\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="ParticleEmitter.h">
+      <Filter>VFX\Particles</Filter>
+    </ClInclude>
+    <ClInclude Include="VFXMeshFactory.h">
+      <Filter>VFX</Filter>
+    </ClInclude>
+    <ClInclude Include="ParticleEmitterFactory.h">
+      <Filter>VFX\Particles</Filter>
+    </ClInclude>
+    <ClInclude Include="NodeTypeDecisionCoinFlip.h">
+      <Filter>Imgui\Node Editor\Nodes\Decision Tree\Decision</Filter>
+    </ClInclude>
+    <ClInclude Include="FlipACoinDecision.h">
+      <Filter>Decision Tree</Filter>
+    </ClInclude>
+    <ClInclude Include="NodeTypeUtilitiesBranching.h">
+      <Filter>Imgui\Node Editor\Nodes\Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="NodeTypeGameObjectSetRotation.h">
+      <Filter>Imgui\Node Editor\Nodes\Game Object</Filter>
+    </ClInclude>
+    <ClInclude Include="NodeTypeGameObjectGetRotation.h">
+      <Filter>Imgui\Node Editor\Nodes\Game Object</Filter>
+    </ClInclude>
+    <ClInclude Include="NodeTypeGameObjectRotate.h">
+      <Filter>Imgui\Node Editor\Nodes\Game Object</Filter>
+    </ClInclude>
+    <ClInclude Include="NodeTypeMathGreater.h">
+    </ClInclude>
+    <ClInclude Include="CameraSetting.h">
+      <Filter>Imgui\Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="CharacterController.h">
+      <Filter>PhysX</Filter>
+    </ClInclude>
+    <ClInclude Include="NodeTypeMathGreater.h">
+      <Filter>Imgui\Node Editor\Nodes\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="NodeTypeAudioPlayStep.h">
+      <Filter>Imgui\Node Editor\Nodes\Audio</Filter>
+    </ClInclude>
+    <ClInclude Include="NodeTypeAudioPlayRobotAttack.h">
+      <Filter>Imgui\Node Editor\Nodes\Audio</Filter>
+    </ClInclude>
+    <ClInclude Include="NodeTypeAudioPlayRobotDeath.h">
+      <Filter>Imgui\Node Editor\Nodes\Audio</Filter>
+    </ClInclude>
+    <ClInclude Include="NodeTypeAudioPlayRobotSearching.h">
+      <Filter>Imgui\Node Editor\Nodes\Audio</Filter>
+    </ClInclude>
+    <ClInclude Include="NodeTypeAudioPlayRobotPatrolling.h">
+      <Filter>Imgui\Node Editor\Nodes\Audio</Filter>
+    </ClInclude>
+    <ClInclude Include="NodeTypeAudioPlayRobotIdle.h">
+      <Filter>Imgui\Node Editor\Nodes\Audio</Filter>
+    </ClInclude>
+    <ClInclude Include="NodeTypeAudioPlayResearcherReactionExplosives.h">
+      <Filter>Imgui\Node Editor\Nodes\Audio</Filter>
+    </ClInclude>
+    <ClInclude Include="VFXEffect.h">
+      <Filter>VFX</Filter>
+    </ClInclude>
+    <ClInclude Include="NodeTypeVFXPlayVFX.h">
+      <Filter>Imgui\Node Editor\Nodes\VFX</Filter>
+    </ClInclude>
+    <ClInclude Include="NodeTypeVFXStopVFX.h">
+      <Filter>Imgui\Node Editor\Nodes\VFX</Filter>
+    </ClInclude>
+    <ClInclude Include="NodeTypeVariableGetVector3.h">
+      <Filter>Imgui\Node Editor\Nodes\Variables\Get</Filter>
+    </ClInclude>
+    <ClInclude Include="NodeTypeVariableSetVector3.h">
+      <Filter>Imgui\Node Editor\Nodes\Variables\Set</Filter>
+    </ClInclude>
+    <ClInclude Include="NodeTypeAudioPlaySFX.h">
+      <Filter>Imgui\Node Editor\Nodes\Audio</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Includes\ImGui\Core\widget_curve.h">
+      <Filter>Imgui\Widgets</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Includes\ImGui\Core\curve_v122.hpp">
+      <Filter>Imgui\Widgets</Filter>
+    </ClInclude>
+    <ClInclude Include="JsonWriter.h">
+      <Filter>Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="SerializerUtility.h">
+      <Filter>Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayerAnimationController.h" />
+    <ClInclude Include="NodeTypeVector3Add.h">
+      <Filter>Imgui\Node Editor\Nodes\Vector3</Filter>
+    </ClInclude>
+    <ClInclude Include="NodeTypeVector3Join.h">
+      <Filter>Imgui\Node Editor\Nodes\Vector3</Filter>
+    </ClInclude>
+    <ClInclude Include="NodeTypeVector3Split.h">
+      <Filter>Imgui\Node Editor\Nodes\Vector3</Filter>
+    </ClInclude>
+    <ClInclude Include="NodeTypeVector3Distance.h">
+      <Filter>Imgui\Node Editor\Nodes\Vector3</Filter>
+    </ClInclude>
+    <ClInclude Include="NodeTypeVector3Dot.h">
+      <Filter>Imgui\Node Editor\Nodes\Vector3</Filter>
+    </ClInclude>
+    <ClInclude Include="NodeTypeVector3Cross.h">
+      <Filter>Imgui\Node Editor\Nodes\Vector3</Filter>
+    </ClInclude>
+    <ClInclude Include="NodeTypeVector3Sub.h">
+      <Filter>Imgui\Node Editor\Nodes\Vector3</Filter>
+    </ClInclude>
+    <ClInclude Include="NodeTypeGameObjectMoveToPosition.h">
+      <Filter>Imgui\Node Editor\Nodes\Game Object</Filter>
+    </ClInclude>
+    <ClInclude Include="Interop.h">
+      <Filter>Imgui\Blueprints</Filter>
+    </ClInclude>
+    <ClInclude Include="NodeTypeGameObjectGetChildPosition.h">
+      <Filter>Imgui\Node Editor\Nodes\Game Object</Filter>
+    </ClInclude>
+    <ClInclude Include="NodeTypeStartSphereOnTriggerExit.h">
+      <Filter>Imgui\Node Editor\Nodes\Start</Filter>
+    </ClInclude>
+    <ClInclude Include="NodeTypeStartSphereOnTriggerEnter.h">
+      <Filter>Imgui\Node Editor\Nodes\Start</Filter>
+    </ClInclude>
+    <ClInclude Include="NodeTypeStartSphereOnTriggerStay.h">
+      <Filter>Imgui\Node Editor\Nodes\Start</Filter>
+    </ClInclude>
+    <ClInclude Include="NodeTypePlayerGetPosition.h">
+      <Filter>Imgui\Node Editor\Nodes\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayerControlWindow.h">
+      <Filter>Imgui\Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="VFXEditorWindow.h">
+      <Filter>Imgui\Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="BoxColliderComponent.h">
+      <Filter>GameObject and Component\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="GravityGloveEditor.h" />
+    <ClInclude Include="BoxLight.h">
+      <Filter>Light</Filter>
+    </ClInclude>
+    <ClInclude Include="BoxLightComponent.h">
+      <Filter>GameObject and Component\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="SpotLight.h">
+      <Filter>Light</Filter>
+    </ClInclude>
+    <ClInclude Include="SpotLightComponent.h">
+      <Filter>GameObject and Component\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="LightRenderer.h">
+      <Filter>Renderers</Filter>
+    </ClInclude>
+    <ClInclude Include="hasher.h">
+      <Filter>Imgui\Node Editor\Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="NodeTypeAudioPlayResearcherEvent.h">
+      <Filter>Imgui\Node Editor\Nodes\Audio</Filter>
+    </ClInclude>
+    <ClInclude Include="NodeTypeActionPatrol.h">
+      <Filter>Imgui\Node Editor\Nodes\Decision Tree\Action</Filter>
+    </ClInclude>
+    <ClInclude Include="NodeTypeAddForce.h">
+      <Filter>Imgui\Node Editor\Nodes\Game Object</Filter>
+    </ClInclude>
+    <ClInclude Include="NodeTypeEnemySpawn.h">
+      <Filter>Imgui\Node Editor\Nodes\Game Object</Filter>
+    </ClInclude>
+    <ClInclude Include="PostMasterStructs.h">
+      <Filter>Post Master</Filter>
+    </ClInclude>
+    <ClInclude Include="SphereColliderComponent.h">
+      <Filter>GameObject and Component\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="ConvexMeshColliderComponent.h">
+      <Filter>GameObject and Component\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayerReportCallback.h">
+      <Filter>PhysX</Filter>
+    </ClInclude>
+    <ClInclude Include="NodeTypeUtilityInvertBool.h" />
+    <ClInclude Include="NodeTypeGameObjectRotateDegrees.h">
+      <Filter>Imgui\Node Editor\Nodes\Game Object</Filter>
+    </ClInclude>
+    <ClInclude Include="EnemyReportCallback.h" />
+    <ClInclude Include="EnvironmentLightWindow.h">
+      <Filter>Imgui\Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="PostMasterHelpers.h">
+      <Filter>Post Master</Filter>
+    </ClInclude>
+    <ClInclude Include="PostProcessingWindow.h">
+      <Filter>Imgui\Windows</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="FullscreenShaderStructs.hlsli">
+      <Filter>Shaders\Fullscreen</Filter>
+    </None>
+    <None Include="ParticleShaderStructs.hlsli">
+      <Filter>Shaders\Particle</Filter>
+    </None>
+    <None Include="SpriteShaderStructs.hlsli">
+      <Filter>Shaders\Sprite</Filter>
+    </None>
+    <None Include="SpriteVFXShaderStructs.hlsli">
+      <Filter>Shaders\Sprite</Filter>
+    </None>
+    <None Include="VFXShaderStructs.hlsli">
+      <Filter>Shaders\VFX</Filter>
+    </None>
+    <None Include="LineShaderStructs.hlsli">
+      <Filter>Shaders\Line</Filter>
+    </None>
+    <None Include="ShaderStructs.hlsli">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="PBRAmbience.hlsli">
+      <Filter>Shaders\PBR</Filter>
+    </None>
+    <None Include="PBRDirectionalLight.hlsli">
+      <Filter>Shaders\PBR</Filter>
+    </None>
+    <None Include="MathHelpers.hlsli">
+      <Filter>Shaders\PBR</Filter>
+    </None>
+    <None Include="SamplingFunctions.hlsli">
+      <Filter>Shaders\PBR</Filter>
+    </None>
+    <None Include="DetailNormalHelpers.hlsli">
+      <Filter>Shaders\PBR</Filter>
+    </None>
+    <None Include="DeferredPBRFunctions.hlsli">
+      <Filter>Shaders\Deferred</Filter>
+    </None>
+    <None Include="DeferredSamplingFunctions.hlsli">
+      <Filter>Shaders\Deferred</Filter>
+    </None>
+    <None Include="DeferredShaderStructs.hlsli">
+      <Filter>Shaders\Deferred</Filter>
+    </None>
+    <None Include="Math2D.inl">
+      <Filter>Imgui\Blueprints</Filter>
+    </None>
+    <None Include="cpp.hint" />
+    <None Include="..\Includes\ImGui\NodeEditor\imgui_bezier_math.inl">
+      <Filter>Imgui\Node Editor\Core</Filter>
+    </None>
+    <None Include="..\Includes\ImGui\NodeEditor\imgui_extra_math.inl">
+      <Filter>Imgui\Node Editor\Core</Filter>
+    </None>
+    <None Include="..\Includes\ImGui\NodeEditor\imgui_node_editor_internal.inl">
+      <Filter>Imgui\Node Editor\Core</Filter>
+    </None>
+    <None Include="DecalShaderStructs.hlsli">
+      <Filter>Shaders\Decal</Filter>
+    </None>
+    <None Include="PointLightShaderStructs.hlsli">
+      <Filter>Shaders\PointLight</Filter>
+    </None>
+    <None Include="BoxLightShaderStructs.hlsli">
+      <Filter>Shaders\BoxLight</Filter>
+    </None>
+    <None Include="SpotLightShaderStructs.hlsli">
+      <Filter>Shaders\SpotLight</Filter>
+    </None>
+    <None Include="VolumetricLightShaderStructs.hlsli">
+      <Filter>Shaders\Volumetric Light</Filter>
+    </None>
+    <None Include="ShadowSampling.hlsli">
+      <Filter>Shaders\Shadows</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Shaders">
+      <UniqueIdentifier>{b8ff449c-90a2-412d-8c8f-11aa9df3ed7a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source files">
+      <UniqueIdentifier>{25b97a06-cfe1-44e4-80b9-da0950fe6fd6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header files">
+      <UniqueIdentifier>{4ce50fad-fc5f-4be2-abe5-4a737d5a6717}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Animation">
+      <UniqueIdentifier>{6d737178-fa98-4199-8590-3c2c9525d9c7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Audio">
+      <UniqueIdentifier>{60d76b97-725c-468b-8184-451a8f7df169}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Debug Tools">
+      <UniqueIdentifier>{f3c45a4a-ba76-429d-a437-b60f2160ab0c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameObject and Component">
+      <UniqueIdentifier>{7de73c83-8238-4c49-b7b8-4cd8ba3b4f31}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameObject and Component\Component">
+      <UniqueIdentifier>{02ffc32a-0ffc-4212-ac60-501fe5c4f812}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Camera">
+      <UniqueIdentifier>{d2f468fd-4d8f-4bc0-8383-4c2ea8ca84ab}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Collision">
+      <UniqueIdentifier>{c0487e25-2768-4381-81cd-e7180461866e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Light">
+      <UniqueIdentifier>{31d7a35e-0ed4-42cc-bb2a-0d7f9bc2c78e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Model">
+      <UniqueIdentifier>{12ecd6ab-d23c-4df9-9e11-b2d59f34eb4b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sprite">
+      <UniqueIdentifier>{aaaccb51-9afb-425c-9df1-e1bea8537179}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Text">
+      <UniqueIdentifier>{426fb3da-8ad2-4cf1-9531-2eb1357ecc59}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="VFX">
+      <UniqueIdentifier>{6edff376-2918-4d3c-8d13-9e8f6e3fc501}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Precompiled">
+      <UniqueIdentifier>{875f9d24-ebc4-4125-9483-d42ed6ab8585}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Utility">
+      <UniqueIdentifier>{5c00f0f2-c35d-4d1a-afc5-0073457db6b4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Input">
+      <UniqueIdentifier>{4c3b644f-8786-4eab-9932-57a1bf6e5c99}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Post Master">
+      <UniqueIdentifier>{5d9eea20-29ac-4f72-8f34-dc1241467fc5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine Core">
+      <UniqueIdentifier>{e819af97-a99f-494d-8aa1-47511d4fd45e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders\Fullscreen">
+      <UniqueIdentifier>{4d21d2bd-0ebf-463b-8b72-815baedba604}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders\Particle">
+      <UniqueIdentifier>{381ed3b8-9aae-4868-bace-03a49f2c229e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders\Sprite">
+      <UniqueIdentifier>{38b8cc25-e0c2-405a-b976-6f181cf06819}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders\VFX">
+      <UniqueIdentifier>{341f3a55-486c-48c7-a77e-70d923abe202}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders\Outline">
+      <UniqueIdentifier>{c2001b22-a421-41b8-bff6-6c64f61bef03}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders\Line">
+      <UniqueIdentifier>{6f5472e4-bf51-43eb-a65f-4cdb78bf9112}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Renderers">
+      <UniqueIdentifier>{804ee6d8-8119-47c7-b01f-f228842feb9e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI">
+      <UniqueIdentifier>{a7555d10-6cc0-4364-a51b-aef3693f1ac2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Navmesh and Pathfinding">
+      <UniqueIdentifier>{686fce43-a286-40b1-b646-57125b4da049}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="StringID">
+      <UniqueIdentifier>{d132a45d-b010-4821-b878-4b7a220fa409}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders\Render Passes">
+      <UniqueIdentifier>{06207d94-afdb-4cb0-94fc-33cbb94a4798}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders\PBR">
+      <UniqueIdentifier>{ed9bc840-c5e4-4389-9833-bcec471a550a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders\Animation">
+      <UniqueIdentifier>{df32f5a3-609b-4e20-9289-b9a0c2b358f5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders\Instanced">
+      <UniqueIdentifier>{5578e42d-5b05-43eb-aa3b-36cf45d8f2d8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="PhysX">
+      <UniqueIdentifier>{1645c7e6-7786-411c-b472-6b687e4bb7e0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders\Deferred">
+      <UniqueIdentifier>{cc09a61a-ce12-4e9a-a6ca-e9ecc120c994}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Imgui">
+      <UniqueIdentifier>{e133abf3-57ac-489e-828a-4dc34449865c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Imgui\Manager">
+      <UniqueIdentifier>{cf9224c9-d296-4081-b1d8-7c2bb6b21f0d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Imgui\Blueprints">
+      <UniqueIdentifier>{61efb602-1edc-4871-bb93-611607e3cbf2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Imgui\Node Editor">
+      <UniqueIdentifier>{211fa6bb-7d1c-4a02-9f6e-71b96259a94e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Imgui\Node Editor\Nodes">
+      <UniqueIdentifier>{bbbcd0c0-46e2-4f03-b955-0181c1622d4a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders\Deferred Render Passes">
+      <UniqueIdentifier>{4e1a5e39-8e5c-4cda-9552-2d86c85c158e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Imgui\Imgui Implementations">
+      <UniqueIdentifier>{4732a842-0d10-4335-b186-3c6e2bbf5b3a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Imgui\Node Editor\Node Editor Managers">
+      <UniqueIdentifier>{87b4700a-15b2-426d-b032-f3d2463faf7e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Imgui\Node Editor\Node Editor Managers\NodeType Managers">
+      <UniqueIdentifier>{86d033ab-85d5-4320-9d24-b75cab10223b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders\Vertex Paint">
+      <UniqueIdentifier>{286f625e-fdc4-4c90-8c1a-1a40c07bbbcb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Imgui\Node Editor\Core">
+      <UniqueIdentifier>{cab40948-499e-4b38-a960-0516e5d2b1e9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Imgui\Core">
+      <UniqueIdentifier>{100a0dc1-32c8-4e4b-8d00-f091b7106618}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Decision Tree">
+      <UniqueIdentifier>{b8340d6e-3231-47ae-bf03-265453331bc3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Decal">
+      <UniqueIdentifier>{4e7bf04d-b17d-4c9d-92ad-e4b07cbbe120}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders\Decal">
+      <UniqueIdentifier>{fbb72eea-2e5f-4249-b6ca-925d6233bdde}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Imgui\Windows">
+      <UniqueIdentifier>{4ca55a53-75be-4929-b51e-694576e6c8a6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Imgui\Node Editor\Nodes\Base Type">
+      <UniqueIdentifier>{b7cdf648-4b6e-4eaa-b986-8766bdbc5020}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Imgui\Node Editor\Nodes\Variables">
+      <UniqueIdentifier>{94d2d326-5412-46b6-b23a-c2eedacb6ab6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Imgui\Node Editor\Nodes\Trigger">
+      <UniqueIdentifier>{91609e06-4217-4759-beb5-82276c4b60bc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Imgui\Node Editor\Nodes\Math">
+      <UniqueIdentifier>{615e6ff6-4a3a-4b26-8b02-d27da0b082b2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Imgui\Node Editor\Nodes\Input">
+      <UniqueIdentifier>{7642cd3e-92c8-418d-a31f-1cfe24e1a16e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Imgui\Node Editor\Nodes\Game Object">
+      <UniqueIdentifier>{8bbe5362-d12e-4d25-9a8f-5cd174138235}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Imgui\Node Editor\Nodes\Decision Tree">
+      <UniqueIdentifier>{ca9bd566-2c6c-4fa1-8c61-915990d8a05d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Imgui\Node Editor\Nodes\Decision Tree\Decision">
+      <UniqueIdentifier>{51c6e420-e832-4070-bd70-9d8819a8d136}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Imgui\Node Editor\Nodes\Decision Tree\Action">
+      <UniqueIdentifier>{b6faa346-a15d-4302-a326-2f5d9d4ee004}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Imgui\Node Editor\Nodes\Start">
+      <UniqueIdentifier>{a78b3e1e-7127-4471-8739-1b5baf7958e5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Imgui\Node Editor\Nodes\Time">
+      <UniqueIdentifier>{2e592059-39e1-49a6-a023-a4d3ba392358}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Imgui\Node Editor\Nodes\Debug">
+      <UniqueIdentifier>{d29438b5-09ae-4a7d-a36f-ae3ad966a5ad}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Imgui\Node Editor\Utilities">
+      <UniqueIdentifier>{bfd097c4-3b85-4aca-a05b-5ece8695f94b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Imgui\Node Editor\Nodes\Variables\Set">
+      <UniqueIdentifier>{75ec4e39-ed4a-4e8d-849c-456f7e92334a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Imgui\Node Editor\Nodes\Variables\Get">
+      <UniqueIdentifier>{c77b8dcc-917a-4872-8dfc-bb6632a1befb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="VFX\Particles">
+      <UniqueIdentifier>{cb6066cf-24a2-4f78-b1eb-a8c7aae1a535}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Imgui\Node Editor\Nodes\Utilities">
+      <UniqueIdentifier>{833d2d1f-1cc9-4040-ae9a-0765b5b0130a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Imgui\Node Editor\Nodes\Audio">
+      <UniqueIdentifier>{fb119114-266c-4e11-92b9-d9a0d1955cdd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders\PointLight">
+      <UniqueIdentifier>{74affbc5-dd5c-4d83-a2bf-e2c3875912c9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Imgui\Node Editor\Nodes\VFX">
+      <UniqueIdentifier>{85ecef19-45a5-483c-bf6f-9e770b31e79b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders\Skybox">
+      <UniqueIdentifier>{182a2bc5-f441-4560-b886-27d301c4e918}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Imgui\Widgets">
+      <UniqueIdentifier>{8a53a5f2-4ecd-4d71-abbe-c564d545b6e9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Imgui\Node Editor\Nodes\Vector3">
+      <UniqueIdentifier>{b2a5782d-6f96-49a0-90de-269313d3f11b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Imgui\Node Editor\Nodes\Player">
+      <UniqueIdentifier>{b9f40423-9f39-4bc1-bd31-92f4e33a1488}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders\BoxLight">
+      <UniqueIdentifier>{613103d5-2526-412e-9032-323c4308a135}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders\Volumetric Light">
+      <UniqueIdentifier>{9d7a184d-828f-48cb-9a53-9ef4bd0d25e8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders\SpotLight">
+      <UniqueIdentifier>{7cce27cf-d4c3-4bcb-9250-79de89449fb5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders\Shadows">
+      <UniqueIdentifier>{aba6652c-120c-4f66-9a31-b77b5a5a3a84}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <Natvis Include="..\Includes\ImGui\NodeEditor\imgui_node_editor.natvis">
+      <Filter>Imgui\Node Editor\Core</Filter>
+    </Natvis>
+  </ItemGroup>
+</Project>
