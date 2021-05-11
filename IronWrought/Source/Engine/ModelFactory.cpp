@@ -628,7 +628,7 @@ ID3D11ShaderResourceView* CModelFactory::GetShaderResourceView(ID3D11Device* aDe
 		std::copy(errorTexturePath.begin(), errorTexturePath.end(), wideErrorPath);
 		wideErrorPath[errorTexturePath.length()] = 0;
 
-		DirectX::CreateDDSTextureFromFile(aDevice, wideErrorPath, nullptr, &shaderResourceView);
+		result = DirectX::CreateDDSTextureFromFile(aDevice, wideErrorPath, nullptr, &shaderResourceView);
 		delete[] wideErrorPath;
 	}
 

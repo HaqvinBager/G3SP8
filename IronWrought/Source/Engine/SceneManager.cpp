@@ -72,8 +72,8 @@ CScene* CSceneManager::CreateEmpty()
 
 CScene* CSceneManager::CreateScene(const std::string& aSceneJson)
 {
-	//CScene* scene = Instantiate();
-	CScene* scene = CreateEmpty();
+	CScene* scene = Instantiate();
+	//CScene* scene = CreateEmpty();
 
 	Binary::SLevelData binLevelData = CBinReader::Load(ASSETPATH("Assets/Generated/" + aSceneJson + "/" + aSceneJson + ".bin"));
 
@@ -374,7 +374,6 @@ void CSceneManager::AddInstancedModelComponents(CScene& aScene, const std::vecto
 			gameObject->AddComponent<CInstancedModelComponent>(*gameObject, ASSETPATH(assetPath), transforms);
 			aScene.AddInstance(gameObject);
 		}
-
 	}
 }
 
@@ -524,7 +523,7 @@ void CSceneManager::AddPlayer(CScene& aScene, RapidObject someData)
 	aScene.AddInstance(camera);
 	aScene.AddInstance(gravityGloveSlot);
 	aScene.AddCamera(camera->GetComponent<CCameraComponent>(), ESceneCamera::PlayerFirstPerson);
-	//aScene.MainCamera(ESceneCamera::PlayerFirstPerson);
+	aScene.MainCamera(ESceneCamera::PlayerFirstPerson);
 	aScene.Player(player);
 }
 

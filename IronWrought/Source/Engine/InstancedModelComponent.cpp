@@ -13,10 +13,13 @@ CInstancedModelComponent::CInstancedModelComponent(CGameObject& aParent, std::st
 	std::vector<std::string> materialNames = myModel->GetModelInstanceData().myMaterialNames;
 	for (auto& materialName : materialNames)
 	{
-		if (materialName.substr(materialName.size() - 6, 2) == "AL")
+		if (materialName.size() > 6)
 		{
-			myRenderWithAlpha = true;
-			break;
+			if (materialName.substr(materialName.size() - 6, 2) == "AL")
+			{
+				myRenderWithAlpha = true;
+				break;
+			}
 		}
 	}
 }
