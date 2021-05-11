@@ -72,8 +72,8 @@ CScene* CSceneManager::CreateEmpty()
 
 CScene* CSceneManager::CreateScene(const std::string& aSceneJson)
 {
-	//CScene* scene = Instantiate();
-	CScene* scene = CreateEmpty();
+	CScene* scene = Instantiate();
+	//CScene* scene = CreateEmpty();
 
 	Binary::SLevelData binLevelData = CBinReader::Load(ASSETPATH("Assets/Generated/" + aSceneJson + "/" + aSceneJson + ".bin"));
 
@@ -214,12 +214,12 @@ void CSceneManager::SetTransforms(CScene& aScene, RapidArray someData)
 		transform->Scale({ t["scale"]["x"].GetFloat(),
 							  t["scale"]["y"].GetFloat(),
 							  t["scale"]["z"].GetFloat() });
-		transform->Position({ t["position"]["x"].GetFloat(),
-							  t["position"]["y"].GetFloat(),
-							  t["position"]["z"].GetFloat() });
 		transform->Rotation({ t["rotation"]["x"].GetFloat(),
 							  t["rotation"]["y"].GetFloat(),
 							  t["rotation"]["z"].GetFloat() });
+		transform->Position({ t["position"]["x"].GetFloat(),
+							  t["position"]["y"].GetFloat(),
+							  t["position"]["z"].GetFloat() });
 	}
 }
 
@@ -229,8 +229,8 @@ void CSceneManager::SetTransforms(CScene& aScene, const std::vector<Binary::STra
 	{
 		CTransformComponent* transform = aScene.FindObjectWithID(t.instanceID)->myTransform;
 		transform->Scale(t.scale);
-		transform->Position(t.pos);
 		transform->Rotation(t.rot);
+		transform->Position(t.pos);
 	}
 }
 
@@ -374,7 +374,6 @@ void CSceneManager::AddInstancedModelComponents(CScene& aScene, const std::vecto
 			gameObject->AddComponent<CInstancedModelComponent>(*gameObject, ASSETPATH(assetPath), transforms);
 			aScene.AddInstance(gameObject);
 		}
-
 	}
 }
 

@@ -101,7 +101,10 @@ void CCameraControllerComponent::Update()
 		case ECameraMode::UnlockCursor:
 			break;
 
-		default:break;
+		default:
+			CEngine::GetInstance()->GetActiveScene().MainCamera(ESceneCamera::FreeCam);
+			UpdateFreeCam();
+			break;
 	}
 }
 
