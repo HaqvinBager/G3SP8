@@ -524,7 +524,7 @@ void CSceneManager::AddPlayer(CScene& aScene, RapidObject someData)
 	aScene.AddInstance(camera);
 	aScene.AddInstance(gravityGloveSlot);
 	aScene.AddCamera(camera->GetComponent<CCameraComponent>(), ESceneCamera::PlayerFirstPerson);
-	aScene.MainCamera(ESceneCamera::PlayerFirstPerson);
+	//aScene.MainCamera(ESceneCamera::PlayerFirstPerson);
 	aScene.Player(player);
 }
 

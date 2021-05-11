@@ -93,15 +93,18 @@ void CCameraControllerComponent::Update()
 			UpdateFreeCam();
 			break;
 
-		case ECameraMode::PlayerFirstPerson:
-			CEngine::GetInstance()->GetActiveScene().MainCamera(ESceneCamera::PlayerFirstPerson);
-			UpdatePlayerFirstPerson();
-			break;
+		//case ECameraMode::PlayerFirstPerson:
+		//	CEngine::GetInstance()->GetActiveScene().MainCamera(ESceneCamera::PlayerFirstPerson);
+		//	UpdatePlayerFirstPerson();
+		//	break;
 
 		case ECameraMode::UnlockCursor:
 			break;
 
-		default:break;
+		default:
+			CEngine::GetInstance()->GetActiveScene().MainCamera(ESceneCamera::FreeCam);
+			UpdateFreeCam();
+			break;
 	}
 }
 
