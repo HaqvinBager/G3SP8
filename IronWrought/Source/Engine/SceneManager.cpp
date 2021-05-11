@@ -214,12 +214,12 @@ void CSceneManager::SetTransforms(CScene& aScene, RapidArray someData)
 		transform->Scale({ t["scale"]["x"].GetFloat(),
 							  t["scale"]["y"].GetFloat(),
 							  t["scale"]["z"].GetFloat() });
-		transform->Position({ t["position"]["x"].GetFloat(),
-							  t["position"]["y"].GetFloat(),
-							  t["position"]["z"].GetFloat() });
 		transform->Rotation({ t["rotation"]["x"].GetFloat(),
 							  t["rotation"]["y"].GetFloat(),
 							  t["rotation"]["z"].GetFloat() });
+		transform->Position({ t["position"]["x"].GetFloat(),
+							  t["position"]["y"].GetFloat(),
+							  t["position"]["z"].GetFloat() });
 	}
 }
 
@@ -229,8 +229,8 @@ void CSceneManager::SetTransforms(CScene& aScene, const std::vector<Binary::STra
 	{
 		CTransformComponent* transform = aScene.FindObjectWithID(t.instanceID)->myTransform;
 		transform->Scale(t.scale);
-		transform->Position(t.pos);
 		transform->Rotation(t.rot);
+		transform->Position(t.pos);
 	}
 }
 
