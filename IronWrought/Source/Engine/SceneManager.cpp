@@ -550,7 +550,7 @@ void CSceneManager::AddEnemyComponents(CScene& aScene, RapidArray someData)
 		}
 		gameObject->AddComponent<CEnemyComponent>(*gameObject, settings);
 
-		gameObject->AddComponent<CVFXSystemComponent>(*gameObject, ASSETPATH("Assets/Graphics/VFX/JSON/VFXSystem_Enemy.json"));
+		//gameObject->AddComponent<CVFXSystemComponent>(*gameObject, ASSETPATH("Assets/Graphics/VFX/JSON/VFXSystem_Enemy.json"));
 	}
 }
 

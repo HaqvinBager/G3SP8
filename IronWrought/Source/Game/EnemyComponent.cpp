@@ -65,7 +65,7 @@ void CEnemyComponent::Start()
 		attack->SetTarget(myPlayer->myTransform);
 	myBehaviours.push_back(attack);
 
-	this->GameObject().GetComponent<CVFXSystemComponent>()->EnableEffect(0);
+	//this->GameObject().GetComponent<CVFXSystemComponent>()->EnableEffect(0);
 
 	if (GameObject().GetComponent<CRigidBodyComponent>()) {
 		myRigidBodyComponent = GameObject().GetComponent<CRigidBodyComponent>();
