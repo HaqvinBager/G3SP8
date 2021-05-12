@@ -11,7 +11,8 @@ public class CustomEventTrigger : MonoBehaviour
 
     public void OnValidate()
     {
-        GetComponent<BoxCollider>().isTrigger = true;
+        if (TryGetComponent(out Collider collider))
+            collider.isTrigger = true;
     }
 
     private void OnTriggerEnter(Collider other)
