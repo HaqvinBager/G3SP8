@@ -8,20 +8,21 @@ using UnityEditor.SceneManagement;
 
 public class ExporterBin
 {
-    private static string Base { get => "Assets/Generated/"; }
+    //private static string Base { get => "Assets/Generated/"; }
 
     BinaryWriter binWriter = null;
 
     public ExporterBin(string aFileName)
     {
-        string rootFolder = Base;
+        string rootFolder = MagicString.GeneratedPath;
         string folder = rootFolder + aFileName;
 
         if (!Directory.Exists(Application.dataPath + folder))
         {
             Directory.CreateDirectory(rootFolder + aFileName);
         }
-
+        
+           
         AssetDatabase.Refresh();
 
         binWriter = new BinaryWriter(new FileStream(folder + "\\" + aFileName + ".bin", FileMode.Create));
