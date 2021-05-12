@@ -22,17 +22,16 @@ public class DrawSphere : MonoBehaviour
 
     public void SetColorGreen()
     {
-        color = Color.green;
+        SetColor(Color.green);
     }
 
     public void SetColorRed()
     {
-        color = Color.red;
+        SetColor(Color.red);
     }
 
     public void SetColor(Color aColor)
     {
         color = aColor;
     }
-
 }
