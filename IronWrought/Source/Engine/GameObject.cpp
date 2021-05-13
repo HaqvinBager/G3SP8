@@ -22,63 +22,50 @@ CGameObject::~CGameObject()
 
 void CGameObject::Awake()
 {
-	for (size_t i = 0; i < myComponents.size(); ++i)
-	{
-		myComponents[i]->Awake();
-	}
-
-	for (size_t i = 0; i < myComponents.size(); ++i)
-	{
-		myComponents[i]->OnEnable();
-	}
+	for (const auto& component : myComponents)
+		component->Awake();
 }
 
 void CGameObject::Start()
 {
-	for (size_t i = 0; i < myComponents.size(); ++i)
+	for (const auto& component : myComponents)
 	{
-		if (CBehaviour* behaviour = dynamic_cast<CBehaviour*>(myComponents[i].get()))
-		{
-			if (behaviour->Enabled())
-			{
-				myComponents[i]->Start();
-			}
-		}
-		else
-		{
-			myComponents[i]->Start();
-		}
+		if (!component->Enabled())
+			continue;
+		
+		component->Start();
 	}
 }
 
 void CGameObject::Update()
 {
-	for (size_t i = 0; i < myComponents.size(); ++i)
+	for (const auto& component : myComponents)
 	{
-		if (CBehaviour* behaviour = dynamic_cast<CBehaviour*>(myComponents[i].get()))
-		{
-			if (behaviour->Enabled())
-			{
-				myComponents[i]->Update();
-			}
-		}
-		else
-		{
-			myComponents[i]->Update();
-		}
+		if (!component->Enabled())
+			continue;
+
+		component->Update();
 	}
 }
 
 void CGameObject::FixedUpdate()
 {
-	for (size_t i = 0; i < myComponents.size(); ++i)
+	for (const auto& component : myComponents)
 	{
-		myComponents[i]->FixedUpdate();
+		component->FixedUpdate();
 	}
 }
 
 void CGameObject::LateUpdate()
 {
+	for (const auto& component : myComponents)
+	{
+		if (!component->Enabled())
+			continue;
+
+		component->LateUpdate();
+
+	}
 	for (size_t i = 0; i < myComponents.size(); ++i)
 	{
 		myComponents[i]->LateUpdate();
@@ -89,20 +76,12 @@ void CGameObject::Active(bool aActive)
 {
 	myIsActive = aActive;
 
-	if (aActive)
-	{
-		for (size_t i = 0; i < myComponents.size(); ++i)
-		{
-			myComponents[i]->OnEnable();
-		}
-	}
-	else
-	{
-		for (size_t i = 0; i < myComponents.size(); ++i)
-		{
-			myComponents[i]->OnDisable();
-		}
-	}
+	if (!aActive)
+		for (const auto& component : myComponents)		
+			component->OnEnable();		
+	else	
+		for (const auto& component : myComponents)	
+			component->OnDisable();		
 }
 
 

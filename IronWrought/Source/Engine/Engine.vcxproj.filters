@@ -903,6 +903,10 @@
     <ClCompile Include="PostProcessingWindow.cpp">
       <Filter>Imgui\Windows</Filter>
     </ClCompile>
+    <ClCompile Include="CustomEventComponent.cpp">
+      <Filter>GameObject and Component\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="CustomEventListenerComponent.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AnimationComponent.h">
@@ -1647,6 +1651,10 @@
     <ClInclude Include="PostProcessingWindow.h">
       <Filter>Imgui\Windows</Filter>
     </ClInclude>
+    <ClInclude Include="CustomEventComponent.h">
+      <Filter>GameObject and Component\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="CustomEventListenerComponent.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="FullscreenShaderStructs.hlsli">

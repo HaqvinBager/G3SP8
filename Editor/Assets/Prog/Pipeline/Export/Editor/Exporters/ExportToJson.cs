@@ -55,7 +55,7 @@ public static class Json
 
     public static void Save(string name, StringBuilder aBuilder)
     {
-        string savePath = System.IO.Directory.GetCurrentDirectory() + "\\Assets\\Generated\\";
+        string savePath = System.IO.Directory.GetCurrentDirectory() + "\\" + MagicString.GeneratedPath;// Assets\\Generated\\";
         if (!System.IO.Directory.Exists(savePath))
             System.IO.Directory.CreateDirectory(savePath);
 
@@ -67,9 +67,9 @@ public static class Json
         myCurrentExportJson.Remove(myCurrentExportJson.Length - 3, 1);/// = ' ';
         myCurrentExportJson.Append("\n]");
         myCurrentExportJson.Append("\n}");
+       
 
-
-        string savePath = System.IO.Directory.GetCurrentDirectory() + "\\Assets\\Generated\\" + aFolder + "\\";
+        string savePath = System.IO.Directory.GetCurrentDirectory() + "\\" + MagicString.GeneratedPath + aFolder + "\\";
         if (!System.IO.Directory.Exists(savePath))
             System.IO.Directory.CreateDirectory(savePath);
 
@@ -94,7 +94,7 @@ public static class Json
         StringBuilder jsonString = new StringBuilder();
         jsonString.Append(JsonUtility.ToJson(someDataToExport));
 
-        string savePath = System.IO.Directory.GetCurrentDirectory() + "\\Assets\\Generated\\";
+        string savePath = System.IO.Directory.GetCurrentDirectory() + "\\" + MagicString.GeneratedPath; // Assets\\Generated\\";
         if (!System.IO.Directory.Exists(savePath))
             System.IO.Directory.CreateDirectory(savePath);
 

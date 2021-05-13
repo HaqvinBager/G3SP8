@@ -64,10 +64,8 @@ void CCapsuleColliderComponent::Update()
 
 void CCapsuleColliderComponent::OnEnable()
 {
-	Enabled(true);
 }
 
 void CCapsuleColliderComponent::OnDisable()
 {
-	Enabled(false);
 }

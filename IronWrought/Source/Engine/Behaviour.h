@@ -12,7 +12,7 @@ public:
 	virtual void OnEnable() = 0;
 	virtual void OnDisable() = 0;
 
-	void Enabled(bool aEnabled) { 
+	void Enabled(bool aEnabled) override { 
 		if (myEnabled != aEnabled)
 		{
 			if (aEnabled == true)
@@ -22,7 +22,7 @@ public:
 		}
 		myEnabled = aEnabled;
 	}
-	const bool Enabled() const { return myEnabled; }
+	const bool Enabled() const override { return myEnabled; }
 
 protected:
 	bool myEnabled;

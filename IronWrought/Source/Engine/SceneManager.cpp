@@ -33,6 +33,8 @@
 #include <ppl.h>
 #include <concurrent_unordered_map.h>
 #include <concurrent_vector.h>
+#include "CustomEventComponent.h"
+#include "CustomEventListenerComponent.h"
 
 
 CScene* CSceneManager::ourLastInstantiatedScene = nullptr;
@@ -94,6 +96,9 @@ CScene* CSceneManager::CreateScene(const std::string& aSceneJson)
 		AddPointLights(*scene, binLevelData.myPointLights);
 		AddModelComponents(*scene, binLevelData.myModels);
 		AddCollider(*scene, binLevelData.myColliders);
+
+		//CreateCustomEvents(*scene);
+		//CreateCustomEventListeners(*scene);
 
 		for (const auto& sceneData : scenes)
 		{
@@ -232,6 +237,21 @@ void CSceneManager::SetTransforms(CScene& aScene, const std::vector<Binary::STra
 		transform->Rotation(t.rot);
 		transform->Position(t.pos);
 	}
+}
+
+void CSceneManager::CreateCustomEvents(CScene& aScene)
+{
+	CGameObject* gameObject = new CGameObject(200, "Test GameObject Event");
+	gameObject->AddComponent<CCustomEventComponent>(*gameObject, "Test Event");
+	aScene.AddInstance(gameObject);
+}
+
+void CSceneManager::CreateCustomEventListeners(CScene& aScene)
+{
+	CGameObject* gameObject = new CGameObject(201, "Test GameObject Listener");
+	CCustomEventComponent* customEvent = aScene.FindObjectWithID(200)->GetComponent<CCustomEventComponent>();
+	gameObject->AddComponent<CCustomEventListenerComponent>(*gameObject, customEvent);
+	aScene.AddInstance(gameObject);
 }
 
 void CSceneManager::SetParents(CScene& aScene, RapidArray someData)

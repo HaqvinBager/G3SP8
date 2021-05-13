@@ -8,9 +8,7 @@ public:
 	virtual ~CComponent();
 
 	virtual void Awake() = 0;
-
 	virtual void Start() = 0;
-
 	virtual void Update() = 0;
 	virtual void FixedUpdate() { };
 	virtual void LateUpdate() { };
@@ -19,6 +17,9 @@ public:
 
 	virtual void OnEnable() {}
 	virtual void OnDisable() {}
+
+	virtual void Enabled(bool /*aEnabled*/) { }
+	virtual const bool Enabled() const { return true; }
 
 	template<class T>
 	T* GetComponent();

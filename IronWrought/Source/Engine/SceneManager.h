@@ -58,6 +58,8 @@ private:
 	static void AddTriggerEvents(CScene& aScene, RapidArray someData);
 	//static void AddTriggerEvents(CScene& aScene, const std::vector<Binary::SEventData>& someData);
 
+	static void CreateCustomEvents(CScene& aScene);
+	static void CreateCustomEventListeners(CScene& aScene);
 
 	static void SetParents(CScene& aScene, RapidArray someData);
 	

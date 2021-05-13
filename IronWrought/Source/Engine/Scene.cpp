@@ -241,7 +241,7 @@ void CScene::CallStartOnNewComponents()
 	{
 		CComponent* component = myStartComponents.front();
 		myStartComponents.pop();
-		component->OnEnable();
+		//component->OnEnable();
 		component->Start();
 	}
 }
@@ -841,6 +841,11 @@ bool CScene::ClearTextInstances()
 
 bool CScene::ClearGameObjects()
 {
+	for (auto& gameObject : myGameObjects)
+	{
+		gameObject->Active(false);
+	}
+
 	// So that we can see which index might be giving us issues.
 	for (size_t i = 0; i < myGameObjects.size(); ++i)
 	{
