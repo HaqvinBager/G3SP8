@@ -115,7 +115,7 @@ CScene* CSceneManager::CreateScene(const std::string& aSceneJson)
 		}
 	}
 
-	scene->InitNavMesh(ASSETPATH("Assets/Generated/" + aSceneJson + "ExportedNavMesh.obj"));
+	scene->InitNavMesh(ASSETPATH("Assets/Generated/SP_LayoutExportedNavMesh.obj"));
 	//scene->NavMesh();
 	//if (AddGameObjects(*scene, sceneData["Ids"].GetArray()))
 	//{

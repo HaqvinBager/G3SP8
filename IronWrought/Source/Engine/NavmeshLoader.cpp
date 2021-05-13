@@ -46,7 +46,7 @@ void CNavmeshLoader::MakeTriangles(aiMesh* aMesh, SNavMesh* aNavMesh)
 
 	for (UINT i = 0; i < numberOfFaces; ++i)
 	{
-		triangles[i] = new STriangle();
+		triangles.push_back(new STriangle());
 		for (UINT j = 0; j < 3; ++j) {
 			triangles[i]->myVertexPositions[j] = {
 				aMesh->mVertices[aMesh->mFaces[i].mIndices[j]].x,
