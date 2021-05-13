@@ -18,4 +18,11 @@ public class CustomGeneratorController : MonoBehaviour
             onCountComplete?.Invoke();
         }
     }
+
+    public void RegisterAdd(int aValue)
+    {
+        currentCount += aValue;
+        if (currentCount >= requiredCount)
+            onCountComplete?.Invoke();
+    }
 }
