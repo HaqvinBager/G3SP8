@@ -14,7 +14,7 @@ class CGameObject
 {
 	friend class CScene;
 public:
-	CGameObject(const int aInstanceID);
+	CGameObject(const int aInstanceID, const char* aName = "");
 	~CGameObject();
 
 	// Inits components. Remember to add CComponents.
@@ -51,12 +51,15 @@ public:
 	const bool IsStatic() const { return myIsStatic; }
 	void IsStatic(const bool aIsStatic) { myIsStatic = aIsStatic; }
 
+	const char* Name() const { return myName; }
+
 private:
 	std::vector<std::unique_ptr<CComponent>> myComponents;
 	//std::vector<CComponent*> myComponents;
 	bool myIsActive;
 	bool myIsStatic;
 	const int myInstanceID;
+	const char* myName;
 };
 
 template<class T, typename... Args >
@@ -81,8 +84,6 @@ inline void CGameObject::RemoveComponent()
 		{
 			std::swap(myComponents[i], myComponents[myComponents.size() - 1]);
 			myComponents.pop_back();
-			//myComponents[myComponents.size() - 1];
-			//myComponents[myComponents.size() - 1] = nullptr;
 		}
 	}
 }
