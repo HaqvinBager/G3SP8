@@ -37,10 +37,12 @@ void CPointLightComponent::Update()
 
 void CPointLightComponent::OnEnable()
 {
+    myPointLight->IsActive(true);
 }
 
 void CPointLightComponent::OnDisable()
 {
+    myPointLight->IsActive(false);
 }
 
 CPointLight* CPointLightComponent::GetPointLight() const

@@ -61,12 +61,10 @@ CModel* CModelComponent::GetMyModel() const
 
 void CModelComponent::OnEnable()
 {
-	Enabled(true);
 }
 
 void CModelComponent::OnDisable()
 {
-	Enabled(false);
 }
 
 const unsigned int CModelComponent::VertexPaintColorID() const 

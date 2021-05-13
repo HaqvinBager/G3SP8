@@ -357,6 +357,9 @@ void CLightRenderer::Render(CCameraComponent* aCamera, std::vector<CPointLight*>
 	myContext->IASetIndexBuffer(myPointLightIndexBuffer, DXGI_FORMAT_R32_UINT, 0);
 
 	for (CPointLight* currentInstance : aPointLightList) {
+		if (!currentInstance->IsActive())
+			continue;
+
 		const SM::Vector3& position = currentInstance->GetPosition();
 		const SM::Vector3& color = currentInstance->GetColor();
 		myPointLightBufferData.myToWorldSpace = currentInstance->GetWorldMatrix();

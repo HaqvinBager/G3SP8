@@ -22,6 +22,9 @@ public:
 	float GetIntensity() const;
 	float GetRange() const;
 
+	const bool IsActive() const { return myIsActive; }
+	void IsActive(const bool aIsActive) { myIsActive = aIsActive; }
+
 private:
 	Matrix myToWorld;
 	SM::Vector3 myPosition;
@@ -29,5 +32,6 @@ private:
 	float myIntensity;
 	float myRange;
 	bool myIsVolumetric;
+	bool myIsActive;
 };
 
