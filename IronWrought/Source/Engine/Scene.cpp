@@ -125,31 +125,17 @@ bool CScene::Init()
 
 bool CScene::InitNavMesh(const std::string& aPath)
 {
-	CNavmeshLoader* loader = new CNavmeshLoader();
-	myNavMesh = loader->LoadNavmesh(aPath);
+	CNavmeshLoader loader;
+	myNavMesh = loader.LoadNavmesh(aPath);
 
 	if (!myNavMesh)
 	{
 		return false;
 	}
 
-	std::vector<DirectX::SimpleMath::Vector3> positions;
-	positions.resize(myNavMesh->myTriangles.size() * 6);
-
-	for (UINT i = 0, j = 0; i < positions.size() && j < myNavMesh->myTriangles.size(); i += 6, j++)
-	{
-		positions[static_cast<int>(i + 0)] = myNavMesh->myTriangles[j]->myVertexPositions[0];
-		positions[static_cast<int>(i + 1)] = myNavMesh->myTriangles[j]->myVertexPositions[1];
-		positions[static_cast<int>(i + 2)] = myNavMesh->myTriangles[j]->myVertexPositions[2];
-		positions[static_cast<int>(i + 3)] = myNavMesh->myTriangles[j]->myVertexPositions[0];
-		positions[static_cast<int>(i + 4)] = myNavMesh->myTriangles[j]->myVertexPositions[1];
-		positions[static_cast<int>(i + 5)] = myNavMesh->myTriangles[j]->myVertexPositions[2];
-	}
-
-	delete loader;
-	loader = nullptr;
 	return true;
 }
+
 bool CScene::InitCanvas(const std::string& aPath)
 {
 	if (!myCanvas)
