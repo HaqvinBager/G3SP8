@@ -8,16 +8,6 @@
 #include <assimp/scene.h>
 #include "AStar.h"
 
-CNavmeshLoader::CNavmeshLoader()
-{
-
-}
-
-CNavmeshLoader::~CNavmeshLoader()
-{
-
-}
-
 bool CNavmeshLoader::Init()
 {
 	return false;
@@ -50,30 +40,30 @@ SNavMesh* CNavmeshLoader::LoadNavmesh(std::string aFilepath)
 
 void CNavmeshLoader::MakeTriangles(aiMesh* aMesh, SNavMesh* aNavMesh)
 {
-	std::vector<STriangle*> triangles;
-
 	UINT numberOfFaces = aMesh->mNumFaces;
+	std::vector<STriangle*> triangles;
+	triangles.reserve(numberOfFaces);
 
 	for (UINT i = 0; i < numberOfFaces; ++i)
 	{
-		triangles.emplace_back(new STriangle());
+		triangles.push_back(new STriangle());
 		for (UINT j = 0; j < 3; ++j) {
-			triangles.back()->myVertexPositions[j] = {
+			triangles[i]->myVertexPositions[j] = {
 				aMesh->mVertices[aMesh->mFaces[i].mIndices[j]].x,
 				aMesh->mVertices[aMesh->mFaces[i].mIndices[j]].y,
 				aMesh->mVertices[aMesh->mFaces[i].mIndices[j]].z
 			};
-			triangles.back()->myIndices[j] = aMesh->mFaces[i].mIndices[j];
+			triangles[i]->myIndices[j] = aMesh->mFaces[i].mIndices[j];
 		}
-		triangles.back()->myId = i;
-		triangles.back()->myCenterPosition = GetCentroid(triangles.back()->myVertexPositions[0], triangles.back()->myVertexPositions[1], triangles.back()->myVertexPositions[2]);
+		triangles[i]->myId = i;
+		triangles[i]->myCenterPosition = GetCentroid(triangles[i]->myVertexPositions[0], triangles[i]->myVertexPositions[1], triangles[i]->myVertexPositions[2]);
 	}
 
 	for (UINT i = 0; i < triangles.size() - 1; ++i) {
 		for (UINT j = i + 1; j < triangles.size(); ++j) {
 			if (AreNeighbors(triangles[i]->myIndices, triangles[j]->myIndices)) {
-				triangles[i]->myNeighbors.emplace_back(triangles[j]);
-				triangles[j]->myNeighbors.emplace_back(triangles[i]);
+				triangles[i]->myNeighbors.push_back(triangles[j]);
+				triangles[j]->myNeighbors.push_back(triangles[i]);
 			}
 		}
 	}
@@ -81,7 +71,7 @@ void CNavmeshLoader::MakeTriangles(aiMesh* aMesh, SNavMesh* aNavMesh)
 	aNavMesh->myTriangles = triangles;
 }
 
-DirectX::SimpleMath::Vector3 CNavmeshLoader::GetCentroid(DirectX::SimpleMath::Vector3& aVectorOne, DirectX::SimpleMath::Vector3& aVectorTwo, DirectX::SimpleMath::Vector3& aVectorThree)
+Vector3 CNavmeshLoader::GetCentroid(Vector3& aVectorOne, Vector3& aVectorTwo, Vector3& aVectorThree)
 {
 	return { 
 		(aVectorOne.x + aVectorTwo.x + aVectorThree.x) / 3.0f, 
@@ -107,19 +97,19 @@ bool CNavmeshLoader::AreNeighbors(UINT* someIndices, UINT* someOtherIndices)
 }
 
 //Simplified Cross product for 2D (xz-plane)
-inline float Sign(DirectX::SimpleMath::Vector3& p1, DirectX::SimpleMath::Vector3& p2, DirectX::SimpleMath::Vector3& p3)
+inline float Sign(Vector3& p1, Vector3& p2, Vector3& p3)
 {
 	return (p1.x - p3.x) * (p2.z - p3.z) - (p2.x - p3.x) * (p1.z - p3.z);
 }
 
-STriangle* SNavMesh::GetTriangleAtPoint(DirectX::SimpleMath::Vector3 aPosition)
+STriangle* SNavMesh::GetTriangleAtPoint(Vector3 aPosition)
 {
 	float d1, d2, d3;
 	bool hasNegativeSigns, hasPositiveSigns;
 
-	DirectX::SimpleMath::Vector3 p1;
-	DirectX::SimpleMath::Vector3 p2;
-	DirectX::SimpleMath::Vector3 p3;
+	Vector3 p1;
+	Vector3 p2;
+	Vector3 p3;
 
 	for (auto& tri : myTriangles) 
 	{

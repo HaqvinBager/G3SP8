@@ -50,8 +50,6 @@ public:
 class CNavmeshLoader
 {
 public:
-	CNavmeshLoader();
-	~CNavmeshLoader();
 	bool Init();
 
 	SNavMesh* LoadNavmesh(std::string aFilepath);

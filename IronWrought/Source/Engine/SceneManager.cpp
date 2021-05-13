@@ -22,7 +22,7 @@
 #include <EnemyComponent.h>
 #include <HealthPickupComponent.h>
 //#include <iostream>
-
+#include "NavmeshLoader.h"
 #include <BinReader.h>
 #include <PlayerControllerComponent.h>
 #include <AIController.h>
@@ -115,8 +115,8 @@ CScene* CSceneManager::CreateScene(const std::string& aSceneJson)
 		}
 	}
 
-
-
+	scene->InitNavMesh(ASSETPATH("Assets/Generated/SP_LayoutExportedNavMesh.obj"));
+	//scene->NavMesh();
 	//if (AddGameObjects(*scene, sceneData["Ids"].GetArray()))
 	//{
 	//	SetTransforms(*scene, sceneData["transforms"].GetArray());
