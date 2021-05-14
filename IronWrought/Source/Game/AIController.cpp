@@ -6,29 +6,62 @@
 #include "LineInstance.h"
 #include "LineFactory.h"
 #include "Scene.h"
+#include "NavmeshLoader.h"
+#include <AStar.h>
+#include <Debug.h>
 
-
-CPatrol::CPatrol(const std::vector<Vector3>& somePositions)
+CPatrol::CPatrol(const std::vector<Vector3>& somePositions, SNavMesh* aNavMesh)
 {
 	myPositions = somePositions;
 	myTarget = 0;
+	myPathTarget = 0;
+	myNavMesh = aNavMesh;
 }
 
 Vector3 CPatrol::Update(const Vector3& aPosition)
 {
-	if (myPositions.empty())
-		return Vector3::Zero;
 
-	if (CheckIfOverlap(aPosition, myPositions[myTarget]))
+	
+
+	if (CheckIfOverlap(aPosition, myPositions[myTarget])) // change patrol points & calculate path
 	{
+		myLastTarget = myTarget;
 		myTarget++;
-	}
-	if (myTarget >= myPositions.size())
-	{
-		myTarget = 0;
-	}
-	Vector3 direction = myPositions[myTarget] - aPosition;
 
+		if (myTarget >= myPositions.size())
+		{
+			myTarget = 0;
+		}
+
+		myPathTarget = 0;
+		myPath = CAStar::GetInstance()->GetPath(myPositions[myLastTarget], myPositions[myTarget], myNavMesh);
+	}
+
+	if (!myPath.empty()) {
+		if (myPathTarget < myPath.size()) {
+			if (CheckIfOverlap(aPosition, myPath[myPathTarget])) {
+				myPathTarget++;
+			}
+		}
+	}
+	else {
+		myPath = CAStar::GetInstance()->GetPath(aPosition, myPositions[myTarget], myNavMesh);
+	}
+
+	Vector3 target;
+	target = myPositions[myTarget];
+
+	if (!myPath.empty()) {
+		if (myPathTarget < myPath.size()) {
+			target = myPath[myPathTarget];
+		}
+	}
+	/*CDebug::GetInstance()->DrawLine(myPositions[myTarget], myPath[0]);
+	for (int i = 0; i < myPath.size() - 1; i++) {
+		CDebug::GetInstance()->DrawLine(myPath[i], myPath[i + 1]);
+	}
+	CDebug::GetInstance()->DrawLine(myPath.back(), myPositions[myTarget]);*/
+	Vector3 direction = target - aPosition;
 	direction.Normalize();
 	return std::move(direction);
 }
@@ -42,6 +75,11 @@ bool CPatrol::CheckIfOverlap(const Vector3& aFirstPosition, const Vector3& aSeco
 	if (zDifference > 0.1f)
 		return false;
 	return true;
+}
+
+SNavMesh* CPatrol::SetNavMesh()
+{
+	return nullptr;
 }
 
 CSeek::CSeek() :myTarget(nullptr)

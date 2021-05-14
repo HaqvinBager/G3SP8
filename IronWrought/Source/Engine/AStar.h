@@ -9,6 +9,7 @@ class CAStar {
 public:
 	static CAStar* GetInstance() { static CAStar astar; return &astar; }
 	std::vector<DirectX::SimpleMath::Vector3> GetPath(VECTOR3FLOAT aStartPosision, VECTOR3FLOAT aEndPosision, SNavMesh* aNavMesh, STriangle* aStartTriangle, STriangle* anEndTriangle);
+	std::vector<DirectX::SimpleMath::Vector3> GetPath(VECTOR3FLOAT aStartPosision, VECTOR3FLOAT aEndPosision, SNavMesh* aNavMesh/*, STriangle* aStartTriangle, STriangle* anEndTriangle*/);
 private:
 	std::vector<int> AStar(
 		SNavMesh* aNavmesh, STriangle* aStartTriangle, STriangle* anEndTriangle

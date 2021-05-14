@@ -13,6 +13,7 @@
 #include "RigidBodyComponent.h"
 #include "ModelComponent.h"
 #include "PhysXWrapper.h"
+#include <AStar.h>
 
 //EnemyComp
 
@@ -46,12 +47,14 @@ void CEnemyComponent::Awake()
 void CEnemyComponent::Start()
 {
 	myPlayer = CEngine::GetInstance()->GetActiveScene().Player();
-
+	CScene &scene = CEngine::GetInstance()->GetActiveScene();
+	myNavMesh = scene.NavMesh();
+	
 	for (const auto id : mySettings.myPatrolGameObjectIds) {
 		CTransformComponent* patrolTransform = CEngine::GetInstance()->GetActiveScene().FindObjectWithID(id)->myTransform;
 		myPatrolPositions.push_back(patrolTransform->Position());
 	}
-	myBehaviours.push_back(new CPatrol(myPatrolPositions));
+	myBehaviours.push_back(new CPatrol(myPatrolPositions, myNavMesh));
 
 	CSeek* seekBehaviour = new CSeek();
 	myBehaviours.push_back(seekBehaviour);
@@ -79,9 +82,9 @@ void CEnemyComponent::Start()
 
 void CEnemyComponent::Update()//får bestämma vilket behaviour vi vill köra i denna Update()!!!
 {
-	float distanceToPlayer = Vector3::DistanceSquared(myPlayer->myTransform->Position(), GameObject().myTransform->Position());
+	//float distanceToPlayer = Vector3::DistanceSquared(myPlayer->myTransform->Position(), GameObject().myTransform->Position());
 
-	if (mySettings.myRadius * mySettings.myRadius >= distanceToPlayer) {
+	/*if (mySettings.myRadius * mySettings.myRadius >= distanceToPlayer) {
 		if (distanceToPlayer <= mySettings.myAttackDistance * mySettings.myAttackDistance) 
 		{
 			SetState(EBehaviour::Attack);
@@ -90,10 +93,10 @@ void CEnemyComponent::Update()//får bestämma vilket behaviour vi vill köra i 
 		{
 			SetState(EBehaviour::Seek);
 		}
-	}
-	else {
+	}*/
+	//else {
 		SetState(EBehaviour::Patrol);
-	}
+	//}
 
 	if (myRigidBodyComponent) {
 		Vector3 targetDirection = myBehaviours[static_cast<int>(myCurrentState)]->Update(GameObject().myTransform->Position());
