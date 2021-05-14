@@ -5,6 +5,7 @@ class CAIController;
 class CCharacterController;
 class CRigidBodyComponent;
 class CGameObject;
+struct SNavMesh;
 
 namespace physx {
 	class PxShape;
@@ -78,5 +79,5 @@ private:
 
 	float myYaw;
 	float myPitch;
-
+	SNavMesh* myNavMesh;
 };

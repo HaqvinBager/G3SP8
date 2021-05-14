@@ -1,6 +1,7 @@
 #pragma once
 class CTransformComponent;
 class CEnemyComponent;
+struct SNavMesh;
 class CAIController
 {
 public:
@@ -13,13 +14,18 @@ class CPatrol: public CAIController
 {
 public:
 	
-	CPatrol(const std::vector<Vector3>& somePositions);
+	CPatrol(const std::vector<Vector3>& somePositions, SNavMesh* aNavMesh);
 	~CPatrol()override {}
 	Vector3 Update(const Vector3& aPosition) override;
 	bool CheckIfOverlap(const Vector3& aFirstPosition, const Vector3& aSecondPosition);
+	SNavMesh* SetNavMesh();
 private:
 	std::vector<Vector3> myPositions;
 	int myTarget;// Suggestion: rename to myTargetIndex. Reasoning: myTarget suggests the Vec3 position. Adding Index clarifies that it is used to identify the target position. 
+	int myPathTarget;
+	int myLastTarget;
+	SNavMesh* myNavMesh;
+	std::vector<Vector3> myPath;
 };
 
 class CSeek: public CAIController 

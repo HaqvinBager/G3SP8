@@ -19,9 +19,9 @@ float CalculateH(DirectX::SimpleMath::Vector3& aStartCentroid, DirectX::SimpleMa
 {
 	return (abs(aStartCentroid.x - anEndCentroid.x) + abs(aStartCentroid.y - anEndCentroid.y) + abs(aStartCentroid.z - anEndCentroid.z));
 }
-
-std::vector<DirectX::SimpleMath::Vector3> CAStar::GetPath(VECTOR3FLOAT aStartPosision, VECTOR3FLOAT aEndPosision, SNavMesh* aNavMesh, STriangle* aStartTriangle, STriangle* anEndTriangle) 
-{ 
+std::vector<DirectX::SimpleMath::Vector3> CAStar::GetPath(VECTOR3FLOAT aStartPosision, VECTOR3FLOAT aEndPosision, SNavMesh* aNavMesh, STriangle* aStartTriangle, STriangle* anEndTriangle)
+{
+	
 	std::vector<DirectX::SimpleMath::Vector3> newPath;
 	if (aStartTriangle == nullptr || anEndTriangle == nullptr) {
 		return newPath;
@@ -31,6 +31,22 @@ std::vector<DirectX::SimpleMath::Vector3> CAStar::GetPath(VECTOR3FLOAT aStartPos
 		return newPath;
 	}
 	newPath = StringPull(aStartPosision, aEndPosision, GetPortals(AStar(aNavMesh, aStartTriangle, anEndTriangle), aNavMesh));
+	return newPath;
+}
+std::vector<DirectX::SimpleMath::Vector3> CAStar::GetPath(VECTOR3FLOAT aStartPosision, VECTOR3FLOAT aEndPosision, SNavMesh* aNavMesh/*, STriangle* aStartTriangle, STriangle* anEndTriangle*/) 
+{ 
+	STriangle* startTriangle = aNavMesh->GetTriangleAtPoint(aStartPosision);
+	STriangle* endTriangle = aNavMesh->GetTriangleAtPoint(aEndPosision);
+
+	std::vector<DirectX::SimpleMath::Vector3> newPath;
+	if (startTriangle == nullptr || endTriangle == nullptr) {
+		return newPath;
+	}
+	if (startTriangle->myId == endTriangle->myId) {
+		newPath.emplace_back(aEndPosision);
+		return newPath;
+	}
+	newPath = StringPull(aStartPosision, aEndPosision, GetPortals(AStar(aNavMesh, startTriangle, endTriangle), aNavMesh));
 	return newPath; 
 }
 
@@ -103,8 +119,8 @@ std::vector<int> CAStar::AStar(SNavMesh* aNavmesh, STriangle* aStartTriangle, ST
 		trianglesID.push_back(iteratorTriangle->myId);
 	}
 		trianglesID.push_back(aStartTriangle->myId);
-	//std::reverse(pathCentroids.begin(), pathCentroids.end());
-	//std::reverse(trianglesID.begin(), trianglesID.end());
+	std::reverse(pathCentroids.begin(), pathCentroids.end());
+	std::reverse(trianglesID.begin(), trianglesID.end());
 	return trianglesID;
 }
 
