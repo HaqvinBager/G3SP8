@@ -4,7 +4,7 @@
 class CEnvironmentLightComponent;
 class CGameObject;
 
-namespace IronWroughtImGui {
+namespace ImGui {
 	class CEnvironmentLightWindow : public CWindow
 	{
 	public:

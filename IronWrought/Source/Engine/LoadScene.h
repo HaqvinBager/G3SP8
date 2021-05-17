@@ -3,7 +3,7 @@
 
 class CSceneFactory;
 
-namespace IronWroughtImGui {
+namespace ImGui {
 
 	class CLoadScene : public CWindow
 	{

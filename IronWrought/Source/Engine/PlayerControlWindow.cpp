@@ -6,7 +6,7 @@
 #include "Scene.h"
 #include <PlayerControllerComponent.h>
 
-namespace IronWroughtImGui
+namespace ImGui
 {
 	CPlayerControlWindow::CPlayerControlWindow(const char* aName)
 		: CWindow(aName)
