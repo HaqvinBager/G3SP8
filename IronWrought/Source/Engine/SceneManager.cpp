@@ -97,8 +97,8 @@ CScene* CSceneManager::CreateScene(const std::string& aSceneJson)
 		AddModelComponents(*scene, binLevelData.myModels);
 		AddCollider(*scene, binLevelData.myColliders);
 
-		CreateCustomEvents(*scene);
-		CreateCustomEventListeners(*scene);
+		//CreateCustomEvents(*scene);
+		//CreateCustomEventListeners(*scene);
 
 		for (const auto& sceneData : scenes)
 		{
