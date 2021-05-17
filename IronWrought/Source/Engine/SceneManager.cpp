@@ -97,8 +97,8 @@ CScene* CSceneManager::CreateScene(const std::string& aSceneJson)
 		AddModelComponents(*scene, binLevelData.myModels);
 		AddCollider(*scene, binLevelData.myColliders);
 
-		//CreateCustomEvents(*scene);
-		//CreateCustomEventListeners(*scene);
+		CreateCustomEvents(*scene);
+		CreateCustomEventListeners(*scene);
 
 		for (const auto& sceneData : scenes)
 		{
@@ -241,15 +241,24 @@ void CSceneManager::SetTransforms(CScene& aScene, const std::vector<Binary::STra
 void CSceneManager::CreateCustomEvents(CScene& aScene)
 {
 	CGameObject* gameObject = new CGameObject(200, "Add");
-	gameObject->AddComponent<CCustomEventComponent>(*gameObject, "TriggerPower");
+	gameObject->AddComponent<CCustomEventComponent>(*gameObject, "Add");
 	aScene.AddInstance(gameObject);
 }
 
 void CSceneManager::CreateCustomEventListeners(CScene& aScene)
 {
-	CGameObject* gameObject = new CGameObject(201, "Generator");
 	CCustomEventComponent* customEvent = aScene.FindObjectWithID(200)->GetComponent<CCustomEventComponent>();
-	gameObject->AddComponent<CCustomEventListenerComponent>(*gameObject, customEvent);
+	CGameObject* gameObject = aScene.FindObjectWithID(-47734);//new CGameObject(201, "Generator");
+	CCustomEventListenerComponent* listener = gameObject->AddComponent<CCustomEventListenerComponent>(*gameObject, customEvent);
+
+	CPointLightComponent* pl = gameObject->GetComponent<CPointLightComponent>();
+	std::function<void()> responseFunction = [pl]() { pl->Enabled(!pl->Enabled()); };
+	listener->SetResponse(responseFunction);
+
+
+
+	//CPointLightComponent* pl = gameObject->AddComponent<CPointLightComponent>(*gameObject, 1000.0f, Vector3(1.0f, 0.0f, 0.5f), 550.0f);
+	//aScene.AddInstance(pl->GetPointLight());
 	aScene.AddInstance(gameObject);
 }
 

@@ -33,6 +33,7 @@ void CPointLightComponent::Start()
 
 void CPointLightComponent::Update()
 {
+    myPointLight->SetPosition(GameObject().myTransform->Position());
 }
 
 void CPointLightComponent::OnEnable()

@@ -115,6 +115,9 @@ void CBoxColliderComponent::CreateBoxCollider()
 
 void CBoxColliderComponent::OnTriggerEnter(CTransformComponent* aOther)
 {
+	//<-- CustomEventTrigger -->
+	// GetComponent<CustomEventTrigger>()->OnEventRaised();
+
 	if (myEventFilter == EEventFilter::PlayerOnly)
 	{
 		if (aOther->GetComponent<CPlayerControllerComponent>() != nullptr)

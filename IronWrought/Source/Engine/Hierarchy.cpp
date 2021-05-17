@@ -11,28 +11,28 @@ ImGui::CHierarchy::CHierarchy(const char* aName)
 	: CWindow(aName)
 	, myScene(nullptr)
 {
-	myComponentMap[typeid(CTransformComponent)] = [&](CComponent* aComponent) { Edit(dynamic_cast<CTransformComponent*>(aComponent)); };
-	myComponentMap[typeid(CPointLightComponent)] = [&](CComponent* aComponent) { Edit(dynamic_cast<CPointLightComponent*>(aComponent)); };
-	myComponentMap[typeid(CCameraComponent)] = [&](CComponent* aComponent) { Edit(dynamic_cast<CCameraComponent*>(aComponent)); };
-	myComponentMap[typeid(CModelComponent)] = [&](CComponent* aComponent) { Edit(dynamic_cast<CModelComponent*>(aComponent)); };
-	myComponentMap[typeid(CInstancedModelComponent)] = [&](CComponent* aComponent) { Edit(dynamic_cast<CInstancedModelComponent*>(aComponent)); };
-	myComponentMap[typeid(CCameraControllerComponent)] = [&](CComponent* aComponent) { Edit(dynamic_cast<CCameraControllerComponent*>(aComponent)); };
-	myComponentMap[typeid(CEnvironmentLightComponent)] = [&](CComponent* aComponent) { Edit(dynamic_cast<CEnvironmentLightComponent*>(aComponent)); };
-	myComponentMap[typeid(CDecalComponent)] = [&](CComponent* aComponent) { Edit(dynamic_cast<CDecalComponent*>(aComponent)); };
-	myComponentMap[typeid(CRigidBodyComponent)] = [&](CComponent* aComponent) { Edit(dynamic_cast<CRigidBodyComponent*>(aComponent)); };
-	myComponentMap[typeid(CBoxColliderComponent)] = [&](CComponent* aComponent) { Edit(dynamic_cast<CBoxColliderComponent*>(aComponent)); };
-	myComponentMap[typeid(CSphereColliderComponent)] = [&](CComponent* aComponent) { Edit(dynamic_cast<CSphereColliderComponent*>(aComponent)); };
-	myComponentMap[typeid(CCapsuleColliderComponent)] = [&](CComponent* aComponent) { Edit(dynamic_cast<CCapsuleColliderComponent*>(aComponent)); };
-	myComponentMap[typeid(CConvexMeshColliderComponent)] = [&](CComponent* aComponent) { Edit(dynamic_cast<CConvexMeshColliderComponent*>(aComponent)); };
-	myComponentMap[typeid(CVFXSystemComponent)] = [&](CComponent* aComponent) { Edit(dynamic_cast<CVFXSystemComponent*>(aComponent)); };
-	myComponentMap[typeid(CAnimationComponent)] = [&](CComponent* aComponent) { Edit(dynamic_cast<CAnimationComponent*>(aComponent)); };
-	myComponentMap[typeid(CCustomEventComponent)] = [&](CComponent* aComponent) { Edit(dynamic_cast<CCustomEventComponent*>(aComponent)); };
+	myComponentMap[typeid(CTransformComponent)] = [&](CComponent* aComponent)			{ Edit(dynamic_cast<CTransformComponent*>(aComponent)); };
+	myComponentMap[typeid(CPointLightComponent)] = [&](CComponent* aComponent)			{ Edit(dynamic_cast<CPointLightComponent*>(aComponent)); };
+	myComponentMap[typeid(CCameraComponent)] = [&](CComponent* aComponent)				{ Edit(dynamic_cast<CCameraComponent*>(aComponent)); };
+	myComponentMap[typeid(CModelComponent)] = [&](CComponent* aComponent)				{ Edit(dynamic_cast<CModelComponent*>(aComponent)); };
+	myComponentMap[typeid(CInstancedModelComponent)] = [&](CComponent* aComponent)		{ Edit(dynamic_cast<CInstancedModelComponent*>(aComponent)); };
+	myComponentMap[typeid(CCameraControllerComponent)] = [&](CComponent* aComponent)	{ Edit(dynamic_cast<CCameraControllerComponent*>(aComponent)); };
+	myComponentMap[typeid(CEnvironmentLightComponent)] = [&](CComponent* aComponent)	{ Edit(dynamic_cast<CEnvironmentLightComponent*>(aComponent)); };
+	myComponentMap[typeid(CDecalComponent)] = [&](CComponent* aComponent)				{ Edit(dynamic_cast<CDecalComponent*>(aComponent)); };
+	myComponentMap[typeid(CRigidBodyComponent)] = [&](CComponent* aComponent)			{ Edit(dynamic_cast<CRigidBodyComponent*>(aComponent)); };
+	myComponentMap[typeid(CBoxColliderComponent)] = [&](CComponent* aComponent)			{ Edit(dynamic_cast<CBoxColliderComponent*>(aComponent)); };
+	myComponentMap[typeid(CSphereColliderComponent)] = [&](CComponent* aComponent)		{ Edit(dynamic_cast<CSphereColliderComponent*>(aComponent)); };
+	myComponentMap[typeid(CCapsuleColliderComponent)] = [&](CComponent* aComponent)		{ Edit(dynamic_cast<CCapsuleColliderComponent*>(aComponent)); };
+	myComponentMap[typeid(CConvexMeshColliderComponent)] = [&](CComponent* aComponent)	{ Edit(dynamic_cast<CConvexMeshColliderComponent*>(aComponent)); };
+	myComponentMap[typeid(CVFXSystemComponent)] = [&](CComponent* aComponent)			{ Edit(dynamic_cast<CVFXSystemComponent*>(aComponent)); };
+	myComponentMap[typeid(CAnimationComponent)] = [&](CComponent* aComponent)			{ Edit(dynamic_cast<CAnimationComponent*>(aComponent)); };
+	myComponentMap[typeid(CCustomEventComponent)] = [&](CComponent* aComponent)			{ Edit(dynamic_cast<CCustomEventComponent*>(aComponent)); };
 	myComponentMap[typeid(CCustomEventListenerComponent)] = [&](CComponent* aComponent) { Edit(dynamic_cast<CCustomEventListenerComponent*>(aComponent)); };
-	myComponentMap[typeid(CEnemyComponent)] = [&](CComponent* aComponent) { Edit(dynamic_cast<CEnemyComponent*>(aComponent)); };
-	myComponentMap[typeid(CPlayerComponent)] = [&](CComponent* aComponent) { Edit(dynamic_cast<CPlayerComponent*>(aComponent)); };
-	myComponentMap[typeid(CGravityGloveComponent)] = [&](CComponent* aComponent) { Edit(dynamic_cast<CGravityGloveComponent*>(aComponent)); };
-	myComponentMap[typeid(CHealthPickupComponent)] = [&](CComponent* aComponent) { Edit(dynamic_cast<CHealthPickupComponent*>(aComponent)); };
-	myComponentMap[typeid(CPlayerControllerComponent)] = [&](CComponent* aComponent) { Edit(dynamic_cast<CPlayerControllerComponent*>(aComponent)); };
+	myComponentMap[typeid(CEnemyComponent)] = [&](CComponent* aComponent)				{ Edit(dynamic_cast<CEnemyComponent*>(aComponent)); };
+	myComponentMap[typeid(CPlayerComponent)] = [&](CComponent* aComponent)				{ Edit(dynamic_cast<CPlayerComponent*>(aComponent)); };
+	myComponentMap[typeid(CGravityGloveComponent)] = [&](CComponent* aComponent)		{ Edit(dynamic_cast<CGravityGloveComponent*>(aComponent)); };
+	myComponentMap[typeid(CHealthPickupComponent)] = [&](CComponent* aComponent)		{ Edit(dynamic_cast<CHealthPickupComponent*>(aComponent)); };
+	myComponentMap[typeid(CPlayerControllerComponent)] = [&](CComponent* aComponent)	{ Edit(dynamic_cast<CPlayerControllerComponent*>(aComponent)); };
 }
 
 ImGui::CHierarchy::~CHierarchy()
@@ -133,97 +133,103 @@ void ImGui::CHierarchy::Edit(CModelComponent* aComponent)
 
 void ImGui::CHierarchy::Edit(CPointLightComponent* /*aComponent*/)
 {
-	ImGui::Text("%s WIP CPointLightComponent");
+	ImGui::Text(" WIP CPointLightComponent");
+	static int count = 10;
+
+	ImGui::Text("Remaining On/Off Countes: %i", --count);
 }
 
 void ImGui::CHierarchy::Edit(CInstancedModelComponent* /*aComponent*/)
 {
-	ImGui::Text("%s WIP CInstancedModelComponent");
+	ImGui::Text(" WIP CInstancedModelComponent");
 }
 
 void ImGui::CHierarchy::Edit(CCameraControllerComponent* /*aComponent*/)
 {
-	ImGui::Text("%s WIP CCameraControllerComponent");
+	ImGui::Text(" WIP CCameraControllerComponent");
 }
 
 void ImGui::CHierarchy::Edit(CEnvironmentLightComponent* /*aComponent*/)
 {
-	ImGui::Text("%s WIP CEnviromentLightComponent");
+	ImGui::Text(" WIP CEnviromentLightComponent");
 }
 
 void ImGui::CHierarchy::Edit(CDecalComponent* /*aComponent*/)
 {
-	ImGui::Text("%s WIP CDecalComponent");
+	ImGui::Text(" WIP CDecalComponent");
 }
 
 void ImGui::CHierarchy::Edit(CRigidBodyComponent* /*aComponent*/)
 {
-	ImGui::Text("%s WIP CRigidBodyComponent");
+	ImGui::Text(" WIP CRigidBodyComponent");
 }
 
 void ImGui::CHierarchy::Edit(CBoxColliderComponent* /*aComponent*/)
 {
-	ImGui::Text("%s WIP CBoxColliderComponent");
+	ImGui::Text(" WIP CBoxColliderComponent");
 }
 
 void ImGui::CHierarchy::Edit(CSphereColliderComponent* /*aComponent*/)
 {
-	ImGui::Text("%s WIP CSphereColliderComponent");
+	ImGui::Text(" WIP CSphereColliderComponent");
 }
 
 void ImGui::CHierarchy::Edit(CCapsuleColliderComponent* /*aComponent*/)
 {
-	ImGui::Text("%s WIP CCapsuleColliderComponent");
+	ImGui::Text(" WIP CCapsuleColliderComponent");
 }
 
 void ImGui::CHierarchy::Edit(CConvexMeshColliderComponent* /*aComponent*/)
 {
-	ImGui::Text("%s WIP CConvexMeshColliderComponent");
+	ImGui::Text("WIP CConvexMeshColliderComponent");
 }
 
 void ImGui::CHierarchy::Edit(CVFXSystemComponent* /*aComponent*/)
 {
-	ImGui::Text("%s WIP CVFXSystemComponent");
+	ImGui::Text("WIP CVFXSystemComponent");
 }
 
 void ImGui::CHierarchy::Edit(CAnimationComponent* /*aComponent*/)
 {
-	ImGui::Text("%s WIP CAnimationComponent");
+	ImGui::Text("WIP CAnimationComponent");
 }
 
-void ImGui::CHierarchy::Edit(CCustomEventComponent* /*aComponent*/)
+void ImGui::CHierarchy::Edit(CCustomEventComponent* aComponent)
 {
-	ImGui::Text("%s WIP CCustomEventComponent");
+	if (Button("Raise Event"))
+	{
+		aComponent->OnRaiseEvent();
+	}
 }
 
 void ImGui::CHierarchy::Edit(CCustomEventListenerComponent* /*aComponent*/)
 {
-	ImGui::Text("%s WIP CCustomEventListenerComponent");
+	ImGui::Text(" WIP CCustomEventListenerComponent");
 }
 
 void ImGui::CHierarchy::Edit(CEnemyComponent* /*aComponent*/)
 {
-	ImGui::Text("%s WIP CEnemyComponent");
+	ImGui::Text(" WIP CEnemyComponent");
 }
 
 void ImGui::CHierarchy::Edit(CPlayerComponent* /*aComponent*/)
 {
-	ImGui::Text("%s WIP CPlayerComponent");
+	ImGui::Text(" WIP CPlayerComponent");
 }
 
 void ImGui::CHierarchy::Edit(CGravityGloveComponent* /*aComponent*/)
 {
-	ImGui::Text("%s WIP CGravityGloveComponent");
+	ImGui::Text(" WIP CGravityGloveComponent");
 }
 
 void ImGui::CHierarchy::Edit(CHealthPickupComponent* /*aComponent*/)
 {
-	ImGui::Text("%s WIP CHealthPickupComponent");
+	ImGui::Text(" WIP CHealthPickupComponent");
 }
 
 void ImGui::CHierarchy::Edit(CPlayerControllerComponent* aComponent)
 {
-	//ImGui::Text("%s WIP CPlayerControllerComponent");
+	//ImGui::Text(" WIP CPlayerControllerComponent");
 
 	float walkSpeed = aComponent->WalkSpeed();
 	if (DragFloat("Walk Speed", &walkSpeed, 0.001f))

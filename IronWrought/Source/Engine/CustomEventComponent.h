@@ -1,6 +1,7 @@
 #pragma once
 #include "Component.h"
 
+
 class CGameObject;
 class CCustomEventListenerComponent;
 class CCustomEventComponent : public CComponent
@@ -21,5 +22,6 @@ public:
 private:
 	const char* myEventName;
 	std::vector<CCustomEventListenerComponent*> myListeners;
+	
 };
 
