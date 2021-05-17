@@ -7,14 +7,32 @@
 #include "Engine.h"
 
 
-ImGui::CHierarchy::CHierarchy(const char* aName) 
+ImGui::CHierarchy::CHierarchy(const char* aName)
 	: CWindow(aName)
 	, myScene(nullptr)
 {
-	myComponentMap[typeid(CTransformComponent)]		= [&](CComponent* aComponent) { Edit(dynamic_cast<CTransformComponent*>(aComponent)); };
-	myComponentMap[typeid(CPointLightComponent)]	= [&](CComponent* aComponent) { Edit(dynamic_cast<CPointLightComponent*>(aComponent)); };
-	myComponentMap[typeid(CCameraComponent)]		= [&](CComponent* aComponent) { Edit(dynamic_cast<CCameraComponent*>(aComponent)); };
-	myComponentMap[typeid(CModelComponent)]			= [&](CComponent* aComponent) { Edit(dynamic_cast<CModelComponent*>(aComponent)); };
+	myComponentMap[typeid(CTransformComponent)] = [&](CComponent* aComponent) { Edit(dynamic_cast<CTransformComponent*>(aComponent)); };
+	myComponentMap[typeid(CPointLightComponent)] = [&](CComponent* aComponent) { Edit(dynamic_cast<CPointLightComponent*>(aComponent)); };
+	myComponentMap[typeid(CCameraComponent)] = [&](CComponent* aComponent) { Edit(dynamic_cast<CCameraComponent*>(aComponent)); };
+	myComponentMap[typeid(CModelComponent)] = [&](CComponent* aComponent) { Edit(dynamic_cast<CModelComponent*>(aComponent)); };
+	myComponentMap[typeid(CInstancedModelComponent)] = [&](CComponent* aComponent) { Edit(dynamic_cast<CInstancedModelComponent*>(aComponent)); };
+	myComponentMap[typeid(CCameraControllerComponent)] = [&](CComponent* aComponent) { Edit(dynamic_cast<CCameraControllerComponent*>(aComponent)); };
+	myComponentMap[typeid(CEnvironmentLightComponent)] = [&](CComponent* aComponent) { Edit(dynamic_cast<CEnvironmentLightComponent*>(aComponent)); };
+	myComponentMap[typeid(CDecalComponent)] = [&](CComponent* aComponent) { Edit(dynamic_cast<CDecalComponent*>(aComponent)); };
+	myComponentMap[typeid(CRigidBodyComponent)] = [&](CComponent* aComponent) { Edit(dynamic_cast<CRigidBodyComponent*>(aComponent)); };
+	myComponentMap[typeid(CBoxColliderComponent)] = [&](CComponent* aComponent) { Edit(dynamic_cast<CBoxColliderComponent*>(aComponent)); };
+	myComponentMap[typeid(CSphereColliderComponent)] = [&](CComponent* aComponent) { Edit(dynamic_cast<CSphereColliderComponent*>(aComponent)); };
+	myComponentMap[typeid(CCapsuleColliderComponent)] = [&](CComponent* aComponent) { Edit(dynamic_cast<CCapsuleColliderComponent*>(aComponent)); };
+	myComponentMap[typeid(CConvexMeshColliderComponent)] = [&](CComponent* aComponent) { Edit(dynamic_cast<CConvexMeshColliderComponent*>(aComponent)); };
+	myComponentMap[typeid(CVFXSystemComponent)] = [&](CComponent* aComponent) { Edit(dynamic_cast<CVFXSystemComponent*>(aComponent)); };
+	myComponentMap[typeid(CAnimationComponent)] = [&](CComponent* aComponent) { Edit(dynamic_cast<CAnimationComponent*>(aComponent)); };
+	myComponentMap[typeid(CCustomEventComponent)] = [&](CComponent* aComponent) { Edit(dynamic_cast<CCustomEventComponent*>(aComponent)); };
+	myComponentMap[typeid(CCustomEventListenerComponent)] = [&](CComponent* aComponent) { Edit(dynamic_cast<CCustomEventListenerComponent*>(aComponent)); };
+	myComponentMap[typeid(CEnemyComponent)] = [&](CComponent* aComponent) { Edit(dynamic_cast<CEnemyComponent*>(aComponent)); };
+	myComponentMap[typeid(CPlayerComponent)] = [&](CComponent* aComponent) { Edit(dynamic_cast<CPlayerComponent*>(aComponent)); };
+	myComponentMap[typeid(CGravityGloveComponent)] = [&](CComponent* aComponent) { Edit(dynamic_cast<CGravityGloveComponent*>(aComponent)); };
+	myComponentMap[typeid(CHealthPickupComponent)] = [&](CComponent* aComponent) { Edit(dynamic_cast<CHealthPickupComponent*>(aComponent)); };
+	myComponentMap[typeid(CPlayerControllerComponent)] = [&](CComponent* aComponent) { Edit(dynamic_cast<CPlayerControllerComponent*>(aComponent)); };
 }
 
 ImGui::CHierarchy::~CHierarchy()
@@ -53,7 +71,7 @@ void ImGui::CHierarchy::OnInspectorGUI()
 				const auto& type = typeid(*component);
 				if (myTypeNames.find(type) == myTypeNames.end())
 					SaveClassName(type);
-				
+
 				const char* componentName = myTypeNames[type].c_str();
 				bool componentOpen = ImGui::TreeNodeEx(
 					componentName,
@@ -63,7 +81,7 @@ void ImGui::CHierarchy::OnInspectorGUI()
 					componentName);
 
 				if (componentOpen)
-				{				
+				{
 					if (myComponentMap.find(type) != myComponentMap.end())
 						myComponentMap[type](component.get());
 					else
@@ -128,7 +146,7 @@ void ImGui::CHierarchy::Edit(CCameraControllerComponent* /*aComponent*/)
 	ImGui::Text("%s WIP CCameraControllerComponent");
 }
 
-void ImGui::CHierarchy::Edit(CEnviromentLightComponent* /*aComponent*/)
+void ImGui::CHierarchy::Edit(CEnvironmentLightComponent* /*aComponent*/)
 {
 	ImGui::Text("%s WIP CEnviromentLightComponent");
 }
@@ -203,7 +221,13 @@ void ImGui::CHierarchy::Edit(CHealthPickupComponent* /*aComponent*/)
 	ImGui::Text("%s WIP CHealthPickupComponent");
 }
 
-void ImGui::CHierarchy::Edit(CPlayerControllerComponent* /*aComponent*/)
+void ImGui::CHierarchy::Edit(CPlayerControllerComponent* aComponent)
 {
-	ImGui::Text("%s WIP CPlayerControllerComponent");
+	//ImGui::Text("%s WIP CPlayerControllerComponent");
+
+	float walkSpeed = aComponent->WalkSpeed();
+	if (DragFloat("Walk Speed", &walkSpeed, 0.001f))
+	{
+		aComponent->WalkSpeed(walkSpeed);
+	}
 }

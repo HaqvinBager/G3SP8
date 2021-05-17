@@ -1,5 +1,6 @@
 #pragma once
 
+#include "EnviromentLightComponent.h"
 #include "CameraComponent.h"
 #include "InstancedModelComponent.h"
 #include "CameraControllerComponent.h"

@@ -13,7 +13,7 @@ namespace physx {
 	class PxUserControllerHitReport;
 }
 
-class CPlayerControllerComponent : public CComponent, public IInputObserver,  public IObserver, public IStringObserver
+class CPlayerControllerComponent : public CComponent, public IInputObserver, public IObserver, public IStringObserver
 {
 public:
 	CPlayerControllerComponent(CGameObject& gameObject, const float aWalkSpeed = 0.314f, const float aCrouchSpeed = 0.13f, physx::PxUserControllerHitReport* aHitReport = nullptr);
@@ -45,7 +45,11 @@ public:
 	const Vector3 GetLinearVelocity();
 
 	const float WalkSpeed() const { return myWalkSpeed; }
-	void WalkSpeed(const float aSpeed) { myWalkSpeed = aSpeed; }
+	void WalkSpeed(const float aSpeed)
+	{
+		myWalkSpeed = aSpeed;
+		mySpeed = aSpeed;
+	}
 	const float CrouchSpeed() const { return myCrouchSpeed; }
 	void CrouchSpeed(const float aSpeed) { myCrouchSpeed = aSpeed; }
 	const float JumpHeight() const { return myJumpHeight; }
