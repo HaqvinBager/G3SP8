@@ -854,7 +854,6 @@
     <ClCompile Include="BoxColliderComponent.cpp">
       <Filter>GameObject and Component\Component</Filter>
     </ClCompile>
-    <ClCompile Include="GravityGloveEditor.cpp" />
     <ClCompile Include="BoxLight.cpp">
       <Filter>Light</Filter>
     </ClCompile>
@@ -906,8 +905,15 @@
     <ClCompile Include="CustomEventComponent.cpp">
       <Filter>GameObject and Component\Component</Filter>
     </ClCompile>
-    <ClCompile Include="CustomEventListenerComponent.cpp" />
-    <ClCompile Include="Hierarchy.cpp" />
+    <ClCompile Include="Hierarchy.cpp">
+      <Filter>Imgui\Windows</Filter>
+    </ClCompile>
+    <ClCompile Include="CustomEventListenerComponent.cpp">
+      <Filter>GameObject and Component\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="GravityGloveEditor.cpp">
+      <Filter>Imgui\Windows</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AnimationComponent.h">
@@ -1595,7 +1601,6 @@
     <ClInclude Include="BoxColliderComponent.h">
       <Filter>GameObject and Component\Component</Filter>
     </ClInclude>
-    <ClInclude Include="GravityGloveEditor.h" />
     <ClInclude Include="BoxLight.h">
       <Filter>Light</Filter>
     </ClInclude>
@@ -1655,8 +1660,18 @@
     <ClInclude Include="CustomEventComponent.h">
       <Filter>GameObject and Component\Component</Filter>
     </ClInclude>
-    <ClInclude Include="CustomEventListenerComponent.h" />
-    <ClInclude Include="Hierarchy.h" />
+    <ClInclude Include="Hierarchy.h">
+      <Filter>Imgui\Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="CustomEventListenerComponent.h">
+      <Filter>GameObject and Component\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="GravityGloveEditor.h">
+      <Filter>Imgui\Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="ComponentsInclude.h">
+      <Filter>Utility</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="FullscreenShaderStructs.hlsli">

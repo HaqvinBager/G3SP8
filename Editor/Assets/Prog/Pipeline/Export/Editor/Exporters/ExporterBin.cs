@@ -41,11 +41,14 @@ public class ExporterBin
         Debug.Log("Exporting " + level.name, level);
 
         var ids = ExportInstanceID.Export(level.name);
-        var transforms = ExportTransform.Export(level.name, ids.Ids);
-        var models = ExportModel.Export(level.name, ids.Ids);
+        List<int> idNumbers = new List<int>();
+        ids.Ids.ForEach(e => idNumbers.Add(e.instanceID));
+
+        var transforms = ExportTransform.Export(level.name, idNumbers);
+        var models = ExportModel.Export(level.name, idNumbers);
         var instancedModels = ExportInstancedModel.Export(level.name);
         var pointLights = ExportPointlights.ExportPointlight(level.name);
-        var colliders = ExportCollider.Export(level.name, ids.Ids);
+        var colliders = ExportCollider.Export(level.name, idNumbers);
         
         ExporterBin exporter = new ExporterBin(directoryInfo.Parent.Name);
         exporter.binWriter.Write(ids);

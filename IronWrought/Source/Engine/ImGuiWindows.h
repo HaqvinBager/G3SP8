@@ -7,3 +7,4 @@
 #include "GravityGloveEditor.h"
 #include "EnvironmentLightWindow.h"
 #include "PostProcessingWindow.h"
+#include "Hierarchy.h"

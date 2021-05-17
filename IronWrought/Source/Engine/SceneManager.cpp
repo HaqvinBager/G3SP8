@@ -77,7 +77,6 @@ CScene* CSceneManager::CreateScene(const std::string& aSceneJson)
 	CScene* scene = Instantiate();
 	//CScene* scene = CreateEmpty();
 
-	Binary::SLevelData binLevelData = CBinReader::Load(ASSETPATH("Assets/Generated/" + aSceneJson + "/" + aSceneJson + ".bin"));
 
 	const auto doc = CJsonReader::Get()->LoadDocument(ASSETPATH("Assets/Generated/" + aSceneJson + "/" + aSceneJson + ".json"));
 	if (doc.HasParseError())
@@ -89,6 +88,7 @@ CScene* CSceneManager::CreateScene(const std::string& aSceneJson)
 	SVertexPaintCollection vertexPaintData = CBinReader::LoadVertexPaintCollection(doc["Root"].GetString());
 	const auto& scenes = doc.GetObjectW()["Scenes"].GetArray();
 
+	Binary::SLevelData binLevelData = CBinReader::Load(ASSETPATH("Assets/Generated/" + aSceneJson + "/" + aSceneJson + ".bin"));
 	if (AddGameObjects(*scene, binLevelData.myInstanceIDs))
 	{
 		SetTransforms(*scene, binLevelData.myTransforms);
@@ -202,10 +202,9 @@ bool CSceneManager::AddGameObjects(CScene& aScene, const std::vector<Binary::SIn
 	if (someData.size() == 0)
 		return false;
 
-	for (const auto& data : someData)
+	for (int i = 0; i < someData.size(); ++i)
 	{
-		int instanceID = data.instanceID;
-		aScene.AddInstance(new CGameObject(instanceID));
+		aScene.AddInstance(new CGameObject(someData[i].instanceID, someData[i].name));
 	}
 	return true;
 }
@@ -325,8 +324,6 @@ void CSceneManager::SetVertexPaintedColors(CScene& aScene, RapidArray someData, 
 			if (gameObject == nullptr) //Was not entirely sure why this would try to acces a non-existant gameObject.
 				continue;				//I think it relates to the Model or VertexPaint Export. We don't want to add vertexColors to the export if said object was never painted on!
 
-
-
 			for (auto it = vertexColorData.myData.begin(); it != vertexColorData.myData.end(); ++it)
 			{
 				if ((*it).myVertexMeshID == vertexColorID)
@@ -375,25 +372,26 @@ void CSceneManager::AddInstancedModelComponents(CScene& aScene, const std::vecto
 {
 	for (const auto& i : someData)
 	{
-		CGameObject* gameObject = new CGameObject(i.assetID);
-
-		std::vector<Matrix> transforms = {};
-		transforms.reserve(i.transforms.size());
-		for (const auto& t : i.transforms)
-		{
-			CGameObject temp(0);
-			CTransformComponent transform(temp);
-			transform.Scale(t.scale);
-			transform.Position(t.pos);
-			transform.Rotation(t.rot);
-			transforms.push_back(transform.GetLocalMatrix());
-		}
 		std::string assetPath = {};
 		if (CJsonReader::Get()->TryGetAssetPath(i.assetID, assetPath))
 		{
+			CGameObject* gameObject = new CGameObject(i.assetID, assetPath.substr(assetPath.find_last_of('/'), assetPath.size() - assetPath.find_last_of('/')));
+
+			std::vector<Matrix> transforms = {};
+			transforms.reserve(i.transforms.size());
+			for (const auto& t : i.transforms)
+			{
+				CGameObject temp(0);
+				CTransformComponent transform(temp);
+				transform.Scale(t.scale);
+				transform.Position(t.pos);
+				transform.Rotation(t.rot);
+				transforms.push_back(transform.GetLocalMatrix());
+			}
+
 			gameObject->AddComponent<CInstancedModelComponent>(*gameObject, ASSETPATH(assetPath), transforms);
 			aScene.AddInstance(gameObject);
-		}
+		}		
 	}
 }
 
@@ -526,7 +524,7 @@ void CSceneManager::AddPlayer(CScene& aScene, RapidObject someData)
 	std::string modelPath = ASSETPATH("Assets/IronWrought/Mesh/Main_Character/CH_PL_SK.fbx");
 	camera->AddComponent<CModelComponent>(*camera, modelPath);
 	AnimationLoader::AddAnimationsToGameObject(camera, modelPath);
-	CGameObject* gravityGloveSlot = new CGameObject(PLAYER_GLOVE_ID);
+	CGameObject* gravityGloveSlot = new CGameObject(PLAYER_GLOVE_ID, "Player Hold Object Slot");
 	gravityGloveSlot->myTransform->Scale(0.1f);
 	gravityGloveSlot->myTransform->SetParent(camera->myTransform);
 	gravityGloveSlot->myTransform->Position({ 0.f, 0.f, 1.5f });
