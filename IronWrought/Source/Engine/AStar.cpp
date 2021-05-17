@@ -19,7 +19,7 @@ float CalculateH(DirectX::SimpleMath::Vector3& aStartCentroid, DirectX::SimpleMa
 {
 	return (abs(aStartCentroid.x - anEndCentroid.x) + abs(aStartCentroid.y - anEndCentroid.y) + abs(aStartCentroid.z - anEndCentroid.z));
 }
-std::vector<DirectX::SimpleMath::Vector3> CAStar::GetPath(VECTOR3FLOAT aStartPosision, VECTOR3FLOAT aEndPosision, SNavMesh* aNavMesh, STriangle* aStartTriangle, STriangle* anEndTriangle)
+std::vector<DirectX::SimpleMath::Vector3> CAStar::GetPath(Vector3 aStartPosision, Vector3 aEndPosision, SNavMesh* aNavMesh, STriangle* aStartTriangle, STriangle* anEndTriangle)
 {
 	
 	std::vector<DirectX::SimpleMath::Vector3> newPath;
@@ -33,7 +33,7 @@ std::vector<DirectX::SimpleMath::Vector3> CAStar::GetPath(VECTOR3FLOAT aStartPos
 	newPath = StringPull(aStartPosision, aEndPosision, GetPortals(AStar(aNavMesh, aStartTriangle, anEndTriangle), aNavMesh));
 	return newPath;
 }
-std::vector<DirectX::SimpleMath::Vector3> CAStar::GetPath(VECTOR3FLOAT aStartPosision, VECTOR3FLOAT aEndPosision, SNavMesh* aNavMesh/*, STriangle* aStartTriangle, STriangle* anEndTriangle*/) 
+std::vector<DirectX::SimpleMath::Vector3> CAStar::GetPath(Vector3 aStartPosision, Vector3 aEndPosision, SNavMesh* aNavMesh/*, STriangle* aStartTriangle, STriangle* anEndTriangle*/)
 { 
 	STriangle* startTriangle = aNavMesh->GetTriangleAtPoint(aStartPosision);
 	STriangle* endTriangle = aNavMesh->GetTriangleAtPoint(aEndPosision);
@@ -126,12 +126,12 @@ std::vector<int> CAStar::AStar(SNavMesh* aNavmesh, STriangle* aStartTriangle, ST
 
 std::vector<DirectX::SimpleMath::Vector3> CAStar::GetPortals(std::vector<int> nodePath, SNavMesh* nodes ) 
 { 
-	std::vector<VECTOR3FLOAT> _portals;
-	VECTOR3FLOAT temp;
+	std::vector<Vector3> portals;
+	Vector3 temp;
 
 	if (nodePath.size() <= 0) {
 		//sometimes finds triangle outside navmesh??
-		return _portals;
+		return portals;
 	}
 	// portals are the 2 vertecis that are connectet between 2 triangles /pontus
 	//nodePath is reversed so goes from back to front
@@ -146,16 +146,16 @@ std::vector<DirectX::SimpleMath::Vector3> CAStar::GetPortals(std::vector<int> no
 			}
 			if (none) {
 				if (x == 0) {
-					_portals.push_back(nodes->myTriangles[nodePath[i]]->myVertexPositions[1]);
-					_portals.push_back(nodes->myTriangles[nodePath[i]]->myVertexPositions[2]);
+					portals.push_back(nodes->myTriangles[nodePath[i]]->myVertexPositions[1]);
+					portals.push_back(nodes->myTriangles[nodePath[i]]->myVertexPositions[2]);
 				}
 				else if (x == 1) {
-					_portals.push_back(nodes->myTriangles[nodePath[i]]->myVertexPositions[2]);
-					_portals.push_back(nodes->myTriangles[nodePath[i]]->myVertexPositions[0]);
+					portals.push_back(nodes->myTriangles[nodePath[i]]->myVertexPositions[2]);
+					portals.push_back(nodes->myTriangles[nodePath[i]]->myVertexPositions[0]);
 				}				
 				else if (x == 2) {
-					_portals.push_back(nodes->myTriangles[nodePath[i]]->myVertexPositions[0]);
-					_portals.push_back(nodes->myTriangles[nodePath[i]]->myVertexPositions[1]);
+					portals.push_back(nodes->myTriangles[nodePath[i]]->myVertexPositions[0]);
+					portals.push_back(nodes->myTriangles[nodePath[i]]->myVertexPositions[1]);
 				}
 				continue;
 			}
@@ -163,26 +163,26 @@ std::vector<DirectX::SimpleMath::Vector3> CAStar::GetPortals(std::vector<int> no
 		}
 
 	}
-	return _portals;}
+	return portals;}
 
-std::vector<DirectX::SimpleMath::Vector3> CAStar::StringPull(VECTOR3FLOAT aStart, VECTOR3FLOAT aEnd, std::vector<DirectX::SimpleMath::Vector3> somePortals)
+std::vector<DirectX::SimpleMath::Vector3> CAStar::StringPull(Vector3 aStart, Vector3 aEnd, std::vector<DirectX::SimpleMath::Vector3> somePortals)
 {
 	if (somePortals.size() <= 0) {
-		return std::vector<VECTOR3FLOAT>();
+		return std::vector<Vector3>();
 	}
 
 
-	std::vector<VECTOR3FLOAT> _points;
+	std::vector<Vector3> points;
 	if (somePortals.size() <= 2) {
 		//_points.push_back(aStart);
-		_points.push_back(aEnd);
-		return _points;
+		points.push_back(aEnd);
+		return points;
 	}
 
 	somePortals.push_back(aEnd);
 	somePortals.push_back(aEnd);
 
-	VECTOR3FLOAT portalApex, portalLeft, portalRight, left, right;
+	Vector3 portalApex, portalLeft, portalRight, left, right;
 	int apexIndex = 0, leftIndex = 0, rightIndex = 0;
 	//set apex to start and gets left and right points in the first portal ask pontus if weard
 	portalApex = aStart;
@@ -209,7 +209,7 @@ std::vector<DirectX::SimpleMath::Vector3> CAStar::StringPull(VECTOR3FLOAT aStart
 				rightIndex = i;
 			}
 			else {
-				_points.push_back(portalLeft);
+				points.push_back(portalLeft);
 
 
 				portalApex = portalLeft;
@@ -235,7 +235,7 @@ std::vector<DirectX::SimpleMath::Vector3> CAStar::StringPull(VECTOR3FLOAT aStart
 				leftIndex = i;
 			}
 			else {
-				_points.push_back(portalRight);
+				points.push_back(portalRight);
 
 
 				portalApex = portalRight;
@@ -253,15 +253,15 @@ std::vector<DirectX::SimpleMath::Vector3> CAStar::StringPull(VECTOR3FLOAT aStart
 		}
 	}
 	//_points.push_back(aEnd);
-	std::reverse(_points.begin(), _points.end());
-	return _points;
+	std::reverse(points.begin(), points.end());
+	return points;
 }
 
- float CAStar::Triarea2d(const VECTOR3FLOAT a, const VECTOR3FLOAT b, const VECTOR3FLOAT c) {
+ float CAStar::Triarea2d(const Vector3 a, const Vector3 b, const Vector3 c) {
 	const float ax = b.x - a.x;
 	const float ay = b.z - a.z;
 	const float bx = c.x - a.x;
 	const float by = c.z - a.z;
-	const float _return = bx* ay - ax * by;
-	return _return;
+	const float returnValue = bx* ay - ax * by;
+	return returnValue;
 	}
