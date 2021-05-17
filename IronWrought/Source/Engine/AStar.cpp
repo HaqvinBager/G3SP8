@@ -5,8 +5,6 @@
 #include "Scene.h"
 #include "TransformComponent.h"
 
-
-
 struct DrefTriangleLessComparer 
 {
 	bool operator()(STriangle* lhs, STriangle* rhs) const 
@@ -19,6 +17,7 @@ float CalculateH(DirectX::SimpleMath::Vector3& aStartCentroid, DirectX::SimpleMa
 {
 	return (abs(aStartCentroid.x - anEndCentroid.x) + abs(aStartCentroid.y - anEndCentroid.y) + abs(aStartCentroid.z - anEndCentroid.z));
 }
+
 std::vector<DirectX::SimpleMath::Vector3> CAStar::GetPath(VECTOR3FLOAT aStartPosision, VECTOR3FLOAT aEndPosision, SNavMesh* aNavMesh, STriangle* aStartTriangle, STriangle* anEndTriangle)
 {
 	
@@ -33,6 +32,7 @@ std::vector<DirectX::SimpleMath::Vector3> CAStar::GetPath(VECTOR3FLOAT aStartPos
 	newPath = StringPull(aStartPosision, aEndPosision, GetPortals(AStar(aNavMesh, aStartTriangle, anEndTriangle), aNavMesh));
 	return newPath;
 }
+
 std::vector<DirectX::SimpleMath::Vector3> CAStar::GetPath(VECTOR3FLOAT aStartPosision, VECTOR3FLOAT aEndPosision, SNavMesh* aNavMesh/*, STriangle* aStartTriangle, STriangle* anEndTriangle*/) 
 { 
 	STriangle* startTriangle = aNavMesh->GetTriangleAtPoint(aStartPosision);
@@ -163,7 +163,8 @@ std::vector<DirectX::SimpleMath::Vector3> CAStar::GetPortals(std::vector<int> no
 		}
 
 	}
-	return _portals;}
+	return _portals;
+}
 
 std::vector<DirectX::SimpleMath::Vector3> CAStar::StringPull(VECTOR3FLOAT aStart, VECTOR3FLOAT aEnd, std::vector<DirectX::SimpleMath::Vector3> somePortals)
 {
@@ -264,4 +265,4 @@ std::vector<DirectX::SimpleMath::Vector3> CAStar::StringPull(VECTOR3FLOAT aStart
 	const float by = c.z - a.z;
 	const float _return = bx* ay - ax * by;
 	return _return;
-	}
+ }

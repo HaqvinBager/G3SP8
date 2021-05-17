@@ -73,10 +73,10 @@ void CNavmeshLoader::MakeTriangles(aiMesh* aMesh, SNavMesh* aNavMesh)
 
 Vector3 CNavmeshLoader::GetCentroid(Vector3& aVectorOne, Vector3& aVectorTwo, Vector3& aVectorThree)
 {
-	return { 
-		(aVectorOne.x + aVectorTwo.x + aVectorThree.x) / 3.0f, 
-		(aVectorOne.y + aVectorTwo.y + aVectorThree.y) / 3.0f, 
-		(aVectorOne.z + aVectorTwo.z + aVectorThree.z) / 3.0f 
+	return {
+		(aVectorOne.x + aVectorTwo.x + aVectorThree.x) / 3.0f,
+		(aVectorOne.y + aVectorTwo.y + aVectorThree.y) / 3.0f,
+		(aVectorOne.z + aVectorTwo.z + aVectorThree.z) / 3.0f
 	};
 }
 
@@ -89,7 +89,7 @@ bool CNavmeshLoader::AreNeighbors(UINT* someIndices, UINT* someOtherIndices)
 		{
 			if (someIndices[i] == someOtherIndices[j]) {
 				++counter;
-			}		
+			}
 		}
 	}
 
@@ -111,7 +111,7 @@ STriangle* SNavMesh::GetTriangleAtPoint(Vector3 aPosition)
 	Vector3 p2;
 	Vector3 p3;
 
-	for (auto& tri : myTriangles) 
+	for (auto& tri : myTriangles)
 	{
 		p1 = tri->myVertexPositions[0];
 		p2 = tri->myVertexPositions[1];
@@ -144,4 +144,97 @@ SNavMesh::~SNavMesh()
 		myTriangles[i] = nullptr;
 	}
 	myTriangles.clear();
+}
+
+std::vector<Vector3> SNavMesh::CalculatePath(Vector3 aStartPosition, DirectX::SimpleMath::Vector3 aDestination, SNavMesh* aNavMesh)
+{
+	
+
+	std::vector<DirectX::SimpleMath::Vector3> path;
+
+	auto startPosition = aStartPosition;
+	auto startTriangle = aNavMesh->GetTriangleAtPoint(startPosition);
+
+	if (startTriangle == nullptr)
+	{
+		ResolveStuck(startTriangle, startPosition, aDestination, aNavMesh);
+		if (startTriangle == nullptr)
+		{
+			// Return closest triangle if ResolveStuck doesn't work
+			startTriangle = ReturnClosestTriangle(startPosition, aNavMesh);
+		}
+	}
+
+	path = CAStar::GetInstance()->GetPath(startPosition, aDestination, aNavMesh, startTriangle, aNavMesh->GetTriangleAtPoint(aDestination));
+	return path;
+}
+
+STriangle* SNavMesh::ReturnClosestTriangle(const DirectX::SimpleMath::Vector3& aStartPosition, SNavMesh* aNavMesh)
+{
+	STriangle* closestTriangle = nullptr;
+	float lastDistance = FLT_MAX;
+	for (unsigned int i = 0; i < aNavMesh->myTriangles.size(); ++i)
+	{
+		float currentDistance = DirectX::SimpleMath::Vector3::DistanceSquared(aStartPosition, aNavMesh->myTriangles[i]->myCenterPosition);
+		if (currentDistance < lastDistance)
+		{
+			lastDistance = currentDistance;
+			closestTriangle = aNavMesh->myTriangles[i];
+		}
+	}
+	return closestTriangle;
+}
+
+void SNavMesh::ResolveStuck(STriangle* aStartTriangle, const DirectX::SimpleMath::Vector3& aStartPosition, const DirectX::SimpleMath::Vector3& aFinalPosition, SNavMesh* aNavMesh)
+{
+	// Try to find triangle in front, behind, to the left and right of player
+	float tolerance = 0.1f;
+	if (!aStartTriangle)
+	{
+		DirectX::SimpleMath::Vector3 dir = aFinalPosition;
+		dir -= aStartPosition;
+		dir.Normalize();
+		dir *= tolerance;
+		DirectX::SimpleMath::Vector3 newPos = aStartPosition;
+		newPos += dir;
+		aStartTriangle = aNavMesh->GetTriangleAtPoint(newPos);
+	}
+	if (!aStartTriangle)
+	{
+		DirectX::SimpleMath::Vector3 dir = aFinalPosition;
+		dir -= aStartPosition;
+		dir.Normalize();
+		dir *= tolerance;
+		DirectX::SimpleMath::Vector3 newPos = aStartPosition;
+		newPos -= dir;
+		aStartTriangle = aNavMesh->GetTriangleAtPoint(newPos);
+	}
+	if (!aStartTriangle)
+	{
+		DirectX::SimpleMath::Vector3 dir = aFinalPosition;
+		dir -= aStartPosition;
+		DirectX::SimpleMath::Vector3 temp;
+		temp.x = -dir.y;
+		temp.y = dir.x;
+		dir = temp;
+		dir.Normalize();
+		dir *= tolerance;
+		DirectX::SimpleMath::Vector3 newPos = aStartPosition;
+		newPos += dir;
+		aStartTriangle = aNavMesh->GetTriangleAtPoint(newPos);
+	}
+	if (!aStartTriangle)
+	{
+		DirectX::SimpleMath::Vector3 dir = aFinalPosition;
+		dir -= aStartPosition;
+		DirectX::SimpleMath::Vector3 temp;
+		temp.x = -dir.y;
+		temp.y = dir.x;
+		dir = temp;
+		dir.Normalize();
+		dir *= tolerance;
+		DirectX::SimpleMath::Vector3 newPos = aStartPosition;
+		newPos -= dir;
+		aStartTriangle = aNavMesh->GetTriangleAtPoint(newPos);
+	}
 }

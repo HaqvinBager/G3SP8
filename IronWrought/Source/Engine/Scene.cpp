@@ -133,6 +133,26 @@ bool CScene::InitNavMesh(const std::string& aPath)
 		return false;
 	}
 
+#ifdef _DEBUG
+	std::vector<DirectX::SimpleMath::Vector3> positions;
+	UINT size = static_cast<UINT>(myNavMesh->myTriangles.size()) * 6;
+	positions.reserve(size);
+
+	for (UINT i = 0, j = 0; i < size && j < myNavMesh->myTriangles.size(); i += 6, j++)
+	{
+		positions.push_back(myNavMesh->myTriangles[j]->myVertexPositions[0]);
+		positions.push_back(myNavMesh->myTriangles[j]->myVertexPositions[1]);
+		positions.push_back(myNavMesh->myTriangles[j]->myVertexPositions[2]);
+		positions.push_back(myNavMesh->myTriangles[j]->myVertexPositions[0]);
+		positions.push_back(myNavMesh->myTriangles[j]->myVertexPositions[1]);
+		positions.push_back(myNavMesh->myTriangles[j]->myVertexPositions[2]);
+	}
+
+	myNavMeshGrid = new CLineInstance();
+	myNavMeshGrid->Init(CLineFactory::GetInstance()->CreatePolygon(positions));
+	this->AddInstance(myNavMeshGrid);
+#endif // _DEBUG
+
 	return true;
 }
 
@@ -263,11 +283,11 @@ void CScene::Receive(const SMessage& aMessage)
 	switch (aMessage.myMessageType)
 	{
 	case EMessageType::ComponentAdded:
-		{
-			CComponent* addedComponent = static_cast<CComponent*>(aMessage.data);
-			myAwakeComponents.push(addedComponent);
-		}
-		break;
+	{
+		CComponent* addedComponent = static_cast<CComponent*>(aMessage.data);
+		myAwakeComponents.push(addedComponent);
+	}
+	break;
 	}
 }
 
@@ -281,7 +301,7 @@ void CScene::MainCamera(const ESceneCamera aCameraType)
 	{
 		if (myCameras[aCameraType] != nullptr)
 		{
-			if(aCameraType != previousCameraType)
+			if (aCameraType != previousCameraType)
 				myCameras[aCameraType]->GameObject().Active(false);
 		}
 	}
@@ -872,7 +892,7 @@ bool CScene::ClearSprites()
 		}
 	}
 	mySpriteInstances.clear();
-	
+
 	return true;
 }
 //CLEAR SCENE OF INSTANCES END

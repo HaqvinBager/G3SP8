@@ -56,7 +56,7 @@ void CEnemyComponent::Start()
 	}
 	myBehaviours.push_back(new CPatrol(myPatrolPositions, myNavMesh));
 
-	CSeek* seekBehaviour = new CSeek();
+	CSeek* seekBehaviour = new CSeek(myNavMesh);
 	myBehaviours.push_back(seekBehaviour);
 	if (myPlayer != nullptr)
 	{
@@ -82,21 +82,24 @@ void CEnemyComponent::Start()
 
 void CEnemyComponent::Update()//får bestämma vilket behaviour vi vill köra i denna Update()!!!
 {
-	//float distanceToPlayer = Vector3::DistanceSquared(myPlayer->myTransform->Position(), GameObject().myTransform->Position());
+	float distanceToPlayer = Vector3::DistanceSquared(myPlayer->myTransform->Position(), GameObject().myTransform->Position());
 
-	/*if (mySettings.myRadius * mySettings.myRadius >= distanceToPlayer) {
-		if (distanceToPlayer <= mySettings.myAttackDistance * mySettings.myAttackDistance) 
+	if (mySettings.myRadius * mySettings.myRadius >= distanceToPlayer) {
+		/*if (distanceToPlayer <= mySettings.myAttackDistance * mySettings.myAttackDistance) 
 		{
+			std::cout << "ATTACK" << std::endl;
 			SetState(EBehaviour::Attack);
 		}
 		else
-		{
+		{*/
+			std::cout << "SEEK" << std::endl;
 			SetState(EBehaviour::Seek);
-		}
-	}*/
-	//else {
+		//}
+	}
+	else {
+		std::cout << "PATROL" << std::endl;
 		SetState(EBehaviour::Patrol);
-	//}
+	}
 
 	if (myRigidBodyComponent) {
 		Vector3 targetDirection = myBehaviours[static_cast<int>(myCurrentState)]->Update(GameObject().myTransform->Position());
@@ -108,10 +111,6 @@ void CEnemyComponent::Update()//får bestämma vilket behaviour vi vill köra i 
 		GameObject().myTransform->Rotation({ 0, DirectX::XMConvertToDegrees(myCurrentOrientation) + 180.f, 0 });
 	}
 
-//new movement
-	//if (GameObject().GetComponent<CRigidBodyComponent>()) {
-//		GameObject().GetComponent<CRigidBodyComponent>()->AddForce({ 1.f, 0.f, 0.f });
-	//}
 	if (myCurrentHealth <= 0.f) {
 		Dead();
 	}

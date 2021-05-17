@@ -17,8 +17,8 @@ public:
 	CPatrol(const std::vector<Vector3>& somePositions, SNavMesh* aNavMesh);
 	~CPatrol()override {}
 	Vector3 Update(const Vector3& aPosition) override;
-	bool CheckIfOverlap(const Vector3& aFirstPosition, const Vector3& aSecondPosition);
-	SNavMesh* SetNavMesh();
+	//bool CheckIfOverlap(const Vector3& aFirstPosition, const Vector3& aSecondPosition);
+	
 private:
 	std::vector<Vector3> myPositions;
 	int myTarget;// Suggestion: rename to myTargetIndex. Reasoning: myTarget suggests the Vec3 position. Adding Index clarifies that it is used to identify the target position. 
@@ -31,12 +31,16 @@ private:
 class CSeek: public CAIController 
 {
 public:
-	CSeek();
+	CSeek(SNavMesh* aNavMesh);
 	~CSeek()override { myTarget = nullptr; }
 	Vector3 Update(const Vector3& aPosition) override;
 	void SetTarget(CTransformComponent* aTarget);
 private:
+	int myPathTarget;
+	int myLastTarget;
 	CTransformComponent* myTarget;
+	SNavMesh* myNavMesh;
+	std::vector<Vector3> myPath;
 };
 
 class CAttack : public CAIController
