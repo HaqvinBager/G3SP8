@@ -7,6 +7,8 @@ using UnityEngine.Events;
 public class CustomEventTrigger : MonoBehaviour
 {
     public CustomEvent triggerEvent = null;
+
+    [Space(50)]
     public UnityEvent onTriggerResponse = new UnityEvent();
 
     public void OnValidate()

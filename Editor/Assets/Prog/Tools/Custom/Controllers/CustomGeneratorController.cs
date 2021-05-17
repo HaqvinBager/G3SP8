@@ -8,6 +8,7 @@ public class CustomGeneratorController : MonoBehaviour
     public int requiredCount = 3;
     private int currentCount = 0;
 
+    [Space(50)]
     public UnityEvent onCountComplete = new UnityEvent();
 
     public void RegisterAdd()
