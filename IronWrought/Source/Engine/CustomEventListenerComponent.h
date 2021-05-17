@@ -21,5 +21,6 @@ public:
 
 private:
 	CCustomEventComponent* myCustomEvent;
+	std::function<void()> myResponse;
 };
 

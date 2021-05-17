@@ -251,6 +251,9 @@ void CSceneManager::CreateCustomEventListeners(CScene& aScene)
 	CGameObject* gameObject = new CGameObject(201, "Test GameObject Listener");
 	CCustomEventComponent* customEvent = aScene.FindObjectWithID(200)->GetComponent<CCustomEventComponent>();
 	gameObject->AddComponent<CCustomEventListenerComponent>(*gameObject, customEvent);
+	//float aRange, DirectX::SimpleMath::Vector3 aColorAndIntensity, float anIntensity
+	gameObject->AddComponent<CPointLightComponent>(*gameObject, 100.0f, Vector3(0.0f, 0.0f, 1.0f), 250.0f);
+	aScene.AddInstance(gameObject->GetComponent<CPointLightComponent>()->GetPointLight());
 	aScene.AddInstance(gameObject);
 }
 

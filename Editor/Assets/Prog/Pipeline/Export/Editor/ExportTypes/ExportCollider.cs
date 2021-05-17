@@ -53,6 +53,12 @@ public class ExportCollider : MonoBehaviour
         {
             if (validInstanceIDs.Contains(collider.transform.GetInstanceID()))
             {
+                if (collider.GetComponent<Rigidbody>() == null)
+                {
+                    Debug.LogWarning("Skipping Object. Missing Rigidbody Component, Please add one if you want to Export this collider =)", collider.gameObject);
+                    continue;
+                }
+
                 ColliderLink link = new ColliderLink();
                 link.instanceID = collider.transform.GetInstanceID();
                 link.isStatic = collider.gameObject.isStatic;
