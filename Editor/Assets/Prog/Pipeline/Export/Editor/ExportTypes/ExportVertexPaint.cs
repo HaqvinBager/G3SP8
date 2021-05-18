@@ -33,28 +33,28 @@ public class ExportVertexPaint : Editor
     static string targetPath = "Assets\\Generated\\";
     static string polybrushMesh = "PolybrushMesh";
 
-    [MenuItem("Tools/Select Paintable %k")]
-    public static void SelectPaintable()
-    {
-        var objects = Selection.objects;
+    //[MenuItem("Tools/Select Paintable %k")]
+    //public static void SelectPaintable()
+    //{
+    //    var objects = Selection.objects;
 
-        List<GameObject> paintableObjects = new List<GameObject>();
-        foreach (var obj in objects)
-        {
-            GameObject gameObject = obj as GameObject;
-            if (gameObject.TryGetComponent(out MeshRenderer renderer))
-            {
-                if (renderer.sharedMaterials.Length == 1)
-                {
-                    paintableObjects.Add(gameObject);
-                }
-            }
-        }
+    //    List<GameObject> paintableObjects = new List<GameObject>();
+    //    foreach (var obj in objects)
+    //    {
+    //        GameObject gameObject = obj as GameObject;
+    //        if (gameObject.TryGetComponent(out MeshRenderer renderer))
+    //        {
+    //            paintableObjects.Add(gameObject);
+    //            //if (renderer.sharedMaterials.Length == 1)
+    //            //{
+    //            //}
+    //        }
+    //    }
 
-        Selection.activeGameObject = paintableObjects[0];
-        //Selection.
-        //Selection.objects = objects;
-    }
+    //    Selection.activeGameObject = paintableObjects[0];
+    //    //Selection.
+    //    //Selection.objects = objects;
+    //}
 
     [MenuItem("Tools/Enable VertexPaint on Selected", true)]
     public static bool IsValid()
@@ -73,8 +73,8 @@ public class ExportVertexPaint : Editor
 
                 if (selectedObject.TryGetComponent(out MeshRenderer renderer))
                 {
-                    if (renderer.sharedMaterials.Length == 1)
-                    {
+                    //if (renderer.sharedMaterials.Length == 1)
+                    //{
                         if (selectedObject.TryGetComponent(out MeshFilter filter))
                         {
                             if (!filter.sharedMesh.name.Contains("PolybrushMesh"))
@@ -82,7 +82,7 @@ public class ExportVertexPaint : Editor
                                 correctItems++;
                             }
                         }
-                    }
+                    //}
                 }
             }
         }
@@ -102,7 +102,7 @@ public class ExportVertexPaint : Editor
                 string guid = AssetDatabase.AssetPathToGUID(fbxPath);
                 fbxSaver.originalFBXGUID = guid;
 
-                selectedObject.GetComponent<MeshRenderer>().sharedMaterial = AssetDatabase.LoadAssetAtPath<Material>("Assets/VertexPaintMaterials/VP_Material_Base.mat");
+                //selectedObject.GetComponent<MeshRenderer>().sharedMaterial = AssetDatabase.LoadAssetAtPath<Material>("Assets/VertexPaintMaterials/VP_Material_Base.mat");
             }
         }
     }
@@ -217,6 +217,7 @@ public class ExportVertexPaint : Editor
     static List<string> ExtractTexturePathsFromMaterials(Material[] materials)
     {
         List<string> texturePaths = new List<string>();
+        
         MaterialProperty[] matProperty = MaterialEditor.GetMaterialProperties(materials);
         for (int i = 0; i < matProperty.Length; ++i)
         {
