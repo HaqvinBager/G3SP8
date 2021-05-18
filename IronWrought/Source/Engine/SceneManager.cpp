@@ -35,7 +35,9 @@
 #include <concurrent_vector.h>
 #include "CustomEventComponent.h"
 #include "CustomEventListenerComponent.h"
-
+#include <SafetyDoorComponent.h>
+#include <FuseboxComponent.h>
+#include <FuseComponent.h>
 
 CScene* CSceneManager::ourLastInstantiatedScene = nullptr;
 CSceneManager::CSceneManager()
@@ -110,6 +112,9 @@ CScene* CSceneManager::CreateScene(const std::string& aSceneJson)
 			SetVertexPaintedColors(*scene, sceneData["vertexColors"].GetArray(), vertexPaintData);
 			AddDecalComponents(*scene, sceneData["decals"].GetArray());
 			AddPickups(*scene, sceneData["healthPickups"].GetArray());
+			AddSafetyDoors(*scene, sceneData["mySafetyDoors"].GetArray());
+			AddFuseboxes(*scene, sceneData["myFuseboxes"].GetArray());
+			AddFuses(*scene, sceneData["myFusePickUps"].GetArray());
 			if (sceneData.HasMember("triggerEvents"))
 				AddTriggerEvents(*scene, sceneData["triggerEvents"].GetArray());
 			if (sceneName.find("Layout") != std::string::npos)//Om Unity Scene Namnet inneh�ller nyckelordet "Layout"
@@ -588,6 +593,45 @@ void CSceneManager::AddPickups(CScene& aScene, RapidArray someData)
 
 		float healthPickupAmount = m["healthPickupAmount"].GetFloat();
 		gameObject->AddComponent<CHealthPickupComponent>(*gameObject, healthPickupAmount);
+	}
+}
+
+void CSceneManager::AddSafetyDoors(CScene& aScene, RapidArray someData)
+{
+	for (const auto& m : someData)
+	{
+		const int instanceId = m["instanceID"].GetInt();
+		CGameObject* gameObject = aScene.FindObjectWithID(instanceId);
+		if (!gameObject)
+			continue;
+
+		gameObject->AddComponent<CSafetyDoorComponent>(*gameObject);
+	}
+}
+
+void CSceneManager::AddFuseboxes(CScene& aScene, RapidArray someData)
+{
+	for (const auto& m : someData)
+	{
+		const int instanceId = m["instanceID"].GetInt();
+		CGameObject* gameObject = aScene.FindObjectWithID(instanceId);
+		if (!gameObject)
+			continue;
+
+		gameObject->AddComponent<CFuseboxComponent>(*gameObject);
+	}
+}
+
+void CSceneManager::AddFuses(CScene& aScene, RapidArray someData)
+{
+	for (const auto& m : someData)
+	{
+		const int instanceId = m["instanceID"].GetInt();
+		CGameObject* gameObject = aScene.FindObjectWithID(instanceId);
+		if (!gameObject)
+			continue;
+
+		gameObject->AddComponent<CFuseComponent>(*gameObject);
 	}
 }
 

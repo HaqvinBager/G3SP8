@@ -77,6 +77,7 @@ enum class EMessageType
 
 	FuseCreated,
 	FusePickedUp,
+	OpenSafetyDoors,
 
 	Count
 };

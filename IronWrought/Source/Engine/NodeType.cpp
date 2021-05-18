@@ -158,18 +158,19 @@ void CNodeTypeCollector::PopulateTypes()
 
 void CNodeTypeCollector::ClearAllTypes()
 {
-	for (auto& customType : myCustomTypes)
-		DegisterCustomDataType(customType->NodeName());
-	for (auto& childType : myChildTypes)
+	for (auto& nodeType : myCustomTypes)
 	{
-		delete childType;
-		childType = nullptr;
+		if (nodeType != NULL)
+			DegisterCustomDataType(nodeType->NodeName());
 	}
-	for (auto& defaultType : myDefaultTypes)
-	{
-		delete defaultType;
-		defaultType = nullptr;
-	}
+	for (auto& nodeType : myChildTypes)
+		nodeType = nullptr;
+	for (auto& nodeType : myDefaultTypes)
+		nodeType = nullptr;
+
+	myDefaultTypeCounter = 0;
+	myCustomTypeCounter = 0;
+	myChildTypeCounter = 0;
 }
 
 void CNodeTypeCollector::RegisterNewDataType(const std::string& aNodeName, unsigned int aType)

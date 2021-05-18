@@ -3,8 +3,10 @@
 #include "Engine.h"
 #include "Scene.h"
 
-CFuseboxComponent::CFuseboxComponent(CGameObject& aParent) : CBehaviour(aParent), myNumberOfFuses(0), myNumberOfPickedUpFuses(0)
+CFuseboxComponent::CFuseboxComponent(CGameObject& aParent) : CBehaviour(aParent), myNumberOfFuses(0), myNumberOfPickedUpFuses(0), myHasTriggered(false)
 {
+	CMainSingleton::PostMaster().Subscribe(EMessageType::FuseCreated, this);
+	CMainSingleton::PostMaster().Subscribe(EMessageType::FusePickedUp, this);
 }
 
 CFuseboxComponent::~CFuseboxComponent()
@@ -43,12 +45,12 @@ void CFuseboxComponent::Receive(const SMessage& aMessage)
 	{
 		++myNumberOfFuses;
 	}
-		break;
+	break;
 	case EMessageType::FusePickedUp:
 	{
 		++myNumberOfPickedUpFuses;
 	}
-		break;
+	break;
 	default:
 		break;
 	}
@@ -56,9 +58,13 @@ void CFuseboxComponent::Receive(const SMessage& aMessage)
 
 void CFuseboxComponent::RunEvent()
 {
-	if (myNumberOfFuses == myNumberOfPickedUpFuses)
+	if (!myHasTriggered)
 	{
-		std::cout << "Hello!" << std::endl;
-		//event;
+		if (myNumberOfFuses == myNumberOfPickedUpFuses)
+		{
+			std::cout << "Hello!" << std::endl;
+			myHasTriggered = true;
+			CMainSingleton::PostMaster().Send({ EMessageType::OpenSafetyDoors, &myHasTriggered });
+		}
 	}
 }

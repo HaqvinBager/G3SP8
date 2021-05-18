@@ -75,6 +75,9 @@ private:
 	static void AddPlayer(CScene& aScene, RapidObject someData);
 	static void AddEnemyComponents(CScene& aScene, RapidArray someData);
 	static void AddPickups(CScene& aScene, RapidArray someData);
+	static void AddSafetyDoors(CScene& aScene, RapidArray someData);
+	static void AddFuseboxes(CScene& aScene, RapidArray someData);
+	static void AddFuses(CScene& aScene, RapidArray someData);
 	static CScene* ourLastInstantiatedScene;
 };
 

@@ -2,11 +2,11 @@
 #include "Behaviour.h"
 #include "Observer.h"
 
-class CFuseboxComponent : public CBehaviour, public IObserver
+class CSafetyDoorComponent : public CBehaviour, public IObserver
 {
 public:
-	CFuseboxComponent(CGameObject& aParent);
-	~CFuseboxComponent() override;
+	CSafetyDoorComponent(CGameObject& aParent);
+	~CSafetyDoorComponent() override;
 
 	void Destroy();
 
@@ -19,11 +19,9 @@ public:
 	void OnDisable() override;
 
 	void Receive(const SMessage& aMessage) override;
-	void RunEvent();
-
 private:
-	int myNumberOfFuses;
-	int myNumberOfPickedUpFuses;
-	bool myHasTriggered;
+	bool myShouldOpenDoors;
+	bool myIsOpen;
+	float myOpenDoorPosition;
 };
 

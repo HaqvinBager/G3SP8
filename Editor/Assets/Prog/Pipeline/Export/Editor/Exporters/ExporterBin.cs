@@ -46,6 +46,7 @@ public class ExporterBin
         var instancedModels = ExportInstancedModel.Export(level.name);
         var pointLights = ExportPointlights.ExportPointlight(level.name);
         var colliders = ExportCollider.Export(level.name, ids.Ids);
+        var fuses = FusePickUpExporter.Export(level.name);
         
         ExporterBin exporter = new ExporterBin(directoryInfo.Parent.Name);
         exporter.binWriter.Write(ids);
