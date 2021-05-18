@@ -40,53 +40,89 @@ Vector3 CPatrol::Update(const Vector3& aPosition)
 		{
 			myTarget = 0;
 		}
-		
-		myPathTarget = 0;
-		myPath.clear();
-		//myPath = CAStar::GetInstance()->GetPath(myPositions[myLastTarget], myPositions[myTarget], myNavMesh);
-		myPath = myNavMesh->CalculatePath(myPositions[myLastTarget], myPositions[myTarget], myNavMesh);
-		if (myPath.size() > 0) {
-			//CDebug::GetInstance()->DrawLine(myPositions[myTarget], myPath[0], 60);
-			for (int i = 0; i < myPath.size() - 1; i++) {
-				CDebug::GetInstance()->DrawLine(myPath[i], myPath[i + 1], 60);
-			}
-			//CDebug::GetInstance()->DrawLine(myPath.back(), myPositions[myTarget], 60);
-		}
+	}
+	myPathTarget = 0;
+	myPath.clear();
+	//myPath = CAStar::GetInstance()->GetPath(myPositions[myLastTarget], myPositions[myTarget], myNavMesh);
+	SetPath(myNavMesh->CalculatePath(aPosition, myPositions[myTarget], myNavMesh), myPositions[myTarget]);
+	if (myPath.size() > 0) {
+		//CDebug::GetInstance()->DrawLine(myPositions[myTarget], myPath[0], 60);
+		/*for (int i = 0; i < myPath.size() - 1; i++) {
+			CDebug::GetInstance()->DrawLine(myPath[i], myPath[i + 1], 60);
+		}*/
+		//CDebug::GetInstance()->DrawLine(myPath.back(), myPositions[myTarget], 60);
 	}
 
-	if (!myPath.empty()) {//change path point
-		if (myPathTarget < myPath.size()) {
-			if (CheckIfOverlap(aPosition, myPath[myPathTarget])) {
-				myPathTarget++;
-			}
+	//-------------------Old way----------------------- Kan ta bort utkommenterat senare om allt fungerar som det ska - Alexander Matthäi 2021-05-18
+	//if (!myPath.empty()) {//change path point
+	//	if (myPathTarget < myPath.size()) {
+	//		if (CheckIfOverlap(aPosition, myPath[myPathTarget])) {
+	//			myPathTarget++;
+	//		}
+	//	}
+	//}
+	//else {//create path to the patrolpoint 
+	//	myPath.clear();
+	//	myPath = myNavMesh->CalculatePath(aPosition, myPositions[myTarget], myNavMesh);
+	//	if (myPath.size() > 0) {
+	//		if (myPath.size() > 0) {
+	//			//CDebug::GetInstance()->DrawLine(myPositions[myTarget], myPath[0], 60);
+	//			for (int i = 0; i < myPath.size() - 1; i++) {
+	//				CDebug::GetInstance()->DrawLine(myPath[i], myPath[i + 1], 60);
+	//			}
+	//			//CDebug::GetInstance()->DrawLine(myPath.back(), myPositions[myTarget], 60);
+	//		}
+	//	}
+	//}
+
+	//Vector3 target;
+	//target = myPositions[myTarget]; //sets target to a patrolpoint
+
+	//if (!myPath.empty()) {//sets target to a path point
+	//	if (myPathTarget < myPath.size()) {
+	//		target = myPath[myPathTarget];
+	//	}
+	//}
+	//
+	//Vector3 direction = target - aPosition;
+	//direction.Normalize();
+	//return std::move(direction);
+
+	//-------------------New way-----------------
+	size_t pathSize = myPath.size();
+	if (pathSize > 0) {
+
+		Vector3 newPos;
+		Vector3 dir;
+
+		float epsilon = 0.05f;
+
+		dir = (myPath[pathSize - 1] - aPosition);
+		dir.Normalize();
+
+		if (DirectX::SimpleMath::Vector3::DistanceSquared(aPosition, myPath[pathSize - 1]) < epsilon) {
+			myPath.pop_back();
 		}
+		return dir;
 	}
-	else {//create path to the patrolpoint 
-		myPath.clear();
-		myPath = myNavMesh->CalculatePath(aPosition, myPositions[myTarget], myNavMesh);
-		if (myPath.size() > 0) {
-			if (myPath.size() > 0) {
-				//CDebug::GetInstance()->DrawLine(myPositions[myTarget], myPath[0], 60);
-				for (int i = 0; i < myPath.size() - 1; i++) {
-					CDebug::GetInstance()->DrawLine(myPath[i], myPath[i + 1], 60);
-				}
-				//CDebug::GetInstance()->DrawLine(myPath.back(), myPositions[myTarget], 60);
-			}
-		}
+	return Vector3();
+}
+
+void CPatrol::ClearPath() {
+	myPath.clear();
+}
+
+void CPatrol::SetPath(std::vector<Vector3> aPath, Vector3 aFinalPosition)
+{
+	if (aPath.empty()) {
+		return;
 	}
 
-	Vector3 target;
-	target = myPositions[myTarget]; //sets target to a patrolpoint
-
-	if (!myPath.empty()) {//sets target to a path point
-		if (myPathTarget < myPath.size()) {
-			target = myPath[myPathTarget];
-		}
+	myPath.clear();
+	myPath.emplace_back(aFinalPosition);
+	for (unsigned int i = 0; i < aPath.size(); ++i) {
+		myPath.emplace_back(aPath[i]);
 	}
-	
-	Vector3 direction = target - aPosition;
-	direction.Normalize();
-	return std::move(direction);
 }
 
 CSeek::CSeek(SNavMesh* aNavMesh): myNavMesh(aNavMesh),myTarget(nullptr){}
@@ -97,26 +133,62 @@ Vector3 CSeek::Update(const Vector3& aPosition)//aPostion == EnemyRobot Position
 		return Vector3();
 
 	myPathTarget = 0;
-	myPath.clear();
-	myPath = myNavMesh->CalculatePath(aPosition, myTarget->Position(), myNavMesh);
+	SetPath(myNavMesh->CalculatePath(aPosition, myTarget->Position(), myNavMesh), myTarget->Position());
+
 	//myPath = CAStar::GetInstance()->GetPath(aPosition, myTarget->Position(), myNavMesh);
+	
+	//if (!myPath.empty()) {//change path point
+	//	if (myPathTarget < myPath.size()) {
+	//		if (CheckIfOverlap(aPosition, myPath[myPathTarget])) {
+	//			myPathTarget++;
+	//		}
+	//	}
+	//}
+	//Vector3 target;
+	//if (myPathTarget < myPath.size()) {
+	//	target = myPath[myPathTarget];
+	//}
 
-	if (!myPath.empty()) {//change path point
-		if (myPathTarget < myPath.size()) {
-			if (CheckIfOverlap(aPosition, myPath[myPathTarget])) {
-				myPathTarget++;
-			}
+	//Vector3 direction = target - aPosition;
+	//direction.Normalize();
+
+	//return std::move(direction);
+
+
+	size_t pathSize = myPath.size();
+	if (pathSize > 0) { 
+
+		Vector3 newPos;
+		Vector3 dir;
+
+		float epsilon = 0.05f;
+
+		dir = (myPath[pathSize - 1] - aPosition);
+		dir.Normalize();
+
+		if (DirectX::SimpleMath::Vector3::DistanceSquared(aPosition, myPath[pathSize - 1]) < epsilon) {
+			myPath.pop_back();
 		}
+		return dir;
 	}
-	Vector3 target;
-	if (myPathTarget < myPath.size()) {
-		target = myPath[myPathTarget];
+	return Vector3();
+}
+
+void CSeek::ClearPath() {
+	myPath.clear();
+}
+
+void CSeek::SetPath(std::vector<Vector3> aPath, Vector3 aFinalPosition)
+{
+	if (aPath.empty()) {
+		return;
 	}
 
-	Vector3 direction = target - aPosition;
-	direction.Normalize();
-
-	return std::move(direction);
+	myPath.clear();
+	myPath.emplace_back(aFinalPosition);
+	for (unsigned int i = 0; i < aPath.size(); ++i) {
+		myPath.emplace_back(aPath[i]);
+	}
 }
 
 void CSeek::SetTarget(CTransformComponent* aTarget) {
@@ -152,6 +224,10 @@ Vector3 CAttack::Update(const Vector3& aPosition)
 		myAttackTimer = 0.f;
 	}
 	return std::move(direction);
+}
+
+void CAttack::ClearPath() {
+	myPath.clear();
 }
 
 void CAttack::SetTarget(CTransformComponent* aTarget)

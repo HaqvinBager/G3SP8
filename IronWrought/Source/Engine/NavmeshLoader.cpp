@@ -148,8 +148,6 @@ SNavMesh::~SNavMesh()
 
 std::vector<Vector3> SNavMesh::CalculatePath(Vector3 aStartPosition, DirectX::SimpleMath::Vector3 aDestination, SNavMesh* aNavMesh)
 {
-	
-
 	std::vector<DirectX::SimpleMath::Vector3> path;
 
 	auto startPosition = aStartPosition;
@@ -166,6 +164,17 @@ std::vector<Vector3> SNavMesh::CalculatePath(Vector3 aStartPosition, DirectX::Si
 	}
 
 	path = CAStar::GetInstance()->GetPath(startPosition, aDestination, aNavMesh, startTriangle, aNavMesh->GetTriangleAtPoint(aDestination));
+	path = ReversePath(path, aDestination);
+	return path;
+}
+
+std::vector<Vector3> SNavMesh::ReversePath(std::vector<Vector3> aPath, DirectX::SimpleMath::Vector3 aDestination)
+{
+	std::vector<Vector3> path;
+	path.emplace_back(aDestination);
+	for (unsigned int i = 0; i < aPath.size(); ++i) {
+		path.emplace_back(aPath[(aPath.size() - 1) - i]);
+	}
 	return path;
 }
 
