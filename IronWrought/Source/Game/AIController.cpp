@@ -20,9 +20,6 @@ CPatrol::CPatrol(const std::vector<Vector3>& somePositions, SNavMesh* aNavMesh)
 
 Vector3 CPatrol::Update(const Vector3& aPosition)
 {
-
-	
-
 	if (CheckIfOverlap(aPosition, myPositions[myTarget])) // change patrol points & calculate path
 	{
 		myLastTarget = myTarget;
@@ -56,6 +53,7 @@ Vector3 CPatrol::Update(const Vector3& aPosition)
 			target = myPath[myPathTarget];
 		}
 	}
+
 	/*CDebug::GetInstance()->DrawLine(myPositions[myTarget], myPath[0]);
 	for (int i = 0; i < myPath.size() - 1; i++) {
 		CDebug::GetInstance()->DrawLine(myPath[i], myPath[i + 1]);

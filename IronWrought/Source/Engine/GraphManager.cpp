@@ -56,6 +56,7 @@ void CGraphManager::SGraph::Clear()
 	}
 	myNodeInstances.clear();
 	myBluePrintInstances.clear();
+	CNodeTypeCollector::ClearAllTypes();
 }
 
 void CGraphManager::Load(const std::string& aSceneName)

@@ -1,14 +1,10 @@
-﻿using System.Collections.Generic;
-using System.IO;
+﻿using System.IO;
 using System.Text;
 using UnityEditor;
 using UnityEngine;
 
 public class ExportNavMeshToObj
 {
-
-    static readonly string fileName = "Assets\\Generated";
-
     [MenuItem("Custom/[Deprecated] Export NavMesh to mesh")]
     public static void Export()
     {
@@ -21,9 +17,9 @@ public class ExportNavMeshToObj
             triangles = triangulatedNavMesh.indices
         };
 
-        string filename = fileName + UnityEngine.SceneManagement.SceneManager.GetActiveScene().name + mesh.name + ".obj";
-        MeshToFile(mesh, filename);
-        Debug.Log("NavMesh exported as '" + filename + "'");
+        string fileName = MagicString.GeneratedPath + UnityEngine.SceneManagement.SceneManager.GetActiveScene().name + mesh.name + ".obj";
+        MeshToFile(mesh, fileName);
+        Debug.Log("NavMesh exported as '" + fileName + "'");
         AssetDatabase.Refresh();
     }
 
