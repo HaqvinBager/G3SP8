@@ -15,11 +15,13 @@ public:
 
 
 	void Position(DirectX::SimpleMath::Vector3 aPosition);
+	void PositionRigidbody(DirectX::SimpleMath::Vector3 aPosition);
 	DirectX::SimpleMath::Vector3 Position() const;
 	DirectX::SimpleMath::Vector3 WorldPosition() const;
 
 	void Rotation(DirectX::SimpleMath::Vector3 aRotation);
 	void Rotation(DirectX::SimpleMath::Quaternion aQuaternion);
+	void RotationRigidbody(DirectX::SimpleMath::Quaternion aQuaternion);
 	DirectX::SimpleMath::Quaternion Rotation() const;
 	void CopyRotation(const DirectX::SimpleMath::Matrix& aTransform);
 

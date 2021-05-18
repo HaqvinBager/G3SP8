@@ -77,6 +77,7 @@ private:
 	Vector3 myMovement;
 	float mySpeed;
 
+	bool myMovementLocked;
 	bool myIsGrounded;
 	bool myIsJumping;
 	bool myHasJumped;
@@ -90,6 +91,7 @@ private:
 	float myFallSpeed;
 	float myAirborneTimer;
 	float myStepTimer;
+	float myWakeUpTimer;
 
 	//CRigidBodyComponent* myLadder;
 

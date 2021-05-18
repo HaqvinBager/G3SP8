@@ -39,6 +39,8 @@ CPlayerControllerComponent::CPlayerControllerComponent(CGameObject& gameObject, 
 	, myAnimationComponentController(nullptr)
 	, myPlayerComponent(nullptr)
 	, myStepTimer(0.0f)
+	, myMovementLocked(false)
+	, myWakeUpTimer(0.f)
 {
 	INPUT_MAPPER->AddObserver(EInputEvent::Jump, this);
 	INPUT_MAPPER->AddObserver(EInputEvent::Crouch, this);
@@ -110,8 +112,16 @@ void CPlayerControllerComponent::Update()
 
 	GameObject().myTransform->Position(myController->GetPosition());
 	myAnimationComponentController->Update(myMovement);
-
-	ControllerUpdate();
+	if (!myMovementLocked) {
+		ControllerUpdate();
+	}
+	else {
+		myWakeUpTimer += CTimer::Dt();
+		if (myWakeUpTimer >= 1.f) {
+			myMovementLocked = false;
+			myWakeUpTimer = 0.f;
+		}
+	}
 	BoundsCheck();
 
 
@@ -216,6 +226,8 @@ void CPlayerControllerComponent::Receive(const SMessage& aMsg)
 	if (aMsg.myMessageType == EMessageType::PlayerTakeDamage)
 	{
 		myAnimationComponentController->TakeDamage();
+		myMovementLocked = true;
+		myMovement = Vector3{ 0.f, 0.f, 0.f };
 	}
 }
 

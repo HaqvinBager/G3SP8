@@ -1,5 +1,6 @@
 #pragma once
 #include "Component.h"
+#include "Observer.h"
 #define PI 3.14159265f
 class CAIController;
 class CCharacterController;
@@ -20,7 +21,7 @@ struct SEnemySetting {
 	std::vector<int> myPatrolGameObjectIds;
 };
 
-class CEnemyComponent : public CComponent
+class CEnemyComponent : public CComponent, public IObserver, public IStringObserver
 {
 public:
 	enum class EBehaviour {
@@ -43,6 +44,8 @@ public:
 	void TakeDamage(float aDamage);
 	void SetState(EBehaviour aState);
 	const EBehaviour GetState()const;
+	void Receive(const SStringMessage& aMsg) override;
+	void Receive(const SMessage& aMsg) override;
 
 	void Dead();
 
@@ -76,6 +79,9 @@ private:
 	Vector3 myCurrentDirection;
 	float myCurrentOrientation; 
 	CRigidBodyComponent* myRigidBodyComponent;
+
+	bool myMovementLocked;
+	float myWakeUpTimer;
 
 	float myYaw;
 	float myPitch;

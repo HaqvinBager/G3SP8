@@ -9,6 +9,7 @@
 #include "NavmeshLoader.h"
 #include <AStar.h>
 #include <Debug.h>
+#include "EnemyComponent.h"
 
 bool CheckIfOverlap(const Vector3& aFirstPosition, const Vector3& aSecondPosition)
 {
@@ -195,7 +196,7 @@ void CSeek::SetTarget(CTransformComponent* aTarget) {
 	myTarget = aTarget;
 }
 
-CAttack::CAttack(CEnemyComponent* aUser) : myDamage(1.0f), myTarget(nullptr), myAttackCooldown(1.f), myAttackTimer(0.f), myUser(aUser) {}
+CAttack::CAttack(CEnemyComponent* aUser, Vector3 aResetPosition) : myDamage(1.0f), myTarget(nullptr), myAttackCooldown(1.f), myAttackTimer(0.f), myUser(aUser), myResetPosition(aResetPosition){}
 
 Vector3 CAttack::Update(const Vector3& aPosition)
 {
@@ -217,9 +218,10 @@ Vector3 CAttack::Update(const Vector3& aPosition)
 
 		if (hits > 0) {
 			std::cout << "Player Hit " << std::endl;
-			float damage = 5.0f;
-			CMainSingleton::PostMaster().Send({ EMessageType::PlayerTakeDamage, &damage });
+			myUser->GameObject().myTransform->PositionRigidbody(myResetPosition);
 			CMainSingleton::PostMaster().SendLate({ EMessageType::EnemyAttack, myUser });
+			CMainSingleton::PostMaster().Send({ EMessageType::PlayerTakeDamage });
+			CMainSingleton::PostMaster().Send({ EMessageType::EnemyAttackedPlayer });
 		}
 		myAttackTimer = 0.f;
 	}

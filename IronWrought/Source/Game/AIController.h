@@ -50,7 +50,7 @@ private:
 class CAttack : public CAIController
 {
 public:
-	CAttack(CEnemyComponent* aUser);
+	CAttack(CEnemyComponent* aUser, Vector3 aResetPosition);
 	~CAttack() override { myTarget = nullptr; }
 	Vector3 Update(const Vector3& aPosition) override;
 	void ClearPath() override;
@@ -63,4 +63,5 @@ private:
 	CTransformComponent* myTarget;
 	CEnemyComponent* myUser;
 	std::vector<Vector3> myPath;
+	Vector3 myResetPosition;
 };

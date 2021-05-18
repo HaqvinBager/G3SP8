@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "TransformComponent.h"
+#include "RigidBodyComponent.h"
 
 using namespace DirectX::SimpleMath;
 
@@ -47,6 +48,14 @@ void CTransformComponent::Position(DirectX::SimpleMath::Vector3 aPosition)
 	myLocalTransform.Translation(aPosition);
 }
 
+void CTransformComponent::PositionRigidbody(DirectX::SimpleMath::Vector3 aPosition)
+{
+	CRigidBodyComponent* rigidbody = nullptr;
+	if (GameObject().TryGetComponent<CRigidBodyComponent>(&rigidbody)) {
+		rigidbody->SetPosition(aPosition);
+	}
+}
+
 DirectX::SimpleMath::Vector3 CTransformComponent::Position() const
 {
 	return myLocalTransform.Translation();
@@ -84,6 +93,14 @@ void CTransformComponent::Rotation(DirectX::SimpleMath::Quaternion aQuaternion)
 	myLocalTransform = Matrix::CreateScale(myScale);
 	myLocalTransform *= tempRotation;
 	myLocalTransform.Translation(tempTranslation);
+}
+
+void CTransformComponent::RotationRigidbody(DirectX::SimpleMath::Quaternion aQuaternion)
+{
+	CRigidBodyComponent* rigidbody = nullptr;
+	if (GameObject().TryGetComponent<CRigidBodyComponent>(&rigidbody)) {
+		rigidbody->SetRotation(aQuaternion);
+	}
 }
 
 DirectX::SimpleMath::Quaternion CTransformComponent::Rotation() const

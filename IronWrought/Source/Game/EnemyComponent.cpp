@@ -23,12 +23,15 @@ CEnemyComponent::CEnemyComponent(CGameObject& aParent, const SEnemySetting& some
 	, myEnemy(nullptr)
 	, myCurrentState(EBehaviour::Count)
 	, myRigidBodyComponent(nullptr)
+	, myMovementLocked(false)
+	, myWakeUpTimer(0.f)
 {
 	//myController = CEngine::GetInstance()->GetPhysx().CreateCharacterController(GameObject().myTransform->Position(), 0.6f * 0.5f, 1.8f * 0.5f, GameObject().myTransform, aHitReport);
 	//myController->GetController().getActor()->setRigidBodyFlag(PxRigidBodyFlag::eUSE_KINEMATIC_TARGET_FOR_SCENE_QUERIES, true);
 	mySettings = someSettings;
 	myPitch = 0.0f;
 	myYaw = 0.0f;
+	CMainSingleton::PostMaster().Subscribe(EMessageType::EnemyAttackedPlayer, this);
 }
 
 CEnemyComponent::~CEnemyComponent()
@@ -38,6 +41,7 @@ CEnemyComponent::~CEnemyComponent()
 	{
 		delete myBehaviours[i];
 	}
+	CMainSingleton::PostMaster().Unsubscribe(EMessageType::EnemyAttackedPlayer, this);
 }
 
 void CEnemyComponent::Awake()
@@ -63,7 +67,7 @@ void CEnemyComponent::Start()
 		seekBehaviour->SetTarget(myPlayer->myTransform);
 	}
 
-	CAttack* attack = new CAttack(this);
+	CAttack* attack = new CAttack(this, myPatrolPositions[0]);
 	if(myPlayer != nullptr)
 		attack->SetTarget(myPlayer->myTransform);
 	myBehaviours.push_back(attack);
@@ -82,33 +86,42 @@ void CEnemyComponent::Start()
 
 void CEnemyComponent::Update()//får bestämma vilket behaviour vi vill köra i denna Update()!!!
 {
-	float distanceToPlayer = Vector3::DistanceSquared(myPlayer->myTransform->Position(), GameObject().myTransform->Position());
+	if (!myMovementLocked) {
+		float distanceToPlayer = Vector3::DistanceSquared(myPlayer->myTransform->Position(), GameObject().myTransform->Position());
 
-	if (mySettings.myRadius * mySettings.myRadius >= distanceToPlayer) {
-		/*if (distanceToPlayer <= mySettings.myAttackDistance * mySettings.myAttackDistance) 
-		{
-			std::cout << "ATTACK" << std::endl;
-			SetState(EBehaviour::Attack);
+		if (mySettings.myRadius * mySettings.myRadius >= distanceToPlayer) {
+			if (distanceToPlayer <= mySettings.myAttackDistance * mySettings.myAttackDistance)
+			{
+				std::cout << "ATTACK" << std::endl;
+				SetState(EBehaviour::Attack);
+			}
+			else
+			{
+				std::cout << "SEEK" << std::endl;
+				SetState(EBehaviour::Seek);
+			}
 		}
-		else
-		{*/
-			std::cout << "SEEK" << std::endl;
-			SetState(EBehaviour::Seek);
-		//}
+		else {
+			std::cout << "PATROL" << std::endl;
+			SetState(EBehaviour::Patrol);
+		}
+
+		if (myRigidBodyComponent) {
+			Vector3 targetDirection = myBehaviours[static_cast<int>(myCurrentState)]->Update(GameObject().myTransform->Position());
+
+			targetDirection.y = 0;
+			myRigidBodyComponent->AddForce(targetDirection, mySettings.mySpeed);
+			float targetOrientation = WrapAngle(atan2f(targetDirection.x, targetDirection.z));
+			myCurrentOrientation = Lerp(myCurrentOrientation, targetOrientation, 2.0f * CTimer::Dt());
+			GameObject().myTransform->Rotation({ 0, DirectX::XMConvertToDegrees(myCurrentOrientation) + 180.f, 0 });
+		}
 	}
 	else {
-		std::cout << "PATROL" << std::endl;
-		SetState(EBehaviour::Patrol);
-	}
-
-	if (myRigidBodyComponent) {
-		Vector3 targetDirection = myBehaviours[static_cast<int>(myCurrentState)]->Update(GameObject().myTransform->Position());
-		
-		targetDirection.y = 0;
-		myRigidBodyComponent->AddForce(targetDirection,mySettings.mySpeed);
-		float targetOrientation = WrapAngle(atan2f(targetDirection.x, targetDirection.z));
-		myCurrentOrientation = Lerp(myCurrentOrientation, targetOrientation, 2.0f * CTimer::Dt());
-		GameObject().myTransform->Rotation({ 0, DirectX::XMConvertToDegrees(myCurrentOrientation) + 180.f, 0 });
+		myWakeUpTimer += CTimer::Dt();
+		if (myWakeUpTimer >= 1.f) {
+			myMovementLocked = false;
+			myWakeUpTimer = 0.f;
+		}
 	}
 
 	if (myCurrentHealth <= 0.f) {
@@ -167,6 +180,18 @@ void CEnemyComponent::SetState(EBehaviour aState)
 const CEnemyComponent::EBehaviour CEnemyComponent::GetState() const
 {
 	return myCurrentState;
+}
+
+void CEnemyComponent::Receive(const SStringMessage& /*aMsg*/)
+{
+}
+
+void CEnemyComponent::Receive(const SMessage& aMsg)
+{
+	if (aMsg.myMessageType == EMessageType::EnemyAttackedPlayer)
+	{
+		myMovementLocked = true;
+	}
 }
 
 void CEnemyComponent::Dead()
