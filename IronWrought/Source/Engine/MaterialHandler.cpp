@@ -109,13 +109,22 @@ SVertexPaintData CMaterialHandler::RequestVertexColorID(std::vector<SVertexPaint
 	for (unsigned int j = 0; j < colorData.myColors.size(); ++j)
 	{
 		vertexPositionToColorMap[{ -colorData.myVertexPositions[j].x, colorData.myVertexPositions[j].y, -colorData.myVertexPositions[j].z}] = colorData.myColors[j];
+		//vertexPositionToColorMap[{ colorData.myVertexPositions[j].z, colorData.myVertexPositions[j].x, colorData.myVertexPositions[j].y}] = colorData.myColors[j];
+
 	}
 
 	std::vector<Vector3> rgbColorData = {};
-	for (auto& ourFBXVertexPositionValue : fbxVertexPositions)
+	rgbColorData.resize(fbxVertexPositions.size());
+
+	for (int i = 0; i < fbxVertexPositions.size(); ++i)
 	{
-		rgbColorData.push_back(vertexPositionToColorMap[ourFBXVertexPositionValue]);
+		rgbColorData[i] = vertexPositionToColorMap[fbxVertexPositions[i]];
 	}
+
+	//for (auto& ourFBXVertexPositionValue : fbxVertexPositions)
+	//{
+	//	rgbColorData.push_back(vertexPositionToColorMap[ourFBXVertexPositionValue]);
+	//}
 
 	if (myVertexColorBuffers.find(colorData.myVertexMeshID) == myVertexColorBuffers.end())
 	{
@@ -189,7 +198,7 @@ bool CMaterialHandler::Init(CDirectXFramework* aFramwork)
 
 CMaterialHandler::CMaterialHandler()
 	: myDevice(nullptr)
-	, myMaterialPath(ASSETPATH("Assets/Graphics/Textures/Materials/"))
+	, myMaterialPath(ASSETPATH("Assets/IronWrought/Texture/"))
 	, myDecalPath(ASSETPATH("Assets/Graphics/Textures/Decals/"))
 	, myVertexLinksPath(ASSETPATH("Assets/Generated/"))
 {
