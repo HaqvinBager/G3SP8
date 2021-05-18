@@ -75,5 +75,8 @@ enum class EMessageType
 	EnemyTargetLost,
 	EnemyTakeDamage,
 
+	FuseCreated,
+	FusePickedUp,
+
 	Count
 };

@@ -16,7 +16,6 @@ int CNodeTypeStartGetCustom::OnEnter(class CNodeInstance* aTriggeringNodeInstanc
 	
 	if (aTriggeringNodeInstance->myShouldTriggerAgain)
 	{
-		//aTriggeringNodeInstance->myShouldTriggerAgain = false;
 		CNodeDataManager::Get()->SetData(myNodeDataKey, CNodeDataManager::EDataType::EStart, aTriggeringNodeInstance->myShouldTriggerAgain);
 		return 0;
 	}
