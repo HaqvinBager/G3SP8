@@ -41,7 +41,6 @@ public:
 	void SetTarget(CTransformComponent* aTarget);
 private:
 	int myPathTarget;
-	int myLastTarget;
 	CTransformComponent* myTarget;
 	SNavMesh* myNavMesh;
 	std::vector<Vector3> myPath;

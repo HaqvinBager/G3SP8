@@ -22,6 +22,18 @@ public class EnemyExporter
         foreach(EnemySettings enemy in allEnemies)
         {
             enemy.settings.instanceID = enemy.transform.GetInstanceID();
+            List<InterestPoint> points = new List<InterestPoint>();
+            for(int i = 0; i < enemy.settings.points.Count; ++i)
+            {
+                if (enemy.settings.points[i].GetComponent<PatrolPoint>())
+                {
+                    InterestPoint interest = new InterestPoint();
+                    interest.interestValue = enemy.settings.points[i].GetComponent<PatrolPoint>().myInterestValue;
+                    interest.transform = enemy.settings.points[i].transform;
+                    points.Add(interest);
+                }
+            }
+            enemy.settings.interestPoints = points;
             collection.enemies.Add(enemy.settings);
         }
 

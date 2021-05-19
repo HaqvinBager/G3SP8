@@ -67,10 +67,10 @@ void CEnemyComponent::Start()
 		seekBehaviour->SetTarget(myPlayer->myTransform);
 	}
 
-	CAttack* attack = new CAttack(this, myPatrolPositions[0]);
-	if(myPlayer != nullptr)
+	//CAttack* attack = new CAttack(this, myPatrolPositions[0]);
+	/*if(myPlayer != nullptr)
 		attack->SetTarget(myPlayer->myTransform);
-	myBehaviours.push_back(attack);
+	myBehaviours.push_back(attack);*/
 
 	//this->GameObject().GetComponent<CVFXSystemComponent>()->EnableEffect(0);
 
@@ -87,7 +87,7 @@ void CEnemyComponent::Start()
 void CEnemyComponent::Update()//får bestämma vilket behaviour vi vill köra i denna Update()!!!
 {
 	if (!myMovementLocked) {
-		float distanceToPlayer = Vector3::DistanceSquared(myPlayer->myTransform->Position(), GameObject().myTransform->Position());
+		/*float distanceToPlayer = Vector3::DistanceSquared(myPlayer->myTransform->Position(), GameObject().myTransform->Position());
 
 		if (mySettings.myRadius * mySettings.myRadius >= distanceToPlayer) {
 			if (distanceToPlayer <= mySettings.myAttackDistance * mySettings.myAttackDistance)
@@ -100,11 +100,11 @@ void CEnemyComponent::Update()//får bestämma vilket behaviour vi vill köra i 
 				std::cout << "SEEK" << std::endl;
 				SetState(EBehaviour::Seek);
 			}
-		}
-		else {
+		}*/
+		//else {
 			std::cout << "PATROL" << std::endl;
 			SetState(EBehaviour::Patrol);
-		}
+		//}
 
 		if (myRigidBodyComponent) {
 			Vector3 targetDirection = myBehaviours[static_cast<int>(myCurrentState)]->Update(GameObject().myTransform->Position());

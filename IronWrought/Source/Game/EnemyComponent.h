@@ -21,6 +21,10 @@ struct SEnemySetting {
 	std::vector<int> myPatrolGameObjectIds;
 };
 
+struct SInterestPoints {
+
+};
+
 class CEnemyComponent : public CComponent, public IObserver, public IStringObserver
 {
 public:

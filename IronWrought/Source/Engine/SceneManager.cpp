@@ -97,8 +97,8 @@ CScene* CSceneManager::CreateScene(const std::string& aSceneJson)
 		AddModelComponents(*scene, binLevelData.myModels);
 		AddCollider(*scene, binLevelData.myColliders);
 
-		CreateCustomEvents(*scene);
-		CreateCustomEventListeners(*scene);
+		//CreateCustomEvents(*scene);
+		//CreateCustomEventListeners(*scene);
 
 		for (const auto& sceneData : scenes)
 		{
@@ -568,11 +568,13 @@ void CSceneManager::AddEnemyComponents(CScene& aScene, RapidArray someData)
 		settings.mySpeed = m["speed"].GetFloat();
 		settings.myHealth = m["health"].GetFloat();
 		settings.myAttackDistance = m["attackDistance"].GetFloat();
-		if (m.HasMember("points"))
+		if (m.HasMember("interestPoints"))
 		{
-			for (const auto& point : m["points"].GetArray())
+			for (const auto& point : m["interestPoints"].GetArray())
 			{
-				settings.myPatrolGameObjectIds.push_back(point["instanceID"].GetInt());
+				settings.myPatrolGameObjectIds.push_back(point["transform"]["instanceID"].GetInt());
+				int id = point["transform"]["instanceID"].GetInt();
+				CGameObject* patrolGameObject = CEngine::GetInstance()->GetActiveScene().FindObjectWithID(id);
 			}
 		}
 		gameObject->AddComponent<CEnemyComponent>(*gameObject, settings);

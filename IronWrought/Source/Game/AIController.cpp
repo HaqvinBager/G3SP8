@@ -44,52 +44,8 @@ Vector3 CPatrol::Update(const Vector3& aPosition)
 	}
 	myPathTarget = 0;
 	myPath.clear();
-	//myPath = CAStar::GetInstance()->GetPath(myPositions[myLastTarget], myPositions[myTarget], myNavMesh);
 	SetPath(myNavMesh->CalculatePath(aPosition, myPositions[myTarget], myNavMesh), myPositions[myTarget]);
-	if (myPath.size() > 0) {
-		//CDebug::GetInstance()->DrawLine(myPositions[myTarget], myPath[0], 60);
-		/*for (int i = 0; i < myPath.size() - 1; i++) {
-			CDebug::GetInstance()->DrawLine(myPath[i], myPath[i + 1], 60);
-		}*/
-		//CDebug::GetInstance()->DrawLine(myPath.back(), myPositions[myTarget], 60);
-	}
 
-	//-------------------Old way----------------------- Kan ta bort utkommenterat senare om allt fungerar som det ska - Alexander Matthäi 2021-05-18
-	//if (!myPath.empty()) {//change path point
-	//	if (myPathTarget < myPath.size()) {
-	//		if (CheckIfOverlap(aPosition, myPath[myPathTarget])) {
-	//			myPathTarget++;
-	//		}
-	//	}
-	//}
-	//else {//create path to the patrolpoint 
-	//	myPath.clear();
-	//	myPath = myNavMesh->CalculatePath(aPosition, myPositions[myTarget], myNavMesh);
-	//	if (myPath.size() > 0) {
-	//		if (myPath.size() > 0) {
-	//			//CDebug::GetInstance()->DrawLine(myPositions[myTarget], myPath[0], 60);
-	//			for (int i = 0; i < myPath.size() - 1; i++) {
-	//				CDebug::GetInstance()->DrawLine(myPath[i], myPath[i + 1], 60);
-	//			}
-	//			//CDebug::GetInstance()->DrawLine(myPath.back(), myPositions[myTarget], 60);
-	//		}
-	//	}
-	//}
-
-	//Vector3 target;
-	//target = myPositions[myTarget]; //sets target to a patrolpoint
-
-	//if (!myPath.empty()) {//sets target to a path point
-	//	if (myPathTarget < myPath.size()) {
-	//		target = myPath[myPathTarget];
-	//	}
-	//}
-	//
-	//Vector3 direction = target - aPosition;
-	//direction.Normalize();
-	//return std::move(direction);
-
-	//-------------------New way-----------------
 	size_t pathSize = myPath.size();
 	if (pathSize > 0) {
 
