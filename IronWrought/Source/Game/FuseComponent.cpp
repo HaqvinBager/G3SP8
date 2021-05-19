@@ -1,10 +1,10 @@
 #include "stdafx.h"
 #include "FuseComponent.h"
 #include "RigidBodyComponent.h"
-#include "Engine.h"
 #include "Scene.h"
+#include "PickupComponent.h"
 
-CFuseComponent::CFuseComponent(CGameObject& aParent) : CBehaviour(aParent)
+CFuseComponent::CFuseComponent(CGameObject& aParent) : CPickupComponent(aParent)
 {
 	int value = 1;
 	CMainSingleton::PostMaster().Send({ EMessageType::FuseCreated, &value });
@@ -12,12 +12,6 @@ CFuseComponent::CFuseComponent(CGameObject& aParent) : CBehaviour(aParent)
 
 CFuseComponent::~CFuseComponent()
 {
-}
-
-void CFuseComponent::Destroy()
-{
-	GameObject().GetComponent<CRigidBodyComponent>()->Destroy();
-	CEngine::GetInstance()->GetActiveScene().RemoveInstance(&GameObject());
 }
 
 void CFuseComponent::Awake()

@@ -1,13 +1,11 @@
 #pragma once
-#include "Behaviour.h"
+#include "PickupComponent.h"
 
-class CFuseComponent : public CBehaviour
+class CFuseComponent : public CPickupComponent
 {
 public:
 	CFuseComponent(CGameObject& aParent);
 	~CFuseComponent() override;
-
-	void Destroy();
 
 public:
 	void Awake() override;
@@ -16,5 +14,5 @@ public:
 
 	void OnEnable() override;
 	void OnDisable() override;
-	void OnPickUp();
+	void OnPickUp() override;
 };
