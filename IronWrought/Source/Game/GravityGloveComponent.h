@@ -55,6 +55,7 @@ public:
 	void Update() override;
 
 	void Pull();
+	void Release();
 	void Push();
 
 	void OnEnable() override;
