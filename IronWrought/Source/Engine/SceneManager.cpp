@@ -310,7 +310,7 @@ void CSceneManager::AddModelComponents(CScene& aScene, const std::vector<Binary:
 		{
 			assetPath = ASSETPATH(assetPath);
 			gameObject->AddComponent<CModelComponent>(*gameObject, assetPath);
-			AnimationLoader::AddAnimationsToGameObject(gameObject, assetPath);
+			//AnimationLoader::AddAnimationsToGameObject(gameObject, assetPath);
 		}
 	}
 }

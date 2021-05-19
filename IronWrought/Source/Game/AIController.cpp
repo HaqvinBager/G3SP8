@@ -20,6 +20,9 @@ CPatrol::CPatrol(const std::vector<Vector3>& somePositions, SNavMesh* aNavMesh)
 
 Vector3 CPatrol::Update(const Vector3& aPosition)
 {
+	if (myPositions.empty())
+		return Vector3::Zero;
+
 	if (CheckIfOverlap(aPosition, myPositions[myTarget])) // change patrol points & calculate path
 	{
 		myLastTarget = myTarget;
