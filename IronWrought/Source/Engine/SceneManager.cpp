@@ -158,7 +158,7 @@ CScene* CSceneManager::CreateScene(const std::string& aSceneJson)
 
 	CEngine::GetInstance()->GetPhysx().Cooking(scene->ActiveGameObjects(), scene);
 
-	//scene->InitCanvas(ASSETPATH("Assets/IronWrought/Textures/UI/JSON/UI_HUD.json"));
+	//scene->InitCanvas(ASSETPATH("Assets/IronWrought/UI/JSON/PH_UI_HUD.json"));
 
 	return scene;
 }

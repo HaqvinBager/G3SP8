@@ -38,18 +38,20 @@ public:
 	void Click(bool anIsPressed, void* someData);
 	void CheckMouseCollision(DirectX::SimpleMath::Vector2 aScreenSpacePosition);
 
-	std::vector<EMessageType> GetMessagesToSend() { return myMessagesToSend; }
+	const std::vector<EMessageType>& GetMessagesToSend() { return myMessagesToSend; }
 
 	void Enabled(const bool& anIsEnabled);
-	inline const bool Enabled();
+	const bool Enabled();
 
 	void SetRenderLayer(const ERenderOrder& aRenderLayer);
+	const ERenderOrder GetRenderLayer();
 
 private:
+
 	CButton();
-	CButton(SButtonData& someData, CScene& aScene);
+	CButton(SButtonData& someData);
 	~CButton();
-	void Init(SButtonData& someData, CScene& aScene);
+	void Init(SButtonData& someData);
 
 private:
 	std::vector<EMessageType> myMessagesToSend;
