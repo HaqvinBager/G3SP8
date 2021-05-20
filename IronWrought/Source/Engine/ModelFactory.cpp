@@ -276,7 +276,11 @@ CModel* CModelFactory::LoadModel(std::string aFilePath)
 	model->HasBones(mesh->myModel->myNumBones > 0);
 #endif
 
-	myModelMap.emplace(aFilePath, model);
+	//myModelMap.emplace(aFilePath, model);
+	myModelMap[aFilePath] = std::move(model);
+
+	mesh = nullptr;
+
 	return model;
 }
 
@@ -301,8 +305,6 @@ CModel* CModelFactory::GetOutlineModelSubset()
 	ENGINE_HR_MESSAGE(myFramework->GetDevice()->CreatePixelShader(psData.data(), psData.size(), nullptr, &pixelShader), "Pixel Shader could not be created.");
 	psFile.close();
 	//End Shader
-
-
 
 	myOutlineModelSubset = new CModel();
 
@@ -600,7 +602,11 @@ CModel* CModelFactory::CreateInstancedModels(std::string aFilePath, int aNumberO
 	model->Init(modelInstanceData);
 	SInstancedModel instancedModel = { aFilePath, aNumberOfInstanced };
 
-	myInstancedModelMap[instancedModel] = model;
+	myInstancedModelMap[instancedModel] = std::move(model);
+
+	delete loaderModel;
+	mesh = nullptr;
+
 	return model;
 }
 
@@ -628,7 +634,7 @@ ID3D11ShaderResourceView* CModelFactory::GetShaderResourceView(ID3D11Device* aDe
 		std::copy(errorTexturePath.begin(), errorTexturePath.end(), wideErrorPath);
 		wideErrorPath[errorTexturePath.length()] = 0;
 
-		result = DirectX::CreateDDSTextureFromFile(aDevice, wideErrorPath, nullptr, &shaderResourceView);
+		DirectX::CreateDDSTextureFromFile(aDevice, wideErrorPath, nullptr, &shaderResourceView);
 		delete[] wideErrorPath;
 	}
 
