@@ -43,7 +43,7 @@ private:
 	static void SetTransforms(CScene& aScene, RapidArray someData);
 	static void SetTransforms(CScene& aScene, const std::vector<Binary::STransform>& someData);
 
-	static void AddModelComponents(CScene& aScene, RapidArray someData);
+	//static void AddModelComponents(CScene& aScene, RapidArray someData);
 	static void AddModelComponents(CScene& aScene, const std::vector<Binary::SModel>& someData);
 
 	static void AddPointLights(CScene& aScene, RapidArray someData);
@@ -52,7 +52,7 @@ private:
 	static void AddCollider(CScene& aScene, RapidArray someData);
 	static void AddCollider(CScene& aScene, const std::vector<Binary::SCollider>& someData);
 
-	static void AddInstancedModelComponents(CScene& aScene, RapidArray someData);
+	//static void AddInstancedModelComponents(CScene& aScene, RapidArray someData);
 	static void AddInstancedModelComponents(CScene& aScene, const std::vector<Binary::SInstancedModel>& someData);
 	
 	static void AddTriggerEvents(CScene& aScene, RapidArray someData);
@@ -63,11 +63,7 @@ private:
 
 	static void SetParents(CScene& aScene, RapidArray someData);
 	
-
-
 	static void SetVertexPaintedColors(CScene& aScene, RapidArray someData, const SVertexPaintCollection& vertexColorData);
-
-
 
 	static void AddDirectionalLight(CScene& aScene, RapidObject someData);
 	static void AddDirectionalLights(CScene& aScene, RapidArray someData);

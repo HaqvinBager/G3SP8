@@ -72,6 +72,9 @@ public:
 
 	void Init(SModelData data);
 	SModelData& GetModelData();
+	void SetMaterials(const std::vector<std::array<ID3D11ShaderResourceView*, 3>>& someMaterials);
+	unsigned int AddMaterial(const std::array<ID3D11ShaderResourceView*, 3>& aMaterial);
+	void AddMaterial(const int aMaterialID);
 
 public:
 	void HasBones(const bool aHasBones) { myHasBones = aHasBones; }

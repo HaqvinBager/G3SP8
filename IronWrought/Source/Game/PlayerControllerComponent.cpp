@@ -61,16 +61,16 @@ CPlayerControllerComponent::CPlayerControllerComponent(CGameObject& gameObject, 
 	GameObject().myTransform->FetchChildren()[0]->Rotation({ 0.0f, 0.0f, 0.0f });
 	myCamera = GameObject().myTransform->FetchChildren()[0]->GameObject().GetComponent<CCameraControllerComponent>();
 
-	CAnimationComponent* animComp = GameObject().myTransform->FetchChildren()[0]->GameObject().GetComponent<CAnimationComponent>();
-	if (animComp)
-	{
-		myAnimationComponentController = new CPlayerAnimationController();
-		myAnimationComponentController->Init(animComp);
-	}
-	else
-	{
-		assert(false && "No animation component available!");
-	}
+	//CAnimationComponent* animComp = GameObject().myTransform->FetchChildren()[0]->GameObject().GetComponent<CAnimationComponent>();
+	//if (animComp)
+	//{
+	//	myAnimationComponentController = new CPlayerAnimationController();
+	//	myAnimationComponentController->Init(animComp);
+	//}
+	//else
+	//{
+	//	assert(false && "No animation component available!");
+	//}
 }
 
 CPlayerControllerComponent::~CPlayerControllerComponent()
@@ -109,7 +109,7 @@ void CPlayerControllerComponent::Update()
 #endif
 
 	GameObject().myTransform->Position(myController->GetPosition());
-	myAnimationComponentController->Update(myMovement);
+	//myAnimationComponentController->Update(myMovement);
 
 	ControllerUpdate();
 	BoundsCheck();
@@ -215,7 +215,7 @@ void CPlayerControllerComponent::Receive(const SMessage& aMsg)
 {
 	if (aMsg.myMessageType == EMessageType::PlayerTakeDamage)
 	{
-		myAnimationComponentController->TakeDamage();
+		//myAnimationComponentController->TakeDamage();
 	}
 }
 
@@ -269,7 +269,7 @@ void CPlayerControllerComponent::Crouch()
 		GameObject().myTransform->FetchChildren()[0]->Position({ 0.0f, myCameraPosYCrouching, myCameraPosZ });// Equivalent to myCamera->GameObject().myTransform->Position
 		mySpeed = myCrouchSpeed;
 		// THIS IS TEMP :)
-		myAnimationComponentController->TakeDamage();// TEMP :)
+		//myAnimationComponentController->TakeDamage();// TEMP :)
 		// SUPER TEMP :)
 	}
 	else

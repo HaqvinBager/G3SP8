@@ -67,6 +67,8 @@ CScene* CSceneManager::CreateEmpty()
 	emptyScene->EnvironmentLight(envLight->GetComponent<CEnvironmentLightComponent>()->GetEnvironmentLight());
 	emptyScene->AddInstance(envLight);
 
+
+
 	//AddPlayer(*emptyScene, std::string());
 
 	return emptyScene;
@@ -273,24 +275,24 @@ void CSceneManager::SetParents(CScene& aScene, RapidArray someData)
 	}
 }
 
-void CSceneManager::AddModelComponents(CScene& aScene, RapidArray someData)
-{
-	for (const auto& m : someData)
-	{
-		const int instanceId = m["instanceID"].GetInt();
-		CGameObject* gameObject = aScene.FindObjectWithID(instanceId);
-		if (!gameObject)
-			continue;
-
-		const int assetId = m["assetID"].GetInt();
-		if (CJsonReader::Get()->HasAssetPath(assetId))
-		{
-			std::string assetPath = ASSETPATH(CJsonReader::Get()->GetAssetPath(assetId));
-			gameObject->AddComponent<CModelComponent>(*gameObject, assetPath);
-			AnimationLoader::AddAnimationsToGameObject(gameObject, assetPath);// Does nothing if the Model has no animations.
-		}
-	}
-}
+//void CSceneManager::AddModelComponents(CScene& aScene, RapidArray someData)
+//{
+//	for (const auto& m : someData)
+//	{
+//		const int instanceId = m["instanceID"].GetInt();
+//		CGameObject* gameObject = aScene.FindObjectWithID(instanceId);
+//		if (!gameObject)
+//			continue;
+//
+//		const int assetId = m["assetID"].GetInt();
+//		if (CJsonReader::Get()->HasAssetPath(assetId))
+//		{
+//			std::string assetPath = ASSETPATH(CJsonReader::Get()->GetAssetPath(assetId));
+//			gameObject->AddComponent<CModelComponent>(*gameObject, assetPath);
+//			AnimationLoader::AddAnimationsToGameObject(gameObject, assetPath);// Does nothing if the Model has no animations.
+//		}
+//	}
+//}
 
 void CSceneManager::AddModelComponents(CScene& aScene, const std::vector<Binary::SModel>& someData)
 {
@@ -300,13 +302,16 @@ void CSceneManager::AddModelComponents(CScene& aScene, const std::vector<Binary:
 		if (gameObject == nullptr)
 			continue;
 
-		std::string assetPath = {};
-		if (CJsonReader::Get()->TryGetAssetPath(m.assetID, assetPath))
-		{
-			assetPath = ASSETPATH(assetPath);
-			gameObject->AddComponent<CModelComponent>(*gameObject, assetPath);
-			AnimationLoader::AddAnimationsToGameObject(gameObject, assetPath);
-		}
+		gameObject->AddComponent<CModelComponent>(*gameObject, m);
+
+
+		//std::string assetPath = {};
+		//if (CJsonReader::Get()->TryGetAssetPath(m.assetID, assetPath))
+		//{
+		//	assetPath = ASSETPATH(assetPath);
+		//	gameObject->AddComponent<CModelComponent>(*gameObject, assetPath);
+		//	AnimationLoader::AddAnimationsToGameObject(gameObject, assetPath);
+		//}
 	}
 }
 
@@ -341,38 +346,38 @@ void CSceneManager::SetVertexPaintedColors(CScene& aScene, RapidArray someData, 
 	}
 }
 
-void CSceneManager::AddInstancedModelComponents(CScene& aScene, RapidArray someData)
-{
-	for (const auto& i : someData)
-	{
-		int assetID = i["assetID"].GetInt();
-		CGameObject* gameObject = new CGameObject(assetID);
-		gameObject->IsStatic(true);
-		std::vector<Matrix> instancedModelTransforms;
-		instancedModelTransforms.reserve(i["transforms"].GetArray().Size());
-
-		for (const auto& t : i["transforms"].GetArray())
-		{
-			CGameObject temp(0);
-			CTransformComponent transform(temp);
-			transform.Scale({ t["scale"]["x"].GetFloat(),
-								 t["scale"]["y"].GetFloat(),
-								 t["scale"]["z"].GetFloat() });
-			transform.Position({ t["position"]["x"].GetFloat(),
-								 t["position"]["y"].GetFloat(),
-								 t["position"]["z"].GetFloat() });
-			transform.Rotation({ t["rotation"]["x"].GetFloat(),
-								 t["rotation"]["y"].GetFloat(),
-								 t["rotation"]["z"].GetFloat() });
-			instancedModelTransforms.emplace_back(transform.GetLocalMatrix());
-		}
-		if (CJsonReader::Get()->HasAssetPath(assetID))
-		{
-			gameObject->AddComponent<CInstancedModelComponent>(*gameObject, ASSETPATH(CJsonReader::Get()->GetAssetPath(assetID)), instancedModelTransforms);
-			aScene.AddInstance(gameObject);
-		}
-	}
-}
+//void CSceneManager::AddInstancedModelComponents(CScene& aScene, RapidArray someData)
+//{
+//	for (const auto& i : someData)
+//	{
+//		int assetID = i["assetID"].GetInt();
+//		CGameObject* gameObject = new CGameObject(assetID);
+//		gameObject->IsStatic(true);
+//		std::vector<Matrix> instancedModelTransforms;
+//		instancedModelTransforms.reserve(i["transforms"].GetArray().Size());
+//
+//		for (const auto& t : i["transforms"].GetArray())
+//		{
+//			CGameObject temp(0);
+//			CTransformComponent transform(temp);
+//			transform.Scale({ t["scale"]["x"].GetFloat(),
+//								 t["scale"]["y"].GetFloat(),
+//								 t["scale"]["z"].GetFloat() });
+//			transform.Position({ t["position"]["x"].GetFloat(),
+//								 t["position"]["y"].GetFloat(),
+//								 t["position"]["z"].GetFloat() });
+//			transform.Rotation({ t["rotation"]["x"].GetFloat(),
+//								 t["rotation"]["y"].GetFloat(),
+//								 t["rotation"]["z"].GetFloat() });
+//			instancedModelTransforms.emplace_back(transform.GetLocalMatrix());
+//		}
+//		if (CJsonReader::Get()->HasAssetPath(assetID))
+//		{
+//			gameObject->AddComponent<CInstancedModelComponent>(*gameObject, ASSETPATH(CJsonReader::Get()->GetAssetPath(assetID)), instancedModelTransforms);
+//			aScene.AddInstance(gameObject);
+//		}
+//	}
+//}
 
 void CSceneManager::AddInstancedModelComponents(CScene& aScene, const std::vector<Binary::SInstancedModel>& someData)
 {
@@ -380,23 +385,14 @@ void CSceneManager::AddInstancedModelComponents(CScene& aScene, const std::vecto
 	{
 		CGameObject* gameObject = new CGameObject(i.assetID);
 
-		std::vector<Matrix> transforms = {};
-		transforms.reserve(i.transforms.size());
-		for (const auto& t : i.transforms)
-		{
-			CGameObject temp(0);
-			CTransformComponent transform(temp);
-			transform.Scale(t.scale);
-			transform.Position(t.pos);
-			transform.Rotation(t.rot);
-			transforms.push_back(transform.GetLocalMatrix());
-		}
-		std::string assetPath = {};
-		if (CJsonReader::Get()->TryGetAssetPath(i.assetID, assetPath))
-		{
-			gameObject->AddComponent<CInstancedModelComponent>(*gameObject, ASSETPATH(assetPath), transforms);
-			aScene.AddInstance(gameObject);
-		}
+
+		gameObject->AddComponent<CInstancedModelComponent>(*gameObject, i);
+		aScene.AddInstance(gameObject);
+		//std::string assetPath = {};
+		//if (CJsonReader::Get()->TryGetAssetPath(i.assetID, assetPath))
+		//{
+			//gameObject->AddComponent<CInstancedModelComponent>(*gameObject, ASSETPATH(assetPath), i.materialIDs, transforms);
+		//}
 	}
 }
 
@@ -526,9 +522,9 @@ void CSceneManager::AddPlayer(CScene& aScene, RapidObject someData)
 
 	CGameObject* camera = CCameraControllerComponent::CreatePlayerFirstPersonCamera(player);//new CGameObject(1000);
 	camera->myTransform->Rotation(playerRot);
-	std::string modelPath = ASSETPATH("Assets/IronWrought/Mesh/Main_Character/CH_PL_SK.fbx");
-	camera->AddComponent<CModelComponent>(*camera, modelPath);
-	AnimationLoader::AddAnimationsToGameObject(camera, modelPath);
+	//std::string modelPath = ASSETPATH("Assets/IronWrought/Mesh/Main_Character/CH_PL_SK.fbx");
+	//camera->AddComponent<CModelComponent>(*camera, modelPath);
+	//AnimationLoader::AddAnimationsToGameObject(camera, modelPath);
 	CGameObject* gravityGloveSlot = new CGameObject(PLAYER_GLOVE_ID);
 	gravityGloveSlot->myTransform->Scale(0.1f);
 	gravityGloveSlot->myTransform->SetParent(camera->myTransform);

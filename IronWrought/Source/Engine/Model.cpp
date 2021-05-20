@@ -41,6 +41,25 @@ CModel::SModelData& CModel::GetModelData() {
 	return myModelData;
 }
 
+void CModel::SetMaterials(const std::vector<std::array<ID3D11ShaderResourceView*, 3>>& someMaterials)
+{
+	myModelData.myMaterials = someMaterials;
+}
+
+unsigned int CModel::AddMaterial(const std::array<ID3D11ShaderResourceView*, 3>& aMaterial)
+{
+	myModelData.myMaterials.push_back(aMaterial);
+	return static_cast<unsigned int>(myModelData.myMaterials.size() - 1);
+}
+
+void CModel::AddMaterial(const int aMaterialID)
+{
+	material mat = CMainSingleton::MaterialHandler().RequestMaterial(aMaterialID);
+	
+
+
+}
+
 void CModel::InstanceCount(int aCount)
 {
 	myInstanceCount = aCount;

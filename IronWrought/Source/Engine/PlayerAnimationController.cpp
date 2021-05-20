@@ -65,8 +65,8 @@ void CPlayerAnimationController::Init(CAnimationComponent* anAnimationComponent)
 
 void CPlayerAnimationController::Update(const Vector3& aMovement)
 {
-	if (myPlayerAnimation->PlayingTemporaryAnimation())
-		return;
+	//if (myPlayerAnimation->PlayingTemporaryAnimation())
+	//	return;
 
 	Walk(aMovement);
 }
