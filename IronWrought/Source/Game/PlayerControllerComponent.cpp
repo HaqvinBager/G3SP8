@@ -113,10 +113,10 @@ void CPlayerControllerComponent::Update()
 		return;
 	}
 
-	if (INPUT->IsKeyPressed('M'))
-	{
-		LockMovementFor(3.0f);
-	}
+	//if (INPUT->IsKeyPressed('M'))
+	//{
+	//	LockMovementFor(3.0f);
+	//}
 #endif
 
 	GameObject().myTransform->Position(myController->GetPosition());
