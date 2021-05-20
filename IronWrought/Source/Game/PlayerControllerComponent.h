@@ -34,7 +34,9 @@ public:
 
 	//void AddFaceMesh(CGameObject* aGameObject);
 	void SetControllerPosition(const Vector3& aPos);
+	// No lerp. Instant crouch
 	void Crouch();
+	// Lerp for crouch
 	void CrouchUpdate(const float& dt);
 	void OnCrouch();
 
@@ -59,9 +61,23 @@ public:
 	void SetRespawnPosition();
 
 private:
+	void LockMovementFor(const float& someSeconds);
+	void UpdateMovementLock();
+	void InitForceForward();
+	void UpdateForceForward();
+	void InitStandStill(const float& aStandStillTimer);
+	void UpdateStandStill();
+
 	void BoundsCheck();
 	void LadderUpdate();
 
+private:
+	enum class EPlayerMovementLock
+	{
+		None,
+		ForceFoward,
+		ForceStandStill,
+	};
 
 	CCharacterController* myController;
 	CPlayerAnimationController* myAnimationComponentController;
@@ -77,7 +93,9 @@ private:
 	bool myIsJumping;
 	bool myHasJumped;
 	bool myLadderHasTriggered;
+	bool myCanStand;
 
+	EPlayerMovementLock myPlayerMovementLock;
 	bool myIsCrouching;
 	float myCrouchingLerp;
 	float myWalkSpeed;
@@ -86,6 +104,8 @@ private:
 	float myFallSpeed;
 	float myAirborneTimer;
 	float myStepTimer;
+	float myStepTime;
+	float myMovementLockTimer; 
 
 	//CRigidBodyComponent* myLadder;
 
