@@ -6,6 +6,7 @@ class CAIController;
 class CCharacterController;
 class CRigidBodyComponent;
 class CGameObject;
+class CPatrolPointComponent;
 struct SNavMesh;
 
 namespace physx {
@@ -19,6 +20,7 @@ struct SEnemySetting {
 	float myAttackDistance; //2.0f
 
 	std::vector<int> myPatrolGameObjectIds;
+	std::vector<float> myPatrolIntrestValue;
 };
 
 struct SInterestPoints {
@@ -50,6 +52,7 @@ public:
 	const EBehaviour GetState()const;
 	void Receive(const SStringMessage& aMsg) override;
 	void Receive(const SMessage& aMsg) override;
+	CPatrolPointComponent* FindBestPatrolPoint();
 
 	void Dead();
 

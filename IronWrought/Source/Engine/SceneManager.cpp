@@ -21,6 +21,7 @@
 #include <GravityGloveComponent.h>
 #include <EnemyComponent.h>
 #include <HealthPickupComponent.h>
+#include <PatrolPointComponent.h>
 //#include <iostream>
 #include "NavmeshLoader.h"
 #include <BinReader.h>
@@ -572,9 +573,8 @@ void CSceneManager::AddEnemyComponents(CScene& aScene, RapidArray someData)
 		{
 			for (const auto& point : m["interestPoints"].GetArray())
 			{
-				settings.myPatrolGameObjectIds.push_back(point["transform"]["instanceID"].GetInt());
-				int id = point["transform"]["instanceID"].GetInt();
-				CGameObject* patrolGameObject = CEngine::GetInstance()->GetActiveScene().FindObjectWithID(id);
+				settings.myPatrolGameObjectIds.emplace_back(point["transform"]["instanceID"].GetInt());
+				settings.myPatrolIntrestValue.emplace_back(point["interestValue"].GetFloat());
 			}
 		}
 		gameObject->AddComponent<CEnemyComponent>(*gameObject, settings);

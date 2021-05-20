@@ -26,6 +26,7 @@ struct SNavMesh;
 class CModel;
 class IAIBehavior;
 class CInstancedModelComponent;
+class CPatrolPointComponent;
 
 class CPlayerControllerComponent;
 
@@ -109,6 +110,7 @@ public:
 	std::vector<CGameObject*> ModelsToOutline() const;
 	std::vector<CPointLight*>& PointLights();
 	std::vector<CTextInstance*> Texts();
+	std::vector<CPatrolPointComponent*> PatrolPoints();
 	const std::vector<CGameObject*>& ActiveGameObjects() const;
 //GETTERS END
 public:
@@ -145,6 +147,7 @@ public:
 	bool AddInstance(CGameObject* aGameObject);
 	bool AddInstances(std::vector<CGameObject*>& someGameObjects);
 	bool AddInstance(CSpriteInstance* aSprite);
+	bool AddInstance(CPatrolPointComponent* aPatrolPoint);
 	//PhysX
 	bool AddPXScene(PxScene* aPXScene);
 	//POPULATE SCENE END
@@ -158,6 +161,7 @@ public:
 	bool RemoveInstance(CGameObject* aGameObject);
 	bool RemoveInstance(CSpriteInstance* aSpriteInstance);
 	bool RemoveInstance(CTextInstance* aTextInstance);
+	bool RemoveInstance(CPatrolPointComponent* aPatrolPoint);
 //REMOVE SPECIFIC INSTANCE END
 //CLEAR SCENE OF INSTANCES START
 	bool ClearSecondaryEnvironmentLights();
@@ -189,6 +193,7 @@ private:
 	std::vector<CTextInstance*> myTexts;
 	std::vector<CGameObject*> myGameObjects;
 	std::vector<CGameObject*> myModelsToOutline;
+	std::vector<CPatrolPointComponent*> myPatrolPoints;
 	std::unordered_map<int, CGameObject*> myIDGameObjectMap;
 	std::unordered_map<size_t, std::vector<CComponent*>> myComponentMap;
 	std::unordered_map<ERenderOrder, std::vector<CSpriteInstance*>> mySpriteInstances;

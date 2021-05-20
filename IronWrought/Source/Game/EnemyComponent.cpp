@@ -9,11 +9,17 @@
 #include "RigidBodyComponent.h"
 #include "RigidDynamicBody.h"
 #include "CapsuleColliderComponent.h"
+#include "PatrolPointComponent.h"
 #include "PlayerComponent.h"
 #include "RigidBodyComponent.h"
 #include "ModelComponent.h"
 #include "PhysXWrapper.h"
+#include "Engine.h"
+#include "Scene.h"
 #include <AStar.h>
+#include "LineInstance.h"
+#include "LineFactory.h"
+#include <algorithm>
 
 //EnemyComp
 
@@ -54,6 +60,19 @@ void CEnemyComponent::Start()
 	CScene &scene = CEngine::GetInstance()->GetActiveScene();
 	myNavMesh = scene.NavMesh();
 	
+	if (mySettings.myPatrolGameObjectIds.size() > 0) {
+		for (int i = 0; i < mySettings.myPatrolGameObjectIds.size(); ++i) {
+			CGameObject* patrolGameObject = CEngine::GetInstance()->GetActiveScene().FindObjectWithID(mySettings.myPatrolGameObjectIds[i]);
+			float points = mySettings.myPatrolIntrestValue[i];
+			patrolGameObject->AddComponent<CPatrolPointComponent>(*patrolGameObject, points);
+			scene.AddInstance(patrolGameObject->GetComponent<CPatrolPointComponent>());
+
+			CLineInstance* myLine2 = new CLineInstance();
+			myLine2->Init(CLineFactory::GetInstance()->CreateLine(GameObject().myTransform->Position(), patrolGameObject->myTransform->Position(), { 0,255,0,255 }));
+			CEngine::GetInstance()->GetActiveScene().AddInstance(myLine2);
+		}
+	}
+
 	for (const auto id : mySettings.myPatrolGameObjectIds) {
 		CTransformComponent* patrolTransform = CEngine::GetInstance()->GetActiveScene().FindObjectWithID(id)->myTransform;
 		myPatrolPositions.push_back(patrolTransform->Position());
@@ -87,27 +106,27 @@ void CEnemyComponent::Start()
 void CEnemyComponent::Update()//får bestämma vilket behaviour vi vill köra i denna Update()!!!
 {
 	if (!myMovementLocked) {
-		/*float distanceToPlayer = Vector3::DistanceSquared(myPlayer->myTransform->Position(), GameObject().myTransform->Position());
+		float distanceToPlayer = Vector3::DistanceSquared(myPlayer->myTransform->Position(), GameObject().myTransform->Position());
 
 		if (mySettings.myRadius * mySettings.myRadius >= distanceToPlayer) {
-			if (distanceToPlayer <= mySettings.myAttackDistance * mySettings.myAttackDistance)
+			/*if (distanceToPlayer <= mySettings.myAttackDistance * mySettings.myAttackDistance)
 			{
 				std::cout << "ATTACK" << std::endl;
 				SetState(EBehaviour::Attack);
 			}
 			else
-			{
+			{*/
 				std::cout << "SEEK" << std::endl;
 				SetState(EBehaviour::Seek);
-			}
-		}*/
-		//else {
+			//}
+		}
+		else {
 			std::cout << "PATROL" << std::endl;
 			SetState(EBehaviour::Patrol);
-		//}
+		}
 
 		if (myRigidBodyComponent) {
-			Vector3 targetDirection = myBehaviours[static_cast<int>(myCurrentState)]->Update(GameObject().myTransform->Position());
+			Vector3 targetDirection = myBehaviours[static_cast<int>(myCurrentState)]->Update(GameObject().myTransform->Position(), FindBestPatrolPoint());
 
 			targetDirection.y = 0;
 			myRigidBodyComponent->AddForce(targetDirection, mySettings.mySpeed);
@@ -192,6 +211,32 @@ void CEnemyComponent::Receive(const SMessage& aMsg)
 	{
 		myMovementLocked = true;
 	}
+}
+
+CPatrolPointComponent* CEnemyComponent::FindBestPatrolPoint()
+{
+	std::vector<CPatrolPointComponent*> patrolPoints = CEngine::GetInstance()->GetActiveScene().PatrolPoints();
+	std::vector<float> intrestValues;
+	if (patrolPoints.size() > 0) {
+		for (int i = 0; i < patrolPoints.size(); ++i) {
+			Vector3 patrolPositions = patrolPoints[i]->GameObject().myTransform->Position();
+			Vector3 dist = patrolPositions - GameObject().myTransform->Position();
+			float length = dist.LengthSquared() / 10.f;
+			patrolPoints[i]->AddValue(length);
+			intrestValues.emplace_back(patrolPoints[i]->GetIntrestValue());
+			//std::cout << "[" << i << "] " << "Length Value: " << patrolPoints[i]->GetIntrestValue() << std::endl;
+		}
+
+		float min = *std::min_element(intrestValues.begin(), intrestValues.end());
+		//std::cout << "Length Value: " << min << std::endl;
+
+		for (int i = 0; i < patrolPoints.size(); ++i) {
+			if (patrolPoints[i]->GetIntrestValue() == min) {
+				return patrolPoints[i];
+			}
+		}
+	}
+	return nullptr;
 }
 
 void CEnemyComponent::Dead()

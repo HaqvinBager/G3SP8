@@ -402,6 +402,11 @@ std::vector<CTextInstance*> CScene::Texts()
 	return textToRender;
 }
 
+std::vector<CPatrolPointComponent*> CScene::PatrolPoints()
+{
+	return myPatrolPoints;
+}
+
 const std::vector<CGameObject*>& CScene::ActiveGameObjects() const
 {
 	return myGameObjects;
@@ -657,6 +662,15 @@ bool CScene::AddInstance(CSpriteInstance* aSprite)
 	return true;
 }
 
+bool CScene::AddInstance(CPatrolPointComponent* aPatrolPoint)
+{
+	if (!aPatrolPoint) {
+		return false;
+	}
+	myPatrolPoints.emplace_back(aPatrolPoint);
+	return true;
+}
+
 //PhysX
 bool CScene::AddPXScene(PxScene* aPXScene)
 {
@@ -770,6 +784,18 @@ bool CScene::RemoveInstance(CTextInstance* aTextInstance)
 		if (aTextInstance == myTexts[i])
 		{
 			myTexts.erase(myTexts.begin() + i);
+			return true;
+		}
+	}
+	return false;
+}
+bool CScene::RemoveInstance(CPatrolPointComponent* aPatrolPoint)
+{
+	for (int i = 0; i < myPatrolPoints.size(); ++i)
+	{
+		if (myPatrolPoints[i] == aPatrolPoint)
+		{
+			myPatrolPoints.erase(myPatrolPoints.begin() + i);
 			return true;
 		}
 	}

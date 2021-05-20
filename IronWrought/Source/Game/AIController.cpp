@@ -10,6 +10,7 @@
 #include <AStar.h>
 #include <Debug.h>
 #include "EnemyComponent.h"
+#include "PatrolPointComponent.h"
 
 bool CheckIfOverlap(const Vector3& aFirstPosition, const Vector3& aSecondPosition)
 {
@@ -30,21 +31,14 @@ CPatrol::CPatrol(const std::vector<Vector3>& somePositions, SNavMesh* aNavMesh)
 	myNavMesh = aNavMesh;
 }
 
-Vector3 CPatrol::Update(const Vector3& aPosition)
+Vector3 CPatrol::Update(const Vector3& aPosition, CPatrolPointComponent* aPatrolPoint)
 {
-	if (CheckIfOverlap(aPosition, myPositions[myTarget])) // change patrol points & calculate path
+	if (CheckIfOverlap(aPosition, aPatrolPoint->GameObject().myTransform->Position())) // change patrol points & calculate path
 	{
-		myLastTarget = myTarget;
-		myTarget++;
-
-		if (myTarget >= myPositions.size())
-		{
-			myTarget = 0;
-		}
+		aPatrolPoint->AddBonusValue(10);
 	}
-	myPathTarget = 0;
 	myPath.clear();
-	SetPath(myNavMesh->CalculatePath(aPosition, myPositions[myTarget], myNavMesh), myPositions[myTarget]);
+	SetPath(myNavMesh->CalculatePath(aPosition, aPatrolPoint->GameObject().myTransform->Position(), myNavMesh), aPatrolPoint->GameObject().myTransform->Position());
 
 	size_t pathSize = myPath.size();
 	if (pathSize > 0) {
@@ -84,8 +78,9 @@ void CPatrol::SetPath(std::vector<Vector3> aPath, Vector3 aFinalPosition)
 
 CSeek::CSeek(SNavMesh* aNavMesh): myNavMesh(aNavMesh),myTarget(nullptr){}
 
-Vector3 CSeek::Update(const Vector3& aPosition)//aPostion == EnemyRobot Position
+Vector3 CSeek::Update(const Vector3& aPosition, CPatrolPointComponent* aPatrolPoint)//aPostion == EnemyRobot Position
 {
+	(aPatrolPoint);
 	if (!myTarget)
 		return Vector3();
 
@@ -154,8 +149,9 @@ void CSeek::SetTarget(CTransformComponent* aTarget) {
 
 CAttack::CAttack(CEnemyComponent* aUser, Vector3 aResetPosition) : myDamage(1.0f), myTarget(nullptr), myAttackCooldown(1.f), myAttackTimer(0.f), myUser(aUser), myResetPosition(aResetPosition){}
 
-Vector3 CAttack::Update(const Vector3& aPosition)
+Vector3 CAttack::Update(const Vector3& aPosition, CPatrolPointComponent* aPatrolPoint)
 {
+	(aPatrolPoint);
 	if (!myTarget) {
 		return Vector3();
 	}
