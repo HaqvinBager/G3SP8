@@ -84,8 +84,6 @@ CPlayerControllerComponent::~CPlayerControllerComponent()
 	INPUT_MAPPER->RemoveObserver(EInputEvent::ResetEntities, this);
 	INPUT_MAPPER->RemoveObserver(EInputEvent::SetResetPointEntities, this);
 	CMainSingleton::PostMaster().Unsubscribe(EMessageType::PlayerTakeDamage, this);
-	CMainSingleton::PostMaster().Unsubscribe(PostMaster::SMSG_DISABLE_GLOVE, this);
-	CMainSingleton::PostMaster().Unsubscribe(PostMaster::SMSG_ENABLE_GLOVE, this);
 
 	delete myAnimationComponentController;
 	myAnimationComponentController = nullptr;
@@ -97,8 +95,6 @@ void CPlayerControllerComponent::Awake()
 void CPlayerControllerComponent::Start()
 {
 	SetRespawnPosition();
-	CMainSingleton::PostMaster().Subscribe(PostMaster::SMSG_DISABLE_GLOVE, this);
-	CMainSingleton::PostMaster().Subscribe(PostMaster::SMSG_ENABLE_GLOVE, this);
 }
 
 void CPlayerControllerComponent::Update()
@@ -246,21 +242,8 @@ switch (myPlayerMovementLock)
 	myMovement.y = y;
 }
 
-void CPlayerControllerComponent::Receive(const SStringMessage& aMsg)
+void CPlayerControllerComponent::Receive(const SStringMessage& /*aMsg*/)
 {
-	if (PostMaster::DisableGravityGlove(aMsg.myMessageType))
-	{
-		myCamera->GameObject().GetComponent<CModelComponent>()->Enabled(false);
-		myCamera->GameObject().GetComponent<CAnimationComponent>()->Enabled(false);
-		return;
-	}
-
-	if (PostMaster::EnableGravityGlove(aMsg.myMessageType))
-	{
-		myCamera->GameObject().GetComponent<CModelComponent>()->Enabled(true);
-		myCamera->GameObject().GetComponent<CAnimationComponent>()->Enabled(true);
-		return;
-	}
 }
 
 void CPlayerControllerComponent::Receive(const SMessage& aMsg)
