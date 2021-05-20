@@ -80,6 +80,14 @@ enum class EMessageType
 	OpenSafetyDoors,
 
 	BootUpState,
+	PlayJumpSound,
+	
+	GameStarted,
+
+	LockFPSCamera,
+
+	ReturnToMainMenu,
+	EnemyDisabled,
 
 	Count
 };
