@@ -116,12 +116,12 @@ void CEnemyComponent::Update()//får bestämma vilket behaviour vi vill köra i 
 			}
 			else
 			{*/
-				std::cout << "SEEK" << std::endl;
+				//std::cout << "SEEK" << std::endl;
 				SetState(EBehaviour::Seek);
 			//}
 		}
 		else {
-			std::cout << "PATROL" << std::endl;
+			//std::cout << "PATROL" << std::endl;
 			SetState(EBehaviour::Patrol);
 		}
 
