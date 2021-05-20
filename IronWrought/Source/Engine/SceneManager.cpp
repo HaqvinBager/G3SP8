@@ -35,7 +35,9 @@
 #include <concurrent_vector.h>
 #include "CustomEventComponent.h"
 #include "CustomEventListenerComponent.h"
-
+#include <SafetyDoorComponent.h>
+#include <FuseboxComponent.h>
+#include <FuseComponent.h>
 
 CScene* CSceneManager::ourLastInstantiatedScene = nullptr;
 CSceneManager::CSceneManager()
@@ -112,9 +114,12 @@ CScene* CSceneManager::CreateScene(const std::string& aSceneJson)
 			SetVertexPaintedColors(*scene, sceneData["vertexColors"].GetArray(), vertexPaintData);
 			AddDecalComponents(*scene, sceneData["decals"].GetArray());
 			AddPickups(*scene, sceneData["healthPickups"].GetArray());
+			AddSafetyDoors(*scene, sceneData["mySafetyDoors"].GetArray());
+			AddFuseboxes(*scene, sceneData["myFuseboxes"].GetArray());
+			AddFuses(*scene, sceneData["myFusePickUps"].GetArray());
 			if (sceneData.HasMember("triggerEvents"))
 				AddTriggerEvents(*scene, sceneData["triggerEvents"].GetArray());
-			if (sceneName.find("Layout") != std::string::npos)//Om Unity Scene Namnet inneh�ller nyckelordet "Layout"
+			if (sceneName.find("Gameplay") != std::string::npos)//Om Unity Scene Namnet inneh�ller nyckelordet "Layout"
 			{
 				AddPlayer(*scene, sceneData["player"].GetObjectW());
 			}
@@ -122,7 +127,7 @@ CScene* CSceneManager::CreateScene(const std::string& aSceneJson)
 		}
 	}
 
-	//scene->InitNavMesh(ASSETPATH("Assets/Generated/SP_LayoutExportedNavMesh.obj"));
+	scene->InitNavMesh(ASSETPATH("Assets/Generated/SP_LayoutExportedNavMesh.obj"));
 	//scene->NavMesh();
 	//if (AddGameObjects(*scene, sceneData["Ids"].GetArray()))
 	//{
@@ -155,7 +160,7 @@ CScene* CSceneManager::CreateScene(const std::string& aSceneJson)
 
 	CEngine::GetInstance()->GetPhysx().Cooking(scene->ActiveGameObjects(), scene);
 
-	//scene->InitCanvas(ASSETPATH("Assets/IronWrought/Textures/UI/JSON/UI_HUD.json"));
+	//scene->InitCanvas(ASSETPATH("Assets/IronWrought/UI/JSON/PH_UI_HUD.json"));
 
 	return scene;
 }
@@ -584,6 +589,45 @@ void CSceneManager::AddPickups(CScene& aScene, RapidArray someData)
 
 		float healthPickupAmount = m["healthPickupAmount"].GetFloat();
 		gameObject->AddComponent<CHealthPickupComponent>(*gameObject, healthPickupAmount);
+	}
+}
+
+void CSceneManager::AddSafetyDoors(CScene& aScene, RapidArray someData)
+{
+	for (const auto& m : someData)
+	{
+		const int instanceId = m["instanceID"].GetInt();
+		CGameObject* gameObject = aScene.FindObjectWithID(instanceId);
+		if (!gameObject)
+			continue;
+
+		gameObject->AddComponent<CSafetyDoorComponent>(*gameObject);
+	}
+}
+
+void CSceneManager::AddFuseboxes(CScene& aScene, RapidArray someData)
+{
+	for (const auto& m : someData)
+	{
+		const int instanceId = m["instanceID"].GetInt();
+		CGameObject* gameObject = aScene.FindObjectWithID(instanceId);
+		if (!gameObject)
+			continue;
+
+		gameObject->AddComponent<CFuseboxComponent>(*gameObject);
+	}
+}
+
+void CSceneManager::AddFuses(CScene& aScene, RapidArray someData)
+{
+	for (const auto& m : someData)
+	{
+		const int instanceId = m["instanceID"].GetInt();
+		CGameObject* gameObject = aScene.FindObjectWithID(instanceId);
+		if (!gameObject)
+			continue;
+
+		gameObject->AddComponent<CFuseComponent>(*gameObject);
 	}
 }
 

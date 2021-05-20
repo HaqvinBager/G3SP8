@@ -19,13 +19,13 @@ CGravityGloveComponent::CGravityGloveComponent(CGameObject& aParent, CTransformC
 	: CBehaviour(aParent)
 	, myGravitySlot(aGravitySlot)
 {
-	mySettings.myPushForce = 27.f;
+	mySettings.myPushForce = 10.f;
 	//mySettings.myDistanceToMaxLinearVelocity = 2.5f;
 	mySettings.myMaxPushForce = 100.0f;
 	mySettings.myMinPushForce = 10.0f;
 	mySettings.myMinPullForce = 1.5f;
 
-	mySettings.myMaxDistance = 50.0f;
+	mySettings.myMaxDistance = 2.0f;
 	mySettings.myCurrentDistanceInverseLerp = 0.0f;
 	myJoint = nullptr;
 }
@@ -53,7 +53,7 @@ void CGravityGloveComponent::Start()
 
 void CGravityGloveComponent::Update()
 {
-	if (Input::GetInstance()->IsMousePressed(Input::EMouseButton::Left))
+	if (Input::GetInstance()->IsMousePressed(Input::EMouseButton::Right))
 	{
 		PostMaster::SCrossHairData data; // Wind down
 		data.myIndex = 0;
@@ -62,9 +62,13 @@ void CGravityGloveComponent::Update()
 
 		Push();
 	}
-	if (Input::GetInstance()->IsMousePressed(Input::EMouseButton::Right))
+	if (Input::GetInstance()->IsMousePressed(Input::EMouseButton::Left))
 	{
 		Pull();
+	}
+	else if (Input::GetInstance()->IsMouseReleased(Input::EMouseButton::Left))
+	{
+		Release();
 	}
 
 	if (myCurrentTarget.myRigidBodyPtr != nullptr)
@@ -140,21 +144,6 @@ void CGravityGloveComponent::Update()
 #include "BoxColliderComponent.h"
 void CGravityGloveComponent::Pull()
 {
-	if (myCurrentTarget.myRigidBodyPtr != nullptr)
-	{
-		myCurrentTarget.myRigidBodyPtr->GetDynamicRigidBody()->GetBody().setMaxLinearVelocity(100.f);
-		myCurrentTarget.myRigidBodyPtr = nullptr;
-
-		PostMaster::SCrossHairData data; // Wind down
-		data.myIndex = 0;
-		data.myShouldBeReversed = true;
-		CMainSingleton::PostMaster().Send({ EMessageType::UpdateCrosshair, &data });
-		bool released = true;
-		CMainSingleton::PostMaster().Send({ EMessageType::GravityGlovePull, &released });
-
-		return;
-	}
-
 	Vector3 start = GameObject().myTransform->GetWorldMatrix().Translation();
 	Vector3 dir = -GameObject().myTransform->GetWorldMatrix().Forward();
 
@@ -202,7 +191,7 @@ void CGravityGloveComponent::Pull()
 				data.myIndex = 0;
 				CMainSingleton::PostMaster().Send({ EMessageType::UpdateCrosshair, &data });
 				CMainSingleton::PostMaster().Send({ EMessageType::GravityGlovePull, nullptr });
-				GameObject().GetComponent<CVFXSystemComponent>()->EnableEffect(0);
+//				GameObject().GetComponent<CVFXSystemComponent>()->EnableEffect(0);
 			}
 		}
 
@@ -219,6 +208,22 @@ void CGravityGloveComponent::Pull()
 	#endif
 	}
 	//myCurrentTarget->SetPosition(myGravitySlot->WorldPosition());
+}
+
+void CGravityGloveComponent::Release()
+{
+	if (myCurrentTarget.myRigidBodyPtr != nullptr)
+	{
+		myCurrentTarget.myRigidBodyPtr->GetDynamicRigidBody()->GetBody().setMaxLinearVelocity(100.f);
+		myCurrentTarget.myRigidBodyPtr = nullptr;
+
+		PostMaster::SCrossHairData data; // Wind down
+		data.myIndex = 0;
+		data.myShouldBeReversed = true;
+		CMainSingleton::PostMaster().Send({ EMessageType::UpdateCrosshair, &data });
+		bool released = true;
+		CMainSingleton::PostMaster().Send({ EMessageType::GravityGlovePull, &released });
+	}
 }
 
 #include "CameraComponent.h"
@@ -262,7 +267,7 @@ void CGravityGloveComponent::Push()
 	if (sendPushMessage)
 	{
 		CMainSingleton::PostMaster().SendLate({ EMessageType::GravityGlovePush, nullptr });
-		GameObject().GetComponent<CVFXSystemComponent>()->EnableEffect(1);
+		//GameObject().GetComponent<CVFXSystemComponent>()->EnableEffect(1);
 	}
 }
 

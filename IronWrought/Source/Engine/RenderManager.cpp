@@ -12,6 +12,7 @@
 #include "MainSingleton.h"
 #include "PopupTextService.h"
 #include "DialogueSystem.h"
+#include "Canvas.h"
 
 #include "Engine.h"
 #include "Scene.h"
@@ -134,8 +135,6 @@ void CRenderManager::Render(CScene& aScene)
 	if (maincamera == nullptr)
 		return;
 
-	//CBoxLight* boxLight = aScene.CullBoxLights(nullptr)[0]; // For BoxLight shadow mapping
-
 	std::vector<CGameObject*> gameObjects = aScene.CullGameObjects(maincamera);
 	std::vector<CGameObject*> instancedGameObjects;
 	std::vector<CGameObject*> instancedGameObjectsWithAlpha;
@@ -195,9 +194,7 @@ void CRenderManager::Render(CScene& aScene)
 	myEnvironmentShadowDepth.SetAsDepthTarget(&myIntermediateTexture);
 	myShadowRenderer.Render(environmentlight, gameObjects, instancedGameObjects);
 	myShadowRenderer.Render(environmentlight, gameObjectsWithAlpha, instancedGameObjectsWithAlpha);
-	//myBoxLightShadowDepth.SetAsDepthTarget();
-	//myShadowRenderer.Render(boxLight, gameObjects, instancedGameObjects);
-
+	
 	// Decals
 	myDepthCopy.SetAsActiveTarget();
 	myIntermediateDepth.SetAsResourceOnSlot(0);
@@ -447,24 +444,32 @@ void CRenderManager::Render(CScene& aScene)
 	myRenderStateManager.SetBlendState(CRenderStateManager::BlendStates::BLENDSTATE_ALPHABLEND);
 	myRenderStateManager.SetDepthStencilState(CRenderStateManager::DepthStencilStates::DEPTHSTENCILSTATE_ONLYREAD);
 
-	std::vector<CSpriteInstance*> sprites = aScene.CullSprites();
+	std::vector<CSpriteInstance*> sprites;
+	std::vector<CSpriteInstance*> animatedUIFrames;
+	std::vector<CTextInstance*> textsToRender;
+	std::vector<CAnimatedUIElement*> animatedUIElements;
+
+	const CCanvas* canvas = aScene.Canvas();
+	if (canvas)
+	{
+		canvas->EmplaceSprites(sprites);
+		animatedUIElements = canvas->EmplaceAnimatedUI(animatedUIFrames);
+		canvas->EmplaceTexts(textsToRender);
+	}
+
+	// Sprites
 	CMainSingleton::PopupTextService().EmplaceSprites(sprites);
 	CMainSingleton::DialogueSystem().EmplaceSprites(sprites);
-	mySpriteRenderer.Render(sprites);
-
-	std::vector<CSpriteInstance*> animatedUIFrames;
-	std::vector<CAnimatedUIElement*> animatedUIElements = aScene.CullAnimatedUI(animatedUIFrames);
 	CEngine::GetInstance()->GetActiveScene().MainCamera()->EmplaceSprites(animatedUIFrames);
+	mySpriteRenderer.Render(sprites);
 	mySpriteRenderer.Render(animatedUIElements);
 	mySpriteRenderer.Render(animatedUIFrames);
-
+	
 	// Text
-	myRenderStateManager.SetBlendState(CRenderStateManager::BlendStates::BLENDSTATE_DISABLE);
-	myRenderStateManager.SetDepthStencilState(CRenderStateManager::DepthStencilStates::DEPTHSTENCILSTATE_DEFAULT);
-
-	std::vector<CTextInstance*> textsToRender = aScene.Texts();
 	CMainSingleton::PopupTextService().EmplaceTexts(textsToRender);
 	CMainSingleton::DialogueSystem().EmplaceTexts(textsToRender);
+	myRenderStateManager.SetBlendState(CRenderStateManager::BlendStates::BLENDSTATE_DISABLE);
+	myRenderStateManager.SetDepthStencilState(CRenderStateManager::DepthStencilStates::DEPTHSTENCILSTATE_DEFAULT);
 	myTextRenderer.Render(textsToRender);
 }
 
@@ -498,8 +503,6 @@ void CRenderManager::Release()
 
 	myGBuffer.ReleaseResources();
 	myGBufferCopy.ReleaseResources();
-
-	//myGBuffer // Should something be released for the GBuffer?
 }
 
 void CRenderManager::SetBrokenScreen(bool aShouldSetBrokenScreen)

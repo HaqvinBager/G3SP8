@@ -22,7 +22,8 @@ CCameraControllerComponent::CCameraControllerComponent(CGameObject& aGameObject,
 	myOffset(aOffset),
 	myMouseRotationSpeed(120.0f),
 	myPitch(0.0f),
-	myYaw(0.0f)
+	myYaw(0.0f),
+	myLimitFirstPerson(false)
 {
 }
 
@@ -94,8 +95,9 @@ void CCameraControllerComponent::Update()
 			break;
 
 		case ECameraMode::PlayerFirstPerson:
-			CEngine::GetInstance()->GetActiveScene().MainCamera(ESceneCamera::PlayerFirstPerson);
-			UpdatePlayerFirstPerson();
+			if(!myLimitFirstPerson)
+				CEngine::GetInstance()->GetActiveScene().MainCamera(ESceneCamera::PlayerFirstPerson);
+				UpdatePlayerFirstPerson();
 			break;
 
 		case ECameraMode::UnlockCursor:
@@ -155,11 +157,19 @@ void CCameraControllerComponent::RotateTransformWithYawAndPitch(const Vector2& s
 		GameObject().myTransform->Rotation({ myPitch, myYaw, 0 });
 	}
 }
+
+void CCameraControllerComponent::Receive(const SMessage& aMsg)
+{
+	if (aMsg.myMessageType == EMessageType::LockFPSCamera)
+	{
+		myLimitFirstPerson = true;
+		return;
+	}
+}
+
 void CCameraControllerComponent::SetCameraMoveSpeed(float aCameraMoveSpeed) {
 	myCameraMoveSpeed = aCameraMoveSpeed;
 }
-
-
 
 float CCameraControllerComponent::GetCameraMoveSpeed() {
 	return myCameraMoveSpeed;

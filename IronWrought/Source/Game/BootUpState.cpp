@@ -6,6 +6,7 @@
 
 #include <SpriteInstance.h>
 #include <SpriteFactory.h>
+#include <Canvas.h>
 
 #include <CameraComponent.h>
 
@@ -16,11 +17,11 @@
 CBootUpState::CBootUpState(CStateStack& aStateStack, const CStateStack::EState aState)
 	: CState(aStateStack, aState)
 	, myTimer(0.0f)
-	, myLogoDisplayDuration(4.0f)
-	, myFadeOutStart(3.0f)
+	, myLogoDisplayDuration(6.0f)
+	, myFadeOutStart(4.5f)
+	, myFadeInDuration(1.5f)
 	, myLogoToRender(0)
 {
-
 }
 
 CBootUpState::~CBootUpState()
@@ -32,26 +33,39 @@ void CBootUpState::Awake()
 	CScene* scene = CSceneManager::CreateEmpty();
 
 	CEngine::GetInstance()->AddScene(myState, scene);
+	scene->InitCanvas();
 	CEngine::GetInstance()->SetActiveScene(myState);
 }
 
 void CBootUpState::Start()
 {
 	rapidjson::Document document = CJsonReader::Get()->LoadDocument("Json/Settings/SplashSettings.json");
+	
+	CEngine::GetInstance()->SetActiveScene(myState);
 
-	auto& scene = IRONWROUGHT->GetActiveScene();
-
-	myLogos.emplace_back(new CSpriteInstance(scene, true));
+	myLogos.emplace_back(new CSpriteInstance());
 	myLogos.back()->Init(CSpriteFactory::GetInstance()->GetSprite(ASSETPATH(document["TGA Logo Path"].GetString())));
 	myLogos.back()->SetShouldRender(true);
 
-	myLogos.emplace_back(new CSpriteInstance(scene, true));
+	myLogos.emplace_back(new CSpriteInstance());
 	myLogos.back()->Init(CSpriteFactory::GetInstance()->GetSprite(ASSETPATH(document["Group Logo Path"].GetString())));
 	myLogos.back()->SetShouldRender(false);
+
+	myLogos.emplace_back(new CSpriteInstance());
+	myLogos.back()->Init(CSpriteFactory::GetInstance()->GetSprite(ASSETPATH(document["Engine Logo Path"].GetString())));
+	myLogos.back()->SetShouldRender(false);
+
+	CCanvas& canvas = *IRONWROUGHT->GetActiveScene().Canvas();
+	for (auto& sprite : myLogos)
+	{
+		canvas.AddSpriteToCanvas(sprite);
+	}
 
 	CTimer::Mark();
 	myTimer = 0.0f;
 	myLogoToRender = 0;
+
+	CMainSingleton::PostMaster().SendLate({ EMessageType::BootUpState, nullptr });
 }
 
 void CBootUpState::Stop()
@@ -64,10 +78,14 @@ void CBootUpState::Update()
 {
 	myTimer += CTimer::Dt();
 
-	//for (auto& gameObject : CEngine::GetInstance()->GetActiveScene().myGameObjects)
-	//{
-	//	gameObject->Update();
-	//}
+	if (myTimer < myFadeInDuration)
+	{
+		auto color = myLogos[myLogoToRender]->GetColor();
+		color.x = myTimer / myFadeInDuration;
+		color.y = myTimer / myFadeInDuration;
+		color.z = myTimer / myFadeInDuration;
+		myLogos[myLogoToRender]->SetColor(color);
+	}
 
 	if (myTimer > myFadeOutStart)
 	{
@@ -79,7 +97,7 @@ void CBootUpState::Update()
 	}
 
 	if (myTimer > myLogoDisplayDuration) {
-		myTimer = 0.0f;
+		myTimer -= myLogoDisplayDuration;
 
 		myLogos[myLogoToRender]->SetShouldRender(false);
 		myLogoToRender++;
@@ -92,17 +110,22 @@ void CBootUpState::Update()
 		}
 
 		myLogos[myLogoToRender]->SetShouldRender(true);
+		auto color = myLogos[myLogoToRender]->GetColor();
+		color.x = myTimer / myFadeInDuration;
+		color.y = myTimer / myFadeInDuration;
+		color.z = myTimer / myFadeInDuration;
+		myLogos[myLogoToRender]->SetColor(color);
 	}
 
 	if (INPUT->IsKeyPressed(VK_SPACE))
 	{
-		//myLogoToRender++;
+		myLogoToRender++;
 
-		//if (myLogoToRender >= myLogos.size())
-		//{
-		//	myStateStack.PopTopAndPush(CStateStack::EState::MainMenu);
-		//	return;
-		//}
+		if (myLogoToRender >= myLogos.size())
+		{
+			myStateStack.PopTopAndPush(CStateStack::EState::MainMenu);
+			return;
+		}
 		myTimer = 0.0f;
 
 		myLogos[myLogoToRender]->SetShouldRender(false);
@@ -115,6 +138,11 @@ void CBootUpState::Update()
 		}
 
 		myLogos[myLogoToRender]->SetShouldRender(true);
+		auto color = myLogos[myLogoToRender]->GetColor();
+		color.x = myTimer / myFadeInDuration;
+		color.y = myTimer / myFadeInDuration;
+		color.z = myTimer / myFadeInDuration;
+		myLogos[myLogoToRender]->SetColor(color);
 	}
 }
 

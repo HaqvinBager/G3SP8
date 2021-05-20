@@ -20,5 +20,8 @@ int CNodeTypeStartDefault::OnEnter(class CNodeInstance* aTriggeringNodeInstance)
 	GetDataOnPin(aTriggeringNodeInstance, 0, outType, someData, outSize);
 	aTriggeringNodeInstance->myShouldTriggerAgain = NodeData::Get<bool>(someData);
 
-	return 1;
+	if (aTriggeringNodeInstance->myShouldTriggerAgain)
+		return 1;
+	else
+		return -1;
 }

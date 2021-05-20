@@ -133,7 +133,7 @@ std::vector<DirectX::SimpleMath::Vector3> CAStar::GetPortals(std::vector<int> no
 		//sometimes finds triangle outside navmesh??
 		return portals;
 	}
-	// portals are the 2 vertecis that are connectet between 2 triangles /pontus
+	// portals are the 2 vertices that are connected between 2 triangles /pontus
 	//nodePath is reversed so goes from back to front
 	for (size_t i = nodePath.size() - 1; i > 0; --i) {
 		for (int x = 0; x < 3; x++) {
@@ -171,7 +171,6 @@ std::vector<DirectX::SimpleMath::Vector3> CAStar::StringPull(Vector3 aStart, Vec
 		return std::vector<Vector3>();
 	}
 
-
 	std::vector<Vector3> points;
 	if (somePortals.size() <= 2) {
 		//_points.push_back(aStart);
@@ -184,7 +183,7 @@ std::vector<DirectX::SimpleMath::Vector3> CAStar::StringPull(Vector3 aStart, Vec
 
 	Vector3 portalApex, portalLeft, portalRight, left, right;
 	int apexIndex = 0, leftIndex = 0, rightIndex = 0;
-	//set apex to start and gets left and right points in the first portal ask pontus if weard
+	//set apex to start and gets left and right points in the first portal ask pontus if weird
 	portalApex = aStart;
 	portalLeft = somePortals[0];
 	portalRight = somePortals[1];

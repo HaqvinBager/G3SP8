@@ -257,7 +257,7 @@ bool CDeferredRenderer::Init(CDirectXFramework* aFramework, CMaterialHandler* aM
 
 void CDeferredRenderer::GenerateGBuffer(CCameraComponent* aCamera, std::vector<CGameObject*>& aGameObjectList, std::vector<CGameObject*>& aInstancedGameObjectList)
 {
-	SM::Matrix cameraMatrix = aCamera->/*GetViewMatrix()*/GameObject().myTransform->Transform();
+	SM::Matrix cameraMatrix = /*aCamera->GetViewMatrix()*/aCamera->GameObject().myTransform->Transform();
 	myFrameBufferData.myCameraPosition = SM::Vector4{ cameraMatrix._41, cameraMatrix._42, cameraMatrix._43, 1.f };
 	myFrameBufferData.myToCameraSpace = cameraMatrix.Invert();
 	myFrameBufferData.myToWorldFromCamera = cameraMatrix;
