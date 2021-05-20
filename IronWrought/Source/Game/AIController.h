@@ -6,7 +6,7 @@ class CAIController
 {
 public:
 	virtual ~CAIController() { }
-	virtual Vector3 Update(const Vector3& aPosition) = 0; // Aki 28/4 använd gärna const & på vector3 så att man inte kopierar 3 floats i varje update :)
+	virtual Vector3 Update(const Vector3& aPosition) = 0; // Aki 28/4 anvï¿½nd gï¿½rna const & pï¿½ vector3 sï¿½ att man inte kopierar 3 floats i varje update :)
 	
 };
 
@@ -51,6 +51,8 @@ private:
 	float myDamage;
 	float myAttackCooldown;
 	float myAttackTimer;
+	float myAnimationOffset;
+	bool myIsAttacking;
 	CTransformComponent* myTarget;
 	CEnemyComponent* myUser;
 };

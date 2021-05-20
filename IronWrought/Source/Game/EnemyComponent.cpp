@@ -68,7 +68,8 @@ void CEnemyComponent::Start()
 		attack->SetTarget(myPlayer->myTransform);
 	myBehaviours.push_back(attack);
 
-	//this->GameObject().GetComponent<CVFXSystemComponent>()->EnableEffect(0);
+	mySettings.mySpeed = mySettings.mySpeed < 5.0f ? 5.0f : mySettings.mySpeed;
+	mySettings.myHealth = mySettings.myHealth < 10.0f ? 10.0f : mySettings.myHealth;
 
 	if (GameObject().GetComponent<CRigidBodyComponent>()) {
 		myRigidBodyComponent = GameObject().GetComponent<CRigidBodyComponent>();
@@ -122,10 +123,11 @@ void CEnemyComponent::FixedUpdate()
 	//myController->Move({ 0.0f, -0.098f, 0.0f }, 1.f);
 }
 
-void CEnemyComponent::TakeDamage(float aDamage)
+void CEnemyComponent::TakeDamage(const float& aDamage)
 {
 	myCurrentHealth -= aDamage;
-	CMainSingleton::PostMaster().SendLate({ EMessageType::EnemyTakeDamage, this });
+	if(myCurrentHealth > 0.0f)
+		CMainSingleton::PostMaster().SendLate({ EMessageType::EnemyTakeDamage, this });
 }
 
 void CEnemyComponent::SetState(EBehaviour aState)
@@ -140,19 +142,16 @@ void CEnemyComponent::SetState(EBehaviour aState)
 	{
 		case EBehaviour::Patrol:
 		{
-			//std::cout << __FUNCTION__ << " " << "PATROL" << std::endl;
 			msgType = EMessageType::EnemyPatrolState;
 		}break;
 
 		case EBehaviour::Seek:
 		{
-			//std::cout << __FUNCTION__ << " " << "SEEK" << std::endl;
 			msgType = EMessageType::EnemySeekState;
 		}break;
 
 		case EBehaviour::Attack:
 		{
-			//std::cout << __FUNCTION__ << " " << "ATTACK" << std::endl;
 			msgType = EMessageType::EnemyAttackState;
 		}break;
 
@@ -162,6 +161,7 @@ void CEnemyComponent::SetState(EBehaviour aState)
 	}
 	if (msgType == EMessageType::Count)
 		return;
+
 	CMainSingleton::PostMaster().SendLate({ msgType, this });
 }
 
@@ -172,5 +172,8 @@ const CEnemyComponent::EBehaviour CEnemyComponent::GetState() const
 
 void CEnemyComponent::Dead()
 {
+	float deadPos = static_cast<float>(0xDEAD);
+	GameObject().myTransform->Position({ deadPos, deadPos, deadPos });
+	myRigidBodyComponent->SetPosition({ deadPos, deadPos, deadPos });
 	GameObject().Active(false);
 }
