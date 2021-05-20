@@ -33,7 +33,7 @@ void CBootUpState::Awake()
 	CScene* scene = CSceneManager::CreateEmpty();
 
 	CEngine::GetInstance()->AddScene(myState, scene);
-	scene->InitCanvas();
+	//scene->InitCanvas();
 	CEngine::GetInstance()->SetActiveScene(myState);
 }
 
@@ -55,17 +55,17 @@ void CBootUpState::Start()
 	myLogos.back()->Init(CSpriteFactory::GetInstance()->GetSprite(ASSETPATH(document["Engine Logo Path"].GetString())));
 	myLogos.back()->SetShouldRender(false);
 
-	CCanvas& canvas = *IRONWROUGHT->GetActiveScene().Canvas();
-	for (auto& sprite : myLogos)
-	{
-		canvas.AddSpriteToCanvas(sprite);
-	}
+	//CCanvas& canvas = *IRONWROUGHT->GetActiveScene().Canvas();
+	//for (auto& sprite : myLogos)
+	//{
+	//	canvas.AddSpriteToCanvas(sprite);
+	//}
 
 	CTimer::Mark();
 	myTimer = 0.0f;
 	myLogoToRender = 0;
 
-	CMainSingleton::PostMaster().SendLate({ EMessageType::BootUpState, nullptr });
+	//CMainSingleton::PostMaster().SendLate({ EMessageType::BootUpState, nullptr });
 }
 
 void CBootUpState::Stop()
