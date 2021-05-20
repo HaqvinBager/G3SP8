@@ -19,6 +19,9 @@ CBoxColliderComponent::CBoxColliderComponent(CGameObject& aParent, const Vector3
 	, myMaterial(aMaterial)
 	, myIsTrigger(aIsTrigger)
 	, myLayerValue(aLayerValue)
+	, myAudioEventIndex(-1)
+	, myTriggerOnce(false)
+	, myHasTriggered(false)
 	//, myEventFilter(static_cast<EEventFilter>(aLayerValue))
 #ifdef DEBUG_COLLIDER_BOX
 	, myColliderDraw(nullptr)
@@ -115,42 +118,82 @@ void CBoxColliderComponent::CreateBoxCollider()
 
 void CBoxColliderComponent::OnTriggerEnter(CTransformComponent* aOther)
 {
+	if (GameObject().Active() == false)
+		return;
+
 	if (myEventFilter == EEventFilter::PlayerOnly)
 	{
 		if (aOther->GetComponent<CPlayerControllerComponent>() != nullptr)
 		{
+			myHasTriggered = true;
+
+			if (myAudioEventIndex > -1)
+			{
+				CMainSingleton::PostMaster().SendLate({ EMessageType::PlayResearcherEvent, &myAudioEventIndex });
+			}
+
+			PostMaster::SBoxColliderEvenTriggerData data = {};
+			data.myState = true;
+			data.myTransform = GameObject().myTransform;
+
 			//Send Player Has entered Collision Message here
-			bool state = true;
-			SStringMessage message = { myEventMessage.c_str(), &state };
+			/*bool state = true;*/
+			SStringMessage message = { myEventMessage.c_str(), &data };
 			CMainSingleton::PostMaster().Send(message);
 		}
 	}
 	else
 	{
-		bool state = true;
-		SStringMessage message = { myEventMessage.c_str(), &state };
+		PostMaster::SBoxColliderEvenTriggerData data = {};
+		data.myState = true;
+		data.myTransform = GameObject().myTransform;
+		SStringMessage message = { myEventMessage.c_str(), &data };
 		CMainSingleton::PostMaster().Send(message);
+
+		myHasTriggered = true;
 	}
+
+		if (myTriggerOnce)
+			if (myHasTriggered)
+				GameObject().Active(false);
 }
 
 void CBoxColliderComponent::OnTriggerExit(CTransformComponent* aOther)
 {
+	if (GameObject().Active() == false)
+		return;
+
 	if (myEventFilter == EEventFilter::PlayerOnly)
 	{
 		if (aOther->GetComponent<CPlayerControllerComponent>() != nullptr)
 		{
-			//Send Player Has entered Collision Message here
-			bool state = false;
-			SStringMessage message = { myEventMessage.c_str(), &state };
+			myHasTriggered = true;
+
+			if (myAudioEventIndex > -1)
+			{
+				CMainSingleton::PostMaster().SendLate({ EMessageType::PlayResearcherEvent, &myAudioEventIndex });
+			}
+			PostMaster::SBoxColliderEvenTriggerData data = {};
+			data.myState = false;
+			data.myTransform = GameObject().myTransform;
+			SStringMessage message = { myEventMessage.c_str(), &data };
 			CMainSingleton::PostMaster().Send(message);
 		}
 	}
 	else
 	{
-		bool state = false;
-		SStringMessage message = { myEventMessage.c_str(), &state };
+		PostMaster::SBoxColliderEvenTriggerData data = {};
+		data.myState = false;
+		data.myTransform = GameObject().myTransform;
+		SStringMessage message = { myEventMessage.c_str(), &data };
 		CMainSingleton::PostMaster().Send(message);
+
+		myHasTriggered = true;
 	}
+
+	if (myTriggerOnce)
+		if (myHasTriggered)
+			GameObject().Active(false);
 }
 
 void CBoxColliderComponent::RegisterEventTriggerFilter(const int& anEventFilter)
@@ -163,6 +206,16 @@ void CBoxColliderComponent::RegisterEventTriggerFilter(const int& anEventFilter)
 	}
 
 	myEventFilter = static_cast<EEventFilter>(anEventFilter);
+}
+
+void CBoxColliderComponent::RegisterEventTriggerAudioIndex(const int& anAudioIndex)
+{
+	myAudioEventIndex = anAudioIndex;
+}
+
+void CBoxColliderComponent::RegisterEventTriggerOnce(const bool& aTriggerOnce)
+{
+	myTriggerOnce = aTriggerOnce;
 }
 
 void CBoxColliderComponent::OnEnable()
@@ -178,7 +231,6 @@ void CBoxColliderComponent::OnDisable()
 void CBoxColliderComponent::CreateColliderDraw(const float& aHalfSizeX, const float& aHalfSizeY, const float& aHalfSizeZ, const Vector3& aPosOffset)
 {
 #ifdef DEBUG_COLLIDER_BOX
-
 	myColliderDraw = new CLineInstance();
 	myColliderDraw->Init(CLineFactory::GetInstance()->CreateBox(aHalfSizeX, aHalfSizeY, aHalfSizeZ));
 	myColliderDraw->SetPosition(GameObject().myTransform->Position() + aPosOffset);
