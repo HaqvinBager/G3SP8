@@ -399,11 +399,11 @@ CCanvas* CScene::Canvas()
 {
 	return myCanvas;
 }
-//
-//const std::vector<CPatrolPointComponent*>& CScene::PatrolPoints() const
-//{
-//	return myPatrolPoints;
-//}
+
+const std::vector<CPatrolPointComponent*>& CScene::PatrolPoints() const
+{
+	return myPatrolPoints;
+}
 
 const std::vector<CGameObject*>& CScene::ActiveGameObjects() const
 {
@@ -594,6 +594,12 @@ bool CScene::AddInstances(std::vector<CGameObject*>& someGameObjects)
 
 
 	//myGameObjects.insert(myGameObjects.end(), someGameObjects.begin(), someGameObjects.end());
+	return true;
+}
+
+bool CScene::AddInstance(CPatrolPointComponent* aPatrolComponent)
+{
+	myPatrolPoints.push_back(aPatrolComponent);
 	return true;
 }
 

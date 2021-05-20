@@ -571,7 +571,8 @@ void CSceneManager::AddEnemyComponents(CScene& aScene, RapidArray someData)
 				settings.myPatrolIntrestValue.emplace_back(point["interestValue"].GetFloat());
 
 				CGameObject* patrolPoint = aScene.FindObjectWithID(point["transform"]["instanceID"].GetInt());
-				patrolPoint->AddComponent<CPatrolPointComponent>(*patrolPoint, point["interestValue"].GetFloat());
+				auto patrolComponent = patrolPoint->AddComponent<CPatrolPointComponent>(*patrolPoint, point["interestValue"].GetFloat());
+				aScene.AddInstance(patrolComponent);
 			}
 		}
 		gameObject->AddComponent<CEnemyComponent>(*gameObject, settings);
