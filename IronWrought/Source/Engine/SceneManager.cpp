@@ -256,6 +256,7 @@ void CSceneManager::CreateCustomEvents(CScene& aScene)
 void CSceneManager::CreateCustomEventListeners(CScene& aScene)
 {
 	CCustomEventComponent* customEvent = aScene.FindObjectWithID(200)->GetComponent<CCustomEventComponent>();
+	CGameObject* gameObject = new CGameObject(201, "Listener");
 	gameObject->AddComponent<CCustomEventListenerComponent>(*gameObject, customEvent);
 	//float aRange, DirectX::SimpleMath::Vector3 aColorAndIntensity, float anIntensity
 	gameObject->AddComponent<CPointLightComponent>(*gameObject, 100.0f, Vector3(0.0f, 0.0f, 1.0f), 250.0f);
@@ -568,10 +569,13 @@ void CSceneManager::AddEnemyComponents(CScene& aScene, RapidArray someData)
 			{
 				settings.myPatrolGameObjectIds.emplace_back(point["transform"]["instanceID"].GetInt());
 				settings.myPatrolIntrestValue.emplace_back(point["interestValue"].GetFloat());
+
+				CGameObject* patrolPoint = aScene.FindObjectWithID(point["transform"]["instanceID"].GetInt());
+				patrolPoint->AddComponent<CPatrolPointComponent>(*patrolPoint, point["interestValue"].GetFloat());
 			}
 		}
 		gameObject->AddComponent<CEnemyComponent>(*gameObject, settings);
-
+		//gameObject->AddComponent<CPatrolPointComponent>(*gameObject, )
 		//gameObject->AddComponent<CVFXSystemComponent>(*gameObject, ASSETPATH("Assets/Graphics/VFX/JSON/VFXSystem_Enemy.json"));
 	}
 }

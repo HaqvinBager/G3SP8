@@ -18,7 +18,7 @@ float CalculateH(DirectX::SimpleMath::Vector3& aStartCentroid, DirectX::SimpleMa
 	return (abs(aStartCentroid.x - anEndCentroid.x) + abs(aStartCentroid.y - anEndCentroid.y) + abs(aStartCentroid.z - anEndCentroid.z));
 }
 
-std::vector<DirectX::SimpleMath::Vector3> CAStar::GetPath(VECTOR3FLOAT aStartPosision, VECTOR3FLOAT aEndPosision, SNavMesh* aNavMesh, STriangle* aStartTriangle, STriangle* anEndTriangle)
+std::vector<DirectX::SimpleMath::Vector3> CAStar::GetPath(const Vector3& aStartPosision, const Vector3& aEndPosision, SNavMesh* aNavMesh, STriangle* aStartTriangle, STriangle* anEndTriangle)
 {
 	
 	std::vector<DirectX::SimpleMath::Vector3> newPath;
@@ -33,7 +33,7 @@ std::vector<DirectX::SimpleMath::Vector3> CAStar::GetPath(VECTOR3FLOAT aStartPos
 	return newPath;
 }
 
-std::vector<DirectX::SimpleMath::Vector3> CAStar::GetPath(VECTOR3FLOAT aStartPosision, VECTOR3FLOAT aEndPosision, SNavMesh* aNavMesh/*, STriangle* aStartTriangle, STriangle* anEndTriangle*/) 
+std::vector<DirectX::SimpleMath::Vector3> CAStar::GetPath(const Vector3& aStartPosision, const Vector3& aEndPosision, SNavMesh* aNavMesh/*, STriangle* aStartTriangle, STriangle* anEndTriangle*/) 
 { 
 	STriangle* startTriangle = aNavMesh->GetTriangleAtPoint(aStartPosision);
 	STriangle* endTriangle = aNavMesh->GetTriangleAtPoint(aEndPosision);
@@ -163,7 +163,7 @@ std::vector<DirectX::SimpleMath::Vector3> CAStar::GetPortals(std::vector<int> no
 		}
 
 	}
-	return _portals;
+	return portals;
 }
 
 std::vector<DirectX::SimpleMath::Vector3> CAStar::StringPull(Vector3 aStart, Vector3 aEnd, std::vector<DirectX::SimpleMath::Vector3> somePortals)

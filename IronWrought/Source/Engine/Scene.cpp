@@ -262,6 +262,21 @@ void CScene::CallAwakeOnNewComponents()
 	while (!myAwakeComponents.empty())
 	{
 		CComponent* component = myAwakeComponents.front();
+		
+	/*	CGameObject& gameObject = component->GameObject();
+		for (auto& comp : gameObject.myComponents)
+		{
+			const auto& hashCode = typeid(*comp).hash_code();
+			if (myComponentMap.find(hashCode) != myComponentMap.end())
+			{
+				auto& componentVector = myComponentMap[hashCode];
+				if (std::find(componentVector.begin(), componentVector.end(), comp.get()) == componentVector.end())
+				{
+					myComponentMap[hashCode].push_back(comp.get());
+				}		
+			}
+		}*/
+
 		myAwakeComponents.pop();
 		component->Awake();
 		component->OnEnable();
@@ -384,11 +399,11 @@ CCanvas* CScene::Canvas()
 {
 	return myCanvas;
 }
-
-std::vector<CPatrolPointComponent*> CScene::PatrolPoints()
-{
-	return myPatrolPoints;
-}
+//
+//const std::vector<CPatrolPointComponent*>& CScene::PatrolPoints() const
+//{
+//	return myPatrolPoints;
+//}
 
 const std::vector<CGameObject*>& CScene::ActiveGameObjects() const
 {
