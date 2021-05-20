@@ -54,7 +54,7 @@ CScene::CScene(const unsigned int aGameObjectCount)
 #endif
 {
 	myGameObjects.reserve(aGameObjectCount);
-	myPXScene = CEngine::GetInstance()->GetPhysx().CreatePXScene(this);
+	myPXScene = CEngine::GetInstance()->GetPhysx().CreatePXScene();
 
 	myModelsToOutline.resize(2);
 	for (unsigned int i = 0; i < myModelsToOutline.size(); ++i)
