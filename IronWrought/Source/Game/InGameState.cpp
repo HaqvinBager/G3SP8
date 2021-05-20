@@ -27,12 +27,24 @@
 	#include <TextFactory.h>
 	#include <TextInstance.h>
 	#include "EnemyComponent.h"
+
+	#include "AnimationComponent.h"
+	#include "animationLoader.h"
+	#include "ModelComponent.h"
+	
+	#include "EngineDefines.h"
+	
+	void TEMP_VFX(CScene* aScene);
+#endif
+
+#ifdef VERTICAL_SLICE
+	bool gHasPlayedAudio = false;
 #endif
 
 CInGameState::CInGameState(CStateStack& aStateStack, const CStateStack::EState aState)
-	: CState(aStateStack, aState),
-	myExitLevel(false)
+	: CState(aStateStack, aState)
 	, myEnemyAnimationController(nullptr)
+	, myExitTo(EExitTo::None)
 {
 }
 
@@ -41,18 +53,17 @@ CInGameState::~CInGameState()
 	delete myEnemyAnimationController;
 }
 
-
+//CGameObject* enemy = new CGameObject(919);
 void CInGameState::Awake()
 {
 	CJsonReader::Get()->InitFromGenerated();
 	myEnemyAnimationController = new CEnemyAnimationController();
 	CScene* scene = CSceneManager::CreateEmpty();
 
+#ifndef NDEBUG
+	TEMP_VFX(scene);
+#endif
 	CEngine::GetInstance()->AddScene(myState, scene);
-	CMainSingleton::PostMaster().Subscribe("Level_1-1", this);
-	CMainSingleton::PostMaster().Subscribe("Level_1-2", this);
-	CMainSingleton::PostMaster().Subscribe("Level_2-1", this);
-	CMainSingleton::PostMaster().Subscribe("Level_2-2", this);
 }
 
 
@@ -60,14 +71,23 @@ void CInGameState::Start()
 {
 	myEnemyAnimationController->Activate();
 	CEngine::GetInstance()->SetActiveScene(myState);
+	IRONWROUGHT->SetBrokenScreen(false);
 	IRONWROUGHT->GetActiveScene().CanvasIsHUD();
 	IRONWROUGHT->HideCursor();
-	myExitLevel = false;
 
-	CMainSingleton::PostMaster().Subscribe(PostMaster::SMSG_DISABLE_GLOVE, this);
-	CMainSingleton::PostMaster().Subscribe(PostMaster::SMSG_ENABLE_GLOVE, this);
+	myExitTo = EExitTo::None;
+
+#ifdef VERTICAL_SLICE
+	if (gHasPlayedAudio == false)
+	{
+		gHasPlayedAudio = true;
+		CMainSingleton::PostMaster().SendLate({ EMessageType::GameStarted, nullptr });
+	}
+#endif
+
 	CMainSingleton::PostMaster().Subscribe(PostMaster::SMSG_DISABLE_CANVAS, this);
 	CMainSingleton::PostMaster().Subscribe(PostMaster::SMSG_ENABLE_CANVAS, this);
+	CMainSingleton::PostMaster().Subscribe(PostMaster::SMSG_TO_MAIN_MENU, this);
 }
 
 void CInGameState::Stop()
@@ -76,10 +96,9 @@ void CInGameState::Stop()
 	CMainSingleton::CollisionManager().ClearColliders();
 	myEnemyAnimationController->Deactivate();
 
-	CMainSingleton::PostMaster().Unsubscribe(PostMaster::SMSG_DISABLE_GLOVE, this);
-	CMainSingleton::PostMaster().Unsubscribe(PostMaster::SMSG_ENABLE_GLOVE, this);
 	CMainSingleton::PostMaster().Unsubscribe(PostMaster::SMSG_DISABLE_CANVAS, this);
 	CMainSingleton::PostMaster().Unsubscribe(PostMaster::SMSG_ENABLE_CANVAS, this);
+	CMainSingleton::PostMaster().Unsubscribe(PostMaster::SMSG_TO_MAIN_MENU, this);
 }
 
 void CInGameState::Update()
@@ -91,10 +110,27 @@ void CInGameState::Update()
 
 	DEBUGFunctionality();
 
-	if (myExitLevel)
+	switch (myExitTo)
 	{
-		myExitLevel = false;
-		myStateStack.PopTopAndPush(CStateStack::EState::LoadLevel);
+		case EExitTo::AnotherLevel:
+		{
+			myExitTo = EExitTo::None;
+			myStateStack.PopTopAndPush(CStateStack::EState::LoadLevel);
+		}break;
+
+		case EExitTo::MainMenu:
+		{
+			myExitTo = EExitTo::None;
+			myStateStack.PopUntil(CStateStack::EState::MainMenu);
+#ifdef VERTICAL_SLICE
+			gHasPlayedAudio = false;
+#endif
+		}break;
+
+		case EExitTo::None:
+		break;
+
+		default:break;
 	}
 }
 
@@ -117,7 +153,11 @@ void CInGameState::Receive(const SStringMessage& aMessage)
 {
 	if (PostMaster::LevelCheck(aMessage.myMessageType))
 	{
-		myExitLevel = true;
+		myExitTo = EExitTo::AnotherLevel;
+	}
+	if (PostMaster::CompareStringMessage(aMessage.myMessageType, PostMaster::SMSG_TO_MAIN_MENU))
+	{
+		myExitTo = EExitTo::MainMenu;
 	}
 
 	if (PostMaster::DisableCanvas(aMessage.myMessageType))
@@ -128,12 +168,6 @@ void CInGameState::Receive(const SStringMessage& aMessage)
 	{
 		IRONWROUGHT->GetActiveScene().CanvasToggle(true);
 	}
-	//const char* test = "Level_1-1";
-	//if (strcmp(aMessage.myMessageType, test) == 0)
-	//{
-	//	/*Start();*/
-	//	myExitLevel = true;
-	//}
 }
 
 void CInGameState::Receive(const SMessage& /*aMessage*/)
@@ -173,3 +207,15 @@ void CInGameState::DEBUGFunctionality()
 	}
 #endif
 }
+
+#ifndef NDEBUG
+	void TEMP_VFX(CScene* /*aScene*/)
+	{
+		//static int id = 500;
+		//CGameObject* abilityObject = new CGameObject(id++);
+		//abilityObject->AddComponent<CVFXSystemComponent>(*abilityObject, ASSETPATH("Assets/IronWrought/VFX/JSON/VFXSystem_ToLoad.json"));
+		//
+		//aScene->AddInstance(abilityObject);
+		//aScene->SetVFXTester(abilityObject);
+	}
+#endif
