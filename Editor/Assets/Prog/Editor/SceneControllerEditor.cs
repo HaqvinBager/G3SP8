@@ -28,7 +28,7 @@ using UnityEditor;
 
 
 
-#if UNITY_EDITOR
+//#if UNITY_EDITOR
 /// <summary>
 /// Display a Scene Reference object in the editor.
 /// If scene is valid, provides basic buttons to interact with the scene's role in Build Settings.
@@ -473,4 +473,4 @@ public class SceneReferencePropertyDrawer : PropertyDrawer
     }
 }
 
-#endif
+//#endif

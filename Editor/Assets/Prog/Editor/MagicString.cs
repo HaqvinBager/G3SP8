@@ -1,7 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.IO;
+
+#if UNITY_EDITOR
 using UnityEditor;
+#endif
 
 public class MagicString
 {
@@ -39,6 +43,29 @@ public class MagicString
     public static string[] GetGuids(string aFilter = "t:texture", params string[] someFolders)
     {
         return AssetDatabase.FindAssets(aFilter, someFolders);
+    }
+
+    public static List<string> ExtractIronWroughtTexturePathFromMaterial(params Material[] materials)
+    {
+        List<string> texturePaths = new List<string>();
+
+        MaterialProperty[] matProperty = MaterialEditor.GetMaterialProperties(materials);
+        for (int i = 0; i < matProperty.Length; ++i)
+        {
+            if (matProperty[i].textureValue != null)
+            {
+                texturePaths.Add(AssetDatabase.GetAssetPath(matProperty[i].textureValue));
+
+                //FileInfo fileInfo = new FileInfo(AssetDatabase.GetAssetPath(matProperty[i].textureValue));
+                //if (!texturePaths.Contains(fileInfo.Directory.Name))
+                //{
+                //    string path = fileInfo.path;
+                //    path = path.Substring(path.IndexOf("Assets/"), path.Length - path.IndexOf("Assets/"));
+                //    texturePaths.Add(path);
+                //}
+            }
+        }
+        return texturePaths;
     }
 }
 

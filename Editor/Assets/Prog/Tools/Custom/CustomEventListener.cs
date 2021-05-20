@@ -13,16 +13,19 @@ public class CustomEventListener : MonoBehaviour
 
     private void OnEnable()
     {
-        testEvent?.Register(this);
+        if(testEvent != null)
+            testEvent.Register(this);
     }
 
     private void OnDisable()
     {
-        testEvent?.UnRegister(this);
+        if(testEvent != null)
+            testEvent.UnRegister(this);
     }
 
     public void OnRespond()
     {
-        onResponse?.Invoke();
+        if(onResponse != null)
+            onResponse.Invoke();
     }
 }

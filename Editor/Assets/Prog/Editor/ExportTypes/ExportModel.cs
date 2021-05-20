@@ -10,6 +10,7 @@ public class ModelLink
 {
     public int instanceID;
     public int assetID;
+    public List<int> materialIDs;
     public int vertexColorID;
 }
 
@@ -57,6 +58,10 @@ public class ExportModel
                     //link.vertexColorID = AssetDatabase.LoadAssetAtPath<Object>("Assets/Generated/VertexColors/VertexColors_" + meshName.ToString() + "_Bin.bin").GetInstanceID();
                     link.vertexColorID = filter.sharedMesh.GetInstanceID();//AssetDatabase.LoadAssetAtPath<Object>("Assets/Generated/" + aSceneName + "/VertexColors_" + polyBrushFbx.GetInstanceID().ToString() + "_Bin.bin").GetInstanceID();
 
+                    link.materialIDs = new List<int>();
+                    foreach (Material mat in renderer.sharedMaterials)
+                        link.materialIDs.Add(mat.GetInstanceID());
+
                     if (!modelCollection.models.Exists(e => e.instanceID == link.instanceID))
                         modelCollection.models.Add(link);
 
@@ -87,7 +92,11 @@ public class ExportModel
                                 link.assetID = modelAsset.transform.GetInstanceID();
                                 link.instanceID = validPrefabParent.transform.GetInstanceID();
 
-                                if(!modelCollection.models.Exists(e => e.instanceID == link.instanceID))
+                                link.materialIDs = new List<int>();
+                                foreach (Material mat in renderer.sharedMaterials)
+                                    link.materialIDs.Add(mat.GetInstanceID());
+
+                                if (!modelCollection.models.Exists(e => e.instanceID == link.instanceID))
                                 {
                                     modelCollection.models.Add(link);
                                 }
@@ -99,6 +108,11 @@ public class ExportModel
                         ModelLink link = new ModelLink();
                         link.assetID = modelAsset.transform.GetInstanceID();
                         link.instanceID = prefabParent.transform.GetInstanceID();
+                        
+                        link.materialIDs = new List<int>();
+                        foreach(Material mat in renderer.sharedMaterials)            
+                            link.materialIDs.Add(mat.GetInstanceID());
+                        
                         modelCollection.models.Add(link);
                     }
                 }else if(renderer.GetType() == typeof(SkinnedMeshRenderer))

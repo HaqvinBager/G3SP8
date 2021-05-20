@@ -1,8 +1,11 @@
 ﻿using UnityEngine;
-using UnityEditor;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine.SceneManagement;
+
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 
 [System.Serializable]
 public struct VertexColorData
@@ -214,7 +217,7 @@ public class ExportVertexPaint : Editor
         //AssetDatabase.Refresh();
     }
 
-    static List<string> ExtractTexturePathsFromMaterials(Material[] materials)
+    public static List<string> ExtractTexturePathsFromMaterials(params Material[] materials)
     {
         List<string> texturePaths = new List<string>();
         
@@ -240,6 +243,8 @@ public class ExportVertexPaint : Editor
         }
         return texturePaths;
     }
+
+
 }
 
 //string meshName = meshFilter.sharedMesh.name;

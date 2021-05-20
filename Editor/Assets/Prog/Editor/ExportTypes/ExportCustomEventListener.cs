@@ -1,10 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEditor;
-using UnityEditor.Events;
 using UnityEngine.Events;
 using System.Reflection;
+#if UNITY_EDITOR
+using UnityEditor;
+using UnityEditor.Events;
+#endif
 /*
 * Component Enabled(true/false) = "set_enabled"
 */

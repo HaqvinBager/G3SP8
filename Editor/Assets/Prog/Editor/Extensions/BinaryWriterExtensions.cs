@@ -141,6 +141,11 @@ public static class BinaryWriterExtensions
             aBinWriter.Write(data.instanceID);
             aBinWriter.Write(data.assetID);
             aBinWriter.Write(data.vertexColorID);
+
+            if (data.materialIDs == null)
+                aBinWriter.Write(0);
+            else
+                aBinWriter.Write(data.materialIDs);
         }
     }
 
@@ -219,8 +224,9 @@ public static class BinaryWriterExtensions
     public static void Write(this BinaryWriter aBinWRiter, InstancedModel data)
     {
         aBinWRiter.Write(data.assetID);
+        aBinWRiter.Write(data.materialIDs);
         aBinWRiter.Write(data.transforms.Count);
-        foreach(STransform transformData in data.transforms)
+        foreach (STransform transformData in data.transforms)
         {
             aBinWRiter.Write(transformData.position);
             aBinWRiter.Write(transformData.rotation);
@@ -300,7 +306,7 @@ public static class BinaryWriterExtensions
     public static void Write(this BinaryWriter aBinWriter, ParentsCollection data)
     {
         aBinWriter.Write(data.parents.Count);
-        foreach(ParentData parentData in data.parents)
+        foreach (ParentData parentData in data.parents)
         {
             aBinWriter.Write(parentData);
         }
@@ -314,7 +320,7 @@ public static class BinaryWriterExtensions
     public static void Write(this BinaryWriter aBinWriter, InstanceModelCollection data)
     {
         aBinWriter.Write(data.instancedModels.Count);
-        foreach(InstancedModel instancedModelData in data.instancedModels)
+        foreach (InstancedModel instancedModelData in data.instancedModels)
             aBinWriter.Write(instancedModelData);
     }
 }

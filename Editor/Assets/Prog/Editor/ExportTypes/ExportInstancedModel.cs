@@ -16,6 +16,7 @@ public struct STransform
 public class InstancedModel
 {
     public int assetID;
+    public List<int> materialIDs;
     public List<STransform> transforms;
 }
 
@@ -44,13 +45,19 @@ public class ExportInstancedModel
                 if (asset == null)
                     continue;
 
-
                 int assetID = asset.transform.GetInstanceID();
                 InstancedModel instancedModel = collection.instancedModels.Find(e => e.assetID == assetID);
                 if (instancedModel == null)
                 {
                     instancedModel = new InstancedModel();
                     instancedModel.assetID = assetID;
+                    instancedModel.materialIDs = new List<int>();
+                    foreach(Material mat in asset.GetComponent<Renderer>().sharedMaterials)
+                    {
+                        instancedModel.materialIDs.Add(mat.GetInstanceID());
+                        if (prefabParent.transform.GetInstanceID() == -3022)
+                            Debug.Log(mat.name);
+                    }
                     instancedModel.transforms = new List<STransform>();
                     collection.instancedModels.Add(instancedModel);
                 }
