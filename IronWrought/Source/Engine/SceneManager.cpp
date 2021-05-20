@@ -21,6 +21,7 @@
 #include <GravityGloveComponent.h>
 #include <EnemyComponent.h>
 #include <HealthPickupComponent.h>
+#include <PatrolPointComponent.h>
 //#include <iostream>
 #include "NavmeshLoader.h"
 #include <BinReader.h>
@@ -81,7 +82,6 @@ CScene* CSceneManager::CreateScene(const std::string& aSceneJson)
 	CScene* scene = Instantiate();
 	//CScene* scene = CreateEmpty();
 
-	Binary::SLevelData binLevelData = CBinReader::Load(ASSETPATH("Assets/Generated/" + aSceneJson + "/" + aSceneJson + ".bin"));
 
 	const auto doc = CJsonReader::Get()->LoadDocument(ASSETPATH("Assets/Generated/" + aSceneJson + "/" + aSceneJson + ".json"));
 	if (doc.HasParseError())
@@ -93,6 +93,7 @@ CScene* CSceneManager::CreateScene(const std::string& aSceneJson)
 	SVertexPaintCollection vertexPaintData = CBinReader::LoadVertexPaintCollection(doc["Root"].GetString());
 	const auto& scenes = doc.GetObjectW()["Scenes"].GetArray();
 
+	Binary::SLevelData binLevelData = CBinReader::Load(ASSETPATH("Assets/Generated/" + aSceneJson + "/" + aSceneJson + ".bin"));
 	if (AddGameObjects(*scene, binLevelData.myInstanceIDs))
 	{
 		SetTransforms(*scene, binLevelData.myTransforms);
@@ -209,10 +210,9 @@ bool CSceneManager::AddGameObjects(CScene& aScene, const std::vector<Binary::SIn
 	if (someData.size() == 0)
 		return false;
 
-	for (const auto& data : someData)
+	for (int i = 0; i < someData.size(); ++i)
 	{
-		int instanceID = data.instanceID;
-		aScene.AddInstance(new CGameObject(instanceID));
+		aScene.AddInstance(new CGameObject(someData[i].instanceID, someData[i].name));
 	}
 	return true;
 }
@@ -248,14 +248,13 @@ void CSceneManager::SetTransforms(CScene& aScene, const std::vector<Binary::STra
 
 void CSceneManager::CreateCustomEvents(CScene& aScene)
 {
-	CGameObject* gameObject = new CGameObject(200, "Test GameObject Event");
-	gameObject->AddComponent<CCustomEventComponent>(*gameObject, "Test Event");
+	CGameObject* gameObject = new CGameObject(200, "Add");
+	gameObject->AddComponent<CCustomEventComponent>(*gameObject, "Add");
 	aScene.AddInstance(gameObject);
 }
 
 void CSceneManager::CreateCustomEventListeners(CScene& aScene)
 {
-	CGameObject* gameObject = new CGameObject(201, "Test GameObject Listener");
 	CCustomEventComponent* customEvent = aScene.FindObjectWithID(200)->GetComponent<CCustomEventComponent>();
 	gameObject->AddComponent<CCustomEventListenerComponent>(*gameObject, customEvent);
 	//float aRange, DirectX::SimpleMath::Vector3 aColorAndIntensity, float anIntensity
@@ -337,8 +336,6 @@ void CSceneManager::SetVertexPaintedColors(CScene& aScene, RapidArray someData, 
 			CGameObject* gameObject = aScene.FindObjectWithID(gameObjectID.GetInt());
 			if (gameObject == nullptr) //Was not entirely sure why this would try to acces a non-existant gameObject.
 				continue;				//I think it relates to the Model or VertexPaint Export. We don't want to add vertexColors to the export if said object was never painted on!
-
-
 
 			for (auto it = vertexColorData.myData.begin(); it != vertexColorData.myData.end(); ++it)
 			{
@@ -565,11 +562,12 @@ void CSceneManager::AddEnemyComponents(CScene& aScene, RapidArray someData)
 		settings.mySpeed = m["speed"].GetFloat();
 		settings.myHealth = m["health"].GetFloat();
 		settings.myAttackDistance = m["attackDistance"].GetFloat();
-		if (m.HasMember("points"))
+		if (m.HasMember("interestPoints"))
 		{
-			for (const auto& point : m["points"].GetArray())
+			for (const auto& point : m["interestPoints"].GetArray())
 			{
-				settings.myPatrolGameObjectIds.push_back(point["instanceID"].GetInt());
+				settings.myPatrolGameObjectIds.emplace_back(point["transform"]["instanceID"].GetInt());
+				settings.myPatrolIntrestValue.emplace_back(point["interestValue"].GetFloat());
 			}
 		}
 		gameObject->AddComponent<CEnemyComponent>(*gameObject, settings);

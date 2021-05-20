@@ -15,7 +15,7 @@
 
 #define CURRENT_EFFECT myEffects[myCurrentEffectIndex]
 
-IronWroughtImGui::CVFXEditorWindow::CVFXEditorWindow(const char* aName)
+ImGui::CVFXEditorWindow::CVFXEditorWindow(const char* aName)
 	: CWindow(aName)
 	, myCurrentMenu(EVFXEditorMenu::MainMenu)
 {
@@ -30,7 +30,7 @@ IronWroughtImGui::CVFXEditorWindow::CVFXEditorWindow(const char* aName)
 
 	AddEffect(0);
 }
-IronWroughtImGui::CVFXEditorWindow::~CVFXEditorWindow()
+ImGui::CVFXEditorWindow::~CVFXEditorWindow()
 {
 	delete myMeshData;
 	myMeshData = nullptr;
@@ -39,7 +39,7 @@ IronWroughtImGui::CVFXEditorWindow::~CVFXEditorWindow()
 	myEmitterData = nullptr;
 }
 
-void IronWroughtImGui::CVFXEditorWindow::OnEnable()
+void ImGui::CVFXEditorWindow::OnEnable()
 {
 	std::vector<std::string> generatedJsonFiles = CFolderUtility::GetFileNamesInFolder(ASSETPATH("Assets/Graphics/VFX/JSON/"), ".json", ".json");
 	for (auto& file : generatedJsonFiles) {
@@ -53,19 +53,19 @@ void IronWroughtImGui::CVFXEditorWindow::OnEnable()
 	myEffectFilePaths.push_back("Empty");
 }
 
-void IronWroughtImGui::CVFXEditorWindow::OnInspectorGUI()
+void ImGui::CVFXEditorWindow::OnInspectorGUI()
 {
 	ImGui::Begin(Name(), Open());
 
 	switch (myCurrentMenu)
 	{
-	case IronWroughtImGui::EVFXEditorMenu::MainMenu:
+	case ImGui::EVFXEditorMenu::MainMenu:
 		ShowMainMenu();
 		break;
-	case IronWroughtImGui::EVFXEditorMenu::VFXMeshView:
+	case ImGui::EVFXEditorMenu::VFXMeshView:
 		ShowVFXMeshWindow();
 		break;
-	case IronWroughtImGui::EVFXEditorMenu::ParticleEmitterView:
+	case ImGui::EVFXEditorMenu::ParticleEmitterView:
 		ShowParticleEffectWindow();
 		break;
 	default:
@@ -75,11 +75,11 @@ void IronWroughtImGui::CVFXEditorWindow::OnInspectorGUI()
 	ImGui::End();
 }
 
-void IronWroughtImGui::CVFXEditorWindow::OnDisable()
+void ImGui::CVFXEditorWindow::OnDisable()
 {
 }
 
-void IronWroughtImGui::CVFXEditorWindow::SaveToFile()
+void ImGui::CVFXEditorWindow::SaveToFile()
 {
 	rapidjson::StringBuffer s;
 	rapidjson::PrettyWriter<rapidjson::StringBuffer> writer(s);
@@ -107,7 +107,7 @@ void IronWroughtImGui::CVFXEditorWindow::SaveToFile()
 	vfx->GetComponent<CVFXSystemComponent>()->EnableEffect(myCurrentEffectIndex);
 }
 
-void IronWroughtImGui::CVFXEditorWindow::LoadFile(std::string aFilePath)
+void ImGui::CVFXEditorWindow::LoadFile(std::string aFilePath)
 {
 	rapidjson::Document document = CJsonReader::Get()->LoadDocument(ASSETPATH(aFilePath));
 	ENGINE_BOOL_POPUP(!CJsonReader::HasParseError(document), "Invalid Json document: %s", aFilePath.c_str());
@@ -167,7 +167,7 @@ void IronWroughtImGui::CVFXEditorWindow::LoadFile(std::string aFilePath)
 	}
 }
 
-void IronWroughtImGui::CVFXEditorWindow::ShowMainMenu()
+void ImGui::CVFXEditorWindow::ShowMainMenu()
 {
 	if (ImGui::BeginCombo("Load Effect", "VFXSystem_Tester.json", ImGuiComboFlags_NoPreview)) 
 	{
@@ -259,7 +259,7 @@ void IronWroughtImGui::CVFXEditorWindow::ShowMainMenu()
 	}
 }
 
-void IronWroughtImGui::CVFXEditorWindow::AddEffect(unsigned int anIndex)
+void ImGui::CVFXEditorWindow::AddEffect(unsigned int anIndex)
 {
 	SVFXSerializable serializable;
 	std::string name = "Effect " + std::to_string(anIndex);
@@ -275,7 +275,7 @@ void IronWroughtImGui::CVFXEditorWindow::AddEffect(unsigned int anIndex)
 	myEffects.push_back(serializable);
 }
 
-void IronWroughtImGui::CVFXEditorWindow::ShowVFXMeshTransformData(SVFXMeshTransformData& someData, unsigned int anIndex)
+void ImGui::CVFXEditorWindow::ShowVFXMeshTransformData(SVFXMeshTransformData& someData, unsigned int anIndex)
 {
 	std::string index = std::to_string(anIndex);
 
@@ -322,7 +322,7 @@ void IronWroughtImGui::CVFXEditorWindow::ShowVFXMeshTransformData(SVFXMeshTransf
 	ImGui::Dummy(ImVec2(0.0f, 10.0f));
 }
 
-void IronWroughtImGui::CVFXEditorWindow::ShowParticleEmitterTransformData(SParticleEmitterTransformData& someData, unsigned int anIndex)
+void ImGui::CVFXEditorWindow::ShowParticleEmitterTransformData(SParticleEmitterTransformData& someData, unsigned int anIndex)
 {
 	std::string index = std::to_string(anIndex);
 
@@ -367,7 +367,7 @@ void IronWroughtImGui::CVFXEditorWindow::ShowParticleEmitterTransformData(SParti
 	ImGui::Dummy(ImVec2(0.0f, 10.0f));
 }
 
-void IronWroughtImGui::CVFXEditorWindow::ShowVFXMeshWindow()
+void ImGui::CVFXEditorWindow::ShowVFXMeshWindow()
 {
 	ImGui::TextColored({ 1.0f, 0.0f, 1.0f, 1.0f }, "VFX Mesh File");
 	ImGui::Spacing();
@@ -429,7 +429,7 @@ void IronWroughtImGui::CVFXEditorWindow::ShowVFXMeshWindow()
 	}
 }
 
-void IronWroughtImGui::CVFXEditorWindow::ShowParticleEffectWindow()
+void ImGui::CVFXEditorWindow::ShowParticleEffectWindow()
 {
 	ImGui::TextColored({ 1.0f, 0.0f, 1.0f, 1.0f }, "Particle Emitter File");
 
@@ -586,7 +586,7 @@ void IronWroughtImGui::CVFXEditorWindow::ShowParticleEffectWindow()
 	}
 }
 
-void IronWroughtImGui::CVFXEditorWindow::OpenVFXMeshWindow(const std::string& aPath)
+void ImGui::CVFXEditorWindow::OpenVFXMeshWindow(const std::string& aPath)
 {
 	if (myMeshData)
 		myMeshData->Init(aPath);
@@ -597,7 +597,7 @@ void IronWroughtImGui::CVFXEditorWindow::OpenVFXMeshWindow(const std::string& aP
 	memcpy(&myVFXMeshDataDestination[0], aPath.c_str(), strlen(aPath.c_str()));
 }
 
-void IronWroughtImGui::CVFXEditorWindow::OpenParticleEffectWindow(const std::string& aPath)
+void ImGui::CVFXEditorWindow::OpenParticleEffectWindow(const std::string& aPath)
 {
 	if (myEmitterData)
 		myEmitterData->Init(aPath);

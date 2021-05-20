@@ -236,8 +236,25 @@ public static class BinaryWriterExtensions
 
     public static void Write(this BinaryWriter aBinWriter, InstanceIDCollection data)
     {
-        aBinWriter.Write(data.Ids);
+        aBinWriter.Write(data.Ids.Count);
+        foreach (var id in data.Ids)
+        {
+            aBinWriter.Write(id.instanceID);
+            aBinWriter.Write(id.name);
+        }
+
+        //aBinWriter.Write(data.Ids);
     }
+
+    //public static void Write(this BinaryWriter aBinWriter, InstanceNameCollection data)
+    //{
+    //    aBinWriter.Write(data.names.Count);
+    //    foreach (InstanceName name in data.names)
+    //    {
+    //        aBinWriter.Write(name.id);
+    //        aBinWriter.Write(name.name);
+    //    }
+    //}
 
     public static void Write(this BinaryWriter aBinWriter, TransformCollection data)
     {

@@ -25,6 +25,7 @@ struct SNavMesh;
 class CModel;
 class IAIBehavior;
 class CInstancedModelComponent;
+class CPatrolPointComponent;
 
 class CPlayerControllerComponent;
 
@@ -175,6 +176,7 @@ private:
 	std::vector<CLineInstance*> myLineInstances;
 	std::vector<CGameObject*> myGameObjects;
 	std::vector<CGameObject*> myModelsToOutline;
+	std::vector<CPatrolPointComponent*> myPatrolPoints;
 	std::unordered_map<int, CGameObject*> myIDGameObjectMap;
 	std::unordered_map<size_t, std::vector<CComponent*>> myComponentMap;
 	

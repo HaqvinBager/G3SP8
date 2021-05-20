@@ -112,7 +112,7 @@ void CCameraControllerComponent::Update()
 
 CGameObject* CCameraControllerComponent::CreatePlayerFirstPersonCamera(CGameObject* aParentObject)
 {
-	CGameObject* camera = new CGameObject(PLAYER_CAMERA_ID);
+	CGameObject* camera = new CGameObject(PLAYER_CAMERA_ID, "Player Camera");
 	camera->AddComponent<CCameraComponent>(*camera, 70.0f);
 	camera->AddComponent<CCameraControllerComponent>(*camera, 2.0f, ECameraMode::PlayerFirstPerson);
 	camera->myTransform->SetParent(aParentObject->myTransform);

@@ -116,8 +116,12 @@ public class ExporterJson
         //Especially if we put these multiple .json files in a folder!
         InstanceIDCollection instanceIDs = ExportInstanceID.Export(aSceneName);
         Json.AddToExport(instanceIDs);
+
+        List<int> ids = new List<int>();
+        instanceIDs.Ids.ForEach(e => ids.Add(e.instanceID));
+
         //Json.AddToExport(ExportTransform.Export(aSceneName, instanceIDs.Ids));
-        Json.AddToExport(ExportVertexPaint.Export(aSceneName, instanceIDs.Ids));
+        Json.AddToExport(ExportVertexPaint.Export(aSceneName, ids));
         //Json.AddToExport(       ExportModel.Export(aSceneName, instanceIDs.Ids)     );
         Json.AddToExport(       ExportDirectionalLight.Export(aSceneName)           );
         //Json.AddToExport(       ExportPointlights.ExportPointlight(aSceneName)      );

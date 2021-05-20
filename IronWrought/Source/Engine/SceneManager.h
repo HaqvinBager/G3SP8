@@ -40,6 +40,8 @@ private:
 	static bool AddGameObjects(CScene& aScene, RapidArray someData);
 	static bool AddGameObjects(CScene& aScene, const std::vector<Binary::SInstanceID>& someData);
 
+	//static void AddGameObjectNames(CScene& aScene, const std::vector<Binary::SInstanceName>& someNames);
+
 	static void SetTransforms(CScene& aScene, RapidArray someData);
 	static void SetTransforms(CScene& aScene, const std::vector<Binary::STransform>& someData);
 

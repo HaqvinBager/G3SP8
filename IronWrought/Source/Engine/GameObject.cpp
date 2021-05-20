@@ -4,12 +4,13 @@
 #include "TransformComponent.h"
 #include "Behaviour.h"
 
-CGameObject::CGameObject(const int aInstanceID, const char* aName)
+CGameObject::CGameObject(const int aInstanceID, const std::string& aName)
 	: myInstanceID(aInstanceID)
 	, myIsStatic(false)
 	, myIsActive(true)
 	, myName(aName)
 {
+	std::cout << "New GameObject: " << aName << std::endl;
 	myComponents.push_back(std::make_unique<CTransformComponent>(*this));
 	myTransform = static_cast<CTransformComponent*>(myComponents.back().get());
 }
