@@ -215,7 +215,7 @@ void CEnemyComponent::Receive(const SMessage& aMsg)
 
 CPatrolPointComponent* CEnemyComponent::FindBestPatrolPoint()
 {
-	std::vector<CPatrolPointComponent*> patrolPoints = CEngine::GetInstance()->GetActiveScene().PatrolPoints();
+	const std::vector<CPatrolPointComponent*>& patrolPoints = CEngine::GetInstance()->GetActiveScene().PatrolPoints();
 	std::vector<float> intrestValues;
 	if (patrolPoints.size() > 0) {
 		for (int i = 0; i < patrolPoints.size(); ++i) {
