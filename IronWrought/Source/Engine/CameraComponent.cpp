@@ -28,10 +28,12 @@ CCameraComponent::CCameraComponent(CGameObject& aParent, const float aFoV/*, flo
 	myShakeTimer = 0.0f;
 	
 	myFadingPlane = nullptr;
-	myFadeTimer = 1.0f;
-	myFadeSpeed = 2.75f;
-	myFadingIn = true;
+	myFadeParameter = 1.0f;
+	myFadeSpeed = 1.0f;
 	myFadingPlaneActive = false;
+	myFadePermanent = false;
+
+	myState = ECameraState::Default;
 }
 
 CCameraComponent::~CCameraComponent()
@@ -65,10 +67,16 @@ float LogEaseIn(float x) {
 
 void CCameraComponent::Update()
 {
+#ifdef _DEBUG
 	if (Input::GetInstance()->IsKeyPressed('H'))
 	{
 		this->SetTrauma(1.5f);
 	}
+	if (Input::GetInstance()->IsKeyPressed('J'))
+	{
+		this->Fade(false, 5.0f);
+	}
+#endif
 
 	if (myTrauma > 0.0f) {
 		myShakeTimer += CTimer::Dt();
@@ -80,37 +88,48 @@ void CCameraComponent::Update()
 		myTrauma = 0.0f;
 	}
 
-	if (myFadingPlaneActive) {
-		
-		if (!myFadingPlane->GetShouldRender())
-			myFadingPlane->SetShouldRender(true);
+		if (myState != ECameraState::Default)
+	{
+		if (myState == ECameraState::FadeIn || myState == ECameraState::FadeOut)
+		{
+			if (!myFadingPlane->GetShouldRender())
+				myFadingPlane->SetShouldRender(true);
 
-		myFadeTimer -= myFadeSpeed * CTimer::Dt();
-		if (myFadingIn) {
+			myFadeParameter -= myFadeSpeed * CTimer::Dt();
+
 			DirectX::SimpleMath::Vector4 color = myFadingPlane->GetColor();
 			float alpha = color.w;
-			alpha = LogEaseOut(myFadeTimer);
-			if (alpha <= 0.01f) {
-				alpha = 0.0f;
-				myFadingPlaneActive = false;
-				myFadeTimer = 1.0f;
-				myFadingPlane->SetShouldRender(false);
-				CMainSingleton::PostMaster().SendLate({ EMessageType::FadeInComplete, 0 });
+
+			if (myState == ECameraState::FadeIn)
+			{
+				alpha = LogEaseOut(myFadeParameter);
+				if (alpha <= 0.01f)
+				{
+					alpha = 0.0f;
+					myState = ECameraState::Default;
+					CMainSingleton::PostMaster().SendLate({ EMessageType::FadeInComplete, 0 });
+				}
 			}
-			myFadingPlane->SetColor({ color.x, color.y, color.z, alpha });
-		}
-		else {
-			DirectX::SimpleMath::Vector4 color = myFadingPlane->GetColor();
-			float alpha = color.w;
-			alpha = LogEaseIn(myFadeTimer);
-			if (alpha >= 1.0f) {
-				alpha = 1.0f;
-				myFadingPlaneActive = false;
-				myFadeTimer = 1.0f;
-				myFadingPlane->SetShouldRender(false);
-				CMainSingleton::PostMaster().SendLate({ EMessageType::FadeOutComplete, 0 });
+			else if (myState == ECameraState::FadeOut)
+			{
+				alpha = LogEaseIn(myFadeParameter);
+				if (alpha >= 0.99f) 
+				{
+					alpha = 1.0f;
+					myState = ECameraState::Default;
+					CMainSingleton::PostMaster().SendLate({ EMessageType::FadeOutComplete, 0 });
+				}
 			}
+
 			myFadingPlane->SetColor({ color.x, color.y, color.z, alpha });
+
+			if (myState == ECameraState::Default)
+			{
+				myFadeParameter = 1.0f;
+				myFadeSpeed = 1.0f;
+				myFadingPlaneActive = myFadePermanent;
+				myFadingPlane->SetShouldRender(myFadePermanent);
+			}
 		}
 	}
 }
@@ -143,10 +162,26 @@ float CCameraComponent::GetFoV()
 	return myFoV;
 }
 
-void CCameraComponent::Fade(bool aShouldFadeIn)
+void CCameraComponent::Fade(bool aShouldFadeIn, const float& aFadeDuration, const bool& aFadeIsPermanent)
 {
+	myFadePermanent = aFadeIsPermanent;
+
+	float alpha = 1.0f;
+	if (aShouldFadeIn)
+	{
+		myState = ECameraState::FadeIn;
+		alpha = 1.0f;
+	}
+	else
+	{
+		myState = ECameraState::FadeOut;
+		alpha = 0.0f;
+	}
+
+	myFadeSpeed = 1.0f / aFadeDuration;
+	DirectX::SimpleMath::Vector4 color = myFadingPlane->GetColor();
+	myFadingPlane->SetColor({ color.x, color.y, color.z, alpha });
 	myFadingPlaneActive = true;
-	myFadingIn = aShouldFadeIn;
 }
 
 const bool CCameraComponent::IsFading() const
