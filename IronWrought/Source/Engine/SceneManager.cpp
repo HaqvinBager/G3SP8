@@ -759,12 +759,12 @@ void CSceneManager::AddTriggerEvents(CScene& aScene, RapidArray someData)
 		{
 			std::string eventData = triggerEvent["gameEvent"].GetString();
 			int eventFilter = triggerEvent.HasMember("eventFilter") ? triggerEvent["eventFilter"].GetInt() : static_cast<int>(CBoxColliderComponent::EEventFilter::Any);
+			int audioIndex = triggerEvent.HasMember("audioIndex") ? triggerEvent["audioIndex"].GetInt() : -1;
+			bool triggerOnce = triggerEvent.HasMember("triggerOnce") ? triggerEvent["triggerOnce"].GetBool() : false;
 			triggerVolume->RegisterEventTriggerMessage(eventData);
 			triggerVolume->RegisterEventTriggerFilter(eventFilter);
-			//SStringMessage triggerMessage = {};
-			//memcpy(&triggerMessage.myMessageType, &eventData[0], sizeof(char) * eventData.size());
-			//triggerMessage.myMessageType = eventData.c_str();
-
+			triggerVolume->RegisterEventTriggerAudioIndex(audioIndex);
+			triggerVolume->RegisterEventTriggerOnce(triggerOnce);
 		}
 	}
 }
