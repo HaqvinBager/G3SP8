@@ -117,7 +117,7 @@ CScene* CSceneManager::CreateScene(const std::string& aSceneJson)
 			AddFuses(*scene, sceneData["myFusePickUps"].GetArray());
 			if (sceneData.HasMember("triggerEvents"))
 				AddTriggerEvents(*scene, sceneData["triggerEvents"].GetArray());
-			if (sceneName.find("Layout") != std::string::npos)//Om Unity Scene Namnet inneh�ller nyckelordet "Layout"
+			if (sceneName.find("Gameplay") != std::string::npos)//Om Unity Scene Namnet inneh�ller nyckelordet "Layout"
 			{
 				AddPlayer(*scene, sceneData["player"].GetObjectW());
 			}
