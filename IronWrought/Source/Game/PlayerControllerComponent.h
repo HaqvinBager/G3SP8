@@ -13,7 +13,7 @@ namespace physx {
 	class PxUserControllerHitReport;
 }
 
-class CPlayerControllerComponent : public CComponent, public IInputObserver, public IObserver, public IStringObserver
+class CPlayerControllerComponent : public CComponent, public IInputObserver,  public IObserver, public IStringObserver
 {
 public:
 	CPlayerControllerComponent(CGameObject& gameObject, const float aWalkSpeed = 0.314f, const float aCrouchSpeed = 0.13f, physx::PxUserControllerHitReport* aHitReport = nullptr);
@@ -34,7 +34,9 @@ public:
 
 	//void AddFaceMesh(CGameObject* aGameObject);
 	void SetControllerPosition(const Vector3& aPos);
+	// No lerp. Instant crouch
 	void Crouch();
+	// Lerp for crouch
 	void CrouchUpdate(const float& dt);
 	void OnCrouch();
 
@@ -45,11 +47,7 @@ public:
 	const Vector3 GetLinearVelocity();
 
 	const float WalkSpeed() const { return myWalkSpeed; }
-	void WalkSpeed(const float aSpeed)
-	{
-		myWalkSpeed = aSpeed;
-		mySpeed = aSpeed;
-	}
+	void WalkSpeed(const float aSpeed) { myWalkSpeed = aSpeed; }
 	const float CrouchSpeed() const { return myCrouchSpeed; }
 	void CrouchSpeed(const float aSpeed) { myCrouchSpeed = aSpeed; }
 	const float JumpHeight() const { return myJumpHeight; }
@@ -63,9 +61,23 @@ public:
 	void SetRespawnPosition();
 
 private:
+	void LockMovementFor(const float& someSeconds);
+	void UpdateMovementLock();
+	void InitForceForward();
+	void UpdateForceForward();
+	void InitStandStill(const float& aStandStillTimer);
+	void UpdateStandStill();
+
 	void BoundsCheck();
 	void LadderUpdate();
 
+private:
+	enum class EPlayerMovementLock
+	{
+		None,
+		ForceFoward,
+		ForceStandStill,
+	};
 
 	CCharacterController* myController;
 	CPlayerAnimationController* myAnimationComponentController;
@@ -77,12 +89,13 @@ private:
 	Vector3 myMovement;
 	float mySpeed;
 
-	bool myMovementLocked;
 	bool myIsGrounded;
 	bool myIsJumping;
 	bool myHasJumped;
 	bool myLadderHasTriggered;
+	bool myCanStand;
 
+	EPlayerMovementLock myPlayerMovementLock;
 	bool myIsCrouching;
 	float myCrouchingLerp;
 	float myWalkSpeed;
@@ -91,7 +104,8 @@ private:
 	float myFallSpeed;
 	float myAirborneTimer;
 	float myStepTimer;
-	float myWakeUpTimer;
+	float myStepTime;
+	float myMovementLockTimer; 
 
 	//CRigidBodyComponent* myLadder;
 

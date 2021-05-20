@@ -31,16 +31,18 @@ CPlayerControllerComponent::CPlayerControllerComponent(CGameObject& gameObject, 
 	, myIsGrounded(true)
 	, myHasJumped(false)
 	, myIsJumping(false)
-	, myJumpHeight(0.1f)// these values don't make sense. //Supposed to be 40cm => ~0.4f
+	, myJumpHeight(0.07f)// these values don't make sense. //Supposed to be 40cm => ~0.4f
 	, myFallSpeed(0.982f * 1.0f)
 	, myMovement( Vector3(0.0f, 0.0f, 0.0f ))
 	, myAirborneTimer(0.0f)
 	, myLadderHasTriggered(false)
 	, myAnimationComponentController(nullptr)
 	, myPlayerComponent(nullptr)
+	, myCanStand(true)
+	, myCrouchingLerp(0.0f)
 	, myStepTimer(0.0f)
-	, myMovementLocked(false)
-	, myWakeUpTimer(0.f)
+	, myStepTime(aWalkSpeed * 5.0f)
+	, myMovementLockTimer(0.0f)
 {
 	INPUT_MAPPER->AddObserver(EInputEvent::Jump, this);
 	INPUT_MAPPER->AddObserver(EInputEvent::Crouch, this);
@@ -63,16 +65,16 @@ CPlayerControllerComponent::CPlayerControllerComponent(CGameObject& gameObject, 
 	GameObject().myTransform->FetchChildren()[0]->Rotation({ 0.0f, 0.0f, 0.0f });
 	myCamera = GameObject().myTransform->FetchChildren()[0]->GameObject().GetComponent<CCameraControllerComponent>();
 
-	CAnimationComponent* animComp = GameObject().myTransform->FetchChildren()[0]->GameObject().GetComponent<CAnimationComponent>();
-	if (animComp)
-	{
-		myAnimationComponentController = new CPlayerAnimationController();
-		myAnimationComponentController->Init(animComp);
-	}
-	else
-	{
-		assert(false && "No animation component available!");
-	}
+	//CAnimationComponent* animComp = GameObject().myTransform->FetchChildren()[0]->GameObject().GetComponent<CAnimationComponent>();
+	//if (animComp)
+	//{
+	//	myAnimationComponentController = new CPlayerAnimationController();
+	//	myAnimationComponentController->Init(animComp);
+	//}
+	//else
+	//{
+	//	assert(false && "No animation component available!");
+	//}
 }
 
 CPlayerControllerComponent::~CPlayerControllerComponent()
@@ -93,8 +95,6 @@ void CPlayerControllerComponent::Awake()
 void CPlayerControllerComponent::Start()
 {
 	SetRespawnPosition();
-	CMainSingleton::PostMaster().Subscribe(PostMaster::SMSG_DISABLE_GLOVE, this);
-	CMainSingleton::PostMaster().Subscribe(PostMaster::SMSG_ENABLE_GLOVE, this);
 }
 
 void CPlayerControllerComponent::Update()
@@ -108,20 +108,37 @@ void CPlayerControllerComponent::Update()
 
 		return;
 	}
+
+	//if (INPUT->IsKeyPressed('M'))
+	//{
+	//	LockMovementFor(3.0f);
+	//}
 #endif
 
 	GameObject().myTransform->Position(myController->GetPosition());
-	myAnimationComponentController->Update(myMovement);
-	if (!myMovementLocked) {
-		ControllerUpdate();
+	//myAnimationComponentController->Update(myMovement);
+
+	switch (myPlayerMovementLock)
+	{
+		case EPlayerMovementLock::None:
+		{
+			ControllerUpdate();
+		}break;
+
+		case EPlayerMovementLock::ForceFoward:
+		{
+			UpdateForceForward();
+		}break;
+
+		case EPlayerMovementLock::ForceStandStill:
+		{
+			UpdateStandStill();
+		}break;
+
+		default:break;
 	}
-	else {
-		myWakeUpTimer += CTimer::Dt();
-		if (myWakeUpTimer >= 1.f) {
-			myMovementLocked = false;
-			myWakeUpTimer = 0.f;
-		}
-	}
+
+	UpdateMovementLock();
 	BoundsCheck();
 
 
@@ -146,6 +163,7 @@ void CPlayerControllerComponent::FixedUpdate()
 			myMovement.y = myJumpHeight;
 			myAirborneTimer = 0.0f;
 			myHasJumped = false;
+			CMainSingleton::PostMaster().SendLate({ EMessageType::PlayJumpSound, nullptr });
 		}
 
 		myMovement.y -= myFallSpeed * myFallSpeed * CTimer::FixedDt() * myAirborneTimer ;
@@ -163,6 +181,25 @@ void CPlayerControllerComponent::FixedUpdate()
 
 void CPlayerControllerComponent::ReceiveEvent(const EInputEvent aEvent)
 {
+switch (myPlayerMovementLock)
+	{
+		case EPlayerMovementLock::None:
+		{}break;
+
+		case EPlayerMovementLock::ForceFoward:
+		{
+			InitForceForward();
+			return;
+		}break;
+
+		case EPlayerMovementLock::ForceStandStill:
+		{
+			return;
+		}break;
+
+		default:break;
+	}
+
 #ifdef _DEBUG
 	if (myCamera->IsFreeCamMode() || myCamera->IsCursorUnlocked())
 	{
@@ -178,7 +215,6 @@ void CPlayerControllerComponent::ReceiveEvent(const EInputEvent aEvent)
 	switch (aEvent)
 	{
 		case EInputEvent::Jump:
-			std::cout << "IS GROUNDED: " << myIsGrounded << std::endl;
 			if (myIsGrounded == true)
 			{
 				myHasJumped = true;
@@ -206,28 +242,15 @@ void CPlayerControllerComponent::ReceiveEvent(const EInputEvent aEvent)
 	myMovement.y = y;
 }
 
-void CPlayerControllerComponent::Receive(const SStringMessage& aMsg)
+void CPlayerControllerComponent::Receive(const SStringMessage& /*aMsg*/)
 {
-	if (PostMaster::DisableGravityGlove(aMsg.myMessageType))
-	{
-		myCamera->GameObject().GetComponent<CModelComponent>()->Enabled(false);
-		myCamera->GameObject().GetComponent<CAnimationComponent>()->Enabled(false);
-	}
-
-	if (PostMaster::EnableGravityGlove(aMsg.myMessageType))
-	{
-		myCamera->GameObject().GetComponent<CModelComponent>()->Enabled(true);
-		myCamera->GameObject().GetComponent<CAnimationComponent>()->Enabled(true);
-	}
 }
 
 void CPlayerControllerComponent::Receive(const SMessage& aMsg)
 {
 	if (aMsg.myMessageType == EMessageType::PlayerTakeDamage)
 	{
-		myAnimationComponentController->TakeDamage();
-		myMovementLocked = true;
-		myMovement = Vector3{ 0.f, 0.f, 0.f };
+		//myAnimationComponentController->TakeDamage();
 	}
 }
 
@@ -245,17 +268,24 @@ void CPlayerControllerComponent::ControllerUpdate()
 void CPlayerControllerComponent::Move(Vector3 aDir)
 {
 	physx::PxControllerCollisionFlags collisionflag = myController->GetController().move({ aDir.x, aDir.y, aDir.z}, 0, CTimer::FixedDt(), 0);
+	
+	if (!myIsGrounded && (collisionflag & physx::PxControllerCollisionFlag::eCOLLISION_DOWN)) 
+	{
+		CMainSingleton::PostMaster().SendLate({ EMessageType::PlayStepSound, nullptr }); // Landing
+	}
+	
 	myIsGrounded = (collisionflag & physx::PxControllerCollisionFlag::eCOLLISION_DOWN);
 	if (myIsGrounded)
 	{
 		myAirborneTimer = 0.f;
+
 		Vector2 horizontalDir(aDir.x, aDir.z);
 		if (horizontalDir.LengthSquared() > 0.0f)
 		{
 			myStepTimer -= CTimer::FixedDt();
-			if (myStepTimer <= 0.0f) 
+			if (myStepTimer <= 0.0f && !myIsCrouching) 
 			{
-				myStepTimer = mySpeed;
+				myStepTimer = myStepTime;
 				CMainSingleton::PostMaster().SendLate({ EMessageType::PlayStepSound, nullptr });
 			}
 		}
@@ -281,7 +311,7 @@ void CPlayerControllerComponent::Crouch()
 		GameObject().myTransform->FetchChildren()[0]->Position({ 0.0f, myCameraPosYCrouching, myCameraPosZ });// Equivalent to myCamera->GameObject().myTransform->Position
 		mySpeed = myCrouchSpeed;
 		// THIS IS TEMP :)
-		myAnimationComponentController->TakeDamage();// TEMP :)
+		//myAnimationComponentController->TakeDamage();// TEMP :)
 		// SUPER TEMP :)
 	}
 	else
@@ -304,15 +334,17 @@ void CPlayerControllerComponent::CrouchUpdate(const float& dt)
 		return;
 	}
 
-	if(myIsCrouching)
-		myCrouchingLerp += dt;
+	if(myIsCrouching && myCanStand)
+		myCrouchingLerp += dt * 2.0f;
 	else
-		myCrouchingLerp -= dt;
+		myCrouchingLerp -= dt * 2.0f;
 }
 
 void CPlayerControllerComponent::OnCrouch()
 {
-	myIsCrouching = !myIsCrouching;
+if (myCanStand) {
+		myIsCrouching = !myIsCrouching;
+	}
 	if (myIsCrouching)
 	{
 		myController->GetController().resize(myColliderHeightCrouched);
@@ -321,9 +353,20 @@ void CPlayerControllerComponent::OnCrouch()
 	}
 	else
 	{
-		myController->GetController().resize(myColliderHeightStanding);
-		mySpeed = myWalkSpeed;
-		myCrouchingLerp = 1.0f;
+		Vector3 start = GameObject().myTransform->GetWorldMatrix().Translation();
+		start.y += (myColliderHeightStanding / 2);
+		Vector3 dir = GameObject().myTransform->GetWorldMatrix().Up();
+		//checks if we can stand up 
+		PxRaycastBuffer hit = CEngine::GetInstance()->GetPhysx().Raycast(start, dir, (myColliderHeightStanding), CPhysXWrapper::ELayerMask::STATIC_ENVIRONMENT);
+		if (hit.getNbAnyHits() <= 0) {
+			myCanStand = true;
+			myController->GetController().resize(myColliderHeightStanding);
+			mySpeed = myWalkSpeed;
+			myCrouchingLerp = 1.0f;
+		}
+		else {
+			myCanStand = false;
+		}
 	}
 }
 
@@ -358,6 +401,62 @@ void CPlayerControllerComponent::SetRespawnPosition()
 	myRespawnPosition = myController->GetPosition();
 }
 
+void CPlayerControllerComponent::LockMovementFor(const float& someSeconds)
+{
+	myMovementLockTimer = someSeconds;
+	myMovement = { 0.0f, myMovement.y, 0.0f };
+}
+
+void CPlayerControllerComponent::UpdateMovementLock()
+{
+	if (myMovementLockTimer < 0.0f)
+		return;
+
+	myMovementLockTimer -= CTimer::Dt();
+	myMovement = { 0.0f, myMovement.y, 0.0f };
+}
+
+void CPlayerControllerComponent::InitForceForward()
+{
+	Vector3 vertical =	-GameObject().myTransform->GetLocalMatrix().Forward();
+	float y = myMovement.y;
+	myMovement = (vertical) * mySpeed;
+	myMovement.y = y;
+}
+
+void CPlayerControllerComponent::UpdateForceForward()
+{
+	const float horizontalInput = Input::GetInstance()->GetAxis(Input::EAxis::Horizontal);
+	const float verticalInput = Input::GetInstance()->GetAxis(Input::EAxis::Vertical);
+
+	if (horizontalInput != 0.0f || verticalInput != 0.0f)
+	{
+		Vector3 vertical =	-GameObject().myTransform->GetLocalMatrix().Forward();
+		float y = myMovement.y;
+		myMovement = (vertical) * mySpeed;
+		myMovement.y = y;
+	}
+	else
+	{
+		Vector3 vertical =	-GameObject().myTransform->GetLocalMatrix().Forward();
+		float y = myMovement.y;
+		myMovement = (vertical) * mySpeed; //* 0.5f;
+		myMovement.y = y;
+	}
+}
+
+void CPlayerControllerComponent::InitStandStill(const float& aStandStillTimer)
+{
+	LockMovementFor(aStandStillTimer);
+	myPlayerMovementLock = EPlayerMovementLock::ForceStandStill;
+}
+
+void CPlayerControllerComponent::UpdateStandStill()
+{
+	if (myMovementLockTimer <= 0.0f)
+		myPlayerMovementLock = EPlayerMovementLock::None;
+}
+
 void CPlayerControllerComponent::BoundsCheck()
 {
 	const Vector3 playerPos = GameObject().myTransform->Position();
@@ -383,43 +482,4 @@ void CPlayerControllerComponent::LadderUpdate()
 			LadderExit();
 		}
 	}
-
-	//if (myHasJumped)
-	//{
-	//	LadderExit();
-	//}
-
-	//	std::cout << myMovement.z << std::endl;
-	//	if (myMovement.z < 0.0f)
-	//	{
-	//		LadderExit();
-	//	}
-	//	//std::cout << "Touched Ground" << std::endl;
-	//}
-	//else
-	//{
-	//	Move({ 0.0f, myMovement.z, 0.0f });
-	//}
-
-
-
-	//if (myLadderHasTriggered)
-	//{
-		//Nuddar vi Marken?
-
-		//Försöker vi gå neråt?
-	//}
-
-	//Best�mmer n�r myIsOnladder s�tts till false
-
-	//G�ra s� att vi g�r upp och ner f�r Ladder n�r vi trycker p� W eller S
-	/*if (myIsGrounded && myMovement.LengthSquared() > 0.25f)
-	{
-		myIsOnLadder = false;
-	}*/
-
-	//if (Input::GetInstance()->IsKeyPressed('K'))
-	//{
-	//	myIsOnLadder = false;
-	//}
 }

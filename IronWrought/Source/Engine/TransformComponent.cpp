@@ -42,7 +42,7 @@ void CTransformComponent::LateUpdate()
 		myWorldTransform = myLocalTransform;
 }
 
-void CTransformComponent::Position(DirectX::SimpleMath::Vector3 aPosition)
+void CTransformComponent::Position(const DirectX::SimpleMath::Vector3& aPosition)
 {
 	myParentOffset = aPosition;
 	myLocalTransform.Translation(aPosition);
@@ -64,10 +64,9 @@ DirectX::SimpleMath::Vector3 CTransformComponent::Position() const
 DirectX::SimpleMath::Vector3 CTransformComponent::WorldPosition() const
 {
 	return myWorldTransform.Translation();
-	//return DirectX::SimpleMath::Vector3();
 }
 
-void CTransformComponent::Rotation(DirectX::SimpleMath::Vector3 aRotation)
+void CTransformComponent::Rotation(const DirectX::SimpleMath::Vector3& aRotation)
 {
 	Vector3 tempTranslation = myLocalTransform.Translation();
 
@@ -83,7 +82,7 @@ void CTransformComponent::Rotation(DirectX::SimpleMath::Vector3 aRotation)
 	//myLocalRotation += aRotation;
 }
 
-void CTransformComponent::Rotation(DirectX::SimpleMath::Quaternion aQuaternion) 
+void CTransformComponent::Rotation(const DirectX::SimpleMath::Quaternion& aQuaternion) 
 {
 	Vector3 tempTranslation = myLocalTransform.Translation();
 
@@ -119,7 +118,7 @@ void CTransformComponent::CopyRotation(const DirectX::SimpleMath::Matrix& aTrans
 	myLocalTransform.Translation(pos);
 }
 
-void CTransformComponent::Scale(DirectX::SimpleMath::Vector3 aScale)
+void CTransformComponent::Scale(const DirectX::SimpleMath::Vector3& aScale)
 {
 	myScale = aScale;
 	ResetScale();
@@ -159,7 +158,7 @@ void CTransformComponent::ResetScale()
 	myLocalTransform.Translation(translation);
 }
 
-void CTransformComponent::Transform(DirectX::SimpleMath::Vector3 aPosition, DirectX::SimpleMath::Vector3 aRotation)
+void CTransformComponent::Transform(const DirectX::SimpleMath::Vector3& aPosition, const DirectX::SimpleMath::Vector3& aRotation)
 {
 	Rotation(aRotation);
 	Position(aPosition);
@@ -175,19 +174,19 @@ DirectX::SimpleMath::Matrix& CTransformComponent::Transform()
 	return myWorldTransform;
 }
 
-void CTransformComponent::Move(DirectX::SimpleMath::Vector3 aMovement)
+void CTransformComponent::Move(const DirectX::SimpleMath::Vector3& aMovement)
 {
 	myLocalTransform.Translation(myLocalTransform.Translation() + aMovement);
 }
 
-void CTransformComponent::MoveLocal(DirectX::SimpleMath::Vector3 aMovement)
+void CTransformComponent::MoveLocal(const DirectX::SimpleMath::Vector3& aMovement)
 {
 	myLocalTransform.Translation(myLocalTransform.Translation() + myLocalTransform.Right() * aMovement.x);
 	myLocalTransform.Translation(myLocalTransform.Translation() + myLocalTransform.Up() * aMovement.y);
 	myLocalTransform.Translation(myLocalTransform.Translation() - myLocalTransform.Forward() * aMovement.z);
 }
 
-void CTransformComponent::Rotate(DirectX::SimpleMath::Vector3 aRotation)
+void CTransformComponent::Rotate(const DirectX::SimpleMath::Vector3& aRotation)
 {
 	Vector3 tempTranslation = myLocalTransform.Translation();
 	Matrix tempRotation = Matrix::CreateFromYawPitchRoll(aRotation.y, aRotation.x, aRotation.z);
@@ -195,7 +194,7 @@ void CTransformComponent::Rotate(DirectX::SimpleMath::Vector3 aRotation)
 	myLocalTransform.Translation(tempTranslation);
 }
 
-void CTransformComponent::Rotate(DirectX::SimpleMath::Quaternion aQuaternion)
+void CTransformComponent::Rotate(const DirectX::SimpleMath::Quaternion& aQuaternion)
 {
 	Vector3 tempTranslation = myLocalTransform.Translation();
 	Matrix tempRotation = Matrix::CreateFromQuaternion(aQuaternion);

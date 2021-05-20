@@ -56,7 +56,20 @@ GBufferOutput main(VertexPaintModelToPixel input)
     
     // Using 4 textures
     GBufferOutput output;
-    output.myAlbedo = float4(lerp(lerp(lerp(albedo, albedo2, vertexColors.r), albedo3, vertexColors.g), albedo4, vertexColors.b), 1.0f);
+    
+    float3 albedo_Base = albedo;
+    float3 albedo_R = albedo2;
+    float3 albedo_G = albedo3;
+    float3 albedo_B = albedo4;
+    
+    float3 combined_RGB = float3(albedo_R * vertexColors.r) + (albedo_G * vertexColors.g) + (albedo_B * vertexColors.b); //+ (albedo_Base * (1.0f - vertexColors.r - vertexColors.g - vertexColors.b));
+    output.myAlbedo = float4(combined_RGB, 1.0f);
+    
+    
+    
+    
+  
+    //output.myAlbedo = float4(lerp(lerp(lerp(albedo, albedo2, vertexColors.r), albedo3, vertexColors.g), albedo4, vertexColors.b), 1.0f);
     output.myNormal = float4(lerp(lerp(lerp(normal, normal2, vertexColors.r), normal3, vertexColors.g), normal4, vertexColors.b), 1.0f);
     output.myVertexNormal = float4(input.myNormal.xyz, 1.0f);
     

@@ -47,7 +47,7 @@ public:
 	void Start() override;
 	void Update() override;
 	void FixedUpdate() override;
-	void TakeDamage(float aDamage);
+	void TakeDamage(const float& aDamage);
 	void SetState(EBehaviour aState);
 	const EBehaviour GetState()const;
 	void Receive(const SStringMessage& aMsg) override;

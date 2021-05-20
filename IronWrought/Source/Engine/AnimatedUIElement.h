@@ -35,11 +35,11 @@ class CAnimatedUIElement
 public:
 
 public:
-	CAnimatedUIElement(CScene& aScene, bool addToScene = true);
-	CAnimatedUIElement(const std::string& aFilePath, CScene& aScene, bool addToScene = true);
+	CAnimatedUIElement();
+	CAnimatedUIElement(const std::string& aFilePath, const float &aLevel = 1.0f);
 	~CAnimatedUIElement();
 
-	void Init(const std::string& aFilePath, const bool& aAddToScene = true, const float& aLevel = 1.0f);
+	void Init(const std::string& aFilePath, const float& aLevel = 1.0f);
 
 	void Level(float aLevel);
 	float Level() const;
@@ -47,9 +47,11 @@ public:
 	void SetPosition(DirectX::SimpleMath::Vector2 aPosition);
 	const DirectX::SimpleMath::Vector2 GetPosition();
 	void SetShouldRender(const bool aShouldRender);
+	const bool GetShouldRender() const;
 	void SetScale(const Vector2& aScale);
 
 	void SetRenderLayer(const ERenderOrder& aRenderLayer);
+	const ERenderOrder GetRendererLayer() const;
 
 public:
 	CSpriteInstance* GetInstance() const;

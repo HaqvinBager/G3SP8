@@ -1,8 +1,5 @@
 #pragma once
 
-
-
-
 //inline float triarea2(const float* a, const float* b, const float* c)
 //{
 //    const float ax = b[0] - a[0];

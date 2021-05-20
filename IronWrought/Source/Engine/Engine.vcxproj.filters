@@ -905,8 +905,10 @@
     <ClCompile Include="CustomEventComponent.cpp">
       <Filter>GameObject and Component\Component</Filter>
     </ClCompile>
+        <ClCompile Include="CustomEventListenerComponent.cpp" />
+    <ClCompile Include="CustomAnimation.cpp" />
     <ClCompile Include="Hierarchy.cpp">
-      <Filter>Imgui\Windows</Filter>
+        <Filter>Imgui\Windows</Filter>
     </ClCompile>
     <ClCompile Include="CustomEventListenerComponent.cpp">
       <Filter>GameObject and Component\Component</Filter>
@@ -1672,6 +1674,8 @@
     <ClInclude Include="ComponentsInclude.h">
       <Filter>Utility</Filter>
     </ClInclude>
+    <ClInclude Include="CustomEventListenerComponent.h" />
+    <ClInclude Include="CustomAnimation.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="FullscreenShaderStructs.hlsli">
