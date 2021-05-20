@@ -26,6 +26,8 @@ bool CPopupTextService::Init()
 {
 	Document document = CJsonReader::Get()->LoadDocument("Json/UI/PopupTextServiceInit.json");
 	ENGINE_BOOL_POPUP(!document.HasParseError(), "Could not load 'Json/UI/PopupTextServiceInit.json'!");
+	if (document.HasParseError())
+		return false;
 
 	//const unsigned int damageNumbersPoolSize = document["Damage Numbers Pool Size"].GetInt();
 
@@ -49,7 +51,6 @@ bool CPopupTextService::Init()
 	//myWarningText = new CTextInstance();
 	//myWarningText->Init(CTextFactory::GetInstance()->GetText(document["Warning Message Font and Size"].GetString()));
 	//myWarningAnimationData = new STextAnimationData();
-
 	auto skillIconPaths = document["Skill Icon Paths"].GetArray();
 	for (unsigned int i = 0; i < skillIconPaths.Size(); ++i)
 	{
