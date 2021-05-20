@@ -156,11 +156,11 @@ void CNodeTypeCollector::PopulateTypes()
 	//RegisterType<CNodeTypeEnemySpawn>("Spawn Enemies"); // Enabled only when testing, not ready for use yet. 23/3 Aki
 }
 
-void CNodeTypeCollector::ClearAllTypes()
+void CNodeTypeCollector::Clear()
 {
 	for (auto& nodeType : myCustomTypes)
 	{
-		if (nodeType != NULL)
+		if(nodeType != NULL)
 			DegisterCustomDataType(nodeType->NodeName());
 	}
 	for (auto& nodeType : myChildTypes)

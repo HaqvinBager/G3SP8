@@ -56,7 +56,7 @@ void CGraphManager::SGraph::Clear()
 	}
 	myNodeInstances.clear();
 	myBluePrintInstances.clear();
-	CNodeTypeCollector::ClearAllTypes();
+	CNodeTypeCollector::Clear();
 }
 
 void CGraphManager::Load(const std::string& aSceneName)
@@ -64,13 +64,6 @@ void CGraphManager::Load(const std::string& aSceneName)
 	//Global = Kan alltid n�s om programmet k�r
 	//Scene = Data som relaterar till Just denna Scen, kan alltid n�s n�r Scene �r ig�ng
 	//Script = Data som relaterar till just detta script
-
-#ifdef _DEBUG
-	myRunScripts = false;
-#else
-	myRunScripts = true;
-#endif // _DEBUG
-
 
 	if (!CNodeDataManager::Get())
 	{
@@ -181,7 +174,11 @@ void CGraphManager::Load(const std::string& aSceneName)
 	LoadTreeFromFile();
 
 	myRenderGraph = false;
+#ifdef _DEBUG
 	myRunScripts = false;
+#else
+	myRunScripts = true;
+#endif // _DEBUG
 }
 
 void CGraphManager::Clear()
