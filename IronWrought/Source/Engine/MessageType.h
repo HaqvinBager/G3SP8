@@ -79,5 +79,7 @@ enum class EMessageType
 	FusePickedUp,
 	OpenSafetyDoors,
 
+	BootUpState,
+
 	Count
 };
