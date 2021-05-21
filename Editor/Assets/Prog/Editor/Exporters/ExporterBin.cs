@@ -48,12 +48,8 @@ public class ExporterBin
         var models = ExportModel.Export(level.name, idNumbers);
         var instancedModels = ExportInstancedModel.Export(level.name);
         var pointLights = ExportPointlights.ExportPointlight(level.name);
-<<<<<<< HEAD:Editor/Assets/Prog/Pipeline/Export/Editor/Exporters/ExporterBin.cs
         var colliders = ExportCollider.Export(level.name, idNumbers);
-=======
-        var colliders = ExportCollider.Export(level.name, ids.Ids);
         var fuses = FusePickUpExporter.Export(level.name);
->>>>>>> master:Editor/Assets/Prog/Editor/Exporters/ExporterBin.cs
         
         ExporterBin exporter = new ExporterBin(directoryInfo.Parent.Name);
         exporter.binWriter.Write(ids);
