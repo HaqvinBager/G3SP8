@@ -33,6 +33,9 @@ CPatrol::CPatrol(const std::vector<Vector3>& somePositions, SNavMesh* aNavMesh)
 
 Vector3 CPatrol::Update(const Vector3& aPosition, CPatrolPointComponent* aPatrolPoint)
 {
+	if (aPatrolPoint == nullptr)
+		return Vector3::Zero;
+
 	if (CheckIfOverlap(aPosition, aPatrolPoint->GameObject().myTransform->Position())) // change patrol points & calculate path
 	{
 		aPatrolPoint->AddBonusValue(10);
