@@ -36,6 +36,7 @@ class CAudioManager;
 class CPhysXWrapper;
 class CSceneFactory;
 class CGraphManager;
+class CGameObject;
 
 class CEngine
 {
@@ -91,6 +92,8 @@ public:
 	void SetBrokenScreen(bool aShouldSetBrokenScreen);
 	const CFullscreenRenderer::SPostProcessingBufferData& GetPostProcessingBufferData() const;
 	void SetPostProcessingBufferData(const CFullscreenRenderer::SPostProcessingBufferData& someBufferData);
+
+	void SetAudioListener(CGameObject* aGameObject);
 
 private:
 	void AllScenesToInactive();

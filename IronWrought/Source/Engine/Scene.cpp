@@ -87,6 +87,7 @@ CScene::~CScene()
 
 	myVFXTester = nullptr;
 	myPlayer = nullptr;
+	IRONWROUGHT->SetAudioListener(nullptr);
 
 	myIDGameObjectMap.clear();
 	myComponentMap.clear();
@@ -212,6 +213,7 @@ void CScene::Awake()
 //No longer needed due to Components Start being called via EMessageType "AddComponent"
 void CScene::Start()
 {	
+	IRONWROUGHT->SetAudioListener(myPlayer);
 }
 
 void CScene::Update()
