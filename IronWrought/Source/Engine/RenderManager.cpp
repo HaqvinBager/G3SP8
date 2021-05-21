@@ -12,6 +12,7 @@
 #include "MainSingleton.h"
 #include "PopupTextService.h"
 #include "DialogueSystem.h"
+#include "Canvas.h"
 
 #include "Engine.h"
 #include "Scene.h"
@@ -40,7 +41,7 @@ bool CRenderManager::Init(CDirectXFramework* aFramework, CWindowHandler* aWindow
 {
 	ENGINE_ERROR_BOOL_MESSAGE(myForwardRenderer.Init(aFramework), "Failed to Init Forward Renderer.");
 	ENGINE_ERROR_BOOL_MESSAGE(myLightRenderer.Init(aFramework), "Failed to Init Light Renderer.");
-	ENGINE_ERROR_BOOL_MESSAGE(myDeferredRenderer.Init(aFramework), "Failed to Init Deferred Renderer.");
+	ENGINE_ERROR_BOOL_MESSAGE(myDeferredRenderer.Init(aFramework, &CMainSingleton::MaterialHandler()), "Failed to Init Deferred Renderer.");
 	ENGINE_ERROR_BOOL_MESSAGE(myFullscreenRenderer.Init(aFramework), "Failed to Init Fullscreen Renderer.");
 	ENGINE_ERROR_BOOL_MESSAGE(myFullscreenTextureFactory.Init(aFramework), "Failed to Init Fullscreen Texture Factory.");
 	ENGINE_ERROR_BOOL_MESSAGE(myParticleRenderer.Init(aFramework), "Failed to Init Particle Renderer.");
@@ -134,8 +135,6 @@ void CRenderManager::Render(CScene& aScene)
 	if (maincamera == nullptr)
 		return;
 
-	//CBoxLight* boxLight = aScene.CullBoxLights(nullptr)[0]; // For BoxLight shadow mapping
-
 	std::vector<CGameObject*> gameObjects = aScene.CullGameObjects(maincamera);
 	std::vector<CGameObject*> instancedGameObjects;
 	std::vector<CGameObject*> instancedGameObjectsWithAlpha;
@@ -195,9 +194,7 @@ void CRenderManager::Render(CScene& aScene)
 	myEnvironmentShadowDepth.SetAsDepthTarget(&myIntermediateTexture);
 	myShadowRenderer.Render(environmentlight, gameObjects, instancedGameObjects);
 	myShadowRenderer.Render(environmentlight, gameObjectsWithAlpha, instancedGameObjectsWithAlpha);
-	//myBoxLightShadowDepth.SetAsDepthTarget();
-	//myShadowRenderer.Render(boxLight, gameObjects, instancedGameObjects);
-
+	
 	// Decals
 	myDepthCopy.SetAsActiveTarget();
 	myIntermediateDepth.SetAsResourceOnSlot(0);
@@ -447,24 +444,32 @@ void CRenderManager::Render(CScene& aScene)
 	myRenderStateManager.SetBlendState(CRenderStateManager::BlendStates::BLENDSTATE_ALPHABLEND);
 	myRenderStateManager.SetDepthStencilState(CRenderStateManager::DepthStencilStates::DEPTHSTENCILSTATE_ONLYREAD);
 
-	std::vector<CSpriteInstance*> sprites = aScene.CullSprites();
+	std::vector<CSpriteInstance*> sprites;
+	std::vector<CSpriteInstance*> animatedUIFrames;
+	std::vector<CTextInstance*> textsToRender;
+	std::vector<CAnimatedUIElement*> animatedUIElements;
+
+	const CCanvas* canvas = aScene.Canvas();
+	if (canvas)
+	{
+		canvas->EmplaceSprites(sprites);
+		animatedUIElements = canvas->EmplaceAnimatedUI(animatedUIFrames);
+		canvas->EmplaceTexts(textsToRender);
+	}
+
+	// Sprites
 	CMainSingleton::PopupTextService().EmplaceSprites(sprites);
 	CMainSingleton::DialogueSystem().EmplaceSprites(sprites);
-	mySpriteRenderer.Render(sprites);
-
-	std::vector<CSpriteInstance*> animatedUIFrames;
-	std::vector<CAnimatedUIElement*> animatedUIElements = aScene.CullAnimatedUI(animatedUIFrames);
 	CEngine::GetInstance()->GetActiveScene().MainCamera()->EmplaceSprites(animatedUIFrames);
+	mySpriteRenderer.Render(sprites);
 	mySpriteRenderer.Render(animatedUIElements);
 	mySpriteRenderer.Render(animatedUIFrames);
-
+	
 	// Text
-	myRenderStateManager.SetBlendState(CRenderStateManager::BlendStates::BLENDSTATE_DISABLE);
-	myRenderStateManager.SetDepthStencilState(CRenderStateManager::DepthStencilStates::DEPTHSTENCILSTATE_DEFAULT);
-
-	std::vector<CTextInstance*> textsToRender = aScene.Texts();
 	CMainSingleton::PopupTextService().EmplaceTexts(textsToRender);
 	CMainSingleton::DialogueSystem().EmplaceTexts(textsToRender);
+	myRenderStateManager.SetBlendState(CRenderStateManager::BlendStates::BLENDSTATE_DISABLE);
+	myRenderStateManager.SetDepthStencilState(CRenderStateManager::DepthStencilStates::DEPTHSTENCILSTATE_DEFAULT);
 	myTextRenderer.Render(textsToRender);
 }
 
@@ -498,8 +503,6 @@ void CRenderManager::Release()
 
 	myGBuffer.ReleaseResources();
 	myGBufferCopy.ReleaseResources();
-
-	//myGBuffer // Should something be released for the GBuffer?
 }
 
 void CRenderManager::SetBrokenScreen(bool aShouldSetBrokenScreen)

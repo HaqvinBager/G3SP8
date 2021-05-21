@@ -5,12 +5,6 @@ using UnityEngine;
 [ExecuteInEditMode]
 public class PrefabProtector : MonoBehaviour
 {
-
-    private void OnValidate()
-    {
-       
-    }
-
     private void Update()
     {
         if (transform.childCount > 0)

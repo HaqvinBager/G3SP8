@@ -295,7 +295,7 @@ bool CLightRenderer::Init(CDirectXFramework* aFramework)
 
 void CLightRenderer::Render(CCameraComponent* aCamera, CEnvironmentLight* anEnvironmentLight)
 {
-	SM::Matrix cameraMatrix = aCamera->/*GetViewMatrix()*/GameObject().myTransform->Transform();
+	SM::Matrix cameraMatrix = /*aCamera->GetViewMatrix()*/aCamera->GameObject().myTransform->Transform();
 	myFrameBufferData.myCameraPosition = SM::Vector4{ cameraMatrix._41, cameraMatrix._42, cameraMatrix._43, 1.f };
 	myFrameBufferData.myToCameraSpace = cameraMatrix.Invert();
 	myFrameBufferData.myToWorldFromCamera = cameraMatrix;
@@ -340,7 +340,7 @@ void CLightRenderer::Render(CCameraComponent* aCamera, std::vector<CPointLight*>
 	if (aPointLightList.empty())
 		return;
 
-	SM::Matrix& cameraMatrix = aCamera->GameObject().myTransform->Transform();
+	SM::Matrix cameraMatrix = /*aCamera->GetViewMatrix()*/aCamera->GameObject().myTransform->Transform();
 	myFrameBufferData.myCameraPosition = SM::Vector4{ cameraMatrix._41, cameraMatrix._42, cameraMatrix._43, 1.f };
 	myFrameBufferData.myToCameraSpace = cameraMatrix.Invert();
 	myFrameBufferData.myToWorldFromCamera = cameraMatrix;
@@ -385,7 +385,7 @@ void CLightRenderer::Render(CCameraComponent* aCamera, std::vector<CSpotLight*>&
 	if (aSpotLightList.empty())
 		return;
 
-	SM::Matrix& cameraMatrix = aCamera->GameObject().myTransform->Transform();
+	SM::Matrix cameraMatrix = /*aCamera->GetViewMatrix()*/aCamera->GameObject().myTransform->Transform();
 	myFrameBufferData.myCameraPosition = SM::Vector4{ cameraMatrix._41, cameraMatrix._42, cameraMatrix._43, 1.f };
 	myFrameBufferData.myToCameraSpace = cameraMatrix.Invert();
 	myFrameBufferData.myToWorldFromCamera = cameraMatrix;
@@ -439,7 +439,7 @@ void CLightRenderer::Render(CCameraComponent* aCamera, std::vector<CBoxLight*>& 
 	if (aBoxLightList.empty())
 		return;
 
-	SM::Matrix& cameraMatrix = aCamera->GameObject().myTransform->Transform();
+	SM::Matrix cameraMatrix = /*aCamera->GetViewMatrix()*/aCamera->GameObject().myTransform->Transform();
 	myFrameBufferData.myCameraPosition = SM::Vector4{ cameraMatrix._41, cameraMatrix._42, cameraMatrix._43, 1.f };
 	myFrameBufferData.myToCameraSpace = cameraMatrix.Invert();
 	myFrameBufferData.myToWorldFromCamera = cameraMatrix;
@@ -489,6 +489,7 @@ void CLightRenderer::RenderVolumetric(CCameraComponent* aCamera, CEnvironmentLig
 		return;
 
 	SM::Matrix& cameraMatrix = aCamera->GameObject().myTransform->Transform();
+	//const SM::Matrix& cameraMatrix = aCamera->GetViewMatrix();
 	myFrameBufferData.myCameraPosition = SM::Vector4{ cameraMatrix._41, cameraMatrix._42, cameraMatrix._43, 1.f };
 	myFrameBufferData.myToCameraSpace = cameraMatrix.Invert();
 	myFrameBufferData.myToWorldFromCamera = cameraMatrix;
@@ -542,6 +543,7 @@ void CLightRenderer::RenderVolumetric(CCameraComponent* aCamera, std::vector<CEn
 			return;
 
 		SM::Matrix& cameraMatrix = aCamera->GameObject().myTransform->Transform();
+		//const SM::Matrix& cameraMatrix = aCamera->GetViewMatrix();
 		myFrameBufferData.myCameraPosition = SM::Vector4{ cameraMatrix._41, cameraMatrix._42, cameraMatrix._43, 1.f };
 		myFrameBufferData.myToCameraSpace = cameraMatrix.Invert();
 		myFrameBufferData.myToWorldFromCamera = cameraMatrix;
@@ -594,6 +596,7 @@ void CLightRenderer::RenderVolumetric(CCameraComponent* aCamera, std::vector<CPo
 		return;
 
 	SM::Matrix& cameraMatrix = aCamera->GameObject().myTransform->Transform();
+	//const SM::Matrix& cameraMatrix = aCamera->GetViewMatrix()/*GameObject().myTransform->Transform()*/;
 	myFrameBufferData.myCameraPosition = SM::Vector4{ cameraMatrix._41, cameraMatrix._42, cameraMatrix._43, 1.f };
 	myFrameBufferData.myToCameraSpace = cameraMatrix.Invert();
 	myFrameBufferData.myToWorldFromCamera = cameraMatrix;
@@ -648,6 +651,7 @@ void CLightRenderer::RenderVolumetric(CCameraComponent* aCamera, std::vector<CSp
 		return;
 
 	SM::Matrix& cameraMatrix = aCamera->GameObject().myTransform->Transform();
+	//const SM::Matrix& cameraMatrix = aCamera->GetViewMatrix()/*GameObject().myTransform->Transform()*/;
 	myFrameBufferData.myCameraPosition = SM::Vector4{ cameraMatrix._41, cameraMatrix._42, cameraMatrix._43, 1.f };
 	myFrameBufferData.myToCameraSpace = cameraMatrix.Invert();
 	myFrameBufferData.myToWorldFromCamera = cameraMatrix;
@@ -708,6 +712,7 @@ void CLightRenderer::RenderVolumetric(CCameraComponent* aCamera, std::vector<CBo
 		return;
 
 	SM::Matrix& cameraMatrix = aCamera->GameObject().myTransform->Transform();
+	//const SM::Matrix& cameraMatrix = aCamera->GetViewMatrix();
 	myFrameBufferData.myCameraPosition = SM::Vector4{ cameraMatrix._41, cameraMatrix._42, cameraMatrix._43, 1.f };
 	myFrameBufferData.myToCameraSpace = cameraMatrix.Invert();
 	myFrameBufferData.myToWorldFromCamera = cameraMatrix;

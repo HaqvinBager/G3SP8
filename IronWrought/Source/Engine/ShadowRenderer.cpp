@@ -11,6 +11,7 @@
 #include "InstancedModelComponent.h"
 #include "RenderManager.h"
 #include "GraphicsHelpers.h"
+#include "MaterialHandler.h"
 
 CShadowRenderer::CShadowRenderer()
 	: myContext(nullptr)
@@ -101,7 +102,12 @@ void CShadowRenderer::Render(CEnvironmentLight* anEnvironmentLight, std::vector<
 		myContext->IASetInputLayout(modelData.myInputLayout);
 		myContext->VSSetConstantBuffers(1, 1, &myObjectBuffer);
 
-		if (modelComponent->RenderWithAlpha())
+		//if(CmodelComponent->GetMaterialID();
+		
+
+		bool isAlpha = CMainSingleton::MaterialHandler().IsMaterialAlpha(modelComponent->GetMaterialID(0));
+		//if (modelComponent->RenderWithAlpha())
+		if(isAlpha)
 			myContext->PSSetShader(myAlphaObjectPixelShader, nullptr, 0);
 		else
 			myContext->PSSetShader(nullptr, nullptr, 0);
@@ -109,7 +115,11 @@ void CShadowRenderer::Render(CEnvironmentLight* anEnvironmentLight, std::vector<
 		// Render all meshes
 		for (unsigned int i = 0; i < modelData.myMeshes.size(); ++i)
 		{
-			if (modelComponent->RenderWithAlpha())
+
+			//if(CMainSingleton::MaterialHandler())
+
+			//if (modelComponent->RenderWithAlpha())
+			if (isAlpha)
 			{
 				myContext->PSSetShaderResources(1, 1, &modelData.myMaterials[modelData.myMeshes[i].myMaterialIndex][0]);
 			}

@@ -5,22 +5,6 @@
 #include "Engine.h"
 #include "WindowHandler.h"
 
-CSpriteInstance::CSpriteInstance(CScene& aScene, bool aAddToScene)
-	: mySprite(nullptr)
-	, myRenderOrder(ERenderOrder::Layer0)
-	, myShouldRender(true)
-	, myShouldAnimate(false)
-	, myAnimationTimer(0.0f)
-	, myCurrentAnimationIndex(0)
-	, myCurrentAnimationFrame(0)
-	, myCurrentAnimationSpeed(1.0f / 60.0f)
-	, myRotation(0.0f)
-	, myShouldLoopAnimation(false)
-	, myShouldReverseAnimation(false)
-{
-	if (aAddToScene)
-		aScene.AddInstance(this);
-}
 CSpriteInstance::CSpriteInstance()
 	: mySprite(nullptr)
 	, myRenderOrder(ERenderOrder::Layer0)
@@ -97,13 +81,13 @@ bool CSpriteInstance::Init(CSprite* aSprite, const std::vector<SSpriteSheetPosit
 		Vector2 scaleProportions = (frameSize / sheetDimensions);
 		this->SetSize(aScale * scaleProportions);
 
+		myCurrentAnimationIndex = 0;
+		myShouldAnimate = true;
+		myShouldLoopAnimation = myAnimationData[myCurrentAnimationIndex].myIsLooping;
+		
 		this->SetUVRect(myAnimationFrames[0]);
-
-		//myShouldAnimate = true;
 	}
-
-
-
+	
 	return true;
 }
 
@@ -137,8 +121,6 @@ void CSpriteInstance::SetShouldRender(bool aBool)
 
 void CSpriteInstance::Update()
 {
-	//this->Rotate(CTimer::Dt()*360.0f/*sinf(CTimer::Time())*90.0f*/);
-
 	if (!myShouldAnimate)
 		return;
 
@@ -150,7 +132,7 @@ void CSpriteInstance::Update()
 	if ((myAnimationTimer += CTimer::Dt()) > (1.0f / myAnimationData[myCurrentAnimationIndex].myFramesPerSecond))
 	{
 		myAnimationTimer = 0.0f; // doing it properly doesn't seem to work, as CTimer is not marked at the start of this state
-
+		
 		if (!myShouldReverseAnimation)
 		{
 			myCurrentAnimationFrame++;
@@ -160,6 +142,7 @@ void CSpriteInstance::Update()
 				if (!myShouldAnimate)
 				{
 					PlayAnimationUsingInternalData(myAnimationData[myCurrentAnimationIndex].myTransitionToIndex);
+					this->SetUVRect(myAnimationFrames[myCurrentAnimationFrame]);
 					return;
 				}
 
@@ -176,6 +159,7 @@ void CSpriteInstance::Update()
 				if (!myShouldAnimate)
 				{
 					PlayAnimationUsingInternalData(myAnimationData[myCurrentAnimationIndex].myReverseTransitionToIndex);
+					this->SetUVRect(myAnimationFrames[myCurrentAnimationFrame]);
 					return;
 				}
 				
@@ -189,7 +173,7 @@ void CSpriteInstance::Update()
 
 void CSpriteInstance::PlayAnimation(unsigned int anIndex, bool aShouldLoop, bool aShouldBeReversed)
 {
-	if (anIndex >= myAnimationData.size() && anIndex < 0)
+	if (anIndex >= myAnimationData.size() || anIndex < 0)
 		return;
 
 	myCurrentAnimationIndex = anIndex;
@@ -205,9 +189,9 @@ void CSpriteInstance::PlayAnimation(unsigned int anIndex, bool aShouldLoop, bool
 	myShouldAnimate = true;
 }
 
-void CSpriteInstance::PlayAnimationUsingInternalData(const unsigned int& anIndex, const bool& aShouldBeReversed)
+void CSpriteInstance::PlayAnimationUsingInternalData(const int& anIndex, const bool& aShouldBeReversed)
 {
-	if (anIndex >= myAnimationData.size() && anIndex < 0)
+	if (anIndex >= myAnimationData.size() || anIndex < 0)
 		return;
 
 	myCurrentAnimationIndex = anIndex;

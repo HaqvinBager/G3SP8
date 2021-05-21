@@ -24,6 +24,7 @@ namespace Binary {
 
 	struct SInstanceID {
 		int instanceID;
+		std::string name;
 	};
 	struct STransform {
 		int instanceID;
@@ -36,11 +37,13 @@ namespace Binary {
 		Vector3 pos;
 		Vector3 rot;
 		Vector3 scale;
+		//Matrix matrix;
 	};
 	struct SModel {
 		int instanceID;
 		int assetID;
 		int vertexColorID;
+		std::vector<int> materialIDs;
 	};
 	struct SDirectionalLightData
 	{
@@ -107,8 +110,14 @@ namespace Binary {
 	struct SInstancedModel
 	{
 		int assetID;
+		std::vector<int> materialIDs;
 		std::vector<SInstancedTransform> transforms;
 	};
+
+	//struct SInstanceName {
+	//	int instanceID;
+	//	std::string name;
+	//};
 
 	struct SLevelData {
 		std::vector<SInstanceID> myInstanceIDs;
@@ -117,6 +126,7 @@ namespace Binary {
 		std::vector<SPointLight> myPointLights;
 		std::vector<SCollider> myColliders;
 		std::vector<SInstancedModel> myInstancedModels;
+		//std::vector<SInstanceName> myInstanceNames;
 	};
 
 	struct SResources {
@@ -152,7 +162,53 @@ namespace Binary {
 	};
 
 	template<>
-	struct CopyBin<SInstancedModel>{
+	struct CopyBin<SModel> {
+		template<typename T>
+		size_t Copy(T& aData, char* aStreamPtr, const unsigned int aCount = 1)
+		{
+			memcpy(&aData, aStreamPtr, sizeof(T) * aCount);
+			return sizeof(T) * aCount;
+		}
+
+
+		/*
+			struct SModel {
+				int instanceID;
+				int assetID;
+				int vertexColorID;
+				std::vector<int> materialIDs;
+			};
+		*/
+
+		size_t operator()(std::vector<SModel>& someData, char* aPtr)
+		{
+			char* ptr = aPtr;
+			int count = 0;
+			ptr += Copy(count, ptr);
+			someData.resize(count);
+
+			for (int i = 0; i < count; ++i)
+			{
+				ptr += Copy(someData[i].instanceID, ptr);
+				ptr += Copy(someData[i].assetID, ptr);
+				ptr += Copy(someData[i].vertexColorID, ptr);
+
+				int materialCount = 0;
+				ptr += Copy(materialCount, ptr);
+				if (materialCount > 0)
+				{
+					someData[i].materialIDs.resize(materialCount);
+					ptr += Copy(someData[i].materialIDs.data()[0], ptr, materialCount);
+				}
+			}
+			return ptr - aPtr;
+		}
+
+
+	};
+
+	template<>
+	struct CopyBin<SInstancedModel> {
 
 		template<typename SInstancedModel>
 		size_t Copy(SInstancedModel& aData, char* aStreamPtr, const unsigned int aCount = 1)
@@ -172,6 +228,11 @@ namespace Binary {
 			{
 				ptr += Copy(someData[i].assetID, ptr);
 
+				int materialCount = 0;
+				ptr += Copy(materialCount, ptr);
+				someData[i].materialIDs.resize(materialCount);
+				ptr += Copy(someData[i].materialIDs.data()[0], ptr, materialCount);
+
 				int transformCount = 0;
 				ptr += Copy(transformCount, ptr);
 
@@ -181,6 +242,56 @@ namespace Binary {
 			return ptr - aPtr;
 		}
 	};
+
+	template<>
+	struct CopyBin<SInstanceID> {
+
+		template<typename T>
+		size_t Copy(T& aData, char* aStreamPtr, const unsigned int aCount = 1)
+		{
+			memcpy(&aData, aStreamPtr, sizeof(T) * aCount);
+			return sizeof(T) * aCount;
+		}
+
+		size_t operator()(SInstanceID& aData, char* aPtr, const unsigned int /*aCount= 1*/) noexcept
+		{
+			char* ptr = aPtr;
+			ptr += Copy(aData.instanceID, ptr);		
+			char buffer[128];// = new char[aPtr[0]];
+			memcpy(&buffer[0], aPtr + 1, aPtr[0]);
+			buffer[aPtr[0]] = '\0';
+			aData.name.resize(aPtr[0]);
+			memcpy(&aData.name.data()[0], &aPtr[1], aPtr[0]);
+			return ptr - aPtr;
+		}
+
+		size_t ReadCharBuffer(char* aPtr, std::string& outString)
+		{
+			char buffer[128];// = new char[aPtr[0]];
+			memcpy(&buffer[0], aPtr + 1, aPtr[0]);
+			buffer[aPtr[0]] = '\0';
+			outString.resize(aPtr[0]);
+			memcpy(&outString.data()[0], &aPtr[1], aPtr[0]);
+			return sizeof(char) * aPtr[0] + 1;
+		}
+
+		size_t operator()(std::vector<SInstanceID>& someData, char* aPtr)
+		{
+			char* ptr = aPtr;
+			int count = 0;
+			ptr += Copy(count, ptr);
+			someData.resize(count);
+			for (int i = 0; i < count; ++i)
+			{
+				ptr += Copy(someData[i].instanceID, ptr);
+				ptr += ReadCharBuffer(ptr, someData[i].name);
+			}
+			return ptr - aPtr;
+		}
+	};
+
+
+
 
 	//template<>
 	//struct CopyBin<SEventData> {
@@ -224,7 +335,7 @@ public:
 	static bool Read(const std::string& aFileNameAndPath, std::vector<Vector3>& outData);
 
 private:
-	
+
 
 
 private:
@@ -235,16 +346,16 @@ private:
 		return sizeof(T) * aCount;
 	}
 
-	static std::string ReadStringAuto(char* aStreamPtr)
-	{
-		int length = 0;
-		aStreamPtr += Read(length, aStreamPtr);
+	//static std::string ReadStringAuto(char* aStreamPtr)
+	//{
+	//	int length = 0;
+	//	aStreamPtr += Read(length, aStreamPtr);
 
-		std::string text = "";
-		aStreamPtr += ReadString(text, aStreamPtr, length);
+	//	std::string text = "";
+	//	aStreamPtr += ReadString(text, aStreamPtr, length);
 
-		return text;
-	}
+	//	return text;
+	//}
 
 	size_t ReadCharBuffer(char* aPtr, std::string& outString)
 	{
@@ -256,11 +367,11 @@ private:
 		return sizeof(char) * aPtr[0] + 1;
 	}
 
-	static size_t ReadString(std::string& data, char* aStreamPtr, size_t aLength)
-	{
-		data.reserve(aLength + 1);
-		memcpy(&data.data()[0], aStreamPtr, sizeof(char) * aLength);
-		data.data()[aLength] = '\0';
-		return sizeof(char) * aLength;
-	}
+	//static size_t ReadString(std::string& data, char* aStreamPtr, size_t aLength)
+	//{
+	//	data.reserve(aLength + 1);
+	//	memcpy(&data.data()[0], aStreamPtr, sizeof(char) * aLength);
+	//	data.data()[aLength] = '\0';
+	//	return sizeof(char) * aLength;
+	//}
 };

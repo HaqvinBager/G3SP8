@@ -23,6 +23,8 @@ void CEnemyAnimationController::Activate()
 	CMainSingleton::PostMaster().Subscribe(EMessageType::EnemyAttackState, this);
 	CMainSingleton::PostMaster().Subscribe(EMessageType::EnemyAttack, this);
 	CMainSingleton::PostMaster().Subscribe(EMessageType::EnemyTakeDamage, this);
+	CMainSingleton::PostMaster().Subscribe(EMessageType::EnemyDied, this);
+	CMainSingleton::PostMaster().Subscribe(EMessageType::EnemyDisabled, this);
 }
 
 void CEnemyAnimationController::Deactivate()
@@ -32,6 +34,8 @@ void CEnemyAnimationController::Deactivate()
 	CMainSingleton::PostMaster().Unsubscribe(EMessageType::EnemyAttackState, this);
 	CMainSingleton::PostMaster().Unsubscribe(EMessageType::EnemyAttack, this);
 	CMainSingleton::PostMaster().Unsubscribe(EMessageType::EnemyTakeDamage, this);
+	CMainSingleton::PostMaster().Unsubscribe(EMessageType::EnemyDied, this);
+	CMainSingleton::PostMaster().Unsubscribe(EMessageType::EnemyDisabled, this);
 }
 
 void CEnemyAnimationController::Receive(const SMessage& aMessage)
@@ -66,6 +70,18 @@ void CEnemyAnimationController::Receive(const SMessage& aMessage)
 		{
 			CEnemyComponent* enemy = reinterpret_cast<CEnemyComponent*>(aMessage.data);
 			OnTakeDamage(enemy);
+		}break;
+
+				case EMessageType::EnemyDied:
+		{
+			CEnemyComponent* enemy = static_cast<CEnemyComponent*>(aMessage.data);
+			OnDeath(enemy);
+		}break;
+
+		case EMessageType::EnemyDisabled:
+		{
+			CEnemyComponent* enemy = static_cast<CEnemyComponent*>(aMessage.data);
+			OnDisabled(enemy);
 		}break;
 
 		default:break;
@@ -118,4 +134,28 @@ void CEnemyAnimationController::OnTakeDamage(CEnemyComponent* anEnemy)
 		return;
 
 	anim->BlendToAnimation(UINT_CAST(EEnemyAnimations::Damage), 0.25f, true, true);
+}
+
+void CEnemyAnimationController::OnDeath(CEnemyComponent* anEnemy)
+{
+	if (!anEnemy)
+		return;
+
+	CAnimationComponent* anim = anEnemy->GetComponent<CAnimationComponent>();
+	if (!anim)
+		return;
+
+	anim->BlendLerpBetween(UINT_CAST(EEnemyAnimations::Death), UINT_CAST(EEnemyAnimations::Death), 0.0f);
+}
+
+void CEnemyAnimationController::OnDisabled(CEnemyComponent* anEnemy)
+{
+	if (!anEnemy)
+		return;
+
+	CAnimationComponent* anim = anEnemy->GetComponent<CAnimationComponent>();
+	if (!anim)
+		return;
+
+	anim->Enabled(false);
 }

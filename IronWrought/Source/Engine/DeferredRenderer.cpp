@@ -57,16 +57,21 @@ CDeferredRenderer::CDeferredRenderer()
 	, mySkyboxNumberOfIndices(0)
 	, mySkyboxStride(0)
 	, mySkyboxOffset(0)
-{}
+{
+
+}
 
 CDeferredRenderer::~CDeferredRenderer()
 {
 }
 
-bool CDeferredRenderer::Init(CDirectXFramework* aFramework)
+bool CDeferredRenderer::Init(CDirectXFramework* aFramework, CMaterialHandler* aMaterialHandler) 
 {
 	myContext = aFramework->GetContext();
 	ENGINE_ERROR_BOOL_MESSAGE(myContext, "Context could not be acquired from Framework.");
+
+	myMaterialHandler = aMaterialHandler;
+	ENGINE_ERROR_BOOL_MESSAGE(myMaterialHandler, "Material Handler was nullptr.");
 
 	ID3D11Device* device = aFramework->GetDevice();
 	ENGINE_ERROR_BOOL_MESSAGE(device, "Device could not be acquired from Framework.");
@@ -252,7 +257,7 @@ bool CDeferredRenderer::Init(CDirectXFramework* aFramework)
 
 void CDeferredRenderer::GenerateGBuffer(CCameraComponent* aCamera, std::vector<CGameObject*>& aGameObjectList, std::vector<CGameObject*>& aInstancedGameObjectList)
 {
-	SM::Matrix cameraMatrix = aCamera->/*GetViewMatrix()*/GameObject().myTransform->Transform();
+	SM::Matrix cameraMatrix = /*aCamera->GetViewMatrix()*/aCamera->GameObject().myTransform->Transform();
 	myFrameBufferData.myCameraPosition = SM::Vector4{ cameraMatrix._41, cameraMatrix._42, cameraMatrix._43, 1.f };
 	myFrameBufferData.myToCameraSpace = cameraMatrix.Invert();
 	myFrameBufferData.myToWorldFromCamera = cameraMatrix;
@@ -283,6 +288,9 @@ void CDeferredRenderer::GenerateGBuffer(CCameraComponent* aCamera, std::vector<C
 
 		CModel* model = modelComponent->GetMyModel();
 		const CModel::SModelData& modelData = model->GetModelData();
+
+		if (modelData.myMaterials.size() == 0)
+			continue;
 
 		myObjectBufferData.myToWorld = gameObject->myTransform->Transform();
 		int dnCounter = 0;
@@ -350,7 +358,14 @@ void CDeferredRenderer::GenerateGBuffer(CCameraComponent* aCamera, std::vector<C
 				myContext->IASetVertexBuffers(0, 1, &modelData.myMeshes[i].myVertexBuffer, &modelData.myMeshes[i].myStride, &modelData.myMeshes[i].myOffset);
 			}
 			myContext->IASetIndexBuffer(modelData.myMeshes[i].myIndexBuffer, DXGI_FORMAT_R32_UINT, 0);
-			myContext->PSSetShaderResources(5, 3, &modelData.myMaterials[modelData.myMeshes[i].myMaterialIndex][0]);
+			
+			//myContext->PSSetShaderResources(5, 3, &modelData.myMaterials[modelData.myMeshes[i].myMaterialIndex][0]);
+			//const auto& material = CMainSingleton::MaterialHandler().GetMaterial(modelComponent->GetMaterialID());
+			//SMaterialInstance materialInstance = modelComponent->GetMaterialID();
+			//myContext->PSSetShaderResources(5, 3, material[0].GetAddressOf());
+				//&modelData.myMaterials[modelComponent->GetMaterialIndex()][0]);
+
+			SetShaderResource(modelComponent->GetMaterialID(i));
 			myContext->DrawIndexed(modelData.myMeshes[i].myNumberOfIndices, 0, 0);
 			CRenderManager::myNumberOfDrawCallsThisFrame++;
 		}
@@ -374,6 +389,8 @@ void CDeferredRenderer::GenerateGBuffer(CCameraComponent* aCamera, std::vector<C
 
 		CModel* model = instanceComponent->GetModel();
 		const CModel::SModelInstanceData& modelData = model->GetModelInstanceData();
+
+
 
 		int dnCounter = 0;
 		for (auto detailNormal : model->GetModelInstanceData().myDetailNormals)
@@ -419,7 +436,11 @@ void CDeferredRenderer::GenerateGBuffer(CCameraComponent* aCamera, std::vector<C
 			ID3D11Buffer* bufferPointers[2] = { modelData.myMeshes[i].myVertexBuffer, modelData.myInstanceBuffer };
 			myContext->IASetVertexBuffers(0, 2, bufferPointers, modelData.myMeshes[i].myStride, modelData.myMeshes[i].myOffset);
 			myContext->IASetIndexBuffer(modelData.myMeshes[i].myIndexBuffer, DXGI_FORMAT_R32_UINT, 0);
-			myContext->PSSetShaderResources(5, 3, &modelData.myMaterials[modelData.myMeshes[i].myMaterialIndex][0]);
+			
+			//const unsigned int materialID = instanceComponent->GetMaterialID();
+			//SetShaderResource()
+			SetShaderResource(instanceComponent->GetMaterialID(i));
+			//myContext->PSSetShaderResources(5, 3, &modelData.myMaterials[modelData.myMeshes[i].myMaterialIndex][0]);
 			myContext->DrawIndexedInstanced(modelData.myMeshes[i].myNumberOfIndices, model->InstanceCount(), 0, 0, 0);
 			CRenderManager::myNumberOfDrawCallsThisFrame++;
 		}
@@ -497,4 +518,10 @@ bool CDeferredRenderer::ToggleRenderPass()
 	}
 	myCurrentRenderPassShader = myRenderPassShaders[myRenderPassIndex];
 	return false;
+}
+
+void CDeferredRenderer::SetShaderResource(const int aMaterialID)
+{	
+	SMaterialInstance materialInstance = myMaterialHandler->GetMaterialInstance(aMaterialID);
+	myContext->PSSetShaderResources(materialInstance.myStartSlot, materialInstance.myNumViews, materialInstance.myShaderResourceView[0].GetAddressOf());
 }

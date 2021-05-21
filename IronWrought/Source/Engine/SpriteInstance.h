@@ -16,7 +16,9 @@ enum class ERenderOrder {
 	Layer3,
 	Layer4,
 	Layer5,
-	Layer6
+	Layer6,
+
+	Count
 };
 
 struct SSpriteSheetPositionData
@@ -50,7 +52,6 @@ struct SSpriteAnimationData
 class CSpriteInstance
 {
 public:
-	CSpriteInstance(CScene& aScene, bool aAddToScene = true);
 	CSpriteInstance();
 	~CSpriteInstance();
 
@@ -68,7 +69,7 @@ public:
 	void Update();
 
 	void PlayAnimation(unsigned int anIndex, bool aShouldLoop = false, bool aShouldBeReversed = false);
-	void PlayAnimationUsingInternalData(const unsigned int& anIndex, const bool& aShouldBeReversed = false);
+	void PlayAnimationUsingInternalData(const int& anIndex, const bool& aShouldBeReversed = false);
 	void PlayAnimation(PostMaster::SCrossHairData& aData);
 	void PlayAnimation(std::string aName, bool aShouldLoop = false, bool aShouldBeReversed = false);
 

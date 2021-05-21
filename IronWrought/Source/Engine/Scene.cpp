@@ -54,7 +54,7 @@ CScene::CScene(const unsigned int aGameObjectCount)
 #endif
 {
 	myGameObjects.reserve(aGameObjectCount);
-	myPXScene = CEngine::GetInstance()->GetPhysx().CreatePXScene(this);
+	myPXScene = CEngine::GetInstance()->GetPhysx().CreatePXScene();
 
 	myModelsToOutline.resize(2);
 	for (unsigned int i = 0; i < myModelsToOutline.size(); ++i)
@@ -77,9 +77,6 @@ CScene::~CScene()
 	this->ClearPointLights();
 	this->ClearSpotLights();
 	this->ClearBoxLights();
-	this->ClearSprites();
-	this->ClearAnimatedUIElement();
-	this->ClearTextInstances();
 
 	myMainCamera = nullptr;
 	delete myEnvironmentLight;
@@ -133,6 +130,26 @@ bool CScene::InitNavMesh(const std::string& aPath)
 		return false;
 	}
 
+#ifdef _DEBUG
+	std::vector<DirectX::SimpleMath::Vector3> positions;
+	UINT size = static_cast<UINT>(myNavMesh->myTriangles.size()) * 6;
+	positions.reserve(size);
+
+	for (UINT i = 0, j = 0; i < size && j < myNavMesh->myTriangles.size(); i += 6, j++)
+	{
+		positions.push_back(myNavMesh->myTriangles[j]->myVertexPositions[0]);
+		positions.push_back(myNavMesh->myTriangles[j]->myVertexPositions[1]);
+		positions.push_back(myNavMesh->myTriangles[j]->myVertexPositions[2]);
+		positions.push_back(myNavMesh->myTriangles[j]->myVertexPositions[0]);
+		positions.push_back(myNavMesh->myTriangles[j]->myVertexPositions[1]);
+		positions.push_back(myNavMesh->myTriangles[j]->myVertexPositions[2]);
+	}
+
+	myNavMeshGrid = new CLineInstance();
+	myNavMeshGrid->Init(CLineFactory::GetInstance()->CreatePolygon(positions));
+	this->AddInstance(myNavMeshGrid);
+#endif // _DEBUG
+
 	return true;
 }
 
@@ -141,23 +158,33 @@ bool CScene::InitCanvas(const std::string& aPath)
 	if (!myCanvas)
 		myCanvas = new CCanvas();
 
-	myCanvas->Init(aPath, *this);
+	myCanvas->Init(aPath);
 
 	return true;
 }
-bool CScene::ReInitCanvas(const std::string& aPath)
+bool CScene::InitCanvas()
 {
 	if (!myCanvas)
-		InitCanvas(aPath);
+		myCanvas = new CCanvas();
 
-	myCanvas->Init(aPath, *this);
+	myCanvas->Init();
 	return true;
 }
+bool CScene::ReInitCanvas(const std::string& aPath, const bool& aDelete)
+{
+	if (aDelete)
+	{
+		delete myCanvas;
+		myCanvas = nullptr;
+	}
 
-void CScene::CanvasIsHUD()
+	return InitCanvas(aPath);
+}
+
+void CScene::CanvasIsHUD(const bool& aIsHud)
 {
 	if (myCanvas)
-		myCanvas->IsHUDCanvas(true);
+		myCanvas->IsHUDCanvas(aIsHud);
 }
 
 void CScene::DisableWidgetsOnCanvas()
@@ -180,27 +207,11 @@ void CScene::CanvasToggle(const bool& anIsEnabled, const bool& anIsForceEnable)
 //No longer needed due to Components Awake being called via EMessageType "AddComponent"
 void CScene::Awake()
 {
-	//while (!myAddedComponentsQueue.empty()) //When Components are Added to GameObjects, a message is sent to Scene with said Component. 
-	//{										//These Components are saved to a Components Queue, and when Scene's Awake or Update is called,
-	//	CComponent* component = myAddedComponentsQueue.front(); //the Scene will make sure that Awake and Start are called Before they are updated on any GameObjects! Axel Savage 2021-04-06
-	//	component->Awake();
-	//	component->Start();
-	//	myAddedComponentsQueue.pop();
-	//}
-	//size_t currentSize = myGameObjects.size();
-	//for (size_t i = 0; i < currentSize; ++i)
-	//	myGameObjects[i]->Awake();
-
-	//size_t newSize = myGameObjects.size();
-	//for (size_t j = currentSize; j < newSize; ++j)
-	//	myGameObjects[j]->Awake(); 	//Late awake
 }
 
 //No longer needed due to Components Start being called via EMessageType "AddComponent"
 void CScene::Start()
-{
-	//for (auto& gameObject : myGameObjects)
-	//	gameObject->Start();	
+{	
 }
 
 void CScene::Update()
@@ -251,6 +262,21 @@ void CScene::CallAwakeOnNewComponents()
 	while (!myAwakeComponents.empty())
 	{
 		CComponent* component = myAwakeComponents.front();
+		
+	/*	CGameObject& gameObject = component->GameObject();
+		for (auto& comp : gameObject.myComponents)
+		{
+			const auto& hashCode = typeid(*comp).hash_code();
+			if (myComponentMap.find(hashCode) != myComponentMap.end())
+			{
+				auto& componentVector = myComponentMap[hashCode];
+				if (std::find(componentVector.begin(), componentVector.end(), comp.get()) == componentVector.end())
+				{
+					myComponentMap[hashCode].push_back(comp.get());
+				}		
+			}
+		}*/
+
 		myAwakeComponents.pop();
 		component->Awake();
 		component->OnEnable();
@@ -263,11 +289,11 @@ void CScene::Receive(const SMessage& aMessage)
 	switch (aMessage.myMessageType)
 	{
 	case EMessageType::ComponentAdded:
-		{
-			CComponent* addedComponent = static_cast<CComponent*>(aMessage.data);
-			myAwakeComponents.push(addedComponent);
-		}
-		break;
+	{
+		CComponent* addedComponent = static_cast<CComponent*>(aMessage.data);
+		myAwakeComponents.push(addedComponent);
+	}
+	break;
 	}
 }
 
@@ -281,7 +307,7 @@ void CScene::MainCamera(const ESceneCamera aCameraType)
 	{
 		if (myCameras[aCameraType] != nullptr)
 		{
-			if(aCameraType != previousCameraType)
+			if (aCameraType != previousCameraType)
 				myCameras[aCameraType]->GameObject().Active(false);
 		}
 	}
@@ -369,17 +395,14 @@ std::vector<CPointLight*>& CScene::PointLights()
 	return myPointLights;
 }
 
-std::vector<CTextInstance*> CScene::Texts()
+CCanvas* CScene::Canvas()
 {
-	std::vector<CTextInstance*> textToRender;
-	for (auto& text : myTexts)
-	{
-		if (text->GetShouldRender())
-		{
-			textToRender.emplace_back(text);
-		}
-	}
-	return textToRender;
+	return myCanvas;
+}
+
+const std::vector<CPatrolPointComponent*>& CScene::PatrolPoints() const
+{
+	return myPatrolPoints;
 }
 
 const std::vector<CGameObject*>& CScene::ActiveGameObjects() const
@@ -447,20 +470,6 @@ const std::vector<SLineTime>& CScene::CullLines() const
 	//return CDebug::GetInstance()->GetLines();
 }
 
-std::vector<CAnimatedUIElement*> CScene::CullAnimatedUI(std::vector<CSpriteInstance*>& someFramesToReturn)
-{
-	std::vector<CAnimatedUIElement*> elementsToRender;
-	for (auto& element : myAnimatedUIElements)
-	{
-		if (element->GetInstance()->GetShouldRender())
-		{
-			elementsToRender.emplace_back(element);
-			someFramesToReturn.emplace_back(element->GetInstance());
-		}
-	}
-	return elementsToRender;
-}
-
 LightPair CScene::CullLightInstanced(CInstancedModelComponent* aModelType)
 {
 	//S�tt s� att Range t�cker objektet l�ngst bort
@@ -520,23 +529,6 @@ std::vector<CGameObject*> CScene::CullGameObjects(CCameraComponent* aMainCamera)
 	//return myGameObjects;
 }
 
-std::vector<CSpriteInstance*> CScene::CullSprites()
-{
-	std::vector<CSpriteInstance*> spritesToRender;
-
-	for (UINT i = 0; i < mySpriteInstances.size(); ++i)
-	{
-		for (auto& sprite : mySpriteInstances[static_cast<ERenderOrder>(i)])
-		{
-			if (sprite->GetShouldRender())
-			{
-				spritesToRender.emplace_back(sprite);
-			}
-		}
-	}
-
-	return spritesToRender;
-}
 CGameObject* CScene::FindObjectWithID(const int aGameObjectInstanceID)
 {
 	if (myIDGameObjectMap.find(aGameObjectInstanceID) == myIDGameObjectMap.end())
@@ -575,26 +567,6 @@ bool CScene::AddInstance(CLineInstance* aLineInstance)
 	return true;
 }
 
-bool CScene::AddInstance(CAnimatedUIElement* anAnimatedUIElement)
-{
-	if (!anAnimatedUIElement)
-	{
-		return false;
-	}
-	myAnimatedUIElements.emplace_back(anAnimatedUIElement);
-	return true;
-}
-
-bool CScene::AddInstance(CTextInstance* aText)
-{
-	if (!aText)
-	{
-		return false;
-	}
-	myTexts.emplace_back(aText);
-	return true;
-}
-
 bool CScene::AddInstance(CGameObject* aGameObject)
 {
 	//Lägg in dom i en "Next frame i will be initied vector, Then when they are inited we move it into myGameObjects
@@ -625,15 +597,9 @@ bool CScene::AddInstances(std::vector<CGameObject*>& someGameObjects)
 	return true;
 }
 
-bool CScene::AddInstance(CSpriteInstance* aSprite)
+bool CScene::AddInstance(CPatrolPointComponent* aPatrolComponent)
 {
-	if (!aSprite)
-	{
-		return false;
-	}
-
-	mySpriteInstances[aSprite->GetRenderOrder()].emplace_back(aSprite);
-
+	myPatrolPoints.push_back(aPatrolComponent);
 	return true;
 }
 
@@ -703,19 +669,6 @@ bool CScene::RemoveInstance(CBoxLight* aBoxLight)
 	return false;
 }
 
-bool CScene::RemoveInstance(CAnimatedUIElement* anAnimatedUIElement)
-{
-	for (int i = 0; i < myAnimatedUIElements.size(); ++i)
-	{
-		if (myAnimatedUIElements[i] == anAnimatedUIElement)
-		{
-			myAnimatedUIElements.erase(myAnimatedUIElements.begin() + i);
-			return true;
-		}
-	}
-	return false;
-}
-
 bool CScene::RemoveInstance(CGameObject* aGameObject)
 {
 	for (int i = 0; i < myGameObjects.size(); ++i)
@@ -725,31 +678,6 @@ bool CScene::RemoveInstance(CGameObject* aGameObject)
 			//std::swap(myGameObjects[i], myGameObjects[myGameObjects.size() - 1]);
 			//myGameObjects.pop_back();
 			myGameObjects.erase(myGameObjects.begin() + i);
-			return true;
-		}
-	}
-	return false;
-}
-bool CScene::RemoveInstance(CSpriteInstance* aSpriteInstance)
-{
-	ERenderOrder renderOrder = aSpriteInstance->GetRenderOrder();
-	for (UINT i = 0; i < mySpriteInstances[renderOrder].size(); ++i)
-	{
-		if (aSpriteInstance == mySpriteInstances[renderOrder][i])
-		{
-			mySpriteInstances[renderOrder].erase(mySpriteInstances[renderOrder].begin() + i);
-			return true;
-		}
-	}
-	return false;
-}
-bool CScene::RemoveInstance(CTextInstance* aTextInstance)
-{
-	for (UINT i = 0; i < myTexts.size(); ++i)
-	{
-		if (aTextInstance == myTexts[i])
-		{
-			myTexts.erase(myTexts.begin() + i);
 			return true;
 		}
 	}
@@ -814,31 +742,6 @@ bool CScene::ClearLineInstances()
 	return false;
 }
 
-bool CScene::ClearAnimatedUIElement()
-{
-	//Canvas has already Deleted these Objects Axel Savage 2021-04-05
-	for (size_t i = 0; i < myAnimatedUIElements.size(); ++i)
-	{
-		delete myAnimatedUIElements[i];
-		myAnimatedUIElements[i] = nullptr;
-	}
-	myAnimatedUIElements.clear();
-	return false;
-}
-
-bool CScene::ClearTextInstances()
-{
-	//Canvas has already Deleted these Objects Axel Savage 2021-04-05
-	for (auto& text : myTexts)
-	{
-		delete text;
-		text = nullptr;
-	}
-	myTexts.clear();
-
-	return false;
-}
-
 bool CScene::ClearGameObjects()
 {
 	for (auto& gameObject : myGameObjects)
@@ -858,21 +761,6 @@ bool CScene::ClearGameObjects()
 	//	gameObject = nullptr;
 	//}
 	myGameObjects.clear();
-	return true;
-}
-
-bool CScene::ClearSprites()
-{
-	for (UINT i = 0; i < mySpriteInstances.size() - 1; ++i)
-	{
-		for (auto& sprite : mySpriteInstances[static_cast<ERenderOrder>(i)])
-		{
-			delete sprite;
-			sprite = nullptr;
-		}
-	}
-	mySpriteInstances.clear();
-	
 	return true;
 }
 //CLEAR SCENE OF INSTANCES END

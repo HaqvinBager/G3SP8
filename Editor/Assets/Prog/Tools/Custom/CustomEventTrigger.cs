@@ -19,7 +19,9 @@ public class CustomEventTrigger : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        triggerEvent?.OnRaiseEvent();
+        if(triggerEvent != null)
+            triggerEvent.OnRaiseEvent();
+
         onTriggerResponse?.Invoke();
         Debug.DrawLine(other.transform.position, transform.position, Color.green * 0.75f, 5.5f);
     }

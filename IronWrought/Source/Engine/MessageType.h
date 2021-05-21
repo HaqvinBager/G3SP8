@@ -74,10 +74,21 @@ enum class EMessageType
 	EnemyAttack,
 	EnemyTargetLost,
 	EnemyTakeDamage,
+	EnemyAttackedPlayer,
 
 	FuseCreated,
 	FusePickedUp,
 	OpenSafetyDoors,
+
+	BootUpState,
+	PlayJumpSound,
+	
+	GameStarted,
+
+	LockFPSCamera,
+
+	ReturnToMainMenu,
+	EnemyDisabled,
 
 	Count
 };

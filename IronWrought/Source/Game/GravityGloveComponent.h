@@ -6,7 +6,7 @@
 class CTransformComponent;
 class CRigidBodyComponent;
 
-namespace IronWroughtImGui {
+namespace ImGui {
 	class CGravityGloveEditor;
 }
 
@@ -45,7 +45,7 @@ struct SRigidBodyTarget
 
 class CGravityGloveComponent : public CBehaviour, public IStringObserver
 {
-	friend class IronWroughtImGui::CGravityGloveEditor;
+	friend class ImGui::CGravityGloveEditor;
 public:
 	CGravityGloveComponent(CGameObject& aParent, CTransformComponent* aGravitySlot);
 	~CGravityGloveComponent() override;

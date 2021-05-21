@@ -39,17 +39,18 @@ int CNodeTypeEnemySpawn::OnEnter(CNodeInstance * aTriggeringNodeInstance)
 }
 
 std::mutex gNodeTypeEnemySpawn_Mutex;
-void CNodeTypeEnemySpawn::SpawnEnemies(const int aNumber, const Vector3& aSpawnPosition)
+void CNodeTypeEnemySpawn::SpawnEnemies(const int /*aNumber*/, const Vector3& /*aSpawnPosition*/)
 {
-	gNodeTypeEnemySpawn_Mutex.lock();
-	for (size_t i = 0; i < aNumber; ++i)
-	{
-		CGameObject* go = new CGameObject(-99999 + (int)i);
-		go->AddComponent<CModelComponent>(*go, ASSETPATH("Assets/Graphics/Character/Enemy/CH_E_Robot_SK.fbx"));
-		go->myTransform->Position(aSpawnPosition);
-		go->Awake();
-		go->Start();
-		IRONWROUGHT_ACTIVE_SCENE.AddInstance(go);
-	}
-	gNodeTypeEnemySpawn_Mutex.unlock();
+	
+	//gNodeTypeEnemySpawn_Mutex.lock();
+	//for (size_t i = 0; i < aNumber; ++i)
+	//{
+		//CGameObject* go = new CGameObject(-99999 + (int)i);
+		//go->AddComponent<CModelComponent>(*go, ASSETPATH("Assets/Graphics/Character/Enemy/CH_E_Robot_SK.fbx"));
+		//go->myTransform->Position(aSpawnPosition);
+		//go->Awake();
+		//go->Start();
+		//IRONWROUGHT_ACTIVE_SCENE.AddInstance(go);
+	//}
+	//gNodeTypeEnemySpawn_Mutex.unlock();
 }

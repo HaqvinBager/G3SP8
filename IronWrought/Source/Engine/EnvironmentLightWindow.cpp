@@ -6,7 +6,7 @@
 #include "Scene.h"
 #include <imgui.h>
 
-IronWroughtImGui::CEnvironmentLightWindow::CEnvironmentLightWindow(const char* aName)
+ImGui::CEnvironmentLightWindow::CEnvironmentLightWindow(const char* aName)
 	: CWindow(aName)
 	, myColor(Vector3::One)
 	, myIntensity(1.0f)
@@ -31,15 +31,15 @@ IronWroughtImGui::CEnvironmentLightWindow::CEnvironmentLightWindow(const char* a
 
 }
 
-IronWroughtImGui::CEnvironmentLightWindow::~CEnvironmentLightWindow()
+ImGui::CEnvironmentLightWindow::~CEnvironmentLightWindow()
 {
 }
 
-void IronWroughtImGui::CEnvironmentLightWindow::OnEnable()
+void ImGui::CEnvironmentLightWindow::OnEnable()
 {
 }
 
-void IronWroughtImGui::CEnvironmentLightWindow::OnInspectorGUI()
+void ImGui::CEnvironmentLightWindow::OnInspectorGUI()
 {
 	ImGui::Begin(Name(), Open());
 
@@ -91,6 +91,6 @@ void IronWroughtImGui::CEnvironmentLightWindow::OnInspectorGUI()
 	ImGui::End();
 }
 
-void IronWroughtImGui::CEnvironmentLightWindow::OnDisable()
+void ImGui::CEnvironmentLightWindow::OnDisable()
 {
 }

@@ -11,7 +11,7 @@
 #include "MainSingleton.h"
 #include "PostMaster.h"
 
-IronWroughtImGui::CLoadScene::CLoadScene(const char* aMenuName, const bool aIsMenuChild)
+ImGui::CLoadScene::CLoadScene(const char* aMenuName, const bool aIsMenuChild)
 	: CWindow(aMenuName, aIsMenuChild)
 	, myState(EState::DropDownMenu)
 	, mySceneIndex(-1)
@@ -20,11 +20,11 @@ IronWroughtImGui::CLoadScene::CLoadScene(const char* aMenuName, const bool aIsMe
 
 }
 
-IronWroughtImGui::CLoadScene::~CLoadScene()
+ImGui::CLoadScene::~CLoadScene()
 {
 }
 
-void IronWroughtImGui::CLoadScene::OnEnable()
+void ImGui::CLoadScene::OnEnable()
 {
 	std::vector<std::string> generatedJsonFiles = CFolderUtility::GetFileNamesInFolder(ASSETPATH ("Assets/Generated"), ".json"/*, "Level"*/);
 	for (auto& file : generatedJsonFiles) {
@@ -45,7 +45,7 @@ void IronWroughtImGui::CLoadScene::OnEnable()
 }
 
 
-bool IronWroughtImGui::CLoadScene::OnMainMenuGUI()
+bool ImGui::CLoadScene::OnMainMenuGUI()
 {
 
 	std::string previewName;
@@ -87,15 +87,15 @@ bool IronWroughtImGui::CLoadScene::OnMainMenuGUI()
 	return true;
 }
 
-void IronWroughtImGui::CLoadScene::OnInspectorGUI()
+void ImGui::CLoadScene::OnInspectorGUI()
 {
 }
 
-void IronWroughtImGui::CLoadScene::OnDisable()
+void ImGui::CLoadScene::OnDisable()
 {
 }
 
-void IronWroughtImGui::CLoadScene::OnComplete(std::string aSceneThatHasBeenSuccessfullyLoaded)
+void ImGui::CLoadScene::OnComplete(std::string aSceneThatHasBeenSuccessfullyLoaded)
 {
 	SetConsoleColor(CONSOLE_DAQUA);
 	std::cout << "Scene Load Complete!" << aSceneThatHasBeenSuccessfullyLoaded << std::endl;
