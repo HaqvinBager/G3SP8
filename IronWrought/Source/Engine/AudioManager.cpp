@@ -15,6 +15,9 @@ using namespace rapidjson;
 CAudioManager::CAudioManager() 
 	: myWrapper() 
 	, myCurrentGroundType(EGroundType::Concrete)
+	, myDynamicChannel1(0.0f)
+	, myDynamicChannel2(0.0f)
+	, myDynamicChannel3(0.0f)
 {
 	SubscribeToMessages();
 
@@ -101,6 +104,14 @@ CAudioManager::CAudioManager()
 		float value = volDoc["RobotVoice"].GetFloat();
 		myChannels[CAST(EChannel::RobotVOX)]->SetVolume(value);
 	}
+
+	myWrapper.Play(myAmbienceAudio[CAST(EAmbience::DynamicTestDrums)], myChannels[CAST(EChannel::DynamicChannel1)]);
+	myWrapper.Play(myAmbienceAudio[CAST(EAmbience::DynamicTestGlitches)], myChannels[CAST(EChannel::DynamicChannel2)]);
+	myWrapper.Play(myAmbienceAudio[CAST(EAmbience::DynamicTestScreamer)], myChannels[CAST(EChannel::DynamicChannel3)]);
+
+	myChannels[CAST(EChannel::DynamicChannel1)]->SetVolume(myDynamicChannel1);
+	myChannels[CAST(EChannel::DynamicChannel2)]->SetVolume(myDynamicChannel2);
+	myChannels[CAST(EChannel::DynamicChannel3)]->SetVolume(myDynamicChannel3);
 }
 
 CAudioManager::~CAudioManager()
@@ -477,6 +488,59 @@ void CAudioManager::Update()
 			++it;
 		}
 	}
+
+	if (myFadingChannels.size() > 0)
+	{
+		const float dt = CTimer::Dt();
+
+		for (auto it = myFadingChannels.begin(); it != myFadingChannels.end();)
+		{
+			it->myTimer -= dt;
+
+			float newVolume = std::clamp(it->myTimer, 0.0f, it->myDuration);
+			newVolume /= it->myDuration;
+			newVolume = it->myFadeOut ? newVolume : (1.0f - newVolume);
+
+			myChannels[CAST(it->myChannel)]->SetVolume(newVolume);
+
+			if (it->myTimer <= 0.0f)
+			{
+				it = myFadingChannels.erase(it);
+				continue;
+			}
+			++it;
+		}
+	}
+
+	if (INPUT->IsKeyPressed(0x31))
+	{
+		FadeChannelOverSeconds(EChannel::DynamicChannel1, 0.1f, false);
+	}
+
+	if (INPUT->IsKeyPressed(0x32))
+	{
+		FadeChannelOverSeconds(EChannel::DynamicChannel2, 2.0f, false);
+	}
+
+	if (INPUT->IsKeyPressed(0x33))
+	{
+		FadeChannelOverSeconds(EChannel::DynamicChannel3, 1.0f, false);
+	}
+
+	if (INPUT->IsKeyPressed(0x34))
+	{
+		FadeChannelOverSeconds(EChannel::DynamicChannel1, 0.1f);
+	}
+
+	if (INPUT->IsKeyPressed(0x35))
+	{
+		FadeChannelOverSeconds(EChannel::DynamicChannel2, 2.0f);
+	}
+
+	if (INPUT->IsKeyPressed(0x36))
+	{
+		FadeChannelOverSeconds(EChannel::DynamicChannel3, 1.0f);
+	}
 }
 
 void CAudioManager::SubscribeToMessages()
@@ -636,6 +700,12 @@ std::string CAudioManager::TranslateEnum(EChannel enumerator) const
 		return "ResearcherVOX";
 	case EChannel::RobotVOX:
 		return "RobotVOX";
+	case EChannel::DynamicChannel1:
+		return "DynamicChannel1";
+	case EChannel::DynamicChannel2:
+		return "DynamicChannel2";
+	case EChannel::DynamicChannel3:
+		return "DynamicChannel3";
 	default:
 		return "";
 	}
@@ -659,6 +729,14 @@ std::string CAudioManager::TranslateEnum(EAmbience enumerator) const {
 		return "Inside";
 	case EAmbience::Outside:
 		return "Outside";
+	case EAmbience::EnemyArea:
+		return "EnemyArea";
+	case EAmbience::DynamicTestDrums:
+		return "DynamicTestDrums";
+	case EAmbience::DynamicTestGlitches:
+		return "DynamicTestGlitches";
+	case EAmbience::DynamicTestScreamer:
+		return "DynamicTestScreamer";
 	default:
 		return "";
 	}
@@ -990,4 +1068,9 @@ void CAudioManager::PlayCyclicRandomSoundFromCollection(const std::vector<CAudio
 
 	unsigned int randomIndex = Random(0, static_cast<int>(aCollection.size()) - 1, someCollectionIndices);
 	myWrapper.Play(aCollection[randomIndex], myChannels[CAST(aChannel)]);
+}
+
+void CAudioManager::FadeChannelOverSeconds(const EChannel& aChannel, const float& aNumberOfSeconds, const bool& aShouldFadeOut)
+{
+	myFadingChannels.push_back({ aChannel, aNumberOfSeconds, aNumberOfSeconds, aShouldFadeOut });
 }

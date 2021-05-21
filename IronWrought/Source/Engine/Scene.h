@@ -110,6 +110,7 @@ public:
 	std::vector<CPointLight*>& PointLights();
 	CCanvas* Canvas();
 	const std::vector<CGameObject*>& ActiveGameObjects() const;
+	const std::vector<CPatrolPointComponent*>& PatrolPoints() const;
 //GETTERS END
 public:
 	const bool Ready() const { return myIsReadyToRender; }
@@ -140,6 +141,7 @@ public:
 	bool AddInstance(CLineInstance* aLineInstance);
 	bool AddInstance(CGameObject* aGameObject);
 	bool AddInstances(std::vector<CGameObject*>& someGameObjects);
+	bool AddInstance(CPatrolPointComponent* aPatrolComponent);
 	//PhysX
 	bool AddPXScene(PxScene* aPXScene);
 	//POPULATE SCENE END

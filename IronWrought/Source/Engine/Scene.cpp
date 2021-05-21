@@ -262,6 +262,21 @@ void CScene::CallAwakeOnNewComponents()
 	while (!myAwakeComponents.empty())
 	{
 		CComponent* component = myAwakeComponents.front();
+		
+	/*	CGameObject& gameObject = component->GameObject();
+		for (auto& comp : gameObject.myComponents)
+		{
+			const auto& hashCode = typeid(*comp).hash_code();
+			if (myComponentMap.find(hashCode) != myComponentMap.end())
+			{
+				auto& componentVector = myComponentMap[hashCode];
+				if (std::find(componentVector.begin(), componentVector.end(), comp.get()) == componentVector.end())
+				{
+					myComponentMap[hashCode].push_back(comp.get());
+				}		
+			}
+		}*/
+
 		myAwakeComponents.pop();
 		component->Awake();
 		component->OnEnable();
@@ -385,7 +400,7 @@ CCanvas* CScene::Canvas()
 	return myCanvas;
 }
 
-std::vector<CPatrolPointComponent*> CScene::PatrolPoints()
+const std::vector<CPatrolPointComponent*>& CScene::PatrolPoints() const
 {
 	return myPatrolPoints;
 }
@@ -579,6 +594,12 @@ bool CScene::AddInstances(std::vector<CGameObject*>& someGameObjects)
 
 
 	//myGameObjects.insert(myGameObjects.end(), someGameObjects.begin(), someGameObjects.end());
+	return true;
+}
+
+bool CScene::AddInstance(CPatrolPointComponent* aPatrolComponent)
+{
+	myPatrolPoints.push_back(aPatrolComponent);
 	return true;
 }
 

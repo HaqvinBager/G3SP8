@@ -358,6 +358,11 @@ void CEngine::UpdateScene(const CStateStack::EState& aState)
 	}
 }
 
+const bool CEngine::IsInGameScene() const
+{
+	return myActiveState == CStateStack::EState::InGame;
+}
+
 void CEngine::ModelViewerSetScene(CScene* aScene)
 {
 	myActiveState = CStateStack::EState::InGame;
@@ -391,6 +396,7 @@ void CEngine::HideCursor(const bool& anIsInEditorMode)
 
 void CEngine::LoadGraph(const std::string& aSceneName)
 {
+	myGraphManager->Clear();
 	myGraphManager->Load(aSceneName);
 }
 

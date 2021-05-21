@@ -19,13 +19,16 @@ CMainMenuState::CMainMenuState(CStateStack& aStateStack, const CStateStack::ESta
 
 CMainMenuState::~CMainMenuState()
 {
-	std::cout << __FUNCTION__ << std::endl;
 	CEngine::GetInstance()->RemoveScene(myState);
 }
 
 void CMainMenuState::Awake()
 {
-	CScene* scene = CSceneManager::CreateMenuScene("MainMenu", ASSETPATH("Assets/Graphics/UI/JSON/UI_MainMenu.json"));
+#ifdef VERTICAL_SLICE
+	CScene* scene = CSceneManager::CreateMenuScene("MainMenu", ASSETPATH("Assets/IronWrought/UI/JSON/UI_MainMenu_VS.json"));
+#else
+	CScene* scene = CSceneManager::CreateMenuScene("MainMenu", ASSETPATH("Assets/IronWrought/UI/JSON/UI_MainMenu.json"));
+#endif
 	CEngine::GetInstance()->AddScene(myState, scene);
 }
 
@@ -40,6 +43,8 @@ void CMainMenuState::Start()
 	CMainSingleton::PostMaster().Subscribe(EMessageType::SetResolution1280x720, this);
 	CMainSingleton::PostMaster().Subscribe(EMessageType::SetResolution1600x900, this);
 	CMainSingleton::PostMaster().Subscribe(EMessageType::SetResolution1920x1080, this);
+
+	CMainSingleton::PostMaster().SendLate({ EMessageType::MainMenu, nullptr });
 }
 
 void CMainMenuState::Stop()
@@ -56,10 +61,10 @@ void CMainMenuState::Stop()
 void CMainMenuState::Update()
 {
 #ifndef NDEBUG
-	if (INPUT->IsKeyPressed('R'))
-	{
-		IRONWROUGHT->GetActiveScene().ReInitCanvas(ASSETPATH("Assets/Graphics/UI/JSON/UI_MainMenu.json"));
-	}
+	//if (INPUT->IsKeyPressed('R'))
+	//{
+	//	IRONWROUGHT->GetActiveScene().ReInitCanvas(ASSETPATH("Assets/Graphics/UI/JSON/UI_MainMenu.json"));
+	//}
 #endif
 
 	if(myTimeToQuit)
@@ -92,21 +97,25 @@ void CMainMenuState::Receive(const SMessage& aMessage)
 		case EMessageType::SetResolution1280x720:
 		{
 			CEngine::GetInstance()->SetResolution({ 1280.0f, 720.0f });  // Canvas reinited in here
+			IRONWROUGHT->GetActiveScene().ReInitCanvas(ASSETPATH("Assets/IronWrought/UI/JSON/UI_MainMenu.json"), true);
 			myStateStack.PopTopAndPush(CStateStack::EState::MainMenu);
 		} break;
 		case EMessageType::SetResolution1600x900:
 		{
 			CEngine::GetInstance()->SetResolution({ 1600.0f, 900.0f });
+			IRONWROUGHT->GetActiveScene().ReInitCanvas(ASSETPATH("Assets/IronWrought/UI/JSON/UI_MainMenu.json"), true);
 			myStateStack.PopTopAndPush(CStateStack::EState::MainMenu);
 		} break;
 		case EMessageType::SetResolution1920x1080:
 		{
 			CEngine::GetInstance()->SetResolution({ 1920.0f, 1080.0f });
+			IRONWROUGHT->GetActiveScene().ReInitCanvas(ASSETPATH("Assets/IronWrought/UI/JSON/UI_MainMenu.json"), true);
 			myStateStack.PopTopAndPush(CStateStack::EState::MainMenu);
 		} break;
 		case EMessageType::SetResolution2560x1440:
 		{
 			CEngine::GetInstance()->SetResolution({ 2560.0f, 1440.0f });
+			IRONWROUGHT->GetActiveScene().ReInitCanvas(ASSETPATH("Assets/IronWrought/UI/JSON/UI_MainMenu.json"), true);
 			myStateStack.PopTopAndPush(CStateStack::EState::MainMenu);
 		} break;
 

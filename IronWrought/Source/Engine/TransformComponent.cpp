@@ -48,7 +48,7 @@ void CTransformComponent::Position(const DirectX::SimpleMath::Vector3& aPosition
 	myLocalTransform.Translation(aPosition);
 }
 
-void CTransformComponent::PositionRigidbody(DirectX::SimpleMath::Vector3 aPosition)
+void CTransformComponent::PositionRigidbody(const DirectX::SimpleMath::Vector3& aPosition)
 {
 	CRigidBodyComponent* rigidbody = nullptr;
 	if (GameObject().TryGetComponent<CRigidBodyComponent>(&rigidbody)) {

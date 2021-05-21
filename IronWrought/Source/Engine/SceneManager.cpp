@@ -256,6 +256,7 @@ void CSceneManager::CreateCustomEvents(CScene& aScene)
 void CSceneManager::CreateCustomEventListeners(CScene& aScene)
 {
 	CCustomEventComponent* customEvent = aScene.FindObjectWithID(200)->GetComponent<CCustomEventComponent>();
+	CGameObject* gameObject = new CGameObject(201, "Listener");
 	gameObject->AddComponent<CCustomEventListenerComponent>(*gameObject, customEvent);
 	//float aRange, DirectX::SimpleMath::Vector3 aColorAndIntensity, float anIntensity
 	gameObject->AddComponent<CPointLightComponent>(*gameObject, 100.0f, Vector3(0.0f, 0.0f, 1.0f), 250.0f);
@@ -568,10 +569,14 @@ void CSceneManager::AddEnemyComponents(CScene& aScene, RapidArray someData)
 			{
 				settings.myPatrolGameObjectIds.emplace_back(point["transform"]["instanceID"].GetInt());
 				settings.myPatrolIntrestValue.emplace_back(point["interestValue"].GetFloat());
+
+				CGameObject* patrolPoint = aScene.FindObjectWithID(point["transform"]["instanceID"].GetInt());
+				auto patrolComponent = patrolPoint->AddComponent<CPatrolPointComponent>(*patrolPoint, point["interestValue"].GetFloat());
+				aScene.AddInstance(patrolComponent);
 			}
 		}
 		gameObject->AddComponent<CEnemyComponent>(*gameObject, settings);
-
+		//gameObject->AddComponent<CPatrolPointComponent>(*gameObject, )
 		//gameObject->AddComponent<CVFXSystemComponent>(*gameObject, ASSETPATH("Assets/Graphics/VFX/JSON/VFXSystem_Enemy.json"));
 	}
 }
@@ -755,12 +760,12 @@ void CSceneManager::AddTriggerEvents(CScene& aScene, RapidArray someData)
 		{
 			std::string eventData = triggerEvent["gameEvent"].GetString();
 			int eventFilter = triggerEvent.HasMember("eventFilter") ? triggerEvent["eventFilter"].GetInt() : static_cast<int>(CBoxColliderComponent::EEventFilter::Any);
+			int audioIndex = triggerEvent.HasMember("audioIndex") ? triggerEvent["audioIndex"].GetInt() : -1;
+			bool triggerOnce = triggerEvent.HasMember("triggerOnce") ? triggerEvent["triggerOnce"].GetBool() : false;
 			triggerVolume->RegisterEventTriggerMessage(eventData);
 			triggerVolume->RegisterEventTriggerFilter(eventFilter);
-			//SStringMessage triggerMessage = {};
-			//memcpy(&triggerMessage.myMessageType, &eventData[0], sizeof(char) * eventData.size());
-			//triggerMessage.myMessageType = eventData.c_str();
-
+			triggerVolume->RegisterEventTriggerAudioIndex(audioIndex);
+			triggerVolume->RegisterEventTriggerOnce(triggerOnce);
 		}
 	}
 }
