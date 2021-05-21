@@ -6,6 +6,7 @@
 #include "PostMaster.h"
 #include "JsonReader.h"
 #include "RandomNumberGenerator.h"
+#include "GameObject.h"
 
 using namespace rapidjson;
 
@@ -18,6 +19,9 @@ CAudioManager::CAudioManager()
 	, myDynamicChannel1(0.0f)
 	, myDynamicChannel2(0.0f)
 	, myDynamicChannel3(0.0f)
+	, myListener(nullptr)
+	, my3DTester(nullptr)
+	, my3DChannel(nullptr)
 {
 	SubscribeToMessages();
 
@@ -105,13 +109,15 @@ CAudioManager::CAudioManager()
 		myChannels[CAST(EChannel::RobotVOX)]->SetVolume(value);
 	}
 
-	myWrapper.Play(myAmbienceAudio[CAST(EAmbience::DynamicTestDrums)], myChannels[CAST(EChannel::DynamicChannel1)]);
-	myWrapper.Play(myAmbienceAudio[CAST(EAmbience::DynamicTestGlitches)], myChannels[CAST(EChannel::DynamicChannel2)]);
-	myWrapper.Play(myAmbienceAudio[CAST(EAmbience::DynamicTestScreamer)], myChannels[CAST(EChannel::DynamicChannel3)]);
+	//my3DTester = myWrapper.Request3DSound("Audio/SFX/EnemyAttack.mp3", true);
+	//my3DChannel = myWrapper.RequestAudioSource("3D");
+	myOffset = Vector3::Zero;
 
-	myChannels[CAST(EChannel::DynamicChannel1)]->SetVolume(myDynamicChannel1);
-	myChannels[CAST(EChannel::DynamicChannel2)]->SetVolume(myDynamicChannel2);
-	myChannels[CAST(EChannel::DynamicChannel3)]->SetVolume(myDynamicChannel3);
+	//SetDynamicTrack(EAmbience::DynamicTestDrums, EAmbience::DynamicTestGlitches, EAmbience::DynamicTestScreamer);
+
+	//myChannels[CAST(EChannel::DynamicChannel1)]->SetVolume(myDynamicChannel1);
+	//myChannels[CAST(EChannel::DynamicChannel2)]->SetVolume(myDynamicChannel2);
+	//myChannels[CAST(EChannel::DynamicChannel3)]->SetVolume(myDynamicChannel3);
 }
 
 CAudioManager::~CAudioManager()
@@ -472,6 +478,14 @@ void CAudioManager::Receive(const SStringMessage& aMessage)
 
 void CAudioManager::Update()
 {
+	if (myListener)
+	{
+		myWrapper.SetListenerAttributes(0, myListener->myTransform->WorldPosition(), {0.0f, 0.0f, 0.0f}, myListener->myTransform->GetWorldMatrix().Forward(), myListener->myTransform->GetWorldMatrix().Up());
+		//my3DChannel->Set3DAttributes(myListener->myTransform->WorldPosition() + myOffset, Vector3::Zero);
+	}
+
+	myWrapper.Update();
+
 	if (myDelayedSFX.size() > 0)
 	{
 		const float dt = CTimer::Dt();
@@ -512,35 +526,68 @@ void CAudioManager::Update()
 		}
 	}
 
-	if (INPUT->IsKeyPressed(0x31))
-	{
-		FadeChannelOverSeconds(EChannel::DynamicChannel1, 0.1f, false);
-	}
+	//if (INPUT->IsKeyPressed(0x31))
+	//{
+	//	myWrapper.Play(my3DTester, my3DChannel);
+	//}
 
-	if (INPUT->IsKeyPressed(0x32))
-	{
-		FadeChannelOverSeconds(EChannel::DynamicChannel2, 2.0f, false);
-	}
+	//constexpr float speed = 1.0f;
+	//if (INPUT->IsKeyPressed(VK_UP))
+	//{
+	//	myOffset.z += speed;
+	//}
 
-	if (INPUT->IsKeyPressed(0x33))
-	{
-		FadeChannelOverSeconds(EChannel::DynamicChannel3, 1.0f, false);
-	}
+	//if (INPUT->IsKeyPressed(VK_LEFT))
+	//{
+	//	myOffset.x += speed;
+	//}
 
-	if (INPUT->IsKeyPressed(0x34))
-	{
-		FadeChannelOverSeconds(EChannel::DynamicChannel1, 0.1f);
-	}
+	//if (INPUT->IsKeyPressed(VK_DOWN))
+	//{
+	//	myOffset.z -= speed;
+	//}
 
-	if (INPUT->IsKeyPressed(0x35))
-	{
-		FadeChannelOverSeconds(EChannel::DynamicChannel2, 2.0f);
-	}
+	//if (INPUT->IsKeyPressed(VK_RIGHT))
+	//{
+	//	myOffset.x -= speed;
+	//}
 
-	if (INPUT->IsKeyPressed(0x36))
-	{
-		FadeChannelOverSeconds(EChannel::DynamicChannel3, 1.0f);
-	}
+	//if (INPUT->IsKeyPressed(0x31))
+	//{
+	//	FadeChannelOverSeconds(EChannel::DynamicChannel1, 0.1f, false);
+	//}
+
+	//if (INPUT->IsKeyPressed(0x32))
+	//{
+	//	FadeChannelOverSeconds(EChannel::DynamicChannel2, 2.0f, false);
+	//}
+
+	//if (INPUT->IsKeyPressed(0x33))
+	//{
+	//	FadeChannelOverSeconds(EChannel::DynamicChannel3, 1.0f, false);
+	//}
+
+	//if (INPUT->IsKeyPressed(0x34))
+	//{
+	//	FadeChannelOverSeconds(EChannel::DynamicChannel1, 0.1f);
+	//}
+
+	//if (INPUT->IsKeyPressed(0x35))
+	//{
+	//	FadeChannelOverSeconds(EChannel::DynamicChannel2, 2.0f);
+	//}
+
+	//if (INPUT->IsKeyPressed(0x36))
+	//{
+	//	FadeChannelOverSeconds(EChannel::DynamicChannel3, 1.0f);
+	//}
+}
+
+void CAudioManager::SetListener(CGameObject* aGameObject)
+{
+	myListener = aGameObject;
+	//if (myListener)
+	//	my3DChannel->Set3DAttributes({8.0f, 1.0f, -12.0f}/*myListener->myTransform->WorldPosition() + myOffset*/, Vector3::Zero);
 }
 
 void CAudioManager::SubscribeToMessages()
@@ -1073,4 +1120,11 @@ void CAudioManager::PlayCyclicRandomSoundFromCollection(const std::vector<CAudio
 void CAudioManager::FadeChannelOverSeconds(const EChannel& aChannel, const float& aNumberOfSeconds, const bool& aShouldFadeOut)
 {
 	myFadingChannels.push_back({ aChannel, aNumberOfSeconds, aNumberOfSeconds, aShouldFadeOut });
+}
+
+void CAudioManager::SetDynamicTrack(const EAmbience& aFirstTrack, const EAmbience& aSecondTrack, const EAmbience& aThirdTrack)
+{
+	myWrapper.Play(myAmbienceAudio[CAST(aFirstTrack)], myChannels[CAST(EChannel::DynamicChannel1)]);
+	myWrapper.Play(myAmbienceAudio[CAST(aSecondTrack)], myChannels[CAST(EChannel::DynamicChannel2)]);
+	myWrapper.Play(myAmbienceAudio[CAST(aThirdTrack)], myChannels[CAST(EChannel::DynamicChannel3)]);
 }

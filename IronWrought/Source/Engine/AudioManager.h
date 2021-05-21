@@ -30,6 +30,8 @@ public:
 
 	void Update();
 
+	void SetListener(CGameObject* aGameObject);
+
 private:
 	void SubscribeToMessages();
 	void UnsubscribeToMessages();
@@ -62,8 +64,14 @@ private:
 	void PlayCyclicRandomSoundFromCollection(const std::vector<CAudio*>& aCollection, const EChannel& aChannel, std::vector<int>& someCollectionIndices, const int& aMaxNrOfChannelsActive = 5);
 
 	void FadeChannelOverSeconds(const EChannel& aChannel, const float& aNumberOfSeconds, const bool& aShouldFadeOut = true);
+	void SetDynamicTrack(const EAmbience& aFirstTrack, const EAmbience& aSecondTrack, const EAmbience& aThirdTrack);
 
 private:
+	CAudio* my3DTester;
+	CAudioChannel* my3DChannel;
+
+	Vector3 myOffset;
+
 	const std::string& myAmbiencePath = "Audio/Ambience/";
 	const std::string& myMusicPath = "Audio/Music/";
 	const std::string& mySFXPath = "Audio/SFX/";
@@ -101,6 +109,8 @@ private:
 	std::vector<int> mySearchingSoundIndices;
 
 	std::vector<CAudioChannel*> myChannels;
+
+	CGameObject* myListener;
 
 	float myDynamicChannel1;
 	float myDynamicChannel2;
