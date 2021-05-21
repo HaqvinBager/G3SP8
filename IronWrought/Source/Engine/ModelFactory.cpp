@@ -238,15 +238,15 @@ CModel* CModelFactory::LoadModel(std::string aFilePath)
 		materialNames.push_back(materialName);
 	}
 #else
-	std::vector<std::string> materialNames;
-	std::vector<std::array<ID3D11ShaderResourceView*, 3>> materials;
-	for (unsigned int i = 0; i < loaderModel->myMaterials.size(); ++i) {
-		ID3D11ShaderResourceView* diffuseResourceView = GetShaderResourceView(device, (modelDirectory + modelName/*modelDirectoryAndName*/ + "_c.dds"));
-		ID3D11ShaderResourceView* materialResourceView = GetShaderResourceView(device, (modelDirectory + modelName/*modelDirectoryAndName*/ + "_m.dds"));
-		ID3D11ShaderResourceView* normalResourceView = GetShaderResourceView(device, (modelDirectory + modelName/*modelDirectoryAndName*/ + "_n.dds"));
-		materials.push_back({ diffuseResourceView, materialResourceView, normalResourceView });
-		materialNames.push_back(modelName);
-	}
+	//std::vector<std::string> materialNames;
+	//std::vector<std::array<ID3D11ShaderResourceView*, 3>> materials;
+	//for (unsigned int i = 0; i < loaderModel->myMaterials.size(); ++i) {
+	//	ID3D11ShaderResourceView* diffuseResourceView = GetShaderResourceView(device, (modelDirectory + modelName/*modelDirectoryAndName*/ + "_c.dds"));
+	//	ID3D11ShaderResourceView* materialResourceView = GetShaderResourceView(device, (modelDirectory + modelName/*modelDirectoryAndName*/ + "_m.dds"));
+	//	ID3D11ShaderResourceView* normalResourceView = GetShaderResourceView(device, (modelDirectory + modelName/*modelDirectoryAndName*/ + "_n.dds"));
+	//	materials.push_back({ diffuseResourceView, materialResourceView, normalResourceView });
+	//	materialNames.push_back(modelName);
+	//}
 #endif
 
 	delete loaderModel;
@@ -263,8 +263,8 @@ CModel* CModelFactory::LoadModel(std::string aFilePath)
 	modelData.mySamplerState = sampler;
 	modelData.myPrimitiveTopology = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
 	modelData.myInputLayout = inputLayout;
-	modelData.myMaterials = materials;
-	modelData.myMaterialNames = materialNames;
+	//modelData.myMaterials = materials;
+	//modelData.myMaterialNames = materialNames;
 
 	modelData.myDetailNormals[0] = detailNormal1;
 	modelData.myDetailNormals[1] = detailNormal2;
@@ -459,7 +459,7 @@ CModel* CModelFactory::CreateInstancedModels(std::string aFilePath, int aNumberO
 		meshData[i].myStride[1] = sizeof(CModel::SInstanceType);
 		meshData[i].myOffset[0] = 0;	
 		meshData[i].myOffset[1] = 0;	
-		meshData[i].myMaterialIndex = mesh->myModel->myMaterialIndices[i];
+		//meshData[i].myMaterialIndex = mesh->myModel->myMaterialIndices[i];
 		meshData[i].myVertexBuffer = vertexBuffer;
 		meshData[i].myIndexBuffer = indexBuffer;
 	}
@@ -555,16 +555,16 @@ CModel* CModelFactory::CreateInstancedModels(std::string aFilePath, int aNumberO
 		materialNames.push_back(materialName);
 	}
 #else
-	std::vector<std::array<ID3D11ShaderResourceView*, 3>> materials;
-	std::vector<std::string> materialNames;
-	
-	for (unsigned int i = 0; i < loaderModel->myMaterials.size(); ++i) {
-		ID3D11ShaderResourceView* diffuseResourceView = GetShaderResourceView(device, (modelDirectory + modelName/*modelDirectoryAndName*/ + "_c.dds"));
-		ID3D11ShaderResourceView* materialResourceView = GetShaderResourceView(device, (modelDirectory + modelName/*modelDirectoryAndName*/ + "_m.dds"));
-		ID3D11ShaderResourceView* normalResourceView = GetShaderResourceView(device, (modelDirectory + modelName/*modelDirectoryAndName*/ + "_n.dds"));
-		materials.push_back({ diffuseResourceView, materialResourceView, normalResourceView });
-		materialNames.push_back(modelName);
-	}
+	//std::vector<std::array<ID3D11ShaderResourceView*, 3>> materials;
+	//std::vector<std::string> materialNames;
+	//
+	//for (unsigned int i = 0; i < loaderModel->myMaterials.size(); ++i) {
+	//	ID3D11ShaderResourceView* diffuseResourceView = GetShaderResourceView(device, (modelDirectory + modelName/*modelDirectoryAndName*/ + "_c.dds"));
+	//	ID3D11ShaderResourceView* materialResourceView = GetShaderResourceView(device, (modelDirectory + modelName/*modelDirectoryAndName*/ + "_m.dds"));
+	//	ID3D11ShaderResourceView* normalResourceView = GetShaderResourceView(device, (modelDirectory + modelName/*modelDirectoryAndName*/ + "_n.dds"));
+	//	materials.push_back({ diffuseResourceView, materialResourceView, normalResourceView });
+	//	materialNames.push_back(modelName);
+	//}
 
 #endif
 
@@ -591,8 +591,8 @@ CModel* CModelFactory::CreateInstancedModels(std::string aFilePath, int aNumberO
 	modelInstanceData.mySamplerState = sampler;
 	modelInstanceData.myPrimitiveTopology = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
 	modelInstanceData.myInputLayout = inputLayout;
-	modelInstanceData.myMaterials = materials;
-	modelInstanceData.myMaterialNames = materialNames;
+	//modelInstanceData.myMaterials = materials;
+	//modelInstanceData.myMaterialNames = materialNames;
 
 	modelInstanceData.myDetailNormals[0] = detailNormal1;
 	modelInstanceData.myDetailNormals[1] = detailNormal2;

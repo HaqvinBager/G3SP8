@@ -14,16 +14,18 @@ public:
 	void LateUpdate() override;
 
 
-	void Position(DirectX::SimpleMath::Vector3 aPosition);
+	void Position(const DirectX::SimpleMath::Vector3& aPosition);
+	void PositionRigidbody(const DirectX::SimpleMath::Vector3& aPosition);
 	DirectX::SimpleMath::Vector3 Position() const;
 	DirectX::SimpleMath::Vector3 WorldPosition() const;
 
-	void Rotation(DirectX::SimpleMath::Vector3 aRotation);
-	void Rotation(DirectX::SimpleMath::Quaternion aQuaternion);
+	void Rotation(const DirectX::SimpleMath::Vector3& aRotation);
+	void Rotation(const DirectX::SimpleMath::Quaternion& aQuaternion);
+	void RotationRigidbody(DirectX::SimpleMath::Quaternion aQuaternion);
 	DirectX::SimpleMath::Quaternion Rotation() const;
 	void CopyRotation(const DirectX::SimpleMath::Matrix& aTransform);
 
-	void Scale(DirectX::SimpleMath::Vector3 aScale);
+	void Scale(const DirectX::SimpleMath::Vector3& aScale);
 	void Scale(float aScale);
 	DirectX::SimpleMath::Vector3 Scale() const;
 
@@ -32,13 +34,13 @@ public:
 	DirectX::SimpleMath::Matrix GetLocalMatrix() const;
 	void SetToOtherTransform(const DirectX::SimpleMath::Matrix& otherTransform);
 
-	void Transform(DirectX::SimpleMath::Vector3 aPosition, DirectX::SimpleMath::Vector3 aRotation);
+	void Transform(const DirectX::SimpleMath::Vector3& aPosition, const DirectX::SimpleMath::Vector3& aRotation);
 	CTransformComponent* GetParent();
 
-	void Move(DirectX::SimpleMath::Vector3 aMovement);
-	void MoveLocal(DirectX::SimpleMath::Vector3 aMovement);
-	void Rotate(DirectX::SimpleMath::Vector3 aRotation);
-	void Rotate(DirectX::SimpleMath::Quaternion aQuaternion);
+	void Move(const DirectX::SimpleMath::Vector3& aMovement);
+	void MoveLocal(const DirectX::SimpleMath::Vector3& aMovement);
+	void Rotate(const DirectX::SimpleMath::Vector3& aRotation);
+	void Rotate(const DirectX::SimpleMath::Quaternion& aQuaternion);
 
 	void ResetScale();
 	//To be Removed 2020-01-12 -> 2020-01-22 /Axel

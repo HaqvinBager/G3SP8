@@ -6,16 +6,16 @@
 #include "Scene.h"
 #include <GravityGloveComponent.h>
 
-IronWroughtImGui::CGravityGloveEditor::CGravityGloveEditor(const char* aName)
+ImGui::CGravityGloveEditor::CGravityGloveEditor(const char* aName)
 	: CWindow(aName)
 {
 }
 
-IronWroughtImGui::CGravityGloveEditor::~CGravityGloveEditor()
+ImGui::CGravityGloveEditor::~CGravityGloveEditor()
 {
 }
 
-void IronWroughtImGui::CGravityGloveEditor::OnEnable()
+void ImGui::CGravityGloveEditor::OnEnable()
 {
 	myGlove = IRONWROUGHT_ACTIVE_SCENE.FindFirstObjectWithComponent<CGravityGloveComponent>();
 
@@ -33,7 +33,7 @@ void IronWroughtImGui::CGravityGloveEditor::OnEnable()
 	}
 }
 
-void IronWroughtImGui::CGravityGloveEditor::OnInspectorGUI()
+void ImGui::CGravityGloveEditor::OnInspectorGUI()
 {
 	if (myGlove == nullptr)
 		*Open() = false;
@@ -50,6 +50,6 @@ void IronWroughtImGui::CGravityGloveEditor::OnInspectorGUI()
 
 }
 
-void IronWroughtImGui::CGravityGloveEditor::OnDisable()
+void ImGui::CGravityGloveEditor::OnDisable()
 {
 }

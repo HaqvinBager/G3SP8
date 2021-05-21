@@ -5,12 +5,12 @@
 struct ID3D11DeviceContext;
 struct ID3D11Buffer;
 class CDirectXFramework;
-class CModelInstance;
 class CModel;
 class CEnvironmentLight;
 class CPointLight;
 class CGameObject;
 class CCameraComponent;
+class CMaterialHandler;
 
 class CDeferredRenderer
 {
@@ -18,12 +18,15 @@ public:
 	CDeferredRenderer();
 	~CDeferredRenderer();
 
-	bool Init(CDirectXFramework* aFramework);
+	bool Init(CDirectXFramework* aFramework, CMaterialHandler* aMaterialHandler);
 
 	void GenerateGBuffer(CCameraComponent* aCamera, std::vector<CGameObject*>& aGameObjectList, std::vector<CGameObject*>& aInstancedGameObjectList);
 	void RenderSkybox(CCameraComponent* aCamera, CEnvironmentLight* anEnvironmentLight);
 
 	bool ToggleRenderPass();
+
+private:
+	void SetShaderResource(const int aMaterialID);
 
 private:
 	template<class T>
@@ -85,6 +88,7 @@ private:
 	bool LoadRenderPassPixelShaders(CDirectXFramework* aFramework);
 
 	ID3D11DeviceContext* myContext;
+	CMaterialHandler* myMaterialHandler;
 // Buffers;
 	ID3D11Buffer* myFrameBuffer;
 	ID3D11Buffer* myObjectBuffer;

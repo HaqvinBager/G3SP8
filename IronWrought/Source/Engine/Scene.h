@@ -25,6 +25,7 @@ struct SNavMesh;
 class CModel;
 class IAIBehavior;
 class CInstancedModelComponent;
+class CPatrolPointComponent;
 
 class CPlayerControllerComponent;
 
@@ -109,6 +110,7 @@ public:
 	std::vector<CPointLight*>& PointLights();
 	CCanvas* Canvas();
 	const std::vector<CGameObject*>& ActiveGameObjects() const;
+	const std::vector<CPatrolPointComponent*>& PatrolPoints() const;
 //GETTERS END
 public:
 	const bool Ready() const { return myIsReadyToRender; }
@@ -139,6 +141,7 @@ public:
 	bool AddInstance(CLineInstance* aLineInstance);
 	bool AddInstance(CGameObject* aGameObject);
 	bool AddInstances(std::vector<CGameObject*>& someGameObjects);
+	bool AddInstance(CPatrolPointComponent* aPatrolComponent);
 	//PhysX
 	bool AddPXScene(PxScene* aPXScene);
 	//POPULATE SCENE END
@@ -175,6 +178,7 @@ private:
 	std::vector<CLineInstance*> myLineInstances;
 	std::vector<CGameObject*> myGameObjects;
 	std::vector<CGameObject*> myModelsToOutline;
+	std::vector<CPatrolPointComponent*> myPatrolPoints;
 	std::unordered_map<int, CGameObject*> myIDGameObjectMap;
 	std::unordered_map<size_t, std::vector<CComponent*>> myComponentMap;
 	

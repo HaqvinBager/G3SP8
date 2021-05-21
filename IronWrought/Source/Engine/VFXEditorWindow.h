@@ -5,7 +5,7 @@
 
 typedef rapidjson::PrettyWriter<rapidjson::StringBuffer> rapidJsonWriter;
 
-namespace IronWroughtImGui {
+namespace ImGui {
 
 	enum class EVFXEditorMenu
 	{

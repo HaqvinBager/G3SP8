@@ -31,11 +31,26 @@ public:
 	void InitFromGenerated();
 	const bool HasAssetPath(const int anAssetID) const;
 	const bool TryGetAssetPath(const int anAssetID, std::string& outPath) const;
+
+	const bool TryGetMaterialsPath(const int aMaterialID, std::vector<std::string>& outTexturePaths) const;
+	const bool TryGetMaterialsPath(const int aMaterialID, std::array<std::string, 3>& outTexturePaths) const;
+
+	const bool TryGetMaterialName(const int aMaterialID, std::string& outMaterialName) const;
+	const bool TryGetMaterialID(const std::string& aMaterialName, int& outMaterialID) const;
+
+
+
 	const std::string& GetAssetPath(const int anAssetID) const;
+
+
 
 private:
 	//std::vector<SDirectory> myDirectories;
 	std::unordered_map<int, std::string> myPathsMap;
+	std::unordered_map<int, std::string> myMaterialsNameMap;
+	std::unordered_map<std::string, int> myMaterialsIDMap;
+
+	std::unordered_map<int, std::vector<int>> myMaterialsMap;
 	std::unordered_map<int, std::string> myVertexColorsMap;
 
 };

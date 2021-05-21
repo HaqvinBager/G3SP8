@@ -24,19 +24,12 @@ CAnimationComponent::CAnimationComponent(CGameObject& aParent, const std::string
 		}
 	}
 	else
+	{
 		for (std::string s : someAnimationPaths)
 		{
 			myController->ImportAnimation(s);
 		}
-
-
-// Used in SP6, optional to keep. Saves Id in vector using CStringID (int + _Debug::string).
-	//myAnimationIds.reserve(someAnimationPaths.size());
-	//for (auto& str : someAnimationPaths)
-	//{
-	//	myAnimationIds.emplace_back(CStringID(str, CStringIDLoader::EStringIDFiles::AnimFile));
-	//}
-	//myAnimationIds.shrink_to_fit();
+	}
 }
 
 CAnimationComponent::~CAnimationComponent()
@@ -142,9 +135,12 @@ void CAnimationComponent::UpdateBlended()
 	//Calling SetBlendTime here causes AnimCtrl::myBlendTime to be used for lerping.
 	if(myShouldUseLerp)
 		myController->SetBlendTime(myAnimationBlend.myBlendLerp);
-
+	
 	std::vector<aiMatrix4x4> trans;
 	myController->SetBoneTransforms(trans);
+	if (trans.empty())
+		return;
+		
 	memcpy(myBones.data(), &trans[0], (sizeof(float) * 16) * trans.size());//was memcpy
 }
 

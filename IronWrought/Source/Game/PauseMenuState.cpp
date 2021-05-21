@@ -27,6 +27,7 @@ void CPauseMenuState::Start()
 {
 	CEngine::GetInstance()->SetActiveScene(myState);
 	IRONWROUGHT->ShowCursor();
+	IRONWROUGHT->GetActiveScene().ReInitCanvas(ASSETPATH("Assets/Graphics/UI/JSON/UI_PauseMenu.json"), true);
 	CMainSingleton::PostMaster().Subscribe(EMessageType::MainMenu, this);
 	CMainSingleton::PostMaster().Subscribe(EMessageType::Resume, this);
 }
@@ -43,10 +44,10 @@ void CPauseMenuState::Update()
 	/*IRONWROUGHT->GetActiveScene().UpdateCanvas();*/
 
 #ifdef _DEBUG
-	if (INPUT->IsKeyPressed('R'))
-	{
-		IRONWROUGHT->GetActiveScene().ReInitCanvas(ASSETPATH("Assets/Graphics/UI/JSON/UI_PauseMenu.json"));
-	}
+	//if (INPUT->IsKeyPressed('R'))
+	//{
+	//	IRONWROUGHT->GetActiveScene().ReInitCanvas(ASSETPATH("Assets/Graphics/UI/JSON/UI_PauseMenu.json"));
+	//}
 #endif
 
 	if (Input::GetInstance()->IsKeyPressed(VK_ESCAPE))

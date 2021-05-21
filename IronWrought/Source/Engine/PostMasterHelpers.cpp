@@ -34,7 +34,7 @@ const bool PostMaster::EnableCanvas(const char* aStringMsg)
 	return strcmp(aStringMsg, SMSG_ENABLE_CANVAS) == 0;
 }
 
-const bool PostMaster::GloveEvent(const char* aStringMsg)
+const bool PostMaster::CompareStringMessage(const char* aCompareTo, const char* aReceived)
 {
-	return strcmp(aStringMsg, SMSG_PICKUP_GLOVE_EVENT) == 0;;
+	return strcmp(aCompareTo, aReceived) == 0;
 }

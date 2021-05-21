@@ -7,21 +7,21 @@
 #include <iostream>
 #include <imgui.h>
 
-IronWroughtImGui::CCameraSetting::CCameraSetting(const char* aName)
+ImGui::CCameraSetting::CCameraSetting(const char* aName)
 	: CWindow(aName)
 	, myCameraSpeed(2.0f)
 {
 }
 
-IronWroughtImGui::CCameraSetting::~CCameraSetting()
+ImGui::CCameraSetting::~CCameraSetting()
 {
 }
 
-void IronWroughtImGui::CCameraSetting::OnEnable()
+void ImGui::CCameraSetting::OnEnable()
 {
 }
 
-void IronWroughtImGui::CCameraSetting::OnInspectorGUI()
+void ImGui::CCameraSetting::OnInspectorGUI()
 {
 	ImGui::Begin(Name(), Open());
 
@@ -45,6 +45,6 @@ void IronWroughtImGui::CCameraSetting::OnInspectorGUI()
 	ImGui::End();
 }
 
-void IronWroughtImGui::CCameraSetting::OnDisable()
+void ImGui::CCameraSetting::OnDisable()
 {
 }

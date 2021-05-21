@@ -2,7 +2,7 @@
 #include "Window.h"
 
 class CPlayerControllerComponent;
-namespace IronWroughtImGui
+namespace ImGui
 {
     class CPlayerControlWindow : public CWindow
 	{

@@ -1,6 +1,6 @@
 #pragma once
 
-namespace IronWroughtImGui {
+namespace ImGui {
 	class CWindow
 	{
 	public:

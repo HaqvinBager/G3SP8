@@ -12,13 +12,32 @@ struct SVertexPaintData
 	int myVertexColorID;
 };
 
+struct SMaterialInstance {
+
+	SMaterialInstance(const UINT aStartSlot, const UINT aNumViews, const std::array<Microsoft::WRL::ComPtr<ID3D11ShaderResourceView>, 3>& someShaderResourceViews) 
+		: myStartSlot(aStartSlot)
+		, myNumViews(aNumViews)
+		, myShaderResourceView(someShaderResourceViews)
+	{
+	}
+
+	const UINT myStartSlot;
+	const UINT myNumViews;
+	const std::array<Microsoft::WRL::ComPtr<ID3D11ShaderResourceView>, 3>& myShaderResourceView;
+};
+
 class CMaterialHandler
 {
 	friend class CMainSingleton;
 	friend class CEngine;
 
 public:
+
+
+	std::array<ID3D11ShaderResourceView*, 3> RequestMaterial(const int aMaterialID);
 	std::array<ID3D11ShaderResourceView*, 3> RequestMaterial(const std::string& aMaterialName);
+
+	//std::array<ID3D11ShaderResourceView*, 3> RequestMaterial(const std::string& aMaterialName);
 	std::array<ID3D11ShaderResourceView*, 3> RequestDecal(const std::string& aDecalName);
 	std::array<ID3D11ShaderResourceView*, 9> GetVertexPaintMaterials(const std::vector<std::string>& someMaterialNames);
 	void ReleaseMaterial(const std::string& aMaterialName);
@@ -28,11 +47,23 @@ public:
 	ID3D11Buffer* GetVertexColorBuffer(unsigned int aVertexColorID);
 	void ReleaseVertexColors(unsigned int aVertexColorID);
 
+	const std::array<Microsoft::WRL::ComPtr<ID3D11ShaderResourceView>, 3>& GetMaterial(const int aMaterialID) const;
+
+	const SMaterialInstance GetMaterialInstance(const int aMaterialID) const;
+	const bool IsMaterialAlpha(const int aMaterialID) const;
+
+
 protected:
 	bool Init(CDirectXFramework* aFramwork);
 
 private:
+	inline bool MaterialIsAlpha(const std::array<std::string, 3>& someTexturePaths);
+
 	std::map<std::string, std::array<Microsoft::WRL::ComPtr<ID3D11ShaderResourceView>, 3>> myMaterials;
+	std::map<std::string, std::array<Microsoft::WRL::ComPtr<ID3D11ShaderResourceView>, 9>> myVertexPaintMaterials;
+
+	std::map<int, bool> myMaterialIsAlphaMap;
+
 	std::map<unsigned int, std::vector<DirectX::SimpleMath::Vector3>> myVertexColors;
 	std::map<unsigned int, ID3D11Buffer*> myVertexColorBuffers;
 	std::map<std::string, int> myMaterialReferences;

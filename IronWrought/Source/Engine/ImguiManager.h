@@ -8,7 +8,7 @@
 class CGraphManager;
 struct ImFontAtlas;
 
-namespace IronWroughtImGui {
+namespace ImGui {
 	class CWindow;
 }
 
@@ -31,7 +31,7 @@ public://Inherited
 private:
 
 #ifdef _DEBUG
-	std::vector<std::unique_ptr<IronWroughtImGui::CWindow>> myWindows;
+	std::vector<std::unique_ptr<ImGui::CWindow>> myWindows;
 #endif
 
 	CGraphManager* myGraphManager;

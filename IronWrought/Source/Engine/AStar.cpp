@@ -5,8 +5,6 @@
 #include "Scene.h"
 #include "TransformComponent.h"
 
-
-
 struct DrefTriangleLessComparer 
 {
 	bool operator()(STriangle* lhs, STriangle* rhs) const 
@@ -19,7 +17,8 @@ float CalculateH(DirectX::SimpleMath::Vector3& aStartCentroid, DirectX::SimpleMa
 {
 	return (abs(aStartCentroid.x - anEndCentroid.x) + abs(aStartCentroid.y - anEndCentroid.y) + abs(aStartCentroid.z - anEndCentroid.z));
 }
-std::vector<DirectX::SimpleMath::Vector3> CAStar::GetPath(Vector3 aStartPosision, Vector3 aEndPosision, SNavMesh* aNavMesh, STriangle* aStartTriangle, STriangle* anEndTriangle)
+
+std::vector<DirectX::SimpleMath::Vector3> CAStar::GetPath(const Vector3& aStartPosision, const Vector3& aEndPosision, SNavMesh* aNavMesh, STriangle* aStartTriangle, STriangle* anEndTriangle)
 {
 	
 	std::vector<DirectX::SimpleMath::Vector3> newPath;
@@ -33,7 +32,8 @@ std::vector<DirectX::SimpleMath::Vector3> CAStar::GetPath(Vector3 aStartPosision
 	newPath = StringPull(aStartPosision, aEndPosision, GetPortals(AStar(aNavMesh, aStartTriangle, anEndTriangle), aNavMesh));
 	return newPath;
 }
-std::vector<DirectX::SimpleMath::Vector3> CAStar::GetPath(Vector3 aStartPosision, Vector3 aEndPosision, SNavMesh* aNavMesh/*, STriangle* aStartTriangle, STriangle* anEndTriangle*/)
+
+std::vector<DirectX::SimpleMath::Vector3> CAStar::GetPath(const Vector3& aStartPosision, const Vector3& aEndPosision, SNavMesh* aNavMesh/*, STriangle* aStartTriangle, STriangle* anEndTriangle*/) 
 { 
 	STriangle* startTriangle = aNavMesh->GetTriangleAtPoint(aStartPosision);
 	STriangle* endTriangle = aNavMesh->GetTriangleAtPoint(aEndPosision);
@@ -163,7 +163,8 @@ std::vector<DirectX::SimpleMath::Vector3> CAStar::GetPortals(std::vector<int> no
 		}
 
 	}
-	return portals;}
+	return portals;
+}
 
 std::vector<DirectX::SimpleMath::Vector3> CAStar::StringPull(Vector3 aStart, Vector3 aEnd, std::vector<DirectX::SimpleMath::Vector3> somePortals)
 {
@@ -261,6 +262,6 @@ std::vector<DirectX::SimpleMath::Vector3> CAStar::StringPull(Vector3 aStart, Vec
 	const float ay = b.z - a.z;
 	const float bx = c.x - a.x;
 	const float by = c.z - a.z;
-	const float returnValue = bx* ay - ax * by;
-	return returnValue;
-	}
+	const float _return = bx* ay - ax * by;
+	return _return;
+ }

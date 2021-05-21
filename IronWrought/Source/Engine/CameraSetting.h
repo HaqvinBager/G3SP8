@@ -2,7 +2,7 @@
 #include "Window.h"
 class CCameraComponent;
 class CGameObject;
-namespace IronWroughtImGui {
+namespace ImGui {
     class CCameraSetting : public CWindow
     {
     public:

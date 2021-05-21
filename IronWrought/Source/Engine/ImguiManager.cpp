@@ -63,13 +63,14 @@ CImguiManager::CImguiManager() : myGraphManagerIsFullscreen(false), myIsEnabled(
 	//myGraphManager = new CGraphManager();
 	//myGraphManager->Load("");
 
-	myWindows.emplace_back(std::make_unique<IronWroughtImGui::CLoadScene>("Load Scene", true));
-	myWindows.emplace_back(std::make_unique <IronWroughtImGui::CCameraSetting>("Camera Settings"));
-	myWindows.emplace_back(std::make_unique <IronWroughtImGui::CVFXEditorWindow>("VFX Editor"));
-	myWindows.emplace_back(std::make_unique <IronWroughtImGui::CPlayerControlWindow>("Player"));
-	myWindows.emplace_back(std::make_unique <IronWroughtImGui::CGravityGloveEditor>("GravityGlove"));
-	myWindows.emplace_back(std::make_unique <IronWroughtImGui::CEnvironmentLightWindow>("Environment Light"));
-	myWindows.emplace_back(std::make_unique <IronWroughtImGui::CPostProcessingWindow>("Post Processing"));
+	myWindows.emplace_back(std::make_unique <ImGui::CLoadScene>("Load Scene", true));
+	myWindows.emplace_back(std::make_unique <ImGui::CCameraSetting>("Camera Settings"));
+	myWindows.emplace_back(std::make_unique <ImGui::CVFXEditorWindow>("VFX Editor"));
+	myWindows.emplace_back(std::make_unique <ImGui::CPlayerControlWindow>("Player"));
+	myWindows.emplace_back(std::make_unique <ImGui::CGravityGloveEditor>("GravityGlove"));
+	myWindows.emplace_back(std::make_unique <ImGui::CEnvironmentLightWindow>("Environment Light"));
+	myWindows.emplace_back(std::make_unique <ImGui::CPostProcessingWindow>("Post Processing"));
+	myWindows.emplace_back(std::make_unique <ImGui::CHierarchy>("Scene Hierarchy"));
 
 	CMainSingleton::PostMaster().Subscribe(EMessageType::CursorHideAndLock, this);
 	CMainSingleton::PostMaster().Subscribe(EMessageType::CursorShowAndUnlock, this);
