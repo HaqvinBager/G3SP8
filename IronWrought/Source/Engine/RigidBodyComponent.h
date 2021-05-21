@@ -44,9 +44,10 @@ public:
 
 	void AttachShape(physx::PxShape* aShape);
 
-	const bool IsKinematic() const { return myIsKinematic; }
 
-	const float GetMass();
+
+	const bool IsKinematic() const { return myIsKinematic; }
+	const float GetMass() const;
 
 	void Destroy();
 	
