@@ -905,15 +905,18 @@
     <ClCompile Include="CustomEventComponent.cpp">
       <Filter>GameObject and Component\Component</Filter>
     </ClCompile>
-        <ClCompile Include="CustomEventListenerComponent.cpp" />
+    <ClCompile Include="CustomEventListenerComponent.cpp" />
     <ClCompile Include="CustomAnimation.cpp" />
     <ClCompile Include="Hierarchy.cpp">
-        <Filter>Imgui\Windows</Filter>
+      <Filter>Imgui\Windows</Filter>
     </ClCompile>
     <ClCompile Include="CustomEventListenerComponent.cpp">
       <Filter>GameObject and Component\Component</Filter>
     </ClCompile>
     <ClCompile Include="GravityGloveEditor.cpp">
+      <Filter>Imgui\Windows</Filter>
+    </ClCompile>
+    <ClCompile Include="DebugPrintoutWindow.cpp">
       <Filter>Imgui\Windows</Filter>
     </ClCompile>
   </ItemGroup>
@@ -1676,6 +1679,9 @@
     </ClInclude>
     <ClInclude Include="CustomEventListenerComponent.h" />
     <ClInclude Include="CustomAnimation.h" />
+    <ClInclude Include="DebugPrintoutWindow.h">
+      <Filter>Imgui\Windows</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="FullscreenShaderStructs.hlsli">
