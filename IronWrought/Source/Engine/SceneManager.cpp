@@ -66,6 +66,7 @@ CScene* CSceneManager::CreateEmpty()
 	emptyScene->MainCamera(ESceneCamera::FreeCam);
 	emptyScene->EnvironmentLight(envLight->GetComponent<CEnvironmentLightComponent>()->GetEnvironmentLight());
 	emptyScene->AddInstance(envLight);
+	emptyScene->AddInstance(new CGameObject(99, "Audio Source"));
 
 	//AddPlayer(*emptyScene, std::string());
 
@@ -248,7 +249,7 @@ void CSceneManager::CreateCustomEvents(CScene& aScene)
 void CSceneManager::CreateCustomEventListeners(CScene& aScene)
 {
 	CCustomEventComponent* customEvent = aScene.FindObjectWithID(200)->GetComponent<CCustomEventComponent>();
-	CGameObject* gameObject = aScene.FindObjectWithID(-47734);//new CGameObject(201, "Generator");
+	CGameObject* gameObject = aScene.FindObjectWithID(-5946);//new CGameObject(201, "Generator");
 	CCustomEventListenerComponent* listener = gameObject->AddComponent<CCustomEventListenerComponent>(*gameObject, customEvent);
 
 	CPointLightComponent* pl = gameObject->GetComponent<CPointLightComponent>();

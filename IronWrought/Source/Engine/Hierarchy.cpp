@@ -111,9 +111,13 @@ void ImGui::CHierarchy::Edit(CTransformComponent* aComponent)
 {
 	Vector3 position = aComponent->Position();
 	float pos[3] = { position.x, position.y, position.z };
-	if (ImGui::DragFloat3("Position", pos, 0.1f))
+	if (DragFloat3("Position", pos, 0.1f))
 	{
 		aComponent->Position({ pos[0], pos[1], pos[2] });
+	}
+	if (Button("Reset"))
+	{
+		aComponent->Position({ 0.0f,0.0f,0.0f });
 	}
 }
 
@@ -149,9 +153,14 @@ void ImGui::CHierarchy::Edit(CCameraControllerComponent* /*aComponent*/)
 	ImGui::Text(" WIP CCameraControllerComponent");
 }
 
-void ImGui::CHierarchy::Edit(CEnvironmentLightComponent* /*aComponent*/)
+void ImGui::CHierarchy::Edit(CEnvironmentLightComponent* aComponent)
 {
-	ImGui::Text(" WIP CEnviromentLightComponent");
+	if (ImGui::Button("Edit"))
+	{
+		std::type_index typeIndex = typeid(*aComponent);
+		if (myEditorCallbackMap.find(typeIndex) != myEditorCallbackMap.end())
+			myEditorCallbackMap[typeIndex](aComponent);
+	}
 }
 
 void ImGui::CHierarchy::Edit(CDecalComponent* /*aComponent*/)

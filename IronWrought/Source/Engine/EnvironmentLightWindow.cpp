@@ -94,3 +94,11 @@ void ImGui::CEnvironmentLightWindow::OnInspectorGUI()
 void ImGui::CEnvironmentLightWindow::OnDisable()
 {
 }
+
+void ImGui::CEnvironmentLightWindow::OpenEditor()
+{
+	if (*Open() == false)
+	{
+		*Open() = true;
+	}
+}

@@ -67,6 +67,9 @@ void CEnemyComponent::Start()
 		seekBehaviour->SetTarget(myPlayer->myTransform);
 	}
 
+	if (myPatrolPositions.empty())
+		myPatrolPositions.push_back({ 0.0f,0.0f,0.0f });
+
 	CAttack* attack = new CAttack(this, myPatrolPositions[0]);
 	if(myPlayer != nullptr)
 		attack->SetTarget(myPlayer->myTransform);

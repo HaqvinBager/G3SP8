@@ -13,7 +13,7 @@ namespace ImGui {
 		void OnEnable() override;
 		void OnInspectorGUI() override;
 		void OnDisable() override;
-
+		void OpenEditor();
 	private:
 		Vector3 myColor;
 		float myIntensity;

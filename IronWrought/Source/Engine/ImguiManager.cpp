@@ -13,6 +13,7 @@
 #include "JsonReader.h"
 #include "ImGuiWindows.h"
 #include "PostMaster.h"
+#include "EnviromentLightComponent.h"
 #endif // _DEBUG
 
 
@@ -68,9 +69,10 @@ CImguiManager::CImguiManager() : myGraphManagerIsFullscreen(false), myIsEnabled(
 	myWindows.emplace_back(std::make_unique <ImGui::CVFXEditorWindow>("VFX Editor"));
 	myWindows.emplace_back(std::make_unique <ImGui::CPlayerControlWindow>("Player"));
 	myWindows.emplace_back(std::make_unique <ImGui::CGravityGloveEditor>("GravityGlove"));
-	myWindows.emplace_back(std::make_unique <ImGui::CEnvironmentLightWindow>("Environment Light"));
+	auto environmentLightWindow = myWindows.emplace_back(std::make_unique <ImGui::CEnvironmentLightWindow>("Environment Light")).get();
 	myWindows.emplace_back(std::make_unique <ImGui::CPostProcessingWindow>("Post Processing"));
-	myWindows.emplace_back(std::make_unique <ImGui::CHierarchy>("Scene Hierarchy"));
+	auto sceneHierarchy = myWindows.emplace_back(std::make_unique <ImGui::CHierarchy>("Scene Hierarchy")).get();
+	static_cast<ImGui::CHierarchy*>(sceneHierarchy)->SubscribeToCallback(typeid(CEnvironmentLightComponent), [environmentLightWindow](CComponent* /*aComponent*/) { static_cast<ImGui::CEnvironmentLightWindow*>(environmentLightWindow)->OpenEditor(); });
 
 	CMainSingleton::PostMaster().Subscribe(EMessageType::CursorHideAndLock, this);
 	CMainSingleton::PostMaster().Subscribe(EMessageType::CursorShowAndUnlock, this);
@@ -110,7 +112,7 @@ void CImguiManager::Update()
 
 		for (const auto& window : myWindows)
 			window->OnMainMenuGUI();
-							
+
 		ImGui::EndMainMenuBar();
 	}
 
@@ -119,7 +121,7 @@ void CImguiManager::Update()
 			window->OnInspectorGUI();
 		}
 	}
-	
+
 	DebugWindow();
 #endif
 
