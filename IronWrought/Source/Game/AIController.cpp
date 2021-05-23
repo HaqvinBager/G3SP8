@@ -33,6 +33,9 @@ CPatrol::CPatrol(const std::vector<CPatrolPointComponent*>& somePositions, SNavM
 
 void CPatrol::Enter(const Vector3& aPosition)
 {
+	if (myNavMesh == nullptr)
+		return;
+
 	CPatrolPointComponent* patrolPoint = myPatrolPoints[0];
 	if (patrolPoint != nullptr) {
 		SetPath(myNavMesh->CalculatePath(aPosition, patrolPoint->GameObject().myTransform->Position(), myNavMesh), patrolPoint->GameObject().myTransform->Position());
@@ -41,6 +44,8 @@ void CPatrol::Enter(const Vector3& aPosition)
 
 Vector3 CPatrol::Update(const Vector3& aPosition)
 {
+	if (myNavMesh == nullptr)
+		return Vector3::Zero;
 	if (myPatrolPoints.empty()) {
 		return Vector3::Zero;
 	}
