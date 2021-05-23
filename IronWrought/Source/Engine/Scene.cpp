@@ -279,6 +279,18 @@ void CScene::CallAwakeOnNewComponents()
 			}
 		}*/
 
+		const auto& hashCode = typeid(*component).hash_code();
+		if (myComponentMap.find(hashCode) == myComponentMap.end())		
+			myComponentMap[hashCode].push_back(component);
+		else
+		{
+			auto& componentVector = myComponentMap.at(hashCode);
+			if (std::find(componentVector.begin(), componentVector.end(), component) == componentVector.end())
+				componentVector.push_back(component);		
+		}
+
+		//myComponentMap[typeid(*component).hash_code()].push_back(component);
+
 		myAwakeComponents.pop();
 		component->Awake();
 		component->OnEnable();

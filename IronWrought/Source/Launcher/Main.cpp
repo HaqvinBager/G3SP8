@@ -62,11 +62,13 @@ static void PrintMemoryUsage()
 #pragma comment(lib, "dbghelp.lib")
 #endif // NDEBUG
 
+//FILE* outPut;
 #ifdef _DEBUG
 #define USE_CONSOLE_COMMAND
 #endif
 void InitConsole()
 {
+
 #pragma warning( push )
 #pragma warning( disable : 4996 )
 #pragma warning( disable : 6031 )
@@ -74,7 +76,8 @@ void InitConsole()
 	freopen("CONIN$", "r", stdin);
 	freopen("CONOUT$", "w", stdout);
 	freopen("CONOUT$", "w", stderr);
-
+	//FILE* stream =
+	//freopen("TestDebug.txt", "w", &(*stream));
 	setbuf(stdin, NULL);
 	setbuf(stdout, NULL);
 	setbuf(stderr, NULL);
@@ -201,7 +204,7 @@ int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, 
 
 
 #ifdef USE_CONSOLE_COMMAND
-	InitConsole();
+	//InitConsole();
 #endif
 
 	//__try {
