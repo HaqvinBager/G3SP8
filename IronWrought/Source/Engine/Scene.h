@@ -127,6 +127,8 @@ public:
 	LightPair CullLightInstanced(CInstancedModelComponent* aModelType);
 	std::vector<CGameObject*> CullGameObjects(CCameraComponent* aMainCamera);
 	CGameObject* FindObjectWithID(const int aGameObjectInstanceID);
+	CGameObject* FindObjectWithTag(const std::string aTag);
+	std::vector<CGameObject*>* FindObjectsWithTag(const std::string aTag);
 	template<class T>
 	std::vector<CComponent*>* GetAllComponents();
 //CULLING END
@@ -179,7 +181,8 @@ private:
 	std::vector<CGameObject*> myGameObjects;
 	std::vector<CGameObject*> myModelsToOutline;
 	std::vector<CPatrolPointComponent*> myPatrolPoints;
-	std::unordered_map<int, CGameObject*> myIDGameObjectMap;
+	std::unordered_map<int, CGameObject*> myIDGameObjectMap; 
+	std::unordered_map<std::string, std::vector<CGameObject*>> myGameObjectTagMap;
 	std::unordered_map<size_t, std::vector<CComponent*>> myComponentMap;
 	
 

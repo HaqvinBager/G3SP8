@@ -541,6 +541,20 @@ CGameObject* CScene::FindObjectWithID(const int aGameObjectInstanceID)
 
 	return myIDGameObjectMap[aGameObjectInstanceID];
 }
+CGameObject* CScene::FindObjectWithTag(const std::string aTag)
+{
+	if (myGameObjectTagMap.find(aTag) == myGameObjectTagMap.end())
+		return nullptr;
+
+	return myGameObjectTagMap[aTag][0];
+}
+std::vector<CGameObject*>* CScene::FindObjectsWithTag(const std::string aTag)
+{
+	if (myGameObjectTagMap.find(aTag) == myGameObjectTagMap.end())
+		return nullptr;
+
+	return &myGameObjectTagMap[aTag];
+}
 bool CScene::AddInstance(CEnvironmentLight* aSecondaryDirectionalLight)
 {
 	mySecondaryEnvironmentLights.emplace_back(aSecondaryDirectionalLight);
@@ -578,6 +592,7 @@ bool CScene::AddInstance(CGameObject* aGameObject)
 
 	myGameObjects.emplace_back(aGameObject);
 	myIDGameObjectMap[aGameObject->InstanceID()] = aGameObject;
+	myGameObjectTagMap[aGameObject->Tag()].push_back(aGameObject);
 
 	for (auto& component : aGameObject->myComponents) {
 		myComponentMap[typeid(*component).hash_code()].push_back(component.get());
