@@ -9,13 +9,16 @@ class CCustomEventListenerComponent : public CBehaviour
 public:
 	CCustomEventListenerComponent(CGameObject& aParent, CCustomEventComponent* aCustomEvent);
 	~CCustomEventListenerComponent() override;
-	
+		
 	void Awake() override;
 	void Start() override;
 	void Update() override;
 
 	void OnEnable() override;
 	void OnDisable() override;
+	
+	void SetResponse(std::function<void()> aResponse);
+
 
 	virtual void OnCustomEventRaised();
 

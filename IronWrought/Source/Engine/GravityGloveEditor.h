@@ -4,7 +4,7 @@
 
 //class CGravityGloveComponent;
 
-namespace IronWroughtImGui {
+namespace ImGui {
     class CGravityGloveEditor : public CWindow
     {
     public:

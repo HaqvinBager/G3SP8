@@ -22,8 +22,6 @@ public:
 		bounce,
 		basic,
 		none
-
-
 	};
 
 
@@ -36,7 +34,7 @@ public:
 		PLAYER = (1 << 8),
 		ENEMY = (1 << 9),
 
-		//Om man lägger tilll ELayerMask Layers vill man addera dom nedan så att "all" alltid representerar alla layers //Axel Savage 2021-05-07
+		//Om man lï¿½gger tilll ELayerMask Layers vill man addera dom nedan sï¿½ att "all" alltid representerar alla layers //Axel Savage 2021-05-07
 		ALL = STATIC_ENVIRONMENT | DYNAMIC_OBJECTS | PLAYER | ENEMY /* | NyttLayer  */ //Axel Savage 2021-05-07
 	};
 
@@ -48,7 +46,7 @@ public:
 	bool Init();
 	void Simulate();
 
-	PxScene* CreatePXScene(CScene* aScene);
+	PxScene* CreatePXScene();
 	PxScene* GetPXScene();
 	PxPhysics* GetPhysics() { return myPhysics; }
 
@@ -76,8 +74,6 @@ public:
 	physx::PxShape* CookObject(CGameObject& aGameObject);
 
 private:
-
-
 	PxFoundation* myFoundation;
 	PxPhysics* myPhysics;
 	PxDefaultCpuDispatcher* myDispatcher;
@@ -87,8 +83,6 @@ private:
 	PxCooking* myCooking;
 	CContactReportCallback* myContactReportCallback;
 	PxControllerManager* myControllerManager;
-	//std::unordered_map<PxScene*, PxControllerManager*> myControllerManagers;// Should not be necessary
-	std::unordered_map<CScene*, PxScene*> myPXScenes;
 	physx::PxUserControllerHitReport* myPlayerReportCallback;
 	//std::queue<CRigidDynamicBody*> myAddBodyQueue;
 };

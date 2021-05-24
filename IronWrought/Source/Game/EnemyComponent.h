@@ -1,10 +1,12 @@
 #pragma once
 #include "Component.h"
+#include "Observer.h"
 #define PI 3.14159265f
 class CAIController;
 class CCharacterController;
 class CRigidBodyComponent;
 class CGameObject;
+class CPatrolPointComponent;
 struct SNavMesh;
 
 namespace physx {
@@ -18,9 +20,14 @@ struct SEnemySetting {
 	float myAttackDistance; //2.0f
 
 	std::vector<int> myPatrolGameObjectIds;
+	std::vector<float> myPatrolIntrestValue;
 };
 
-class CEnemyComponent : public CComponent
+struct SInterestPoints {
+
+};
+
+class CEnemyComponent : public CComponent, public IObserver, public IStringObserver
 {
 public:
 	enum class EBehaviour {
@@ -40,11 +47,11 @@ public:
 	void Start() override;
 	void Update() override;
 	void FixedUpdate() override;
-	void TakeDamage(float aDamage);
 	void SetState(EBehaviour aState);
 	const EBehaviour GetState()const;
-
-	void Dead();
+	void Receive(const SStringMessage& aMsg) override;
+	void Receive(const SMessage& aMsg) override;
+	//CPatrolPointComponent* FindBestPatrolPoint();
 
 public:
 	float WrapAngle(float anAngle)
@@ -67,17 +74,12 @@ private:
 	CCharacterController* myController;
 	std::vector<CAIController*> myBehaviours;
 	EBehaviour myCurrentState;
-	CGameObject* myEnemy;
 	CGameObject* myPlayer;
 	SEnemySetting mySettings;
-	float myCurrentHealth;
-	std::vector<Vector3> myPatrolPositions;
-	Quaternion myPatrolRotation;
-	Vector3 myCurrentDirection;
 	float myCurrentOrientation; 
 	CRigidBodyComponent* myRigidBodyComponent;
 
-	float myYaw;
-	float myPitch;
+	bool myMovementLocked;
+	float myWakeUpTimer;
 	SNavMesh* myNavMesh;
 };

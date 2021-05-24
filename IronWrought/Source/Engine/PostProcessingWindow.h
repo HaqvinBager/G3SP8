@@ -1,7 +1,7 @@
 #pragma once
 #include "Window.h"
 
-namespace IronWroughtImGui {
+namespace ImGui {
 
 	enum class EToneMappingAlgorithm
 	{

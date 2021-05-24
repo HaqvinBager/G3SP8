@@ -41,8 +41,12 @@ struct STriangle {
 struct SNavMesh {
 	std::vector<STriangle*> myTriangles;
 
-	STriangle* GetTriangleAtPoint(DirectX::SimpleMath::Vector3 aPosition);
 
+	STriangle* GetTriangleAtPoint(DirectX::SimpleMath::Vector3 aPosition);
+	std::vector<Vector3> CalculatePath(Vector3 aStartPosition, DirectX::SimpleMath::Vector3 aDestination, SNavMesh* aNavMesh);
+	std::vector<Vector3> ReversePath(std::vector<Vector3> aPath, DirectX::SimpleMath::Vector3 aDestination);
+	STriangle* ReturnClosestTriangle(const DirectX::SimpleMath::Vector3& aStartPosition, SNavMesh* aNavMesh);
+	void ResolveStuck(STriangle* aStartTriangle, const DirectX::SimpleMath::Vector3& aStartPosition, const DirectX::SimpleMath::Vector3& aFinalPosition, SNavMesh* aNavMesh);
 public:
 	~SNavMesh();
 };

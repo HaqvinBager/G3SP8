@@ -74,6 +74,7 @@ enum class EMessageType
 	EnemyAttack,
 	EnemyTargetLost,
 	EnemyTakeDamage,
+	EnemyAttackedPlayer,
 
 	FuseCreated,
 	FusePickedUp,
@@ -88,6 +89,9 @@ enum class EMessageType
 
 	ReturnToMainMenu,
 	EnemyDisabled,
+
+	AddAudioSource,
+	ClearAudioSources,
 
 	Count
 };

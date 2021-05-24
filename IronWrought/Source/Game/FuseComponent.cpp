@@ -3,6 +3,7 @@
 #include "RigidBodyComponent.h"
 #include "Scene.h"
 #include "PickupComponent.h"
+#include <PointLightComponent.h>
 
 CFuseComponent::CFuseComponent(CGameObject& aParent) : CPickupComponent(aParent)
 {
@@ -39,5 +40,12 @@ void CFuseComponent::OnPickUp()
 {
 	int value = 1;
 	CMainSingleton::PostMaster().Send({ EMessageType::FusePickedUp, &value });
+
+	CPointLightComponent* pl = nullptr;
+	if (GameObject().TryGetComponent(&pl))
+	{
+		pl->Enabled(false);
+	}
+
 	this->Destroy();
 }

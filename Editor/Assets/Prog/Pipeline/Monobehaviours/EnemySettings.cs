@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [System.Serializable]
-public struct Enemy
+public struct Enemy //Unity Interface for LD
 {
     [HideInInspector]
     public int instanceID;
@@ -12,20 +12,24 @@ public struct Enemy
     public float radius;
     public float health;
     public float attackDistance;
-    public List<Transform> points;
+    public List<GameObject> points;
+    [HideInInspector]
+    public List<InterestPoint> interestPoints;
 }
 
-public struct EnemyPatrolPoints
+[System.Serializable]
+public struct InterestPoint
 {
-    [HideInInspector]
-    public int instanceID;
-    public List<Transform> points;
+  
+    public float interestValue;
+    public Transform transform;
 }
 
 public class EnemySettings : MonoBehaviour
 {
-    public Enemy settings = new Enemy { speed = 2.0f, radius = 10.0f,  health = 10.0f, attackDistance = 2.0f };
-    public EnemyPatrolPoints patrolPositions = new EnemyPatrolPoints { points = new List<Transform>() };
+    public Enemy settings = new Enemy { speed = 2.0f, radius = 10.0f,  health = 10.0f, attackDistance = 2.0f};
+  
+    
 
     private void OnDrawGizmos()
     {

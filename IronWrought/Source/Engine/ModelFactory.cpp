@@ -64,7 +64,7 @@ bool CModelFactory::Init(CDirectXFramework* aFramework)
 	return true;
 }
 
-CModel* CModelFactory::GetModel(std::string aFilePath)
+CModel* CModelFactory::GetModel(const std::string& aFilePath)
 {
 	if (myModelMap.find(aFilePath) == myModelMap.end())
 	{
@@ -77,7 +77,7 @@ CModel* CModelFactory::GetModel(std::string aFilePath)
 	return myModelMap.at(aFilePath);
 }
 
-CModel* CModelFactory::LoadModel(std::string aFilePath)
+CModel* CModelFactory::LoadModel(const std::string& aFilePath)
 {
 	// Loading
 	const size_t last_slash_idx = aFilePath.find_last_of("\\/");
@@ -86,10 +86,15 @@ CModel* CModelFactory::LoadModel(std::string aFilePath)
 
 	CFBXLoaderCustom modelLoader;
 	CLoaderModel* loaderModel = modelLoader.LoadModel(aFilePath.c_str());
-	ENGINE_ERROR_BOOL_MESSAGE(loaderModel, aFilePath.append(" could not be loaded.").c_str());
+	ENGINE_ERROR_BOOL_MESSAGE(loaderModel, std::string(aFilePath).append(" could not be loaded.").c_str());
 
 	// Mesh Data
 	size_t numberOfMeshes = loaderModel->myMeshes.size();
+
+	if (numberOfMeshes == 0)
+		return nullptr;
+
+
 	std::vector<SMeshData> meshData;
 	meshData.resize(numberOfMeshes);
 
@@ -238,15 +243,15 @@ CModel* CModelFactory::LoadModel(std::string aFilePath)
 		materialNames.push_back(materialName);
 	}
 #else
-	std::vector<std::string> materialNames;
-	std::vector<std::array<ID3D11ShaderResourceView*, 3>> materials;
-	for (unsigned int i = 0; i < loaderModel->myMaterials.size(); ++i) {
-		ID3D11ShaderResourceView* diffuseResourceView = GetShaderResourceView(device, (modelDirectory + modelName/*modelDirectoryAndName*/ + "_c.dds"));
-		ID3D11ShaderResourceView* materialResourceView = GetShaderResourceView(device, (modelDirectory + modelName/*modelDirectoryAndName*/ + "_m.dds"));
-		ID3D11ShaderResourceView* normalResourceView = GetShaderResourceView(device, (modelDirectory + modelName/*modelDirectoryAndName*/ + "_n.dds"));
-		materials.push_back({ diffuseResourceView, materialResourceView, normalResourceView });
-		materialNames.push_back(modelName);
-	}
+	//std::vector<std::string> materialNames;
+	//std::vector<std::array<ID3D11ShaderResourceView*, 3>> materials;
+	//for (unsigned int i = 0; i < loaderModel->myMaterials.size(); ++i) {
+	//	ID3D11ShaderResourceView* diffuseResourceView = GetShaderResourceView(device, (modelDirectory + modelName/*modelDirectoryAndName*/ + "_c.dds"));
+	//	ID3D11ShaderResourceView* materialResourceView = GetShaderResourceView(device, (modelDirectory + modelName/*modelDirectoryAndName*/ + "_m.dds"));
+	//	ID3D11ShaderResourceView* normalResourceView = GetShaderResourceView(device, (modelDirectory + modelName/*modelDirectoryAndName*/ + "_n.dds"));
+	//	materials.push_back({ diffuseResourceView, materialResourceView, normalResourceView });
+	//	materialNames.push_back(modelName);
+	//}
 #endif
 
 	delete loaderModel;
@@ -263,8 +268,8 @@ CModel* CModelFactory::LoadModel(std::string aFilePath)
 	modelData.mySamplerState = sampler;
 	modelData.myPrimitiveTopology = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
 	modelData.myInputLayout = inputLayout;
-	modelData.myMaterials = materials;
-	modelData.myMaterialNames = materialNames;
+	//modelData.myMaterials = materials;
+	//modelData.myMaterialNames = materialNames;
 
 	modelData.myDetailNormals[0] = detailNormal1;
 	modelData.myDetailNormals[1] = detailNormal2;
@@ -277,10 +282,10 @@ CModel* CModelFactory::LoadModel(std::string aFilePath)
 #endif
 
 	//myModelMap.emplace(aFilePath, model);
+	// 
+	// 	   Testing removing this to load meshes Async at Startup!
 	myModelMap[aFilePath] = std::move(model);
-
 	mesh = nullptr;
-
 	return model;
 }
 
@@ -329,7 +334,7 @@ CLoaderMesh*& CModelFactory::GetMeshes(const std::string& aFilePath)
 	return myMeshesMap.at(aFilePath);
 }
 
-void CModelFactory::ClearModel(std::string aFilePath, int aNumberOfInstances)
+void CModelFactory::ClearModel(const std::string& aFilePath, int aNumberOfInstances)
 {
 	if (myModelMap.find(aFilePath) != myModelMap.end())
 	{
@@ -354,7 +359,7 @@ void CModelFactory::ClearModel(std::string aFilePath, int aNumberOfInstances)
 	}
 }
 
-CModel* CModelFactory::GetInstancedModel(std::string aFilePath, int aNumberOfInstanced)
+CModel* CModelFactory::GetInstancedModel(const std::string& aFilePath, int aNumberOfInstanced)
 {
 	SInstancedModel instancedModel = {aFilePath, aNumberOfInstanced};
 	if (myInstancedModelMap.find(instancedModel) == myInstancedModelMap.end())
@@ -389,7 +394,8 @@ void CModelFactory::ClearFactory()
 	myInstancedModelMap.clear();
 }
 
-CModel* CModelFactory::CreateInstancedModels(std::string aFilePath, int aNumberOfInstanced)
+
+CModel* CModelFactory::CreateInstancedModels(const std::string& aFilePath, int aNumberOfInstanced)
 {
 	const size_t last_slash_idx = aFilePath.find_last_of("\\/");
 	std::string modelDirectory = aFilePath.substr(0, last_slash_idx + 1);
@@ -397,7 +403,7 @@ CModel* CModelFactory::CreateInstancedModels(std::string aFilePath, int aNumberO
 
 	CFBXLoaderCustom modelLoader;
 	CLoaderModel* loaderModel = modelLoader.LoadModel(aFilePath.c_str());
-	ENGINE_ERROR_BOOL_MESSAGE(loaderModel, aFilePath.append(" could not be loaded.").c_str());
+	ENGINE_ERROR_BOOL_MESSAGE(loaderModel, std::string(aFilePath).append(" could not be loaded.").c_str());
 
 	// Mesh Data
 	size_t numberOfMeshes = loaderModel->myMeshes.size();
@@ -459,7 +465,7 @@ CModel* CModelFactory::CreateInstancedModels(std::string aFilePath, int aNumberO
 		meshData[i].myStride[1] = sizeof(CModel::SInstanceType);
 		meshData[i].myOffset[0] = 0;	
 		meshData[i].myOffset[1] = 0;	
-		meshData[i].myMaterialIndex = mesh->myModel->myMaterialIndices[i];
+		//meshData[i].myMaterialIndex = mesh->myModel->myMaterialIndices[i];
 		meshData[i].myVertexBuffer = vertexBuffer;
 		meshData[i].myIndexBuffer = indexBuffer;
 	}
@@ -555,16 +561,16 @@ CModel* CModelFactory::CreateInstancedModels(std::string aFilePath, int aNumberO
 		materialNames.push_back(materialName);
 	}
 #else
-	std::vector<std::array<ID3D11ShaderResourceView*, 3>> materials;
-	std::vector<std::string> materialNames;
-	
-	for (unsigned int i = 0; i < loaderModel->myMaterials.size(); ++i) {
-		ID3D11ShaderResourceView* diffuseResourceView = GetShaderResourceView(device, (modelDirectory + modelName/*modelDirectoryAndName*/ + "_c.dds"));
-		ID3D11ShaderResourceView* materialResourceView = GetShaderResourceView(device, (modelDirectory + modelName/*modelDirectoryAndName*/ + "_m.dds"));
-		ID3D11ShaderResourceView* normalResourceView = GetShaderResourceView(device, (modelDirectory + modelName/*modelDirectoryAndName*/ + "_n.dds"));
-		materials.push_back({ diffuseResourceView, materialResourceView, normalResourceView });
-		materialNames.push_back(modelName);
-	}
+	//std::vector<std::array<ID3D11ShaderResourceView*, 3>> materials;
+	//std::vector<std::string> materialNames;
+	//
+	//for (unsigned int i = 0; i < loaderModel->myMaterials.size(); ++i) {
+	//	ID3D11ShaderResourceView* diffuseResourceView = GetShaderResourceView(device, (modelDirectory + modelName/*modelDirectoryAndName*/ + "_c.dds"));
+	//	ID3D11ShaderResourceView* materialResourceView = GetShaderResourceView(device, (modelDirectory + modelName/*modelDirectoryAndName*/ + "_m.dds"));
+	//	ID3D11ShaderResourceView* normalResourceView = GetShaderResourceView(device, (modelDirectory + modelName/*modelDirectoryAndName*/ + "_n.dds"));
+	//	materials.push_back({ diffuseResourceView, materialResourceView, normalResourceView });
+	//	materialNames.push_back(modelName);
+	//}
 
 #endif
 
@@ -591,8 +597,8 @@ CModel* CModelFactory::CreateInstancedModels(std::string aFilePath, int aNumberO
 	modelInstanceData.mySamplerState = sampler;
 	modelInstanceData.myPrimitiveTopology = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
 	modelInstanceData.myInputLayout = inputLayout;
-	modelInstanceData.myMaterials = materials;
-	modelInstanceData.myMaterialNames = materialNames;
+	//modelInstanceData.myMaterials = materials;
+	//modelInstanceData.myMaterialNames = materialNames;
 
 	modelInstanceData.myDetailNormals[0] = detailNormal1;
 	modelInstanceData.myDetailNormals[1] = detailNormal2;
@@ -610,7 +616,7 @@ CModel* CModelFactory::CreateInstancedModels(std::string aFilePath, int aNumberO
 	return model;
 }
 
-ID3D11ShaderResourceView* CModelFactory::GetShaderResourceView(ID3D11Device* aDevice, std::string aTexturePath)
+ID3D11ShaderResourceView* CModelFactory::GetShaderResourceView(ID3D11Device* aDevice, const std::string& aTexturePath)
 {
 	ID3D11ShaderResourceView* shaderResourceView;
 
@@ -640,4 +646,21 @@ ID3D11ShaderResourceView* CModelFactory::GetShaderResourceView(ID3D11Device* aDe
 
 	delete[] widePath;
 	return shaderResourceView;
+}
+
+
+void CModelFactory::LoadMeshesAsync(const std::vector<std::string>& someFilePaths)
+{
+	std::cout << "Starting Loading Meshes" << std::endl;
+	for (const auto& modelPath : someFilePaths)
+	{	
+		myFutures.push_back(std::async(std::launch::async, &CModelFactory::LoadModelAsync, this, modelPath));
+	}
+}
+
+void CModelFactory::LoadModelAsync(const std::string& aFilePath)
+{
+	CModel* model = LoadModel(aFilePath);
+	std::lock_guard<std::mutex> lock(myMeshMutex);
+	myModelMap[aFilePath] = model;
 }

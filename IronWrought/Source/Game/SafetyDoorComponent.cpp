@@ -4,7 +4,8 @@
 
 CSafetyDoorComponent::CSafetyDoorComponent(CGameObject& aParent) : CBehaviour(aParent), myShouldOpenDoors(false), myIsOpen(false)
 {
-	myOpenDoorPosition = GameObject().myTransform->Position().y - 10.0f;
+	myOpenDoorPosition = 2.1f;
+		//GameObject().myTransform->Position().y - 10.0f;
 	CMainSingleton::PostMaster().Subscribe(EMessageType::OpenSafetyDoors, this);
 }
 
@@ -30,16 +31,9 @@ void CSafetyDoorComponent::Update()
 	{
 		if (myShouldOpenDoors)
 		{
-			Vector3 newPosition = GameObject().myTransform->Position();
-			if (newPosition.y >= myOpenDoorPosition)
-			{
-				newPosition.y -= 5.0f * CTimer::Dt();
-				GameObject().myTransform->Move(newPosition);
-			}
-			else
-			{
+			GameObject().myTransform->Move({ 0.0f, CTimer::Dt(), 0.0f });
+			if (GameObject().myTransform->Position().y > myOpenDoorPosition)
 				myIsOpen = true;
-			}
 		}
 	}
 }
@@ -65,3 +59,13 @@ void CSafetyDoorComponent::Receive(const SMessage& aMessage)
 		break;
 	}
 }
+
+/*Vector3 newPosition = GameObject().myTransform->Position();
+if (newPosition.y >= myOpenDoorPosition)
+{*/
+//newPosition.y += CTimer::Dt();			
+/*	}
+	else
+	{
+		myIsOpen = true;
+	}*/

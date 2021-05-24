@@ -111,10 +111,9 @@ void CRigidBodyComponent::AttachShape(physx::PxShape* aShape)
 	}
 }
 
-const float CRigidBodyComponent::GetMass()
+const float CRigidBodyComponent::GetMass() const
 {
-	PxReal mass = myDynamicRigidBody->GetBody().getMass();
-	return {mass};
+	return myDynamicRigidBody->GetBody().getMass();
 }
 
 void CRigidBodyComponent::Destroy()

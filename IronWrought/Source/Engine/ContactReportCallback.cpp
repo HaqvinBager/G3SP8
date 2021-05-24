@@ -102,29 +102,8 @@ void CContactReportCallback::onContact(const physx::PxContactPairHeader& pairHea
 	// Walls don't uses userData. Only feedback when hamsters collide
 	if (pairHeader.actors[0]->userData != nullptr && pairHeader.actors[1]->userData != nullptr)
 	{
-		CTransformComponent* firstTransform = (CTransformComponent*)pairHeader.actors[0]->userData;
-		CTransformComponent* secondTransform = (CTransformComponent*)pairHeader.actors[1]->userData;
-		CEnemyComponent* enemy = nullptr;
-		float length = 0;
-		if (firstTransform->GetComponent<CEnemyComponent>()) {
-			enemy = firstTransform->GetComponent<CEnemyComponent>();
-			//check velocity
-			if (secondTransform->GetComponent<CRigidBodyComponent>()) {
-				length = secondTransform->GetComponent<CRigidBodyComponent>()->GetDynamicRigidBody()->GetLinearVelocity().LengthSquared();
-				if (length >= 50.f) {
-					enemy->TakeDamage(5.f);
-				}
-			}
-		}
-		//probably is not needed because it will always be the object that collides with the enemy
-		/*else if (secondTransform->GetComponent<CEnemyComponent>()) {
-			enemy = secondTransform->GetComponent<CEnemyComponent>();
-			if (firstTransform->GetComponent<CRigidBodyComponent>()) {
-				length = firstTransform->GetComponent<CRigidBodyComponent>()->GetDynamicRigidBody()->GetLinearVelocity().LengthSquared();
-				if (length >= 500.f) {
-					enemy->TakeDamage();
-				}
-			}
-		}*/
+		//CTransformComponent* firstTransform = (CTransformComponent*)pairHeader.actors[0]->userData;
+		//CTransformComponent* secondTransform = (CTransformComponent*)pairHeader.actors[1]->userData;
+		
 	}
 }

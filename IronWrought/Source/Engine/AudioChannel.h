@@ -15,6 +15,8 @@ public:
 	void SetVolume(float aVolumeLevel);
 	void Stop();
 	void Mute(bool aDoMute);
+
+	void Set3DAttributes(const Vector3& aPosition, const Vector3& aVelocity);
 	
 	//Pitch
 public:

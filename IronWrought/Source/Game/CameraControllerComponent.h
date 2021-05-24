@@ -1,12 +1,11 @@
 #include "Component.h"
+#include "Observer.h"
 
 class CCameraComponent;
 class CGameObject;
 #define PI 3.14159265f
 
-
-
-class CCameraControllerComponent : public CComponent
+class CCameraControllerComponent : public CComponent, public IObserver
 {
 public:
 	enum class ECameraMode //This Enum exists in Scene.h as well. If you add anything here, add the same to Scene.h ESceneCamera enum as well! //Axel Savage 2021-05-10
@@ -31,6 +30,7 @@ public:
 	const bool IsCursorUnlocked() const { return (myCameraMode == ECameraMode::UnlockCursor); }
 	void RotateTransformWithYawAndPitch(const Vector2& aInput);
 
+	void Receive(const SMessage& aMsg) override;
 
 public:
 	float WrapAngle(float anAngle)
@@ -92,6 +92,7 @@ public:
 
 private:
 	void UpdatePlayerFirstPerson();
+	void UpdateLimitedPlayerFirstPerson();
 	void UpdateFreeCam();
 
 	const char myToggleFreeCam;
@@ -106,4 +107,6 @@ private:
 	float myMouseRotationSpeed;
 	float myPitch;
 	float myYaw;
+
+	bool myLimitFirstPerson;
 };

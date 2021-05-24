@@ -18,7 +18,7 @@ CFMod::CFMod()
     FMOD_EXCEPTION(FMOD::Studio::System::create(&myStudioSystem));
 
     // Initialize FMOD Studio, which will also initialize FMOD Core
-    FMOD_EXCEPTION(myStudioSystem->initialize(512, FMOD_STUDIO_INIT_NORMAL, FMOD_INIT_NORMAL, 0));
+    FMOD_EXCEPTION(myStudioSystem->initialize(512, FMOD_STUDIO_INIT_NORMAL, /*FMOD_INIT_NORMAL*/FMOD_INIT_3D_RIGHTHANDED, 0));
 
     // Get core system, initialized when studio system is initialized
     FMOD_EXCEPTION(myStudioSystem->getCoreSystem(&myCoreSystem));
@@ -48,24 +48,46 @@ FMOD::Sound* CFMod::TryCreateSound(const std::string& aFilePath, bool aShouldLoo
     return soundPtr;
 }
 
-FMOD::Sound* CFMod::CreateSound(const std::string& aFilePath, bool aShouldLoop)
+FMOD::Sound* CFMod::CreateSound(const std::string& aFilePath, bool aShouldLoop, bool aShouldBe3D)
 {
     FMOD::Sound* soundPtr;
     FMOD_MODE mode = aShouldLoop ? FMOD_LOOP_NORMAL : FMOD_DEFAULT;
+    mode = aShouldBe3D ? mode | FMOD_3D : mode;
     FMOD_EXCEPTION(myCoreSystem->createSound(aFilePath.c_str(), mode, nullptr, &soundPtr));
     return soundPtr;
 }
 
-FMOD::ChannelGroup* CFMod::CreateChannel(const std::string& aChannelName)
+FMOD::ChannelGroup* CFMod::CreateChannel(const std::string& aChannelName, bool aShouldBe3D)
 {
     FMOD::ChannelGroup* channelPtr;
     FMOD_EXCEPTION(myCoreSystem->createChannelGroup(aChannelName.c_str(), &channelPtr));
+
+    if (aShouldBe3D)
+        channelPtr->setMode(FMOD_3D);
+
     return channelPtr;
+}
+
+void CFMod::Update()
+{
+    FMOD_EXCEPTION(myCoreSystem->update());
 }
 
 void CFMod::Play(FMOD::Sound* aSound, FMOD::ChannelGroup* aChannelGroup)
 {
     FMOD_EXCEPTION(myCoreSystem->playSound(aSound, aChannelGroup, false, NULL));
+}
+
+void CFMod::SetListenerAttributes(int aListenerIndex, const FMOD_VECTOR& aListenerPosition, const FMOD_VECTOR& aListenerVelocity, const FMOD_VECTOR& aListenerForward, const FMOD_VECTOR& aListenerUp)
+{
+    myCoreSystem->set3DListenerAttributes
+    (
+        aListenerIndex
+        , &aListenerPosition
+        , &aListenerVelocity
+        , &aListenerForward
+        , &aListenerUp
+    );
 }
 
 void CFMod::CheckException(FMOD_RESULT aResult)

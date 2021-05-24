@@ -4,7 +4,7 @@
 #include "Engine.h"
 #include <imgui.h>
 
-IronWroughtImGui::CPostProcessingWindow::CPostProcessingWindow(const char* aName)
+ImGui::CPostProcessingWindow::CPostProcessingWindow(const char* aName)
 	: CWindow(aName)
 	, mySSAORadius(0.6f)
 	, mySSAOSampleBias(0.005f)
@@ -20,15 +20,15 @@ IronWroughtImGui::CPostProcessingWindow::CPostProcessingWindow(const char* aName
 {
 }
 
-IronWroughtImGui::CPostProcessingWindow::~CPostProcessingWindow()
+ImGui::CPostProcessingWindow::~CPostProcessingWindow()
 {
 }
 
-void IronWroughtImGui::CPostProcessingWindow::OnEnable()
+void ImGui::CPostProcessingWindow::OnEnable()
 {
 }
 
-void IronWroughtImGui::CPostProcessingWindow::OnInspectorGUI()
+void ImGui::CPostProcessingWindow::OnInspectorGUI()
 {
 	CFullscreenRenderer::SPostProcessingBufferData bufferData = IRONWROUGHT->GetPostProcessingBufferData();
 
@@ -110,6 +110,6 @@ void IronWroughtImGui::CPostProcessingWindow::OnInspectorGUI()
 	IRONWROUGHT->SetPostProcessingBufferData(bufferData);
 }
 
-void IronWroughtImGui::CPostProcessingWindow::OnDisable()
+void ImGui::CPostProcessingWindow::OnDisable()
 {
 }
