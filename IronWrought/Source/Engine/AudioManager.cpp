@@ -20,8 +20,8 @@ CAudioManager::CAudioManager()
 	, myDynamicChannel2(0.0f)
 	, myDynamicChannel3(0.0f)
 	, myListener(nullptr)
-	, my3DTester(nullptr)
-	, my3DChannel(nullptr)
+	, myDynamicObject(nullptr)
+	, myDynamicSource(nullptr)
 {
 	SubscribeToMessages();
 
@@ -38,7 +38,7 @@ CAudioManager::CAudioManager()
 
 	for (unsigned int i = 0; i < static_cast<unsigned int>(EAmbience::Count); ++i)
 	{
-		myAmbienceAudio.push_back(myWrapper.RequestSound(GetPath(static_cast<EAmbience>(i)), true));
+		myAmbienceAudio.push_back(myWrapper.Request3DSound(GetPath(static_cast<EAmbience>(i)), true));
 	}
 
 	for (unsigned int i = 0; i < static_cast<unsigned int>(EPropAmbience::Count); ++i)
@@ -114,9 +114,7 @@ CAudioManager::CAudioManager()
 		myChannels[CAST(EChannel::RobotVOX)]->SetVolume(value);
 	}
 
-	//my3DTester = myWrapper.Request3DSound("Audio/SFX/EnemyAttack.mp3", true);
-	//my3DChannel = myWrapper.RequestAudioSource("3D");
-	myOffset = Vector3::Zero;
+	myDynamicSource = myWrapper.RequestAudioSource("Enemy");
 
 	//SetDynamicTrack(EAmbience::DynamicTestDrums, EAmbience::DynamicTestGlitches, EAmbience::DynamicTestScreamer);
 
@@ -426,7 +424,7 @@ void CAudioManager::Receive(const SMessage& aMessage) {
 		myWrapper.Play(myAmbienceAudio[CAST(EAmbience::Inside)], myChannels[CAST(EChannel::Ambience)]);
 	}break;
 
-	case EMessageType::AddAudioSource:
+	case EMessageType::AddStaticAudioSource:
 	{
 		PostMaster::SStaticAudioSourceInitData data = *reinterpret_cast<PostMaster::SStaticAudioSourceInitData*>(aMessage.data);
 
@@ -435,6 +433,13 @@ void CAudioManager::Receive(const SMessage& aMessage) {
 		
 		this->AddSource(data.myGameObjectID, data.mySoundIndex, data.myPosition);
 	}break;
+
+	case EMessageType::SetDynamicAudioSource:
+	{
+		CGameObject* data = reinterpret_cast<CGameObject*>(aMessage.data);
+		myDynamicObject = data;
+	}break;
+
 
 	default: break;
 	}
@@ -476,7 +481,11 @@ void CAudioManager::Update()
 	if (myListener)
 	{
 		myWrapper.SetListenerAttributes(0, myListener->myTransform->WorldPosition(), {0.0f, 0.0f, 0.0f}, myListener->myTransform->GetWorldMatrix().Forward(), myListener->myTransform->GetWorldMatrix().Up());
-		//my3DChannel->Set3DAttributes(myListener->myTransform->WorldPosition() + myOffset, Vector3::Zero);
+	}
+
+	if (myDynamicObject)
+	{
+		myDynamicSource->Set3DAttributes(myDynamicObject->myTransform->WorldPosition(), { 0.0f, 0.0f, 0.0f });
 	}
 
 	myWrapper.Update();
@@ -640,7 +649,9 @@ void CAudioManager::SubscribeToMessages()
 	CMainSingleton::PostMaster().Subscribe(EMessageType::GameStarted, this);
 	CMainSingleton::PostMaster().Subscribe(EMessageType::MainMenu, this);
 
-	CMainSingleton::PostMaster().Subscribe(EMessageType::AddAudioSource, this);
+	CMainSingleton::PostMaster().Subscribe(EMessageType::AddStaticAudioSource, this);
+	CMainSingleton::PostMaster().Subscribe(EMessageType::ClearStaticAudioSources, this);
+	CMainSingleton::PostMaster().Subscribe(EMessageType::SetDynamicAudioSource, this);
 }
 
 void CAudioManager::UnsubscribeToMessages()
@@ -684,8 +695,9 @@ void CAudioManager::UnsubscribeToMessages()
 	CMainSingleton::PostMaster().Unsubscribe(EMessageType::GameStarted, this);
 	CMainSingleton::PostMaster().Unsubscribe(EMessageType::MainMenu, this);
 
-	CMainSingleton::PostMaster().Unsubscribe(EMessageType::AddAudioSource, this);
-
+	CMainSingleton::PostMaster().Unsubscribe(EMessageType::AddStaticAudioSource, this);
+	CMainSingleton::PostMaster().Unsubscribe(EMessageType::ClearStaticAudioSources, this);
+	CMainSingleton::PostMaster().Unsubscribe(EMessageType::SetDynamicAudioSource, this);
 }
 
 std::string CAudioManager::GetPath(EMusic type) const
