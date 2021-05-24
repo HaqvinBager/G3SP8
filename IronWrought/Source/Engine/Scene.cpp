@@ -87,6 +87,7 @@ CScene::~CScene()
 
 	myVFXTester = nullptr;
 	myPlayer = nullptr;
+	IRONWROUGHT->SetAudioListener(nullptr);
 
 	myIDGameObjectMap.clear();
 	myComponentMap.clear();
@@ -209,9 +210,9 @@ void CScene::Awake()
 {
 }
 
-//No longer needed due to Components Start being called via EMessageType "AddComponent"
 void CScene::Start()
 {	
+	IRONWROUGHT->SetAudioListener(myPlayer);
 }
 
 void CScene::Update()
@@ -263,19 +264,15 @@ void CScene::CallAwakeOnNewComponents()
 	{
 		CComponent* component = myAwakeComponents.front();
 		
-	/*	CGameObject& gameObject = component->GameObject();
-		for (auto& comp : gameObject.myComponents)
+		const auto& hashCode = typeid(*component).hash_code();
+		if (myComponentMap.find(hashCode) == myComponentMap.end())		
+			myComponentMap[hashCode].push_back(component);
+		else
 		{
-			const auto& hashCode = typeid(*comp).hash_code();
-			if (myComponentMap.find(hashCode) != myComponentMap.end())
-			{
-				auto& componentVector = myComponentMap[hashCode];
-				if (std::find(componentVector.begin(), componentVector.end(), comp.get()) == componentVector.end())
-				{
-					myComponentMap[hashCode].push_back(comp.get());
-				}		
-			}
-		}*/
+			auto& componentVector = myComponentMap.at(hashCode);
+			if (std::find(componentVector.begin(), componentVector.end(), component) == componentVector.end())
+				componentVector.push_back(component);		
+		}
 
 		myAwakeComponents.pop();
 		component->Awake();

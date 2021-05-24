@@ -76,6 +76,7 @@ private:
 	static void AddSafetyDoors(CScene& aScene, RapidArray someData);
 	static void AddFuseboxes(CScene& aScene, RapidArray someData);
 	static void AddFuses(CScene& aScene, RapidArray someData);
+	static void AddAudioSources(CScene& aScene, RapidArray someData);
 	static CScene* ourLastInstantiatedScene;
 };
 

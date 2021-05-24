@@ -338,7 +338,9 @@ void CDeferredRenderer::GenerateGBuffer(CCameraComponent* aCamera, std::vector<C
 		unsigned int vertexColorID = modelComponent->VertexPaintColorID();
 
 		// Render all meshes
-		for (unsigned int i = 0; i < modelData.myMeshes.size(); ++i)
+
+		//for (unsigned int i = 0; i < modelData.myMeshes.size(); ++i)
+		for (unsigned int i = 0; i < modelComponent->GetMaterialCount(); ++i)
 		{
 			if (vertexColorID > 0)
 			{
@@ -431,7 +433,9 @@ void CDeferredRenderer::GenerateGBuffer(CCameraComponent* aCamera, std::vector<C
 		myContext->PSSetShader(myCurrentGBufferPixelShader, nullptr, 0);
 
 		// Render all meshes
-		for (unsigned int i = 0; i < modelData.myMeshes.size(); ++i)
+		
+		//for (unsigned int i = 0; i < modelData.myMeshes.size(); ++i)
+		for(unsigned int i = 0; i < instanceComponent->GetMaterialCount(); ++i)
 		{
 			ID3D11Buffer* bufferPointers[2] = { modelData.myMeshes[i].myVertexBuffer, modelData.myInstanceBuffer };
 			myContext->IASetVertexBuffers(0, 2, bufferPointers, modelData.myMeshes[i].myStride, modelData.myMeshes[i].myOffset);

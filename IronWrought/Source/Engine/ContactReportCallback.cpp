@@ -102,38 +102,8 @@ void CContactReportCallback::onContact(const physx::PxContactPairHeader& pairHea
 	// Walls don't uses userData. Only feedback when hamsters collide
 	if (pairHeader.actors[0]->userData != nullptr && pairHeader.actors[1]->userData != nullptr)
 	{
-		CTransformComponent* firstTransform = (CTransformComponent*)pairHeader.actors[0]->userData;
-		CTransformComponent* secondTransform = (CTransformComponent*)pairHeader.actors[1]->userData;
-		CEnemyComponent* enemy = nullptr;
-		float length = 0;
-		if (firstTransform->GetComponent<CEnemyComponent>()) {
-			enemy = firstTransform->GetComponent<CEnemyComponent>();
-			//check velocity
-			if (secondTransform->GetComponent<CRigidBodyComponent>()) {
-				auto& rb = *secondTransform->GetComponent<CRigidBodyComponent>();
-				length = rb.GetDynamicRigidBody()->GetLinearVelocity().LengthSquared();
-				if (length >= 50.f) {
-					//float massDiff = fabs(rb.GetMass() - firstTransform->GetComponent<CRigidBodyComponent>()->GetMass());
-					//float dmg = massDiff * length;
-					//dmg = 3.34f;// For vertical slice
-					enemy->TakeDamage(/*dmg*/3.34f);
-				}
-			}
-		}
-		if (secondTransform->GetComponent<CEnemyComponent>()) {
-			enemy = secondTransform->GetComponent<CEnemyComponent>();
-			//check velocity
-			if (firstTransform->GetComponent<CRigidBodyComponent>()) {
-				auto& rb = *firstTransform->GetComponent<CRigidBodyComponent>();
-				length = rb.GetDynamicRigidBody()->GetLinearVelocity().LengthSquared();
-				if (length >= 50.f) {
-					//float massDiff = fabs(rb.GetMass() /*- secondTransform->GetComponent<CRigidBodyComponent>()->GetMass()*/);
-					//std::cout << __FUNCTION__ << " " << massDiff << std::endl;
-					//float dmg = massDiff * length;
-					//dmg = 3.34f;// For vertical slice
-					enemy->TakeDamage(/*dmg*/3.34f);
-				}
-			}
-		}
+		//CTransformComponent* firstTransform = (CTransformComponent*)pairHeader.actors[0]->userData;
+		//CTransformComponent* secondTransform = (CTransformComponent*)pairHeader.actors[1]->userData;
+		
 	}
 }

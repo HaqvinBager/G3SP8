@@ -71,6 +71,8 @@ CImguiManager::CImguiManager() : myGraphManagerIsFullscreen(false), myIsEnabled(
 	myWindows.emplace_back(std::make_unique <ImGui::CEnvironmentLightWindow>("Environment Light"));
 	myWindows.emplace_back(std::make_unique <ImGui::CPostProcessingWindow>("Post Processing"));
 	myWindows.emplace_back(std::make_unique <ImGui::CHierarchy>("Scene Hierarchy"));
+	myWindows.emplace_back(std::make_unique <ImGui::CDebugPrintoutWindow>("CMD"));
+
 
 	CMainSingleton::PostMaster().Subscribe(EMessageType::CursorHideAndLock, this);
 	CMainSingleton::PostMaster().Subscribe(EMessageType::CursorShowAndUnlock, this);

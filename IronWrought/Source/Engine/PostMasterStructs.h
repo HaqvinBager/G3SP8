@@ -22,6 +22,13 @@ namespace PostMaster
 		CTransformComponent* myTransform;
 	};
 
+	struct SStaticAudioSourceInitData
+	{
+		Vector3 myPosition;
+		int mySoundIndex;
+		int myGameObjectID;
+	};
+
 	// SP7: Checks if the string is equivalent to any of our levels
 	const bool LevelCheck(const char* aMessageToCompare);
 }

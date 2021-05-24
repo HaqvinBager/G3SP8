@@ -50,7 +50,7 @@ public class ExporterBin
         var pointLights = ExportPointlights.ExportPointlight(level.name);
         var colliders = ExportCollider.Export(level.name, idNumbers);
         var fuses = FusePickUpExporter.Export(level.name);
-       
+        
         ExporterBin exporter = new ExporterBin(directoryInfo.Parent.Name);
         exporter.binWriter.Write(ids);
         exporter.binWriter.Write(transforms);

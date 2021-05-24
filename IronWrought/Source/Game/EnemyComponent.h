@@ -47,14 +47,11 @@ public:
 	void Start() override;
 	void Update() override;
 	void FixedUpdate() override;
-	void TakeDamage(const float& aDamage);
 	void SetState(EBehaviour aState);
 	const EBehaviour GetState()const;
 	void Receive(const SStringMessage& aMsg) override;
 	void Receive(const SMessage& aMsg) override;
-	CPatrolPointComponent* FindBestPatrolPoint();
-
-	void Dead();
+	//CPatrolPointComponent* FindBestPatrolPoint();
 
 public:
 	float WrapAngle(float anAngle)
@@ -77,21 +74,13 @@ private:
 	CCharacterController* myController;
 	std::vector<CAIController*> myBehaviours;
 	EBehaviour myCurrentState;
-	CGameObject* myEnemy;
 	CGameObject* myPlayer;
 	SEnemySetting mySettings;
-	float myCurrentHealth;
-	std::vector<Vector3> myPatrolPositions;
-	Quaternion myPatrolRotation;
-	Vector3 myCurrentDirection;
 	float myCurrentOrientation; 
 	CRigidBodyComponent* myRigidBodyComponent;
 
 	bool myHasFoundPlayer;
 	bool myMovementLocked;
 	float myWakeUpTimer;
-
-	float myYaw;
-	float myPitch;
 	SNavMesh* myNavMesh;
 };

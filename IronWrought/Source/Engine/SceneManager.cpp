@@ -118,6 +118,7 @@ CScene* CSceneManager::CreateScene(const std::string& aSceneJson)
 			AddSafetyDoors(*scene, sceneData["mySafetyDoors"].GetArray());
 			AddFuseboxes(*scene, sceneData["myFuseboxes"].GetArray());
 			AddFuses(*scene, sceneData["myFusePickUps"].GetArray());
+			AddAudioSources(*scene, sceneData["myAudioSources"].GetArray());
 			if (sceneData.HasMember("triggerEvents"))
 				AddTriggerEvents(*scene, sceneData["triggerEvents"].GetArray());
 			if (sceneName.find("Gameplay") != std::string::npos)//Om Unity Scene Namnet inneh�ller nyckelordet "Layout"
@@ -536,7 +537,6 @@ void CSceneManager::AddPlayer(CScene& aScene, RapidObject someData)
 
 	camera->AddComponent<CGravityGloveComponent>(*camera, gravityGloveSlot->myTransform);
 	player->AddComponent<CPlayerComponent>(*player);
-
 	player->AddComponent<CPlayerControllerComponent>(*player, 0.09f, 0.035f, CEngine::GetInstance()->GetPhysx().GetPlayerReportBack());// CPlayerControllerComponent constructor sets position of camera child object.
 
 	//camera->AddComponent<CVFXSystemComponent>(*camera, ASSETPATH("Assets/Graphics/VFX/JSON/VFXSystem_Player.json"));
@@ -631,6 +631,20 @@ void CSceneManager::AddFuses(CScene& aScene, RapidArray someData)
 			continue;
 
 		gameObject->AddComponent<CFuseComponent>(*gameObject);
+	}
+}
+
+void CSceneManager::AddAudioSources(CScene& aScene, RapidArray someData)
+{
+	for (const auto& m : someData)
+	{
+		const int instanceId = m["instanceID"].GetInt();
+		CGameObject* gameObject = aScene.FindObjectWithID(instanceId);
+		if (!gameObject)
+			continue;
+
+		PostMaster::SStaticAudioSourceInitData data = { gameObject->myTransform->Position(), m["soundIndex"].GetInt(), instanceId };
+		CMainSingleton::PostMaster().Send({ EMessageType::AddAudioSource, &data });
 	}
 }
 

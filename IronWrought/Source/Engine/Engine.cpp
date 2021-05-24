@@ -52,6 +52,8 @@
 
 #include "GraphManager.h"
 
+#include "GameObject.h"
+
 #pragma comment(lib, "runtimeobject.lib")
 #pragma comment(lib, "d3d11.lib")
 
@@ -325,7 +327,7 @@ void CEngine::SetActiveScene(const CStateStack::EState aState)
 
 	CTimer::Mark();
 	//mySceneMap[myActiveState]->Awake();// Unused
-	//mySceneMap[myActiveState]->Start();// Unused
+	mySceneMap[myActiveState]->Start();
 }
 
 CScene& CEngine::GetActiveScene()
@@ -439,4 +441,9 @@ const CFullscreenRenderer::SPostProcessingBufferData& CEngine::GetPostProcessing
 void CEngine::SetPostProcessingBufferData(const CFullscreenRenderer::SPostProcessingBufferData& someBufferData)
 {
 	myRenderManager->SetPostProcessingBufferData(someBufferData);
+}
+
+void CEngine::SetAudioListener(CGameObject* aGameObject)
+{
+	myAudioManager->SetListener(aGameObject);
 }

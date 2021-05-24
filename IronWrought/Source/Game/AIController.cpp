@@ -23,25 +23,43 @@ bool CheckIfOverlap(const Vector3& aFirstPosition, const Vector3& aSecondPositio
 	return true;
 }
 
-CPatrol::CPatrol(const std::vector<Vector3>& somePositions, SNavMesh* aNavMesh)
+CPatrol::CPatrol(const std::vector<CPatrolPointComponent*>& somePositions, SNavMesh* aNavMesh)
 {
-	myPositions = somePositions;
+	myPatrolPoints = somePositions;
 	myTarget = 0;
 	myPathTarget = 0;
 	myNavMesh = aNavMesh;
 }
 
-Vector3 CPatrol::Update(const Vector3& aPosition, CPatrolPointComponent* aPatrolPoint)
+void CPatrol::Enter(const Vector3& aPosition)
 {
-	if (aPatrolPoint == nullptr)
-		return Vector3::Zero;
+	if (myNavMesh == nullptr)
+		return;
 
-	if (CheckIfOverlap(aPosition, aPatrolPoint->GameObject().myTransform->Position())) // change patrol points & calculate path
-	{
-		aPatrolPoint->AddBonusValue(10);
+	if (myPatrolPoints.empty())
+		return;
+
+	CPatrolPointComponent* patrolPoint = myPatrolPoints[0];
+	if (patrolPoint != nullptr) {
+		SetPath(myNavMesh->CalculatePath(aPosition, patrolPoint->GameObject().myTransform->Position(), myNavMesh), patrolPoint->GameObject().myTransform->Position());
 	}
-	myPath.clear();
-	SetPath(myNavMesh->CalculatePath(aPosition, aPatrolPoint->GameObject().myTransform->Position(), myNavMesh), aPatrolPoint->GameObject().myTransform->Position());
+}
+
+Vector3 CPatrol::Update(const Vector3& aPosition)
+{
+	if (myNavMesh == nullptr)
+		return Vector3::Zero;
+	if (myPatrolPoints.empty())
+		return Vector3::Zero;
+	
+	Vector3 patrolPointPosition = myPatrolPoints[myTarget]->GameObject().myTransform->Position();
+
+	if (CheckIfOverlap(aPosition, patrolPointPosition)) // change patrol points & calculate path
+	{
+		myPatrolPoints[myTarget]->AddBonusValue(10);
+		myPath.clear();
+		SetPath(myNavMesh->CalculatePath(aPosition, patrolPointPosition, myNavMesh), patrolPointPosition);
+	}
 
 	size_t pathSize = myPath.size();
 	if (pathSize > 0) {
@@ -73,17 +91,48 @@ void CPatrol::SetPath(std::vector<Vector3> aPath, Vector3 aFinalPosition)
 	}
 
 	myPath.clear();
-	myPath.emplace_back(aFinalPosition);
+	myPath.push_back(aFinalPosition);
 	for (unsigned int i = 0; i < aPath.size(); ++i) {
-		myPath.emplace_back(aPath[i]);
+		myPath.push_back(aPath[i]);
 	}
 }
 
-CSeek::CSeek(SNavMesh* aNavMesh): myNavMesh(aNavMesh),myTarget(nullptr){}
-
-Vector3 CSeek::Update(const Vector3& aPosition, CPatrolPointComponent* aPatrolPoint)//aPostion == EnemyRobot Position
+CPatrolPointComponent* CPatrol::FindBestPatrolPoint(const Vector3& aPosition)
 {
-	(aPatrolPoint);
+	//const std::vector<CPatrolPointComponent*>& patrolPoints = CEngine::GetInstance()->GetActiveScene().PatrolPoints();
+	std::vector<float> intrestValues;
+	if (myPatrolPoints.empty()) {
+		for (int i = 0; i < myPatrolPoints.size(); ++i) {
+			Vector3 patrolPositions = myPatrolPoints[i]->GameObject().myTransform->Position();
+			Vector3 dist = patrolPositions - aPosition;
+			float length = dist.LengthSquared() / 10.f;
+			myPatrolPoints[i]->AddValue(length);
+			intrestValues.push_back(myPatrolPoints[i]->GetIntrestValue());
+			//std::cout << "[" << i << "] " << "Length Value: " << patrolPoints[i]->GetIntrestValue() << std::endl;
+		}
+
+		float min = *std::min_element(intrestValues.begin(), intrestValues.end());
+		//std::cout << "Length Value: " << min << std::endl;
+
+		for (int i = 0; i < myPatrolPoints.size(); ++i) {
+			if (myPatrolPoints[i]->GetIntrestValue() <= min) {
+				return myPatrolPoints[i];
+			}
+		}
+	}
+	return nullptr;
+}
+
+CSeek::CSeek(SNavMesh* aNavMesh) : myNavMesh(aNavMesh), myTarget(nullptr) {}
+
+void CSeek::Enter(const Vector3& aPosition)
+{
+	aPosition;
+}
+
+Vector3 CSeek::Update(const Vector3& aPosition)//aPostion == EnemyRobot Position
+{
+
 	if (!myTarget)
 		return Vector3();
 
@@ -91,7 +140,7 @@ Vector3 CSeek::Update(const Vector3& aPosition, CPatrolPointComponent* aPatrolPo
 	SetPath(myNavMesh->CalculatePath(aPosition, myTarget->Position(), myNavMesh), myTarget->Position());
 
 	//myPath = CAStar::GetInstance()->GetPath(aPosition, myTarget->Position(), myNavMesh);
-	
+
 	//if (!myPath.empty()) {//change path point
 	//	if (myPathTarget < myPath.size()) {
 	//		if (CheckIfOverlap(aPosition, myPath[myPathTarget])) {
@@ -111,7 +160,7 @@ Vector3 CSeek::Update(const Vector3& aPosition, CPatrolPointComponent* aPatrolPo
 
 
 	size_t pathSize = myPath.size();
-	if (pathSize > 0) { 
+	if (pathSize > 0) {
 
 		Vector3 newPos;
 		Vector3 dir;
@@ -150,11 +199,16 @@ void CSeek::SetTarget(CTransformComponent* aTarget) {
 	myTarget = aTarget;
 }
 
-CAttack::CAttack(CEnemyComponent* aUser, Vector3 aResetPosition) : myDamage(1.0f), myTarget(nullptr), myAttackCooldown(1.f), myAttackTimer(0.f), myUser(aUser), myResetPosition(aResetPosition){}
+CAttack::CAttack(CEnemyComponent* aUser, Vector3 aResetPosition) : myDamage(1.0f), myTarget(nullptr), myAttackCooldown(1.f), myAttackTimer(0.f), myUser(aUser), myResetPosition(aResetPosition) {}
 
-Vector3 CAttack::Update(const Vector3& aPosition, CPatrolPointComponent* aPatrolPoint)
+void CAttack::Enter(const Vector3& aPosition)
 {
-	(aPatrolPoint);
+	aPosition;
+}
+
+Vector3 CAttack::Update(const Vector3& aPosition)
+{
+
 	if (!myTarget) {
 		return Vector3();
 	}

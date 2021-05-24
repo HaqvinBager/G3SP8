@@ -20,11 +20,14 @@ public:
 	const FMOD::Studio::System* GetStudioSystem() const;
 	const FMOD::System* GetCoreSystem() const;
 
-	FMOD::Sound* CreateSound(const std::string& aFilePath, bool aShouldLoop = false);
+	FMOD::Sound* CreateSound(const std::string& aFilePath, bool aShouldLoop = false, bool aShouldBe3D = false);
 	FMOD::Sound* TryCreateSound(const std::string& aFilePath, bool aShouldLoop = false);
-	FMOD::ChannelGroup* CreateChannel(const std::string& aChannelName);
+	FMOD::ChannelGroup* CreateChannel(const std::string& aChannelName, bool aShouldBe3D = false);
+
+	void Update();
 
 	void Play(FMOD::Sound* aSound, FMOD::ChannelGroup* aChannelGroup);
+	void SetListenerAttributes(int aListenerIndex, const FMOD_VECTOR& aListenerPosition, const FMOD_VECTOR& aListenerVelocity, const FMOD_VECTOR& aListenerForward, const FMOD_VECTOR& aListenerUp);
 
 private:
 	static void CheckException(FMOD_RESULT aResult);

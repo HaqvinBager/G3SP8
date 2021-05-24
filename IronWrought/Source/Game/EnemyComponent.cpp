@@ -26,7 +26,6 @@
 CEnemyComponent::CEnemyComponent(CGameObject& aParent, const SEnemySetting& someSettings)
 	: CComponent(aParent)
 	, myPlayer(nullptr)
-	, myEnemy(nullptr)
 	, myCurrentState(EBehaviour::Count)
 	, myRigidBodyComponent(nullptr)
 	, myMovementLocked(false)
@@ -36,8 +35,6 @@ CEnemyComponent::CEnemyComponent(CGameObject& aParent, const SEnemySetting& some
 	//myController = CEngine::GetInstance()->GetPhysx().CreateCharacterController(GameObject().myTransform->Position(), 0.6f * 0.5f, 1.8f * 0.5f, GameObject().myTransform, aHitReport);
 	//myController->GetController().getActor()->setRigidBodyFlag(PxRigidBodyFlag::eUSE_KINEMATIC_TARGET_FOR_SCENE_QUERIES, true);
 	mySettings = someSettings;
-	myPitch = 0.0f;
-	myYaw = 0.0f;
 	CMainSingleton::PostMaster().Subscribe(EMessageType::EnemyAttackedPlayer, this);
 }
 
@@ -60,25 +57,26 @@ void CEnemyComponent::Start()
 	myPlayer = CEngine::GetInstance()->GetActiveScene().Player();
 	CScene &scene = CEngine::GetInstance()->GetActiveScene();
 	myNavMesh = scene.NavMesh();
-	
+
 	if (mySettings.myPatrolGameObjectIds.size() > 0) {
 		for (int i = 0; i < mySettings.myPatrolGameObjectIds.size(); ++i) {
-			CGameObject* patrolGameObject = CEngine::GetInstance()->GetActiveScene().FindObjectWithID(mySettings.myPatrolGameObjectIds[i]);
+			CGameObject* patrolGameObject = scene.FindObjectWithID(mySettings.myPatrolGameObjectIds[i]);
 			float points = mySettings.myPatrolIntrestValue[i];
 			patrolGameObject->AddComponent<CPatrolPointComponent>(*patrolGameObject, points);
 			scene.AddInstance(patrolGameObject->GetComponent<CPatrolPointComponent>());
 
-			CLineInstance* myLine2 = new CLineInstance();
-			myLine2->Init(CLineFactory::GetInstance()->CreateLine(GameObject().myTransform->Position(), patrolGameObject->myTransform->Position(), { 0,255,0,255 }));
-			CEngine::GetInstance()->GetActiveScene().AddInstance(myLine2);
+			//CLineInstance* myLine2 = new CLineInstance();
+			//myLine2->Init(CLineFactory::GetInstance()->CreateLine(GameObject().myTransform->Position(), patrolGameObject->myTransform->Position(), { 0,255,0,255 }));
+			//CEngine::GetInstance()->GetActiveScene().AddInstance(myLine2);
 		}
 	}
 
-	for (const auto id : mySettings.myPatrolGameObjectIds) {
-		CTransformComponent* patrolTransform = CEngine::GetInstance()->GetActiveScene().FindObjectWithID(id)->myTransform;
-		myPatrolPositions.push_back(patrolTransform->Position());
+	std::vector<CPatrolPointComponent*> patrolPositions;
+	for (const int id : mySettings.myPatrolGameObjectIds) {
+		CGameObject* patrolPointGameObject = scene.FindObjectWithID(id);
+		patrolPositions.push_back(patrolPointGameObject->GetComponent<CPatrolPointComponent>());
 	}
-	myBehaviours.push_back(new CPatrol(myPatrolPositions, myNavMesh));
+	myBehaviours.push_back(new CPatrol(patrolPositions, myNavMesh));
 
 	CSeek* seekBehaviour = new CSeek(myNavMesh);
 	myBehaviours.push_back(seekBehaviour);
@@ -93,16 +91,14 @@ void CEnemyComponent::Start()
 	myBehaviours.push_back(attack);*/
 
 	mySettings.mySpeed = mySettings.mySpeed < 5.0f ? 5.0f : mySettings.mySpeed;
-	mySettings.myHealth = mySettings.myHealth < 10.0f ? 10.0f : mySettings.myHealth;
 
 	if (GameObject().GetComponent<CRigidBodyComponent>()) {
 		myRigidBodyComponent = GameObject().GetComponent<CRigidBodyComponent>();
 		myRigidBodyComponent->GetDynamicRigidBody()->GetBody().setRigidDynamicLockFlag(physx::PxRigidDynamicLockFlag::eLOCK_ANGULAR_X, true);
 		myRigidBodyComponent->GetDynamicRigidBody()->GetBody().setRigidDynamicLockFlag(physx::PxRigidDynamicLockFlag::eLOCK_ANGULAR_Y, true);
-		myRigidBodyComponent->GetDynamicRigidBody()->GetBody().setRigidDynamicLockFlag(physx::PxRigidDynamicLockFlag::eLOCK_ANGULAR_Z, true); 
+		myRigidBodyComponent->GetDynamicRigidBody()->GetBody().setRigidDynamicLockFlag(physx::PxRigidDynamicLockFlag::eLOCK_ANGULAR_Z, true);
 		myRigidBodyComponent->GetDynamicRigidBody()->GetBody().setMaxLinearVelocity(mySettings.mySpeed);
 	}
-	myCurrentHealth = mySettings.myHealth;
 }
 
 void CEnemyComponent::Update()//får bestämma vilket behaviour vi vill köra i denna Update()!!!
@@ -140,7 +136,7 @@ void CEnemyComponent::Update()//får bestämma vilket behaviour vi vill köra i 
 		}
 		else {
 			SetState(EBehaviour::Patrol);
-		}
+		//}
 
 		//if (mySettings.myRadius * mySettings.myRadius >= distanceToPlayer) {
 		//	/*if (distanceToPlayer <= mySettings.myAttackDistance * mySettings.myAttackDistance)
@@ -160,7 +156,7 @@ void CEnemyComponent::Update()//får bestämma vilket behaviour vi vill köra i 
 		//}
 
 		if (myRigidBodyComponent) {
-			Vector3 targetDirection = myBehaviours[static_cast<int>(myCurrentState)]->Update(GameObject().myTransform->Position(), FindBestPatrolPoint());
+			Vector3 targetDirection = myBehaviours[static_cast<int>(myCurrentState)]->Update(GameObject().myTransform->Position());
 
 			targetDirection.y = 0;
 			myRigidBodyComponent->AddForce(targetDirection, mySettings.mySpeed);
@@ -176,10 +172,6 @@ void CEnemyComponent::Update()//får bestämma vilket behaviour vi vill köra i 
 			myWakeUpTimer = 0.f;
 		}
 	}
-
-	if (myCurrentHealth <= 0.f) {
-		Dead();
-	}
 }
 
 void CEnemyComponent::FixedUpdate()
@@ -187,12 +179,7 @@ void CEnemyComponent::FixedUpdate()
 	//myController->Move({ 0.0f, -0.098f, 0.0f }, 1.f);
 }
 
-void CEnemyComponent::TakeDamage(const float& aDamage)
-{
-	myCurrentHealth -= aDamage;
-	if(myCurrentHealth > 0.0f)
-		CMainSingleton::PostMaster().SendLate({ EMessageType::EnemyTakeDamage, this });
-}
+
 
 void CEnemyComponent::SetState(EBehaviour aState)
 {
@@ -200,7 +187,7 @@ void CEnemyComponent::SetState(EBehaviour aState)
 		return;
 
 	myCurrentState = aState;
-
+	myBehaviours[static_cast<int>(myCurrentState)]->Enter(GameObject().myTransform->Position());
 	EMessageType msgType = EMessageType::Count;
 	switch (myCurrentState)
 	{
@@ -246,36 +233,28 @@ void CEnemyComponent::Receive(const SMessage& aMsg)
 	}
 }
 
-CPatrolPointComponent* CEnemyComponent::FindBestPatrolPoint()
-{
-	const std::vector<CPatrolPointComponent*>& patrolPoints = CEngine::GetInstance()->GetActiveScene().PatrolPoints();
-	std::vector<float> intrestValues;
-	if (patrolPoints.size() > 0) {
-		for (int i = 0; i < patrolPoints.size(); ++i) {
-			Vector3 patrolPositions = patrolPoints[i]->GameObject().myTransform->Position();
-			Vector3 dist = patrolPositions - GameObject().myTransform->Position();
-			float length = dist.LengthSquared() / 10.f;
-			patrolPoints[i]->AddValue(length);
-			intrestValues.emplace_back(patrolPoints[i]->GetIntrestValue());
-			//std::cout << "[" << i << "] " << "Length Value: " << patrolPoints[i]->GetIntrestValue() << std::endl;
-		}
-
-		float min = *std::min_element(intrestValues.begin(), intrestValues.end());
-		//std::cout << "Length Value: " << min << std::endl;
-
-		for (int i = 0; i < patrolPoints.size(); ++i) {
-			if (patrolPoints[i]->GetIntrestValue() == min) {
-				return patrolPoints[i];
-			}
-		}
-	}
-	return nullptr;
-}
-
-void CEnemyComponent::Dead()
-{
-	float deadPos = static_cast<float>(0xDEAD);
-	GameObject().myTransform->Position({ deadPos, deadPos, deadPos });
-	myRigidBodyComponent->SetPosition({ deadPos, deadPos, deadPos });
-	GameObject().Active(false);
-}
+//CPatrolPointComponent* CEnemyComponent::FindBestPatrolPoint()
+//{
+//	const std::vector<CPatrolPointComponent*>& patrolPoints = CEngine::GetInstance()->GetActiveScene().PatrolPoints();
+//	std::vector<float> intrestValues;
+//	if (patrolPoints.size() > 0) {
+//		for (int i = 0; i < patrolPoints.size(); ++i) {
+//			Vector3 patrolPositions = patrolPoints[i]->GameObject().myTransform->Position();
+//			Vector3 dist = patrolPositions - GameObject().myTransform->Position();
+//			float length = dist.LengthSquared() / 10.f;
+//			patrolPoints[i]->AddValue(length);
+//			intrestValues.emplace_back(patrolPoints[i]->GetIntrestValue());
+//			//std::cout << "[" << i << "] " << "Length Value: " << patrolPoints[i]->GetIntrestValue() << std::endl;
+//		}
+//
+//		float min = *std::min_element(intrestValues.begin(), intrestValues.end());
+//		//std::cout << "Length Value: " << min << std::endl;
+//
+//		for (int i = 0; i < patrolPoints.size(); ++i) {
+//			if (patrolPoints[i]->GetIntrestValue() == min) {
+//				return patrolPoints[i];
+//			}
+//		}
+//	}
+//	return nullptr;
+//}
