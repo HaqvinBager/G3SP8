@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "JsonReader.h"
 #include <filesystem>
+#include "ModelFactory.h"
 
 namespace fs = std::filesystem;
 
@@ -48,10 +49,15 @@ void CJsonReader::InitFromGenerated()
 	if (!IsValid(doc, { "models", "vertexColors" }))
 		return;
 
+	//std::vector<std::string> meshPaths;
+	//meshPaths.reserve(doc.GetObjectW()["models"].GetArray().Size());
 	for (const auto& model : doc.GetObjectW()["models"].GetArray())
 	{
 		myPathsMap[model["id"].GetInt()] = model["path"].GetString();
+		//meshPaths.push_back(ASSETPATH(model["path"].GetString()));
 	}
+	//CModelFactory::GetInstance()->LoadMeshesAsync(meshPaths);
+
 
 	for (const auto& vertexColor : doc.GetObjectW()["vertexColors"].GetArray())
 	{

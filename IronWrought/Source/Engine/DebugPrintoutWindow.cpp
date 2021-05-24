@@ -32,7 +32,7 @@ void ImGui::CDebugPrintoutWindow::OnInspectorGUI()
 	ImGui::SetNextWindowBgAlpha(0.1f);
 	ImGui::SetNextWindowPos({ 0.0f, 900.0f }, ImGuiCond_None, {0.0f, 1.0f});
 	ImGui::SetNextWindowSize({ 1200.0f, 350.0f }, ImGuiCond_None);
-	ImGui::Begin(Name(), Open(), ImGuiWindowFlags_NoTitleBar/* | ImGuiWindowFlags_NoScrollbar*/ | ImGuiWindowFlags_NoResize);		
+	ImGui::Begin(Name(), Open(), ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize);		
 	std::string data((std::istreambuf_iterator<char>(read)), std::istreambuf_iterator<char>());
 	if(data.size() > 0)
 	{
