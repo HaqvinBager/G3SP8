@@ -14,21 +14,7 @@ CInstancedModelComponent::CInstancedModelComponent(CGameObject& aParent, const B
 	for (const auto& materialID : aData.materialIDs)
 		myModel->AddMaterial(CMainSingleton::MaterialHandler().RequestMaterial(materialID));
 
-	//const std::vector<std::string>& materialNames = myModel->GetModelInstanceData().myMaterialNames;
-	//for (const auto& materialName : materialNames)
-	//{
-	//	if (materialName.size() > 6)
-	//	{
-	//		if (materialName.substr(materialName.size() - 6, 2) == "AL")
-	//		{
-	//			myRenderWithAlpha = true;
-	//			break;
-	//		}
-	//	}
-	//}
-
 	myMaterialIds = aData.materialIDs;
-	//myMaterialID = aData.materialIDs[0];
 
 	std::vector<Matrix> transforms = {};
 	myIntancedTransforms.resize(aData.transforms.size());
@@ -42,28 +28,6 @@ CInstancedModelComponent::CInstancedModelComponent(CGameObject& aParent, const B
 		myIntancedTransforms[i] = transform.GetLocalMatrix();
 	}
 }
-
-//CInstancedModelComponent::CInstancedModelComponent(CGameObject& aParent, const std::string& aModelPath, const int aMaterialID, const std::vector<DirectX::SimpleMath::Matrix>& aInstancedTransforms, bool /*aRenderWithAlpha*/)
-//	: CBehaviour(aParent)
-//	, myModel(CModelFactory::GetInstance()->GetInstancedModel(aModelPath, static_cast<int> (aInstancedTransforms.size())))
-//	, myIntancedTransforms(aInstancedTransforms)
-//	, myModelPath(aModelPath)
-//	, myMaterialID(aMaterialID)
-//{
-//	myRenderWithAlpha = false;
-//	const std::vector<std::string>& materialNames = myModel->GetModelInstanceData().myMaterialNames;
-//	for (const auto& materialName : materialNames)
-//	{
-//		if (materialName.size() > 6)
-//		{
-//			if (materialName.substr(materialName.size() - 6, 2) == "AL")
-//			{
-//				myRenderWithAlpha = true;
-//				break;
-//			}
-//		}
-//	}
-//}
 
 CInstancedModelComponent::~CInstancedModelComponent()
 {

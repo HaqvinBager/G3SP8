@@ -28,6 +28,7 @@ public:
 	const bool RenderWithAlpha() const { return myRenderWithAlpha; }
 	const int GetMaterialID() const { return myMaterialID; }
 	const int GetMaterialID(const int aMeshIndex) const { return myMaterialIds[aMeshIndex]; }
+	const unsigned int GetMaterialCount() const { return static_cast<unsigned int>(myMaterialIds.size()); }
 
 
 private:
