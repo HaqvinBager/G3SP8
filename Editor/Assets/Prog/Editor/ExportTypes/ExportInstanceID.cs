@@ -8,6 +8,7 @@ public struct InstanceID
 {
     public int instanceID;
     public string name;
+    public string tag;
 }
 
 [System.Serializable]
@@ -40,6 +41,7 @@ public class ExportInstanceID
                 InstanceID id = new InstanceID();
                 id.instanceID = transform.GetInstanceID();
                 id.name = transform.name;
+                id.tag = transform.tag;
 
                 sceneIDCollection.Ids.Add(id);//transform.GetInstanceID());
 
@@ -58,6 +60,7 @@ public class ExportInstanceID
                 InstanceID id = new InstanceID();
                 id.instanceID = prefabParent.transform.GetInstanceID();
                 id.name = prefabParent.transform.name;
+                id.tag = prefabParent.transform.tag;
                 sceneIDCollection.Ids.Add(id);
 
                 //InstanceName instanceName = new InstanceName();
@@ -73,6 +76,7 @@ public class ExportInstanceID
                         InstanceID childID = new InstanceID();
                         id.instanceID = childTransform.GetInstanceID();
                         id.name = childTransform.name;
+                        id.tag = childTransform.tag;
                         sceneIDCollection.Ids.Add(childID);
 
                         //sceneIDCollection.Ids.Add(childTransform.GetInstanceID());

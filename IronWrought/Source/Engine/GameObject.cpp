@@ -4,13 +4,14 @@
 #include "TransformComponent.h"
 #include "Behaviour.h"
 
-CGameObject::CGameObject(const int aInstanceID, const std::string& aName)
+CGameObject::CGameObject(const int aInstanceID, const std::string& aName, const std::string& aTag)
 	: myInstanceID(aInstanceID)
 	, myIsStatic(false)
 	, myIsActive(true)
 	, myName(aName)
+	, myTag(aTag)
 {
-	std::cout << "New GameObject: " << aName << std::endl;
+	std::cout << "New GameObject: " << aName << " : Tag: " << myTag << std::endl;
 	myComponents.push_back(std::make_unique<CTransformComponent>(*this));
 	myTransform = static_cast<CTransformComponent*>(myComponents.back().get());
 }
@@ -85,6 +86,13 @@ void CGameObject::Active(bool aActive)
 			component->OnDisable();		
 }
 
+bool CGameObject::CompareTag(const std::string& aTag) const
+{
+	if (aTag == myTag) {
+		return true;
+	}
+	return false;
+}
 
 void CGameObject::Collided(CGameObject& /*aCollidedGameObject*/)
 {

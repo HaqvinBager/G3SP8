@@ -14,7 +14,7 @@ class CGameObject
 {
 	friend class CScene;
 public:
-	CGameObject(const int aInstanceID, const std::string& aName = "");
+	CGameObject(const int aInstanceID, const std::string& aName = "", const std::string& aTag = "Untagged");
 	~CGameObject();
 
 	// Inits components. Remember to add CComponents.
@@ -52,6 +52,10 @@ public:
 	void IsStatic(const bool aIsStatic) { myIsStatic = aIsStatic; }
 
 	const std::string& Name() const { return myName; }
+	//Get Tag
+	const std::string& Tag() const { return myTag; }
+	//return bool if tag is correct with gameobject tag
+	bool CompareTag(const std::string& aTag) const;
 
 	std::vector<std::unique_ptr<CComponent>> myComponents;
 private:
@@ -59,6 +63,7 @@ private:
 	bool myIsActive;
 	bool myIsStatic;
 	const int myInstanceID;
+	const std::string myTag;
 	std::string myName;
 };
 

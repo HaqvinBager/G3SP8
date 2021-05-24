@@ -14,6 +14,7 @@ namespace Binary {
 	struct SInstanceID {
 		int instanceID;
 		std::string name;
+		std::string tag;
 	};
 	struct STransform {
 		int instanceID;
@@ -258,6 +259,7 @@ namespace Binary {
 			{
 				ptr += Copy(someData[i].instanceID, ptr);
 				ptr += ReadCharBuffer(ptr, someData[i].name);
+				ptr += ReadCharBuffer(ptr, someData[i].tag);
 			}
 			return ptr - aPtr;
 		}

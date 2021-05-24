@@ -241,6 +241,7 @@ public static class BinaryWriterExtensions
         {
             aBinWriter.Write(id.instanceID);
             aBinWriter.Write(id.name);
+            aBinWriter.Write(id.tag);
         }
 
         //aBinWriter.Write(data.Ids);

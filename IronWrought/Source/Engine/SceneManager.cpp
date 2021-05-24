@@ -97,6 +97,7 @@ CScene* CSceneManager::CreateScene(const std::string& aSceneJson)
 	if (AddGameObjects(*scene, binLevelData.myInstanceIDs))
 	{
 		SetTransforms(*scene, binLevelData.myTransforms);
+		
 		AddInstancedModelComponents(*scene, binLevelData.myInstancedModels);
 		AddPointLights(*scene, binLevelData.myPointLights);
 		AddModelComponents(*scene, binLevelData.myModels);
@@ -110,7 +111,6 @@ CScene* CSceneManager::CreateScene(const std::string& aSceneJson)
 			std::string sceneName = sceneData["sceneName"].GetString();
 			if (sceneData.HasMember("parents"))
 				SetParents(*scene, sceneData["parents"].GetArray());
-
 			AddDirectionalLights(*scene, sceneData["directionalLights"].GetArray());
 			SetVertexPaintedColors(*scene, sceneData["vertexColors"].GetArray(), vertexPaintData);
 			AddDecalComponents(*scene, sceneData["decals"].GetArray());
@@ -129,7 +129,7 @@ CScene* CSceneManager::CreateScene(const std::string& aSceneJson)
 		}
 	}
 
-	scene->InitNavMesh(ASSETPATH("Assets/Generated/SP_LayoutExportedNavMesh.obj"));
+	scene->InitNavMesh(ASSETPATH("Assets/Generated/SP_GameplayExportedNavMesh.obj"));
 	//scene->NavMesh();
 	//if (AddGameObjects(*scene, sceneData["Ids"].GetArray()))
 	//{
@@ -213,7 +213,7 @@ bool CSceneManager::AddGameObjects(CScene& aScene, const std::vector<Binary::SIn
 
 	for (int i = 0; i < someData.size(); ++i)
 	{
-		aScene.AddInstance(new CGameObject(someData[i].instanceID, someData[i].name));
+		aScene.AddInstance(new CGameObject(someData[i].instanceID, someData[i].name, someData[i].tag));
 	}
 	return true;
 }
