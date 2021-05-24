@@ -75,11 +75,6 @@ private:
 	void SetDynamicTrack(const EAmbience& aFirstTrack, const EAmbience& aSecondTrack, const EAmbience& aThirdTrack);
 
 private:
-	CAudio* my3DTester;
-	CAudioChannel* my3DChannel;
-
-	Vector3 myOffset;
-
 	const std::string& myAmbiencePath = "Audio/Ambience/";
 	const std::string& myPropAmbiencePath = "Audio/PropAmbience/";
 	const std::string& myMusicPath = "Audio/Music/";
@@ -121,6 +116,8 @@ private:
 	std::vector<CAudioChannel*> myChannels;
 
 	CGameObject* myListener;
+	CGameObject* myDynamicObject;
+	CAudioChannel* myDynamicSource;
 
 	float myDynamicChannel1;
 	float myDynamicChannel2;

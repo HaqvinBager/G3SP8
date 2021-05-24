@@ -31,6 +31,7 @@
 #include "CameraComponent.h"
 
 #include <PlayerControllerComponent.h>
+#include <EnemyComponent.h>
 
 #include "CollisionManager.h"
 
@@ -88,6 +89,7 @@ CScene::~CScene()
 	myVFXTester = nullptr;
 	myPlayer = nullptr;
 	IRONWROUGHT->SetAudioListener(nullptr);
+	CMainSingleton::PostMaster().Send({ EMessageType::SetDynamicAudioSource, nullptr });
 
 	myIDGameObjectMap.clear();
 	myComponentMap.clear();
@@ -213,6 +215,13 @@ void CScene::Awake()
 void CScene::Start()
 {	
 	IRONWROUGHT->SetAudioListener(myPlayer);
+	
+	auto enemyComponent = FindFirstObjectWithComponent<CEnemyComponent>();
+	if (enemyComponent)
+	{
+		CGameObject* enemy = &enemyComponent->GameObject();
+		CMainSingleton::PostMaster().Send({ EMessageType::SetDynamicAudioSource, enemy });
+	}
 }
 
 void CScene::Update()
@@ -232,7 +241,6 @@ void CScene::Update()
 	{
 		myEnvironmentLight->SetPosition({ myPlayer->myTransform->WorldPosition().x, myPlayer->myTransform->WorldPosition().y + 20.0f, myPlayer->myTransform->WorldPosition().z });
 	}
-
 }
 
 void CScene::FixedUpdate()

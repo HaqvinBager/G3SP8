@@ -644,7 +644,7 @@ void CSceneManager::AddAudioSources(CScene& aScene, RapidArray someData)
 			continue;
 
 		PostMaster::SStaticAudioSourceInitData data = { gameObject->myTransform->Position(), m["soundIndex"].GetInt(), instanceId };
-		CMainSingleton::PostMaster().Send({ EMessageType::AddAudioSource, &data });
+		CMainSingleton::PostMaster().Send({ EMessageType::AddStaticAudioSource, &data });
 	}
 }
 
