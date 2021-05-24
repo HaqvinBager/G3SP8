@@ -265,20 +265,6 @@ void CScene::CallAwakeOnNewComponents()
 	{
 		CComponent* component = myAwakeComponents.front();
 		
-	/*	CGameObject& gameObject = component->GameObject();
-		for (auto& comp : gameObject.myComponents)
-		{
-			const auto& hashCode = typeid(*comp).hash_code();
-			if (myComponentMap.find(hashCode) != myComponentMap.end())
-			{
-				auto& componentVector = myComponentMap[hashCode];
-				if (std::find(componentVector.begin(), componentVector.end(), comp.get()) == componentVector.end())
-				{
-					myComponentMap[hashCode].push_back(comp.get());
-				}		
-			}
-		}*/
-
 		const auto& hashCode = typeid(*component).hash_code();
 		if (myComponentMap.find(hashCode) == myComponentMap.end())		
 			myComponentMap[hashCode].push_back(component);
@@ -288,8 +274,6 @@ void CScene::CallAwakeOnNewComponents()
 			if (std::find(componentVector.begin(), componentVector.end(), component) == componentVector.end())
 				componentVector.push_back(component);		
 		}
-
-		//myComponentMap[typeid(*component).hash_code()].push_back(component);
 
 		myAwakeComponents.pop();
 		component->Awake();

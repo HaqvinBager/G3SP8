@@ -51,6 +51,7 @@ public:
 	const unsigned int GetMaterialIndex() const { return myMaterialIndex; }
 
 	const int GetMaterialID(const unsigned int aMeshIndex) const { return myMaterialIDs[aMeshIndex]; }
+	const unsigned int GetMaterialCount() const { return static_cast<unsigned int>(myMaterialIDs.size()); }
 
 	void OnEnable() override;
 	void OnDisable() override;

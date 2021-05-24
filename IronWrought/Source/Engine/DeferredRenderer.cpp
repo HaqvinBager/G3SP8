@@ -338,7 +338,9 @@ void CDeferredRenderer::GenerateGBuffer(CCameraComponent* aCamera, std::vector<C
 		unsigned int vertexColorID = modelComponent->VertexPaintColorID();
 
 		// Render all meshes
-		for (unsigned int i = 0; i < modelData.myMeshes.size(); ++i)
+
+		//for (unsigned int i = 0; i < modelData.myMeshes.size(); ++i)
+		for (unsigned int i = 0; i < modelComponent->GetMaterialCount(); ++i)
 		{
 			if (vertexColorID > 0)
 			{

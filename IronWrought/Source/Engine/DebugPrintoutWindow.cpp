@@ -6,17 +6,15 @@
 ImGui::CDebugPrintoutWindow::CDebugPrintoutWindow(const char* aName) 
 	: CWindow(aName)
 {
-	stream = std::ofstream("testOutput.txt");
+	stream = std::ofstream("DebugLog.txt");
 	redir = new RedirectStdOutput(stream);
 
-	std::cout << "Hejsan sverjsan" << std::endl;
-
-
-	freopen_s(&outPut, "Log.txt", "w", stdout);
+	freopen_s(&outPut, "DebugLog.txt", "w", stdout);
 	if(outPut != nullptr)
 		setvbuf(outPut, NULL, _IOFBF, 1024);
 
-	read = std::ifstream("testOutput.txt", std::ios::in);
+	read = std::ifstream("DebugLog.txt", std::ios::in);
+	*Open() = true;
 }
 
 ImGui::CDebugPrintoutWindow::~CDebugPrintoutWindow()
@@ -34,7 +32,7 @@ void ImGui::CDebugPrintoutWindow::OnInspectorGUI()
 	ImGui::SetNextWindowBgAlpha(0.1f);
 	ImGui::SetNextWindowSize({ 1200.0f, 200.0f }, ImGuiCond_None);
 	ImGui::SetNextWindowPos({ 0.0f, 256.0f });
-	ImGui::Begin(Name(), Open(), ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoResize);		
+	ImGui::Begin(Name(), Open(), ImGuiWindowFlags_NoTitleBar/* | ImGuiWindowFlags_NoScrollbar*/ | ImGuiWindowFlags_NoResize);		
 	std::string data((std::istreambuf_iterator<char>(read)), std::istreambuf_iterator<char>());
 	if(data.size() > 0)
 	{

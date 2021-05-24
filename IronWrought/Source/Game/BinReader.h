@@ -8,20 +8,9 @@ struct SVertexPaintColorData {
 
 struct SVertexPaintCollection {
 	std::vector<SVertexPaintColorData> myData;
-
-	//std::map<int, SVertexPaintColorData> myVertexColorMap;
-	//std::vector<SVertexPaintColorData> myCollection;
-};
-
-struct STransformTest {
-	Vector3 pos;
-	Vector3 rot;
-	Vector3 scale;
 };
 
 namespace Binary {
-
-
 	struct SInstanceID {
 		int instanceID;
 		std::string name;
@@ -106,6 +95,9 @@ namespace Binary {
 		int instanceID;
 		int eventFilter;
 		std::string gameEvent;
+
+		//size_t operator+=()
+
 	};
 	struct SInstancedModel
 	{
@@ -113,12 +105,6 @@ namespace Binary {
 		std::vector<int> materialIDs;
 		std::vector<SInstancedTransform> transforms;
 	};
-
-	//struct SInstanceName {
-	//	int instanceID;
-	//	std::string name;
-	//};
-
 	struct SLevelData {
 		std::vector<SInstanceID> myInstanceIDs;
 		std::vector<STransform> myTransforms;
@@ -169,17 +155,6 @@ namespace Binary {
 			memcpy(&aData, aStreamPtr, sizeof(T) * aCount);
 			return sizeof(T) * aCount;
 		}
-
-
-		/*
-			struct SModel {
-				int instanceID;
-				int assetID;
-				int vertexColorID;
-				std::vector<int> materialIDs;
-			};
-		*/
-
 		size_t operator()(std::vector<SModel>& someData, char* aPtr)
 		{
 			char* ptr = aPtr;
@@ -203,8 +178,6 @@ namespace Binary {
 			}
 			return ptr - aPtr;
 		}
-
-
 	};
 
 	template<>
@@ -289,32 +262,6 @@ namespace Binary {
 			return ptr - aPtr;
 		}
 	};
-
-
-
-
-	//template<>
-	//struct CopyBin<SEventData> {
-
-	//	template<typename T>
-	//	size_t Copy(T& aData, char* aStreamPtr, const unsigned int aCount = 1)
-	//	{
-	//		memcpy(&aData, aStreamPtr, sizeof(T) * aCount);
-	//		return sizeof(T) * aCount;
-	//	}
-
-
-	//	size_t operator()(std::vector<SEventData>& someData, char* aPtr)
-	//	{
-	//		char* ptr = aPtr;
-	//		int count = 0;
-	//		ptr += Copy(count, ptr);
-	//		someData.reserve(count);
-
-	//		//Loop through events and save Data! This is because of the stringerino!
-
-	//	}
-	//};
 }
 
 class CBinReader
@@ -325,8 +272,8 @@ public:
 	~CBinReader();
 
 	static SVertexPaintCollection LoadVertexPaintCollection(const std::string& aSceneName);
-	static SVertexPaintColorData LoadVertexColorData(const std::string& aBinFilePath);
-	static void Test(const std::string& aBinFile);
+	//static SVertexPaintColorData LoadVertexColorData(const std::string& aBinFilePath);
+	//static void Test(const std::string& aBinFile);
 
 	static Binary::SLevelData Load(const std::string& aPath);
 

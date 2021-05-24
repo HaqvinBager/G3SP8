@@ -36,6 +36,9 @@ void CPatrol::Enter(const Vector3& aPosition)
 	if (myNavMesh == nullptr)
 		return;
 
+	if (myPatrolPoints.empty())
+		return;
+
 	CPatrolPointComponent* patrolPoint = myPatrolPoints[0];
 	if (patrolPoint != nullptr) {
 		SetPath(myNavMesh->CalculatePath(aPosition, patrolPoint->GameObject().myTransform->Position(), myNavMesh), patrolPoint->GameObject().myTransform->Position());
@@ -46,9 +49,9 @@ Vector3 CPatrol::Update(const Vector3& aPosition)
 {
 	if (myNavMesh == nullptr)
 		return Vector3::Zero;
-	if (myPatrolPoints.empty()) {
+	if (myPatrolPoints.empty())
 		return Vector3::Zero;
-	}
+	
 	Vector3 patrolPointPosition = myPatrolPoints[myTarget]->GameObject().myTransform->Position();
 
 	if (CheckIfOverlap(aPosition, patrolPointPosition)) // change patrol points & calculate path

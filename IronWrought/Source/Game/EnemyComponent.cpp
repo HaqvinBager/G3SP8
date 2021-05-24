@@ -59,14 +59,14 @@ void CEnemyComponent::Start()
 	
 	if (mySettings.myPatrolGameObjectIds.size() > 0) {
 		for (int i = 0; i < mySettings.myPatrolGameObjectIds.size(); ++i) {
-			CGameObject* patrolGameObject = CEngine::GetInstance()->GetActiveScene().FindObjectWithID(mySettings.myPatrolGameObjectIds[i]);
+			CGameObject* patrolGameObject = scene.FindObjectWithID(mySettings.myPatrolGameObjectIds[i]);
 			float points = mySettings.myPatrolIntrestValue[i];
 			patrolGameObject->AddComponent<CPatrolPointComponent>(*patrolGameObject, points);
 			scene.AddInstance(patrolGameObject->GetComponent<CPatrolPointComponent>());
 
-			CLineInstance* myLine2 = new CLineInstance();
-			myLine2->Init(CLineFactory::GetInstance()->CreateLine(GameObject().myTransform->Position(), patrolGameObject->myTransform->Position(), { 0,255,0,255 }));
-			CEngine::GetInstance()->GetActiveScene().AddInstance(myLine2);
+			//CLineInstance* myLine2 = new CLineInstance();
+			//myLine2->Init(CLineFactory::GetInstance()->CreateLine(GameObject().myTransform->Position(), patrolGameObject->myTransform->Position(), { 0,255,0,255 }));
+			//CEngine::GetInstance()->GetActiveScene().AddInstance(myLine2);
 		}
 	}
 
