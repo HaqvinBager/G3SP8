@@ -41,6 +41,11 @@ CAudioManager::CAudioManager()
 		myAmbienceAudio.push_back(myWrapper.RequestSound(GetPath(static_cast<EAmbience>(i)), true));
 	}
 
+	for (unsigned int i = 0; i < static_cast<unsigned int>(EPropAmbience::Count); ++i)
+	{
+		myPropAmbienceAudio.push_back(myWrapper.RequestSound(GetPath(static_cast<EPropAmbience>(i)), true));
+	}
+
 	for (unsigned int i = 0; i < static_cast<unsigned int>(ESFX::Count); ++i)
 	{
 		mySFXAudio.push_back(myWrapper.RequestSound(GetPath(static_cast<ESFX>(i))));
@@ -360,26 +365,6 @@ void CAudioManager::Receive(const SMessage& aMessage) {
 		myWrapper.Play(mySFXAudio[CAST(ESFX::EnemyAttack)], myChannels[CAST(EChannel::SFX)]);
 	}break;
 
-
-	//// VOICELINES
-	//case EMessageType::PlayVoiceLine:
-	//{
-	//	std::string message = static_cast<char*>(aMessage.data);
-	//	message.append("20");
-	//	//if (!myVoicelineAudio.empty()) {
-	//	//	int index = *static_cast<int*>(aMessage.data);
-	//	//	myChannels[CAST(EChannel::VOX)]->Stop();
-	//	//	myWrapper.Play(myVoicelineAudio[index], myChannels[CAST(EChannel::VOX)]);
-	//	//}
-	//}break;
-
-	//case EMessageType::StopDialogue:
-	//{
-	//	//if (!myVoicelineAudio.empty()) {
-	//	//	myChannels[CAST(EChannel::VOX)]->Stop();
-	//	//}
-	//}break;
-
 	case EMessageType::GameStarted:
 	{
 		myWrapper.Play(myResearcherEventSounds[CAST(EResearcherEventVoiceLine::V1)], myChannels[CAST(EChannel::ResearcherVOX)]);
@@ -439,6 +424,16 @@ void CAudioManager::Receive(const SMessage& aMessage) {
 		myChannels[CAST(EChannel::RobotVOX)]->Stop();
 		myChannels[CAST(EChannel::SFX)]->Stop();
 		myWrapper.Play(myAmbienceAudio[CAST(EAmbience::Inside)], myChannels[CAST(EChannel::Ambience)]);
+	}break;
+
+	case EMessageType::AddAudioSource:
+	{
+		PostMaster::SStaticAudioSourceInitData data = *reinterpret_cast<PostMaster::SStaticAudioSourceInitData*>(aMessage.data);
+
+		if (data.mySoundIndex < 0 || data.mySoundIndex >= static_cast<int>(EPropAmbience::Count))
+			return;
+		
+		this->AddSource(data.myGameObjectID, data.mySoundIndex, data.myPosition);
 	}break;
 
 	default: break;
@@ -586,8 +581,22 @@ void CAudioManager::Update()
 void CAudioManager::SetListener(CGameObject* aGameObject)
 {
 	myListener = aGameObject;
-	//if (myListener)
-	//	my3DChannel->Set3DAttributes({8.0f, 1.0f, -12.0f}/*myListener->myTransform->WorldPosition() + myOffset*/, Vector3::Zero);
+}
+
+void CAudioManager::AddSource(const int anIdentifier, const unsigned int aSoundIndex, const Vector3& aPosition)
+{
+	myStaticAudioSources.push_back({ anIdentifier, aSoundIndex, myWrapper.RequestAudioSource("3D") });
+	myStaticAudioSources.back().myChannel->Set3DAttributes(aPosition, Vector3::Zero);
+	myWrapper.Play(myPropAmbienceAudio[aSoundIndex], myStaticAudioSources.back().myChannel);
+}
+
+void CAudioManager::RemoveSource(const int /*anIdentifier*/)
+{
+}
+
+void CAudioManager::ClearSources()
+{
+	myStaticAudioSources.clear();
 }
 
 void CAudioManager::SubscribeToMessages()
@@ -630,6 +639,8 @@ void CAudioManager::SubscribeToMessages()
 	CMainSingleton::PostMaster().Subscribe(EMessageType::BootUpState, this);
 	CMainSingleton::PostMaster().Subscribe(EMessageType::GameStarted, this);
 	CMainSingleton::PostMaster().Subscribe(EMessageType::MainMenu, this);
+
+	CMainSingleton::PostMaster().Subscribe(EMessageType::AddAudioSource, this);
 }
 
 void CAudioManager::UnsubscribeToMessages()
@@ -672,6 +683,9 @@ void CAudioManager::UnsubscribeToMessages()
 	CMainSingleton::PostMaster().Unsubscribe(EMessageType::BootUpState, this);
 	CMainSingleton::PostMaster().Unsubscribe(EMessageType::GameStarted, this);
 	CMainSingleton::PostMaster().Unsubscribe(EMessageType::MainMenu, this);
+
+	CMainSingleton::PostMaster().Unsubscribe(EMessageType::AddAudioSource, this);
+
 }
 
 std::string CAudioManager::GetPath(EMusic type) const
@@ -685,6 +699,14 @@ std::string CAudioManager::GetPath(EMusic type) const
 std::string CAudioManager::GetPath(EAmbience type) const
 {
 	std::string path = myAmbiencePath;
+	path.append(TranslateEnum(type));
+	path.append(".mp3");
+	return path;
+}
+
+std::string CAudioManager::GetPath(EPropAmbience type) const
+{
+	std::string path = myPropAmbiencePath;
 	path.append(TranslateEnum(type));
 	path.append(".mp3");
 	return path;
@@ -784,6 +806,16 @@ std::string CAudioManager::TranslateEnum(EAmbience enumerator) const {
 		return "DynamicTestGlitches";
 	case EAmbience::DynamicTestScreamer:
 		return "DynamicTestScreamer";
+	default:
+		return "";
+	}
+}
+std::string CAudioManager::TranslateEnum(EPropAmbience enumerator) const
+{
+	switch (enumerator)
+	{
+	case EPropAmbience::GrandfatherClock:
+		return "GrandfatherClock";
 	default:
 		return "";
 	}
