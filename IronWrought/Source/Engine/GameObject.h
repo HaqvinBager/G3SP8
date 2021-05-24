@@ -55,6 +55,7 @@ public:
 	//Get Tag
 	const std::string& Tag() const { return myTag; }
 	//return bool if tag is correct with gameobject tag
+	//Is this game object tagged with tag ?
 	bool CompareTag(const std::string& aTag) const;
 
 	std::vector<std::unique_ptr<CComponent>> myComponents;
