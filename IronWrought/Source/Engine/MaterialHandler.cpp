@@ -34,8 +34,6 @@ std::array<ID3D11ShaderResourceView*, 3> CMaterialHandler::RequestMaterial(const
 			<< texturePaths[2].substr(texturePaths[2].size() / 2, texturePaths[2].size() - texturePaths[2].size() / 2) << ", "
 			<< std::endl;
 
-
-
 		std::array<Microsoft::WRL::ComPtr<ID3D11ShaderResourceView>, 3> newTextures;
 
 		if (!texturePaths[0].empty())

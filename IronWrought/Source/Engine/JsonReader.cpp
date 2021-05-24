@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "JsonReader.h"
 #include <filesystem>
+#include "ModelFactory.h"
 
 namespace fs = std::filesystem;
 
@@ -48,10 +49,15 @@ void CJsonReader::InitFromGenerated()
 	if (!IsValid(doc, { "models", "vertexColors" }))
 		return;
 
+	//std::vector<std::string> meshPaths;
+	//meshPaths.reserve(doc.GetObjectW()["models"].GetArray().Size());
 	for (const auto& model : doc.GetObjectW()["models"].GetArray())
 	{
 		myPathsMap[model["id"].GetInt()] = model["path"].GetString();
+		//meshPaths.push_back(ASSETPATH(model["path"].GetString()));
 	}
+	//CModelFactory::GetInstance()->LoadMeshesAsync(meshPaths);
+
 
 	for (const auto& vertexColor : doc.GetObjectW()["vertexColors"].GetArray())
 	{
@@ -124,15 +130,23 @@ const bool CJsonReader::TryGetMaterialsPath(const int aMaterialID, std::array<st
 		const std::string& texturePath = myPathsMap.at(textureID);
 		size_t indexOfType = texturePath.find_last_of('_');
 		char textureType = texturePath[indexOfType + static_cast<size_t>(1)];
+	
+		textureType = static_cast<char>(std::toupper(textureType));
+		
+		if (textureType == 'A')
+		{
+			textureType = texturePath[indexOfType - static_cast<size_t>(1)];
+		}
+
 		switch (textureType)
 		{
-		case 'c':
+		case 'C':
 			outTexturePaths[0] = texturePath;
 			break;
-		case 'm':
+		case 'M':
 			outTexturePaths[1] = texturePath;
 			break;
-		case 'n':
+		case 'N':
 			outTexturePaths[2] = texturePath;
 			break;
 		default:		

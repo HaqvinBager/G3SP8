@@ -9,6 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5853259892417439921}
+  - component: {fileID: 8021652480619486778}
   m_Layer: 0
   m_Name: En_P_PendulumClock
   m_TagString: Untagged
@@ -31,6 +32,19 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &8021652480619486778
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9012099018393399178}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fcacea507542a2d47be01cfec7f83296, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  mySoundIndex: 0
 --- !u!1001 &1642433399870839243
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -89,7 +103,7 @@ PrefabInstance:
     - target: {fileID: -7511558181221131132, guid: 2e7608e184d9a8d4d99b46cff04504bc, type: 3}
       propertyPath: m_Materials.Array.data[1]
       value: 
-      objectReference: {fileID: 2100000, guid: 6e8297c113880554c98f2f13151d4a5c, type: 2}
+      objectReference: {fileID: 2100000, guid: e802c6d7e7518d742b2e38e8c9ee3425, type: 2}
     - target: {fileID: 919132149155446097, guid: 2e7608e184d9a8d4d99b46cff04504bc, type: 3}
       propertyPath: m_Name
       value: En_P_PendulumClock
