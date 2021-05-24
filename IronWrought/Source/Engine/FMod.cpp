@@ -18,7 +18,7 @@ CFMod::CFMod()
     FMOD_EXCEPTION(FMOD::Studio::System::create(&myStudioSystem));
 
     // Initialize FMOD Studio, which will also initialize FMOD Core
-    FMOD_EXCEPTION(myStudioSystem->initialize(512, FMOD_STUDIO_INIT_NORMAL, FMOD_INIT_NORMAL, 0));
+    FMOD_EXCEPTION(myStudioSystem->initialize(512, FMOD_STUDIO_INIT_NORMAL, /*FMOD_INIT_NORMAL*/FMOD_INIT_3D_RIGHTHANDED, 0));
 
     // Get core system, initialized when studio system is initialized
     FMOD_EXCEPTION(myStudioSystem->getCoreSystem(&myCoreSystem));

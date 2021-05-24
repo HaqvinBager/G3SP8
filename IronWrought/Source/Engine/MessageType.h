@@ -90,5 +90,8 @@ enum class EMessageType
 	ReturnToMainMenu,
 	EnemyDisabled,
 
+	AddAudioSource,
+	ClearAudioSources,
+
 	Count
 };

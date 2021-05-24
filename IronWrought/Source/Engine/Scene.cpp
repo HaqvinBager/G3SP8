@@ -210,7 +210,6 @@ void CScene::Awake()
 {
 }
 
-//No longer needed due to Components Start being called via EMessageType "AddComponent"
 void CScene::Start()
 {	
 	IRONWROUGHT->SetAudioListener(myPlayer);
