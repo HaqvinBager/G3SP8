@@ -87,6 +87,7 @@ private:
 	float myCurrentOrientation; 
 	CRigidBodyComponent* myRigidBodyComponent;
 
+	bool myHasFoundPlayer;
 	bool myMovementLocked;
 	float myWakeUpTimer;
 

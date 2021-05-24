@@ -401,6 +401,7 @@ void CPhysXWrapper::Cooking(const std::vector<CGameObject*>& gameObjectsToCook, 
 				PxTriangleMeshGeometry pMeshGeometry(pxMesh, meshScale);
 
 				PxRigidStatic* actor = myPhysics->createRigidStatic({ 0.f, 0.f, 0.f });
+				actor->userData = (void*)gameObjectsToCook[i]->myTransform;
 				PxShape* instancedShape = myPhysics->createShape(pMeshGeometry, *CreateMaterial(CPhysXWrapper::materialfriction::basic), true);
 
 				PxFilterData filterData;
