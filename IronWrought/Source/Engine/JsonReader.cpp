@@ -124,15 +124,23 @@ const bool CJsonReader::TryGetMaterialsPath(const int aMaterialID, std::array<st
 		const std::string& texturePath = myPathsMap.at(textureID);
 		size_t indexOfType = texturePath.find_last_of('_');
 		char textureType = texturePath[indexOfType + static_cast<size_t>(1)];
+	
+		textureType = static_cast<char>(std::toupper(textureType));
+		
+		if (textureType == 'A')
+		{
+			textureType = texturePath[indexOfType - static_cast<size_t>(1)];
+		}
+
 		switch (textureType)
 		{
-		case 'c':
+		case 'C':
 			outTexturePaths[0] = texturePath;
 			break;
-		case 'm':
+		case 'M':
 			outTexturePaths[1] = texturePath;
 			break;
-		case 'n':
+		case 'N':
 			outTexturePaths[2] = texturePath;
 			break;
 		default:		
