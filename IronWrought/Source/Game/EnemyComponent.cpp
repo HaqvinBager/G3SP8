@@ -30,6 +30,7 @@ CEnemyComponent::CEnemyComponent(CGameObject& aParent, const SEnemySetting& some
 	, myRigidBodyComponent(nullptr)
 	, myMovementLocked(false)
 	, myWakeUpTimer(0.f)
+	, myHasFoundPlayer(false)
 {
 	//myController = CEngine::GetInstance()->GetPhysx().CreateCharacterController(GameObject().myTransform->Position(), 0.6f * 0.5f, 1.8f * 0.5f, GameObject().myTransform, aHitReport);
 	//myController->GetController().getActor()->setRigidBodyFlag(PxRigidBodyFlag::eUSE_KINEMATIC_TARGET_FOR_SCENE_QUERIES, true);
@@ -56,17 +57,17 @@ void CEnemyComponent::Start()
 	myPlayer = CEngine::GetInstance()->GetActiveScene().Player();
 	CScene &scene = CEngine::GetInstance()->GetActiveScene();
 	myNavMesh = scene.NavMesh();
-	
+
 	if (mySettings.myPatrolGameObjectIds.size() > 0) {
 		for (int i = 0; i < mySettings.myPatrolGameObjectIds.size(); ++i) {
-			CGameObject* patrolGameObject = CEngine::GetInstance()->GetActiveScene().FindObjectWithID(mySettings.myPatrolGameObjectIds[i]);
+			CGameObject* patrolGameObject = scene.FindObjectWithID(mySettings.myPatrolGameObjectIds[i]);
 			float points = mySettings.myPatrolIntrestValue[i];
 			patrolGameObject->AddComponent<CPatrolPointComponent>(*patrolGameObject, points);
 			scene.AddInstance(patrolGameObject->GetComponent<CPatrolPointComponent>());
 
-			CLineInstance* myLine2 = new CLineInstance();
-			myLine2->Init(CLineFactory::GetInstance()->CreateLine(GameObject().myTransform->Position(), patrolGameObject->myTransform->Position(), { 0,255,0,255 }));
-			CEngine::GetInstance()->GetActiveScene().AddInstance(myLine2);
+			//CLineInstance* myLine2 = new CLineInstance();
+			//myLine2->Init(CLineFactory::GetInstance()->CreateLine(GameObject().myTransform->Position(), patrolGameObject->myTransform->Position(), { 0,255,0,255 }));
+			//CEngine::GetInstance()->GetActiveScene().AddInstance(myLine2);
 		}
 	}
 
@@ -95,7 +96,7 @@ void CEnemyComponent::Start()
 		myRigidBodyComponent = GameObject().GetComponent<CRigidBodyComponent>();
 		myRigidBodyComponent->GetDynamicRigidBody()->GetBody().setRigidDynamicLockFlag(physx::PxRigidDynamicLockFlag::eLOCK_ANGULAR_X, true);
 		myRigidBodyComponent->GetDynamicRigidBody()->GetBody().setRigidDynamicLockFlag(physx::PxRigidDynamicLockFlag::eLOCK_ANGULAR_Y, true);
-		myRigidBodyComponent->GetDynamicRigidBody()->GetBody().setRigidDynamicLockFlag(physx::PxRigidDynamicLockFlag::eLOCK_ANGULAR_Z, true); 
+		myRigidBodyComponent->GetDynamicRigidBody()->GetBody().setRigidDynamicLockFlag(physx::PxRigidDynamicLockFlag::eLOCK_ANGULAR_Z, true);
 		myRigidBodyComponent->GetDynamicRigidBody()->GetBody().setMaxLinearVelocity(mySettings.mySpeed);
 	}
 }
@@ -105,21 +106,53 @@ void CEnemyComponent::Update()//får bestämma vilket behaviour vi vill köra i 
 	if (!myMovementLocked) {
 		//float distanceToPlayer = Vector3::DistanceSquared(myPlayer->myTransform->Position(), GameObject().myTransform->Position());
 
-		//if (mySettings.myRadius * mySettings.myRadius >= distanceToPlayer) {
-			/*if (distanceToPlayer <= mySettings.myAttackDistance * mySettings.myAttackDistance)
-			{
-				std::cout << "ATTACK" << std::endl;
-				SetState(EBehaviour::Attack);
+		float range = 10.f;
+		Vector3 dir = GameObject().myTransform->Transform().Forward();
+		//måste offseta mot origo då angle för två vectorers kollas mot origo i världen
+		Vector3 enemyPos = GameObject().myTransform->Position();
+		Vector3 furthestLookingPoint = GameObject().myTransform->WorldPosition() + (GameObject().myTransform->Transform().Forward() * range);
+		Vector3 furthestLookingPointToEnemy = furthestLookingPoint - enemyPos;
+		Vector3 playerPos = myPlayer->myTransform->WorldPosition();
+		Vector3 playerToEnemy = playerPos - enemyPos;
+		float dot = furthestLookingPointToEnemy.Dot(playerToEnemy);
+		float lengthSquaredEnemy = furthestLookingPointToEnemy.LengthSquared();
+		float lengthSquaredPlayer = playerToEnemy.LengthSquared();
+		float degrees = std::acos(dot / sqrt(lengthSquaredEnemy * lengthSquaredPlayer)) * 180.f / PI;
+		//std::cout << "Degrees: " << degrees << std::endl;
+		float viewAngle = 60.f;
+		myHasFoundPlayer = false;
+		if (degrees <= viewAngle) {
+			Vector3 direction = playerPos - enemyPos;
+			PxRaycastBuffer hit = CEngine::GetInstance()->GetPhysx().Raycast(enemyPos, direction, range, CPhysXWrapper::ELayerMask::STATIC_ENVIRONMENT | CPhysXWrapper::ELayerMask::PLAYER);
+			if (hit.getNbAnyHits() > 0) {
+				CTransformComponent* transform = (CTransformComponent*)hit.getAnyHit(0).actor->userData;
+				if (!transform) {
+					myHasFoundPlayer = true;
+				}
 			}
-			else
-			{*/
-				//std::cout << "SEEK" << std::endl;
-				//SetState(EBehaviour::Seek);
-			//}
-		//}
-	//	else {
-			//std::cout << "PATROL" << std::endl;
+		}
+		if (myHasFoundPlayer) {
+			SetState(EBehaviour::Seek);
+		}
+		else {
 			SetState(EBehaviour::Patrol);
+		}
+
+		//if (mySettings.myRadius * mySettings.myRadius >= distanceToPlayer) {
+		//	/*if (distanceToPlayer <= mySettings.myAttackDistance * mySettings.myAttackDistance)
+		//	{
+		//		std::cout << "ATTACK" << std::endl;
+		//		SetState(EBehaviour::Attack);
+		//	}
+		//	else
+		//	{*/
+		//		//std::cout << "SEEK" << std::endl;
+		//		//SetState(EBehaviour::Seek);
+		//	//}
+		//}
+		//else {
+		//	//std::cout << "PATROL" << std::endl;
+		//	SetState(EBehaviour::Patrol);
 		//}
 
 		if (myRigidBodyComponent) {
@@ -225,4 +258,3 @@ void CEnemyComponent::Receive(const SMessage& aMsg)
 //	}
 //	return nullptr;
 //}
-
