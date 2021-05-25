@@ -15,6 +15,7 @@ public:
 	void SetVolume(float aVolumeLevel);
 	void Stop();
 	void Mute(bool aDoMute);
+	void SetPaused(bool aDoPause);
 
 	void Set3DAttributes(const Vector3& aPosition, const Vector3& aVelocity);
 	

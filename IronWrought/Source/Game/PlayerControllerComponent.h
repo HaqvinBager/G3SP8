@@ -59,6 +59,7 @@ public:
 	void LadderExit();
 
 	void SetRespawnPosition();
+	void SetCurrentFloorMaterial(const std::string& anObjectTag);
 
 private:
 	void LockMovementFor(const float& someSeconds);
@@ -79,6 +80,13 @@ private:
 		ForceStandStill,
 	};
 
+	enum class EFloorMaterial
+	{
+		Default,
+		WoodFloor,
+		Carpet
+	};
+
 	CCharacterController* myController;
 	CPlayerAnimationController* myAnimationComponentController;
 	CPlayerComponent* myPlayerComponent;
@@ -96,6 +104,7 @@ private:
 	bool myCanStand;
 
 	EPlayerMovementLock myPlayerMovementLock;
+	EFloorMaterial myCurrentFloorMaterial;
 	bool myIsCrouching;
 	float myCrouchingLerp;
 	float myWalkSpeed;

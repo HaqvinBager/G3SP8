@@ -74,6 +74,11 @@ void CPlayerReportCallback::onShapeHit(const physx::PxControllerShapeHit& hit)
 							//	playerTransform->GetComponent<CPlayerControllerComponent>()->LadderEnter(nullptr);
 							//}
 						}
+
+						if (n.y > 0.99f) // Floor Check
+						{
+							player->SetCurrentFloorMaterial(objectTransform->GameObject().Tag());
+						}
 					}
 				}
 			}

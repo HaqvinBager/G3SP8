@@ -31,6 +31,11 @@ void CAudioChannel::Mute(bool aDoMute)
     myFModChannel->setMute(aDoMute);
 }
 
+void CAudioChannel::SetPaused(bool aDoPause)
+{
+    myFModChannel->setPaused(aDoPause);
+}
+
 void CAudioChannel::Set3DAttributes(const Vector3& aPosition, const Vector3& aVelocity)
 {
     FMOD_VECTOR pos = { aPosition.x, aPosition.y, aPosition.z };
