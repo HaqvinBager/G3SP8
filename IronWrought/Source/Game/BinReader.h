@@ -103,6 +103,7 @@ namespace Binary {
 	struct SInstancedModel
 	{
 		int assetID;
+		std::string tag;
 		std::vector<int> materialIDs;
 		std::vector<SInstancedTransform> transforms;
 	};
@@ -191,6 +192,16 @@ namespace Binary {
 			return sizeof(SInstancedModel) * aCount;
 		}
 
+		size_t ReadCharBuffer(char* aPtr, std::string& outString)
+		{
+			char buffer[128];// = new char[aPtr[0]];
+			memcpy(&buffer[0], aPtr + 1, aPtr[0]);
+			buffer[aPtr[0]] = '\0';
+			outString.resize(aPtr[0]);
+			memcpy(&outString.data()[0], &aPtr[1], aPtr[0]);
+			return sizeof(char) * aPtr[0] + 1;
+		}
+
 		size_t operator()(std::vector<SInstancedModel>& someData, char* aPtr)
 		{
 			char* ptr = aPtr;
@@ -201,6 +212,8 @@ namespace Binary {
 			for (int i = 0; i < count; ++i)
 			{
 				ptr += Copy(someData[i].assetID, ptr);
+
+				ptr += ReadCharBuffer(ptr, someData[i].tag);
 
 				int materialCount = 0;
 				ptr += Copy(materialCount, ptr);
