@@ -11,7 +11,7 @@ ImGui::CDebugPrintoutWindow::CDebugPrintoutWindow(const char* aName)
 
 	freopen_s(&outPut, "DebugLog.txt", "w", stdout);
 	if(outPut != nullptr)
-		setvbuf(outPut, NULL, _IOFBF, 1024);
+		setvbuf(outPut, NULL, _IOFBF, myBufferSize);
 
 	read = std::ifstream("DebugLog.txt", std::ios::in);
 	*Open() = true;
@@ -37,7 +37,7 @@ void ImGui::CDebugPrintoutWindow::OnInspectorGUI()
 	if(data.size() > 0)
 	{
 		print.append(data);
-		if (print.size() > 4096)
+		if (print.size() > myBufferSize)
 			print.clear();
 	}
 	ImGui::Text(print.c_str());	
@@ -45,7 +45,7 @@ void ImGui::CDebugPrintoutWindow::OnInspectorGUI()
 	ImGui::End();
 	//ImGui::EndChild();
 
-	if (Input::GetInstance()->IsKeyPressed('K'))
+	if (Input::GetInstance()->IsKeyDown('K'))
 	{
 		std::cout << "Hej Jag skriver ett langt meddelande" << std::endl;
 	}
