@@ -18,6 +18,7 @@
 #include "CapsuleColliderComponent.h"
 #include "ConvexMeshColliderComponent.h"
 #include "VFXSystemComponent.h"
+#include "PhysicsPropAudioComponent.h"
 #include <GravityGloveComponent.h>
 #include <EnemyComponent.h>
 #include <HealthPickupComponent.h>
@@ -643,8 +644,15 @@ void CSceneManager::AddAudioSources(CScene& aScene, RapidArray someData)
 		if (!gameObject)
 			continue;
 
-		PostMaster::SStaticAudioSourceInitData data = { gameObject->myTransform->Position(), m["soundIndex"].GetInt(), instanceId };
-		CMainSingleton::PostMaster().Send({ EMessageType::AddStaticAudioSource, &data });
+		if (m["is3D"].GetBool())
+		{ 
+			PostMaster::SStaticAudioSourceInitData data = { gameObject->myTransform->Position(), m["soundIndex"].GetInt(), instanceId };
+			CMainSingleton::PostMaster().Send({ EMessageType::AddStaticAudioSource, &data });
+		}
+		else
+		{
+			gameObject->AddComponent<CPhysicsPropAudioComponent>(*gameObject, static_cast<unsigned int>(m["soundIndex"].GetInt()));
+		}
 	}
 }
 

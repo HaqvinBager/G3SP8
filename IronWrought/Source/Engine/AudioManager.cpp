@@ -442,6 +442,11 @@ void CAudioManager::Receive(const SMessage& aMessage) {
 		myDynamicObject = data;
 	}break;
 
+	case EMessageType::PhysicsPropCollision:
+	{
+		unsigned int soundIndex = *reinterpret_cast<unsigned int*>(aMessage.data);
+		myWrapper.Play(mySFXAudio[soundIndex], myChannels[CAST(EChannel::SFX)]);
+	}break;
 
 	default: break;
 	}
@@ -664,6 +669,8 @@ void CAudioManager::SubscribeToMessages()
 	CMainSingleton::PostMaster().Subscribe(EMessageType::AddStaticAudioSource, this);
 	CMainSingleton::PostMaster().Subscribe(EMessageType::ClearStaticAudioSources, this);
 	CMainSingleton::PostMaster().Subscribe(EMessageType::SetDynamicAudioSource, this);
+
+	CMainSingleton::PostMaster().Subscribe(EMessageType::PhysicsPropCollision, this);
 }
 
 void CAudioManager::UnsubscribeToMessages()
@@ -710,6 +717,8 @@ void CAudioManager::UnsubscribeToMessages()
 	CMainSingleton::PostMaster().Unsubscribe(EMessageType::AddStaticAudioSource, this);
 	CMainSingleton::PostMaster().Unsubscribe(EMessageType::ClearStaticAudioSources, this);
 	CMainSingleton::PostMaster().Unsubscribe(EMessageType::SetDynamicAudioSource, this);
+
+	CMainSingleton::PostMaster().Unsubscribe(EMessageType::PhysicsPropCollision, this);
 }
 
 std::string CAudioManager::GetPath(EMusic type) const

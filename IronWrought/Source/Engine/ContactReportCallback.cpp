@@ -8,7 +8,8 @@
 #include <EnemyComponent.h>
 #include "Engine.h"
 #include "Scene.h"
-//#include "GameObject.h"
+#include "PhysicsPropAudioComponent.h"
+#include "GameObject.h"
 
 void CContactReportCallback::onWake(physx::PxActor** actors, physx::PxU32 count)
 {
@@ -102,8 +103,21 @@ void CContactReportCallback::onContact(const physx::PxContactPairHeader& pairHea
 	// Walls don't uses userData. Only feedback when hamsters collide
 	if (pairHeader.actors[0]->userData != nullptr && pairHeader.actors[1]->userData != nullptr)
 	{
-		//CTransformComponent* firstTransform = (CTransformComponent*)pairHeader.actors[0]->userData;
-		//CTransformComponent* secondTransform = (CTransformComponent*)pairHeader.actors[1]->userData;
-		
+		CTransformComponent* firstTransform = (CTransformComponent*)pairHeader.actors[0]->userData;
+		CTransformComponent* secondTransform = (CTransformComponent*)pairHeader.actors[1]->userData;
+
+		CPhysicsPropAudioComponent* audioComponent = firstTransform->GameObject().GetComponent<CPhysicsPropAudioComponent>();
+		if (!audioComponent)
+			audioComponent = secondTransform->GameObject().GetComponent<CPhysicsPropAudioComponent>();
+
+		if (audioComponent)
+		{
+			float velocity = audioComponent->GetComponent<CRigidBodyComponent>()->GetDynamicRigidBody()->GetLinearVelocity().LengthSquared();
+			if (velocity > 0.05f)
+			{
+				if (audioComponent->Ready())
+					CMainSingleton::PostMaster().SendLate({ EMessageType::PhysicsPropCollision, &audioComponent->GetSoundIndex() });
+			}
+		}
 	}
 }

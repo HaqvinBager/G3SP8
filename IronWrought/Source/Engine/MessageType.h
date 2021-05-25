@@ -94,5 +94,7 @@ enum class EMessageType
 	ClearStaticAudioSources,
 	SetDynamicAudioSource,
 
+	PhysicsPropCollision,
+
 	Count
 };
