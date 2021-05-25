@@ -12,15 +12,15 @@ public:
 	CLineInstance();
 	~CLineInstance();
 
-	CLineInstance& Init(CLine* aLine);
+	CLineInstance& Init(CLine* aLine, const bool aTakeOwnershipOfLine = true);
 
 	// Copy constructor.
 	CLineInstance(const CLineInstance& other)
 		: myLine(other.myLine)
 		, myTransform(other.myTransform)
 		, myIsActive(other.myIsActive)
+		, myTakeOwnershipOfLine(other.myTakeOwnershipOfLine)
 	{
-		//std::copy();
 	}
 
 	CLineInstance(CLineInstance&& other) noexcept : myLine(nullptr), myTransform() { 
@@ -28,6 +28,7 @@ public:
 		myTransform = other.myTransform;
 		myIsActive = other.myIsActive;
 		other.myLine = nullptr;
+		myTakeOwnershipOfLine = other.myTakeOwnershipOfLine;
 	}
 
 	CLineInstance& operator=(CLineInstance&& other) noexcept
@@ -36,6 +37,7 @@ public:
 		myTransform = other.myTransform;
 		myIsActive = other.myIsActive;
 		other.myLine = nullptr;
+		myTakeOwnershipOfLine = other.myTakeOwnershipOfLine;
 		return *this;
 	}
 	
@@ -60,5 +62,6 @@ private:
 	CLine*						myLine;
 	DirectX::SimpleMath::Matrix myTransform;
 	bool myIsActive;
+	bool myTakeOwnershipOfLine;
 };
 

@@ -90,13 +90,13 @@ void CCameraControllerComponent::Update()
 			break;
 
 		case ECameraMode::FreeCam:
-			CEngine::GetInstance()->GetActiveScene().MainCamera(ESceneCamera::FreeCam);
+			//CEngine::GetInstance()->GetActiveScene().MainCamera(ESceneCamera::FreeCam);
 			UpdateFreeCam();
 			break;
 
 		case ECameraMode::PlayerFirstPerson:
 			if(!myLimitFirstPerson)
-				CEngine::GetInstance()->GetActiveScene().MainCamera(ESceneCamera::PlayerFirstPerson);
+				//CEngine::GetInstance()->GetActiveScene().MainCamera(ESceneCamera::PlayerFirstPerson);
 				UpdatePlayerFirstPerson();
 			break;
 

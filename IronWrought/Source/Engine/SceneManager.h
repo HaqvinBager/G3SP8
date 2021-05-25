@@ -32,7 +32,7 @@ public:
 	~CSceneManager();
 	static CScene* CreateEmpty();
 	static CScene* CreateScene(const std::string& aSceneName);
-	static CScene* CreateMenuScene(const std::string& aSceneName, const std::string& aCanvasPath);
+	static CScene* CreateMenuScene(const std::string& aCanvasPath);
 
 private:
 	static CScene* Instantiate();

@@ -78,12 +78,12 @@ void CGameObject::Active(bool aActive)
 {
 	myIsActive = aActive;
 
-	if (!aActive)
+	if (aActive)
 		for (const auto& component : myComponents)		
-			component->OnEnable();		
+			component->Enabled(true);		
 	else	
 		for (const auto& component : myComponents)	
-			component->OnDisable();		
+			component->Enabled(false);		
 }
 
 bool CGameObject::CompareTag(const std::string& aTag) const

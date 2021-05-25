@@ -5,10 +5,13 @@
 #include "Observer.h"
 #include "PostMaster.h"
 
+#include <array>
+
 class CGameObject;
 class CMouseSelection;
+class CCanvas;
 
-class CInGameState : public CState, public IInputObserver, public IStringObserver, public IObserver
+class CInGameState : public CState, public IStringObserver, public IObserver
 {
 public:
 	CInGameState(CStateStack& aStateStack, const CStateStack::EState aState = CStateStack::EState::InGame);
@@ -19,24 +22,37 @@ public:
 	void Stop() override;
 	void Update() override;
 
-	void ReceiveEvent(const EInputEvent aEvent) override;
 	void Receive(const SStringMessage& aMessage) override;
 	void Receive(const SMessage& aMessage) override;
 
-	void TEMP_DecalTests(class CScene* aScene);
+private:
+	enum EInGameCanvases
+	{
+		EInGameCanvases_MainMenu,
+		EInGameCanvases_HUD,
+		EInGameCanvases_PauseMenu,
+
+		EInGameCanvases_Count
+	};
+
+	void DEBUGFunctionality();
+	void ToggleCanvas(EInGameCanvases anEInGameCanvases);
+
 private:
 	enum class EExitTo
 	{
 		None,
 		MainMenu,
+		Windows,
 		AnotherLevel
 	};
-
-	void DEBUGFunctionality();
-
-private:
 	EExitTo myExitTo;
 
 	class CEnemyAnimationController* myEnemyAnimationController;
-	CGameObject* myDecal;
+
+	CGameObject* myMenuCamera;
+	std::array<Vector3, 4> myMenuCameraPositions;
+	std::array<CCanvas*, EInGameCanvases_Count> myCanvases;
+	EInGameCanvases myCurrentCanvas;
+
 };
