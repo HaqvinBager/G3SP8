@@ -16,6 +16,7 @@ public struct STransform
 public class InstancedModel
 {
     public int assetID;
+    public string tag;
     public List<int> materialIDs;
     public List<STransform> transforms;
 }
@@ -51,6 +52,7 @@ public class ExportInstancedModel
                 {
                     instancedModel = new InstancedModel();
                     instancedModel.assetID = assetID;
+                    instancedModel.tag = prefabParent.tag;
                     instancedModel.materialIDs = new List<int>();
                     foreach(Material mat in asset.GetComponent<Renderer>().sharedMaterials)
                     {

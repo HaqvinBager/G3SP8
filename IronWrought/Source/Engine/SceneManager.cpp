@@ -387,7 +387,7 @@ void CSceneManager::AddInstancedModelComponents(CScene& aScene, const std::vecto
 {
 	for (const auto& i : someData)
 	{
-		CGameObject* gameObject = new CGameObject(i.assetID);
+		CGameObject* gameObject = new CGameObject(i.assetID, "", i.tag);
 
 
 		gameObject->AddComponent<CInstancedModelComponent>(*gameObject, i);

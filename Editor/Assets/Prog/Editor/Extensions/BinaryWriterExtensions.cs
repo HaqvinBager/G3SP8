@@ -224,6 +224,7 @@ public static class BinaryWriterExtensions
     public static void Write(this BinaryWriter aBinWRiter, InstancedModel data)
     {
         aBinWRiter.Write(data.assetID);
+        aBinWRiter.Write(data.tag);
         aBinWRiter.Write(data.materialIDs);
         aBinWRiter.Write(data.transforms.Count);
         foreach (STransform transformData in data.transforms)
