@@ -442,6 +442,15 @@ void CAudioManager::Receive(const SMessage& aMessage) {
 		myDynamicObject = data;
 	}break;
 
+	case EMessageType::PauseMenu:
+	{
+		Pause();
+	}break;
+
+	case EMessageType::Resume:
+	{
+		Resume();
+	}break;
 
 	default: break;
 	}
@@ -660,6 +669,8 @@ void CAudioManager::SubscribeToMessages()
 	CMainSingleton::PostMaster().Subscribe(EMessageType::BootUpState, this);
 	CMainSingleton::PostMaster().Subscribe(EMessageType::GameStarted, this);
 	CMainSingleton::PostMaster().Subscribe(EMessageType::MainMenu, this);
+	CMainSingleton::PostMaster().Subscribe(EMessageType::PauseMenu, this);
+	CMainSingleton::PostMaster().Subscribe(EMessageType::Resume, this);
 
 	CMainSingleton::PostMaster().Subscribe(EMessageType::AddStaticAudioSource, this);
 	CMainSingleton::PostMaster().Subscribe(EMessageType::ClearStaticAudioSources, this);
@@ -706,6 +717,8 @@ void CAudioManager::UnsubscribeToMessages()
 	CMainSingleton::PostMaster().Unsubscribe(EMessageType::BootUpState, this);
 	CMainSingleton::PostMaster().Unsubscribe(EMessageType::GameStarted, this);
 	CMainSingleton::PostMaster().Unsubscribe(EMessageType::MainMenu, this);
+	CMainSingleton::PostMaster().Unsubscribe(EMessageType::PauseMenu, this);
+	CMainSingleton::PostMaster().Unsubscribe(EMessageType::Resume, this);
 
 	CMainSingleton::PostMaster().Unsubscribe(EMessageType::AddStaticAudioSource, this);
 	CMainSingleton::PostMaster().Unsubscribe(EMessageType::ClearStaticAudioSources, this);

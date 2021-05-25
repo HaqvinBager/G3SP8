@@ -94,5 +94,8 @@ enum class EMessageType
 	ClearStaticAudioSources,
 	SetDynamicAudioSource,
 
+	CanvasButtonIndex,
+	PauseMenu,
+
 	Count
 };

@@ -24,11 +24,7 @@ CMainMenuState::~CMainMenuState()
 
 void CMainMenuState::Awake()
 {
-#ifdef VERTICAL_SLICE
-	CScene* scene = CSceneManager::CreateMenuScene("MainMenu", ASSETPATH("Assets/IronWrought/UI/JSON/UI_MainMenu_VS.json"));
-#else
-	CScene* scene = CSceneManager::CreateMenuScene("MainMenu", ASSETPATH("Assets/IronWrought/UI/JSON/UI_MainMenu.json"));
-#endif
+	CScene* scene = CSceneManager::CreateMenuScene(ASSETPATH("Assets/IronWrought/UI/JSON/UI_MainMenu.json"));
 	CEngine::GetInstance()->AddScene(myState, scene);
 }
 
@@ -38,24 +34,24 @@ void CMainMenuState::Start()
 	IRONWROUGHT->ShowCursor(true);
 	IRONWROUGHT->GetActiveScene().CanvasToggle(true, true);
 	IRONWROUGHT->GetActiveScene().DisableWidgetsOnCanvas();
-	CMainSingleton::PostMaster().Subscribe(EMessageType::StartGame, this);
-	CMainSingleton::PostMaster().Subscribe(EMessageType::Quit, this);
-	CMainSingleton::PostMaster().Subscribe(EMessageType::SetResolution1280x720, this);
-	CMainSingleton::PostMaster().Subscribe(EMessageType::SetResolution1600x900, this);
-	CMainSingleton::PostMaster().Subscribe(EMessageType::SetResolution1920x1080, this);
+	//CMainSingleton::PostMaster().Subscribe(EMessageType::StartGame, this);
+	//CMainSingleton::PostMaster().Subscribe(EMessageType::Quit, this);
+	//CMainSingleton::PostMaster().Subscribe(EMessageType::SetResolution1280x720, this);
+	//CMainSingleton::PostMaster().Subscribe(EMessageType::SetResolution1600x900, this);
+	//CMainSingleton::PostMaster().Subscribe(EMessageType::SetResolution1920x1080, this);
 
-	CMainSingleton::PostMaster().SendLate({ EMessageType::MainMenu, nullptr });
+	//CMainSingleton::PostMaster().SendLate({ EMessageType::MainMenu, nullptr });
 }
 
 void CMainMenuState::Stop()
 {
 	IRONWROUGHT->GetActiveScene().CanvasToggle(false, false);
 	IRONWROUGHT->GetActiveScene().DisableWidgetsOnCanvas();
-	CMainSingleton::PostMaster().Unsubscribe(EMessageType::StartGame, this);
-	CMainSingleton::PostMaster().Unsubscribe(EMessageType::Quit, this);
-	CMainSingleton::PostMaster().Unsubscribe(EMessageType::SetResolution1280x720, this);
-	CMainSingleton::PostMaster().Unsubscribe(EMessageType::SetResolution1600x900, this);
-	CMainSingleton::PostMaster().Unsubscribe(EMessageType::SetResolution1920x1080, this);
+	//CMainSingleton::PostMaster().Unsubscribe(EMessageType::StartGame, this);
+	//CMainSingleton::PostMaster().Unsubscribe(EMessageType::Quit, this);
+	//CMainSingleton::PostMaster().Unsubscribe(EMessageType::SetResolution1280x720, this);
+	//CMainSingleton::PostMaster().Unsubscribe(EMessageType::SetResolution1600x900, this);
+	//CMainSingleton::PostMaster().Unsubscribe(EMessageType::SetResolution1920x1080, this);
 }
 
 void CMainMenuState::Update()

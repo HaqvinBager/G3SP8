@@ -53,12 +53,16 @@ public:
 	//static CScene* GetInstance();
 	bool Init();
 	bool InitNavMesh(const std::string& aPath);
+
 	bool InitCanvas(const std::string& aPath);
 	bool InitCanvas();
 	bool ReInitCanvas(const std::string& aPath, const bool& aDelete = false);
 	void CanvasIsHUD(const bool& aIsHud = true);
 	void DisableWidgetsOnCanvas();
 	void CanvasToggle(const bool& anIsEnabled, const bool& anIsForceEnable = false);
+	// Sets Canvas in Scene to use a Canvas owned by another object.
+	void SetCanvas(CCanvas* aCanvas);
+	void UpdateOnlyCanvas(const bool anUpdateOnlyCanvas);
 
 //SETUP END
 
@@ -188,9 +192,8 @@ private:
 
 	std::queue<CComponent*> myAwakeComponents;
 	std::queue<CComponent*> myStartComponents;
-
-
 //CONTAINERS END
+
 private:
 //POINTERS START
 	CEnvironmentLight* myEnvironmentLight;
@@ -203,8 +206,10 @@ private:
 	std::unordered_map<ESceneCamera, CCameraComponent*> myCameras;
 
 	PxScene* myPXScene;
-	CCanvas* myCanvas;
 	CGameObject* myPlayer;
+	CCanvas* myCanvas;
+	bool myDeleteCanvas;
+	bool myUpdateOnlyCanvas;
 //POINTERS END
 
 // VFX EDITOR START

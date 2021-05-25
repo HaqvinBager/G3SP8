@@ -167,11 +167,17 @@ CScene* CSceneManager::CreateScene(const std::string& aSceneJson)
 	return scene;
 }
 
-CScene* CSceneManager::CreateMenuScene(const std::string& aSceneName, const std::string& aCanvasPath)
+CScene* CSceneManager::CreateMenuScene(const std::string& aCanvasPath)
 {
-	aSceneName;
 	CScene* scene = CreateEmpty();
+
+	assert(scene != nullptr && "Scene is nullptr. This shouldn't happen.");
 	scene->MainCamera()->GameObject().GetComponent<CCameraControllerComponent>()->SetCameraMode(CCameraControllerComponent::ECameraMode::MenuCam);
+	if (aCanvasPath.empty())
+	{
+		//assert(false && "aCanvasPath parameter is empty.");
+		return scene;
+	}
 	scene->InitCanvas(aCanvasPath);
 
 	return scene;
