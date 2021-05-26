@@ -76,6 +76,7 @@ Binary::SLevelData CBinReader::Load(const std::string& aPath)
 	ptr += CopyBin<STransform>()(data.myTransforms, ptr);
 	ptr += CopyBin<SModel>()(data.myModels, ptr);
 	ptr += CopyBin<SPointLight>()(data.myPointLights, ptr);
+	ptr += CopyBin<SSpotLight>()(data.mySpotLights, ptr);
 	ptr += CopyBin<SCollider>()(data.myColliders, ptr);
 	ptr += CopyBin<SInstancedModel>()(data.myInstancedModels, ptr);
 	return std::move(data);
