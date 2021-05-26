@@ -34,7 +34,7 @@ public:
 	void SetListener(CGameObject* aGameObject);
 
 private:
-	void AddSource(const int anIdentifier, const unsigned int aSoundIndex, const Vector3& aPosition);
+	void AddSource(const int anIdentifier, const unsigned int aSoundIndex, const Vector3& aPosition, const Vector3& aDirection, float aStartAttenuationAngle, float aMaxAttenuationAngle, float aMinimumVolume);
 	void RemoveSource(const int anIdentifier);
 	void ClearSources();
 

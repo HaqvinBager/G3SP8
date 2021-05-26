@@ -674,7 +674,16 @@ void CSceneManager::AddAudioSources(CScene& aScene, RapidArray someData)
 
 		if (m["is3D"].GetBool())
 		{ 
-			PostMaster::SStaticAudioSourceInitData data = { gameObject->myTransform->Position(), m["soundIndex"].GetInt(), instanceId };
+			PostMaster::SStaticAudioSourceInitData data = 
+			{ 
+				  gameObject->myTransform->Position()
+				, { m["coneDirection"]["x"].GetFloat(), m["coneDirection"]["y"].GetFloat(), m["coneDirection"]["z"].GetFloat() }
+				, m["minAttenuationAngle"].GetFloat()
+				, m["maxAttenuationAngle"].GetFloat()
+				, m["minimumVolume"].GetFloat()
+				, m["soundIndex"].GetInt()
+				, instanceId 
+			};
 			CMainSingleton::PostMaster().Send({ EMessageType::AddStaticAudioSource, &data });
 		}
 		else

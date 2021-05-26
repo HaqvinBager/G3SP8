@@ -47,6 +47,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mySoundIndex: 0
   myIs3D: 1
+  myConeDirection: {x: -1, y: 0, z: 1}
+  myMinAttenuationAngle: 90
+  myMaxAttenuationAngle: 180
+  myMinimumVolume: 0.1
 --- !u!114 &7723952492053145743
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -72,7 +76,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 2e7608e184d9a8d4d99b46cff04504bc, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 2e7608e184d9a8d4d99b46cff04504bc, type: 3}
       propertyPath: m_LocalPosition.y
@@ -92,11 +96,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 2e7608e184d9a8d4d99b46cff04504bc, type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 2e7608e184d9a8d4d99b46cff04504bc, type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 2e7608e184d9a8d4d99b46cff04504bc, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
