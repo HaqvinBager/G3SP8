@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6418772804997508639}
   - component: {fileID: 9151018769084803396}
+  - component: {fileID: 1498013716847557570}
   m_Layer: 0
   m_Name: En_P_electricalCabinet
   m_TagString: Untagged
@@ -44,6 +45,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5c562e108cc65394cb59634177042694, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1498013716847557570
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 779026117693715870}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fcacea507542a2d47be01cfec7f83296, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  mySoundIndex: 2
+  myIs3D: 1
+  myConeDirection: {x: 0, y: 0, z: -1}
+  myMinAttenuationAngle: 90
+  myMaxAttenuationAngle: 180
+  myMinimumVolume: 0
 --- !u!1001 &1785228937807553792
 PrefabInstance:
   m_ObjectHideFlags: 0

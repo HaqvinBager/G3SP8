@@ -4,9 +4,15 @@
 class CGameObject;
 class CSpotLight;
 
+namespace Binary {
+	struct SSpotLight;
+}
+
 class CSpotLightComponent : public CBehaviour
 {
 public:
+	CSpotLightComponent(CGameObject& aParent, const Binary::SSpotLight& aData);
+
 	CSpotLightComponent(CGameObject& aParent, Vector3 aColor, float anIntensity, Vector3 aDirection, float aRange, float aWideness);
 	~CSpotLightComponent();
 

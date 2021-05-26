@@ -1,9 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System.IO;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEditor;
-using System.IO;
-
 
 [System.Serializable]
 public struct PlayerID
@@ -20,40 +19,6 @@ public struct Player
 
 public class ExporterJson
 {
-    [MenuItem("GameObject/BluePrint/Add Patrol Point", validate = true)]
-    static bool ValidateTest()
-    {
-        if(Selection.gameObjects.Length == 1)
-        {
-            return Selection.gameObjects[0].name.Contains("BP_");
-        }
-        return false;
-    }
-
-    //[MenuItem("3D Create/PatrolPosition")]
-    [MenuItem("GameObject/BluePrint/Add Patrol Point", false, 0)]
-    static void Test()
-    {
-        PrefabUtility.InstantiatePrefab(AssetDatabase.LoadAssetAtPath<Object>("Assets/Prefabs/PatrolPoint.prefab"), Selection.activeTransform);
-        //GameObject parent = Selection.gameObjects[0];
-        //GameObject obj = new GameObject("Patrol");
-        //obj.transform.parent = parent.transform;
-    }
-
-    //[MenuItem("Export/Export Bin")]
-    //public static void Testererer()
-    //{
-    //    if(Selection.activeObject.GetType() == typeof(LevelCollection))
-    //    {
-    //        Object selectedObject = Selection.objects[0];
-    //        LevelCollection collection = selectedObject as LevelCollection;
-    //        ExportBin bin = new ExportBin("test", "tester");
-    //        bin.DoExport(collection);
-    //    }
-    //}
-
-
-
     [MenuItem("Export/Export")]
     public static void ExportJson()
     {
@@ -119,38 +84,34 @@ public class ExporterJson
 
         List<int> ids = new List<int>();
         instanceIDs.Ids.ForEach(e => ids.Add(e.instanceID));
-
-        //Json.AddToExport(ExportTransform.Export(aSceneName, instanceIDs.Ids));
         Json.AddToExport(ExportVertexPaint.Export(aSceneName, ids));
-        //Json.AddToExport(       ExportModel.Export(aSceneName, instanceIDs.Ids)     );
-        Json.AddToExport(       ExportDirectionalLight.Export(aSceneName)           );
-        //Json.AddToExport(       ExportPointlights.ExportPointlight(aSceneName)      );
-        Json.AddToExport(       ExportDecals.Export(aSceneName)                     );
-        Json.AddToExport(       ExportPlayer(aSceneName)                            );
-        Json.AddToExport(       ExportBluePrint.Export(aSceneName)                  );
-        //Json.AddToExport(       ExportCollider.Export(aSceneName, instanceIDs.Ids)  );
-        Json.AddToExport(       EnemyExporter.Export(aSceneName)                    );
-        Json.AddToExport(       ExportParents.Export(aSceneName)                    );
-        Json.AddToExport(       ExportEventTrigger.Export(aSceneName)               );
-        Json.AddToExport(       HealthPickupExporter.Export(aSceneName)             );
-        Json.AddToExport(       ExportSafetyDoors.Export(aSceneName)                );
-        Json.AddToExport(       ExportFusebox.Export(aSceneName)                    );
-        Json.AddToExport(       ExportAudioSource.Export(aSceneName)                );
-        Json.AddToExport(       ExportVFX.Export(aSceneName)                        );
-        Json.AddToExport(       FusePickUpExporter.Export(aSceneName), true         );
-        //Json.AddToExport(       ExportInstancedModel.Export(aSceneName) , true      );
+        Json.AddToExport(ExportDirectionalLight.Export(aSceneName));
+        Json.AddToExport(ExportDecals.Export(aSceneName));
+        Json.AddToExport(ExportPlayer(aSceneName));
+        Json.AddToExport(ExportBluePrint.Export(aSceneName));
+        Json.AddToExport(EnemyExporter.Export(aSceneName));
+        Json.AddToExport(ExportParents.Export(aSceneName));
+        Json.AddToExport(ExportEventTrigger.Export(aSceneName));
+        Json.AddToExport(HealthPickupExporter.Export(aSceneName));
+        Json.AddToExport(ExportSafetyDoors.Export(aSceneName));
+        Json.AddToExport(ExportFusebox.Export(aSceneName));
+        Json.AddToExport(ExportAudioSource.Export(aSceneName));
+        Json.AddToExport(ExportVFX.Export(aSceneName));
+        Json.AddToExport(ExportSpotLight.Export());
+        Json.AddToExport(ExportEventListener.Export());
+        Json.AddToExport(FusePickUpExporter.Export(aSceneName), true);
     }
 
     public static Player ExportPlayer(string aSceneName)
     {
         Player data = new Player();
         PlayerSpawnPosition player = GameObject.FindObjectOfType<PlayerSpawnPosition>();
-        if(player != null)
+        if (player != null)
         {
             data.player.instanceID = player.transform.GetInstanceID();
             data.player.childrenIDs = new List<int>();
             foreach (Transform child in player.transform)
-                data.player.childrenIDs.Add(child.GetInstanceID());         
+                data.player.childrenIDs.Add(child.GetInstanceID());
         }
         return data;
     }
@@ -175,3 +136,20 @@ public class ExporterJson
         return allScenesActiveObjects;
     }
 }
+
+
+//[MenuItem("GameObject/BluePrint/Add Patrol Point", validate = true)]
+//static bool ValidateTest()
+//{
+//    if (Selection.gameObjects.Length == 1)
+//    {
+//        return Selection.gameObjects[0].name.Contains("BP_");
+//    }
+//    return false;
+//}
+////[MenuItem("3D Create/PatrolPosition")]
+//[MenuItem("GameObject/BluePrint/Add Patrol Point", false, 0)]
+//static void Test()
+//{
+//    PrefabUtility.InstantiatePrefab(AssetDatabase.LoadAssetAtPath<Object>("Assets/Prefabs/PatrolPoint.prefab"), Selection.activeTransform);
+//}

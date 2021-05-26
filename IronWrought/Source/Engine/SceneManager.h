@@ -50,6 +50,9 @@ private:
 
 	static void AddPointLights(CScene& aScene, RapidArray someData);
 	static void AddPointLights(CScene& aScene, const std::vector<Binary::SPointLight>& someData);
+	static void AddSpotLights(CScene& aScene, const std::vector<Binary::SSpotLight>& someData);
+
+
 
 	static void AddCollider(CScene& aScene, RapidArray someData);
 	static void AddCollider(CScene& aScene, const std::vector<Binary::SCollider>& someData);

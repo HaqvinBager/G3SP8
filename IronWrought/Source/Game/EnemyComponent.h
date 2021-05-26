@@ -29,6 +29,7 @@ struct SInterestPoints {
 
 class CEnemyComponent : public CComponent, public IObserver, public IStringObserver
 {
+	friend class CEnemyAudioComponent;
 public:
 	enum class EBehaviour {
 		Patrol,

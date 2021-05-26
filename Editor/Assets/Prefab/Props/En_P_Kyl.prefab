@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 430186614107074527}
   - component: {fileID: 8270126232799345890}
+  - component: {fileID: 4019449393229849569}
   m_Layer: 0
   m_Name: En_P_Kyl
   m_TagString: Untagged
@@ -44,6 +45,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5c562e108cc65394cb59634177042694, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &4019449393229849569
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4844999431448764807}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fcacea507542a2d47be01cfec7f83296, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  mySoundIndex: 4
+  myIs3D: 1
+  myConeDirection: {x: 1, y: 0, z: -1}
+  myMinAttenuationAngle: 80
+  myMaxAttenuationAngle: 120
+  myMinimumVolume: 0.2
 --- !u!1001 &5246039559424216302
 PrefabInstance:
   m_ObjectHideFlags: 0

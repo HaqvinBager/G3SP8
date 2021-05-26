@@ -34,6 +34,10 @@ namespace PostMaster
 	struct SStaticAudioSourceInitData
 	{
 		Vector3 myPosition;
+		Vector3 myForward;
+		float myStartAttenuationAngle;
+		float myMaxAttenuationAngle;
+		float myMinimumVolume;
 		int mySoundIndex;
 		int myGameObjectID;
 	};

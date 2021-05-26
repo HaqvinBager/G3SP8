@@ -19,6 +19,7 @@
 #include "ConvexMeshColliderComponent.h"
 #include "VFXSystemComponent.h"
 #include "PhysicsPropAudioComponent.h"
+#include "EnemyAudioComponent.h"
 #include <GravityGloveComponent.h>
 #include <EnemyComponent.h>
 #include <HealthPickupComponent.h>
@@ -40,6 +41,7 @@
 #include <SafetyDoorComponent.h>
 #include <FuseboxComponent.h>
 #include <FuseComponent.h>
+#include "SpotLightComponent.h"
 
 CScene* CSceneManager::ourLastInstantiatedScene = nullptr;
 CSceneManager::CSceneManager()
@@ -103,6 +105,7 @@ CScene* CSceneManager::CreateScene(const std::string& aSceneJson)
 		AddPointLights(*scene, binLevelData.myPointLights);
 		AddModelComponents(*scene, binLevelData.myModels);
 		AddCollider(*scene, binLevelData.myColliders);
+		AddSpotLights(*scene, binLevelData.mySpotLights);
 
 		//CreateCustomEvents(*scene);
 		//CreateCustomEventListeners(*scene);
@@ -516,6 +519,20 @@ void CSceneManager::AddPointLights(CScene& aScene, const std::vector<Binary::SPo
 	}
 }
 
+void CSceneManager::AddSpotLights(CScene& aScene, const std::vector<Binary::SSpotLight>& someData)
+{
+	for (const auto& data : someData)
+	{
+		CGameObject* gameObject = aScene.FindObjectWithID(data.instanceID);
+
+		if (gameObject == nullptr)
+			continue;
+
+		auto component = gameObject->AddComponent<CSpotLightComponent>(*gameObject, data);
+		aScene.AddInstance(component->GetSpotLight());
+	}
+}
+
 void CSceneManager::AddDecalComponents(CScene& aScene, RapidArray someData)
 {
 	for (const auto& decal : someData)
@@ -587,6 +604,7 @@ void CSceneManager::AddEnemyComponents(CScene& aScene, RapidArray someData)
 			}
 		}
 		gameObject->AddComponent<CEnemyComponent>(*gameObject, settings);
+		gameObject->AddComponent<CEnemyAudioComponent>(*gameObject);
 		//gameObject->AddComponent<CPatrolPointComponent>(*gameObject, )
 		//gameObject->AddComponent<CVFXSystemComponent>(*gameObject, ASSETPATH("Assets/Graphics/VFX/JSON/VFXSystem_Enemy.json"));
 	}
@@ -656,7 +674,16 @@ void CSceneManager::AddAudioSources(CScene& aScene, RapidArray someData)
 
 		if (m["is3D"].GetBool())
 		{ 
-			PostMaster::SStaticAudioSourceInitData data = { gameObject->myTransform->Position(), m["soundIndex"].GetInt(), instanceId };
+			PostMaster::SStaticAudioSourceInitData data = 
+			{ 
+				  gameObject->myTransform->Position()
+				, { m["coneDirection"]["x"].GetFloat(), m["coneDirection"]["y"].GetFloat(), m["coneDirection"]["z"].GetFloat() }
+				, m["minAttenuationAngle"].GetFloat()
+				, m["maxAttenuationAngle"].GetFloat()
+				, m["minimumVolume"].GetFloat()
+				, m["soundIndex"].GetInt()
+				, instanceId 
+			};
 			CMainSingleton::PostMaster().Send({ EMessageType::AddStaticAudioSource, &data });
 		}
 		else
