@@ -77,6 +77,7 @@ private:
 	static void AddFuseboxes(CScene& aScene, RapidArray someData);
 	static void AddFuses(CScene& aScene, RapidArray someData);
 	static void AddAudioSources(CScene& aScene, RapidArray someData);
+	static void AddVFX(CScene& aScene, RapidArray someData);
 	static CScene* ourLastInstantiatedScene;
 };
 

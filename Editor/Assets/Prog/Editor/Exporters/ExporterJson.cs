@@ -132,11 +132,12 @@ public class ExporterJson
         Json.AddToExport(       EnemyExporter.Export(aSceneName)                    );
         Json.AddToExport(       ExportParents.Export(aSceneName)                    );
         Json.AddToExport(       ExportEventTrigger.Export(aSceneName)               );
-        Json.AddToExport(       HealthPickupExporter.Export(aSceneName)       );
-        Json.AddToExport(       ExportSafetyDoors.Export(aSceneName)       );
-        Json.AddToExport(       ExportFusebox.Export(aSceneName)       );
+        Json.AddToExport(       HealthPickupExporter.Export(aSceneName)             );
+        Json.AddToExport(       ExportSafetyDoors.Export(aSceneName)                );
+        Json.AddToExport(       ExportFusebox.Export(aSceneName)                    );
         Json.AddToExport(       ExportAudioSource.Export(aSceneName)                );
-        Json.AddToExport(       FusePickUpExporter.Export(aSceneName), true       );
+        Json.AddToExport(       ExportVFX.Export(aSceneName)                        );
+        Json.AddToExport(       FusePickUpExporter.Export(aSceneName), true         );
         //Json.AddToExport(       ExportInstancedModel.Export(aSceneName) , true      );
     }
 

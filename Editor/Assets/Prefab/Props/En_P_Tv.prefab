@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5903546777333624591}
   - component: {fileID: 1683550236371812103}
+  - component: {fileID: 7897045005340711281}
   m_Layer: 0
   m_Name: En_P_Tv
   m_TagString: Untagged
@@ -44,6 +45,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5c562e108cc65394cb59634177042694, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &7897045005340711281
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2382810824661067142}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7652d18929f027e43b5eaeeb24e1754f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  effectName: Lightning1
 --- !u!1001 &6386508862630912957
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -57,7 +71,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 6a838443c4047d847acf43b3cc61ce41, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 6a838443c4047d847acf43b3cc61ce41, type: 3}
       propertyPath: m_LocalPosition.y
@@ -77,11 +91,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 6a838443c4047d847acf43b3cc61ce41, type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 6a838443c4047d847acf43b3cc61ce41, type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 6a838443c4047d847acf43b3cc61ce41, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
