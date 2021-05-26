@@ -674,16 +674,8 @@ void CSceneManager::AddVFX(CScene& aScene, RapidArray someData)
 
 		std::string jsonPath = "Assets/IronWrought/VFX/VFX_JSON/VFXSystem_";
 		auto component = gameObject->AddComponent<CVFXSystemComponent>(*gameObject, ASSETPATH(jsonPath + m["effectName"].GetString() + ".json"));
-		component->EnableEffect(0);
-		//if (m["is3D"].GetBool())
-		//{
-		//	PostMaster::SStaticAudioSourceInitData data = { gameObject->myTransform->Position(), m["soundIndex"].GetInt(), instanceId };
-		//	CMainSingleton::PostMaster().Send({ EMessageType::AddStaticAudioSource, &data });
-		//}
-		//else
-		//{
-		//	gameObject->AddComponent<CPhysicsPropAudioComponent>(*gameObject, static_cast<unsigned int>(m["soundIndex"].GetInt()));
-		//}
+		
+		component->EnableEffect(0); // Temp
 	}
 }
 
