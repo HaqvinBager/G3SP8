@@ -98,5 +98,7 @@ enum class EMessageType
 	PauseMenu,
 	PhysicsPropCollision,
 
+	EnemyStateChange,
+
 	Count
 };

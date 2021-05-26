@@ -16,10 +16,10 @@ public:
 	void Stop();
 	void Mute(bool aDoMute);
 	void SetPaused(bool aDoPause);
+	void SetPitch(float aPitch);
 
 	void Set3DAttributes(const Vector3& aPosition, const Vector3& aVelocity);
 	
-	//Pitch
 public:
 	~CAudioChannel();// 2020 12 04  - Destruction of CAudioChannel is not taken care of by FMOD
 private:
