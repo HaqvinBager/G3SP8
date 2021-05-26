@@ -207,9 +207,9 @@ void CSpriteInstance::PlayAnimationUsingInternalData(const int& anIndex, const b
 	myShouldAnimate = true;
 }
 
-void CSpriteInstance::PlayAnimation(PostMaster::SCrossHairData& aData)
+void CSpriteInstance::PlayAnimation(PostMaster::SCrossHairData& /*aData*/)
 {
-	PlayAnimation(aData.myIndex, aData.myShouldLoop, aData.myShouldLoop);
+	//PlayAnimation(aData.myIndex, aData.myShouldLoop, aData.myShouldLoop);
 }
 
 void CSpriteInstance::PlayAnimation(std::string aName, bool aShouldLoop, bool aShouldBeReversed)

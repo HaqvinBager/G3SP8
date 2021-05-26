@@ -14,10 +14,13 @@
 #include "PlayerComponent.h"
 #include "HealthPickupComponent.h"
 #include "CharacterController.h"
+#include "CameraComponent.h"
+#include "BoxColliderComponent.h"
 
 CGravityGloveComponent::CGravityGloveComponent(CGameObject& aParent, CTransformComponent* aGravitySlot)
 	: CBehaviour(aParent)
 	, myGravitySlot(aGravitySlot)
+	, myRigidStatic(nullptr)
 {
 	mySettings.myPushForce = 10.f;
 	//mySettings.myDistanceToMaxLinearVelocity = 2.5f;
@@ -49,31 +52,17 @@ void CGravityGloveComponent::Awake()
 
 void CGravityGloveComponent::Start()
 {
-	PostMaster::SCrossHairData data; // Wind down
-	data.myIndex = 0;
-	data.myShouldBeReversed = true;
-	CMainSingleton::PostMaster().Send({ EMessageType::UpdateCrosshair, &data });
+	//PostMaster::SCrossHairData data; // Wind down
+	//data.myIndex = 0;
+	//data.myShouldBeReversed = true;
+	CMainSingleton::PostMaster().Send({ EMessageType::UpdateCrosshair, &myCrosshairData });
 }
 
 void CGravityGloveComponent::Update()
 {
-	if (Input::GetInstance()->IsMousePressed(Input::EMouseButton::Right))
-	{
-		PostMaster::SCrossHairData data; // Wind down
-		data.myIndex = 0;
-		data.myShouldBeReversed = true;
-		CMainSingleton::PostMaster().Send({ EMessageType::UpdateCrosshair, &data });
-
-		Push();
-	}
-	if (Input::GetInstance()->IsMousePressed(Input::EMouseButton::Left))
-	{
-		Pull();
-	}
-	else if (Input::GetInstance()->IsMouseReleased(Input::EMouseButton::Left))
-	{
-		Release();
-	}
+	// Use one at a time:
+	InteractionLogicContinuous();
+	//InteractionLogicOnInput();
 
 	if (myCurrentTarget.myRigidBodyPtr != nullptr)
 	{
@@ -117,10 +106,6 @@ void CGravityGloveComponent::Update()
 					myCurrentTarget.myRigidBodyPtr->GetComponent<CHealthPickupComponent>()->Destroy();
 					myCurrentTarget.myRigidBodyPtr = nullptr;
 
-					PostMaster::SCrossHairData data; // Wind down
-					data.myIndex = 0;
-					data.myShouldBeReversed = true;
-					CMainSingleton::PostMaster().Send({ EMessageType::UpdateCrosshair, &data });
 					bool released = true;
 					CMainSingleton::PostMaster().Send({ EMessageType::GravityGlovePull, &released });
 				}
@@ -134,28 +119,17 @@ void CGravityGloveComponent::Update()
 			direction.Normalize();
 			myCurrentTarget.myRigidBodyPtr->AddForce(direction, force, EForceMode::EForce);
 		}
-		//Yaay Here things are happening omfg lets gouee! : D
-
-		if (myCurrentTarget.myRigidBodyPtr != nullptr) {
-			myCurrentTarget.currentDistanceSquared = Vector3::DistanceSquared(myGravitySlot->WorldPosition(), myCurrentTarget.myRigidBodyPtr->GameObject().myTransform->WorldPosition());
-			PostMaster::SGravityGloveTargetData ggTargetData;
-			ggTargetData.myCurrentDistanceSquared = myCurrentTarget.currentDistanceSquared;
-			ggTargetData.myInitialDistanceSquared = myCurrentTarget.initialDistanceSquared;
-			CMainSingleton::PostMaster().Send({ EMessageType::GravityGloveTargetDistance, &ggTargetData });
-		}
 	}
 }
-#include "BoxColliderComponent.h"
+
 void CGravityGloveComponent::Pull()
 {
 	Vector3 start = GameObject().myTransform->GetWorldMatrix().Translation();
 	Vector3 dir = -GameObject().myTransform->GetWorldMatrix().Forward();
 
-	//CPhysXWrapper::ELayerMask mask = ;
 	PxRaycastBuffer hit = CEngine::GetInstance()->GetPhysx().Raycast(start, dir, mySettings.myMaxDistance, CPhysXWrapper::ELayerMask::WORLD);
 
-
-//	std::vector<CGameObject*> gameobjects = CEngine::GetInstance()->GetActiveScene().ActiveGameObjects();
+	//std::vector<CGameObject*> gameobjects = CEngine::GetInstance()->GetActiveScene().ActiveGameObjects();
 
 	/*for (int i = 0; i < gameobjects.size(); ++i) {
 		if (gameobjects[i]->GetComponent<CRigidBodyComponent>()) {
@@ -175,10 +149,6 @@ void CGravityGloveComponent::Pull()
 		CTransformComponent* transform = (CTransformComponent*)hit.getAnyHit(0).actor->userData;
 		if (transform == nullptr || transform->GetComponent<CEnemyComponent>())
 		{
-			PostMaster::SCrossHairData data; // Wind down
-			data.myIndex = 0;
-			data.myShouldBeReversed = true;
-			CMainSingleton::PostMaster().Send({ EMessageType::UpdateCrosshair, &data });
 			return;
 		}
 
@@ -191,11 +161,8 @@ void CGravityGloveComponent::Pull()
 				myCurrentTarget.myRigidBodyPtr = rigidbody;
 				myCurrentTarget.initialDistanceSquared = Vector3::DistanceSquared(myGravitySlot->WorldPosition(), transform->WorldPosition());
 
-				PostMaster::SCrossHairData data; // Wind Up
-				data.myIndex = 0;
-				CMainSingleton::PostMaster().Send({ EMessageType::UpdateCrosshair, &data });
 				CMainSingleton::PostMaster().Send({ EMessageType::GravityGlovePull, nullptr });
-//				GameObject().GetComponent<CVFXSystemComponent>()->EnableEffect(0);
+				//GameObject().GetComponent<CVFXSystemComponent>()->EnableEffect(0);
 			}
 		}
 
@@ -214,6 +181,23 @@ void CGravityGloveComponent::Pull()
 	//myCurrentTarget->SetPosition(myGravitySlot->WorldPosition());
 }
 
+void CGravityGloveComponent::Pull(CTransformComponent* aTransform, CRigidBodyComponent* aRigidBodyTarget)
+{
+	if (aTransform == nullptr || aTransform->GetComponent<CEnemyComponent>())
+	{
+		return;
+	}
+
+	if (!aRigidBodyTarget->IsKinematic()) {
+		myCurrentTarget.Clear();
+
+		myCurrentTarget.myRigidBodyPtr = aRigidBodyTarget;
+		myCurrentTarget.initialDistanceSquared = Vector3::DistanceSquared(myGravitySlot->WorldPosition(), aTransform->WorldPosition());
+
+		CMainSingleton::PostMaster().Send({ EMessageType::GravityGlovePull, nullptr });
+	}
+}
+
 void CGravityGloveComponent::Release()
 {
 	if (myCurrentTarget.myRigidBodyPtr != nullptr)
@@ -221,16 +205,11 @@ void CGravityGloveComponent::Release()
 		myCurrentTarget.myRigidBodyPtr->GetDynamicRigidBody()->GetBody().setMaxLinearVelocity(100.f);
 		myCurrentTarget.myRigidBodyPtr = nullptr;
 
-		PostMaster::SCrossHairData data; // Wind down
-		data.myIndex = 0;
-		data.myShouldBeReversed = true;
-		CMainSingleton::PostMaster().Send({ EMessageType::UpdateCrosshair, &data });
 		bool released = true;
 		CMainSingleton::PostMaster().Send({ EMessageType::GravityGlovePull, &released });
 	}
 }
 
-#include "CameraComponent.h"
 void CGravityGloveComponent::Push()
 {
 	bool sendPushMessage = false;
@@ -271,7 +250,39 @@ void CGravityGloveComponent::Push()
 	if (sendPushMessage)
 	{
 		CMainSingleton::PostMaster().SendLate({ EMessageType::GravityGlovePush, nullptr });
-		//GameObject().GetComponent<CVFXSystemComponent>()->EnableEffect(1);
+	}
+}
+
+void CGravityGloveComponent::Push(CTransformComponent* aTransform, CRigidBodyComponent* aRigidBodyTarget)
+{
+	bool sendPushMessage = false;
+
+	if (myCurrentTarget.myRigidBodyPtr != nullptr) {
+		IRONWROUGHT->GetActiveScene().MainCamera()->SetTrauma(0.25f); // plz enable camera movement without moving player for shake??? ::)) Nico 2021-04-09
+
+		myCurrentTarget.myRigidBodyPtr->GetDynamicRigidBody()->GetBody().setMaxLinearVelocity(100.f);
+		myCurrentTarget.myRigidBodyPtr->AddForce(-GameObject().myTransform->GetWorldMatrix().Forward(), mySettings.myPushForce * myCurrentTarget.myRigidBodyPtr->GetMass(), EForceMode::EImpulse);
+		myCurrentTarget.myRigidBodyPtr = nullptr;
+		sendPushMessage = true;
+
+	} else {
+		if (aTransform == nullptr)
+			return;
+
+		if (aRigidBodyTarget != nullptr)
+		{
+			if (!aRigidBodyTarget->IsKinematic())
+			{
+				aRigidBodyTarget->AddForce(-GameObject().myTransform->GetWorldMatrix().Forward(), mySettings.myPushForce * aRigidBodyTarget->GetMass(), EForceMode::EImpulse);
+
+				sendPushMessage = true;
+			}
+		}
+	}
+
+	if (sendPushMessage)
+	{
+		CMainSingleton::PostMaster().SendLate({ EMessageType::GravityGlovePush, nullptr });
 	}
 }
 
@@ -292,5 +303,72 @@ void CGravityGloveComponent::Receive(const SStringMessage& aMessage)
 	if (PostMaster::EnableGravityGlove(aMessage.myMessageType))
 	{
 		this->Enabled(true);
+	}
+}
+
+void CGravityGloveComponent::InteractionLogicContinuous()
+{
+	// -4FPS! with continuous raycasts :S (compared to InteractionLogicOnInput() in Cottage) // Aki 2021 05 26
+	Vector3 start = GameObject().myTransform->GetWorldMatrix().Translation();
+	Vector3 dir = -GameObject().myTransform->GetWorldMatrix().Forward();
+
+	PxRaycastBuffer hit = CEngine::GetInstance()->GetPhysx().Raycast(start, dir, mySettings.myMaxDistance, CPhysXWrapper::ELayerMask::WORLD);// ELayerMask could be changed to ::DYNAMIC only? // Aki 2021 05 26
+	if (hit.getNbAnyHits() > 0)
+	{
+		CTransformComponent* transform = static_cast<CTransformComponent*>(hit.getAnyHit(0).actor->userData);
+		CRigidBodyComponent* rigidbody = nullptr;
+		if (transform->GameObject().TryGetComponent<CRigidBodyComponent>(&rigidbody))
+		{
+			if (Input::GetInstance()->IsMousePressed(Input::EMouseButton::Right))
+			{
+				// Wind down
+				//data.myIndex = 0;
+				//data.myShouldBeReversed = true;
+				Push(transform, rigidbody);
+			}
+			if (Input::GetInstance()->IsMousePressed(Input::EMouseButton::Left))
+			{
+				Pull(transform, rigidbody);
+			}
+			else if (Input::GetInstance()->IsMouseReleased(Input::EMouseButton::Left))
+			{
+				Release();
+			}
+
+			if(myCurrentTarget.myRigidBodyPtr)
+				myCrosshairData.myTargetStatus = PostMaster::SCrossHairData::ETargetStatus::Holding;
+			else
+				myCrosshairData.myTargetStatus = PostMaster::SCrossHairData::ETargetStatus::Targeted;
+		}
+		else
+		{
+			myCrosshairData.myTargetStatus = PostMaster::SCrossHairData::ETargetStatus::None;
+		}
+	}
+	else
+	{
+		myCrosshairData.myTargetStatus = PostMaster::SCrossHairData::ETargetStatus::None;
+	}
+	CMainSingleton::PostMaster().SendLate({ EMessageType::UpdateCrosshair, &myCrosshairData });
+}
+
+void CGravityGloveComponent::InteractionLogicOnInput()
+{
+	if (Input::GetInstance()->IsMousePressed(Input::EMouseButton::Right))
+	{
+		//PostMaster::SCrossHairData data; // Wind down
+		//data.myIndex = 0;
+		//data.myShouldBeReversed = true;
+		//CMainSingleton::PostMaster().Send({ EMessageType::UpdateCrosshair, &data });
+	
+		Push();
+	}
+	if (Input::GetInstance()->IsMousePressed(Input::EMouseButton::Left))
+	{
+		Pull();
+	}
+	else if (Input::GetInstance()->IsMouseReleased(Input::EMouseButton::Left))
+	{
+		Release();
 	}
 }

@@ -1,4 +1,4 @@
-#include "stdafx.h"
+ï»¿#include "stdafx.h"
 #include "TransformComponent.h"
 #include "AIController.h"
 #include "PhysXWrapper.h"
@@ -52,19 +52,20 @@ Vector3 CPatrol::Update(const Vector3& aPosition)
 		return Vector3::Zero;
 	if (myPatrolPoints.empty())
 		return Vector3::Zero;
-
-	static bool myIsFinished = true;
-	static size_t myCurrentIndex;
-	static Vector3 patrolPointPosition;
-	static CPatrolPointComponent* patrolPoint;
+	
+	Vector3 patrolPointPosition = myPatrolPoints[myTarget]->GameObject().myTransform->Position();
+	CPatrolPointComponent* patrolPoint = FindBestPatrolPoint(aPosition);
 
 	if (myIsFinished)
 	{
+		myPatrolPoints[myTarget]->AddBonusValue(5);
 		patrolPoint = FindBestPatrolPoint(aPosition);
-		myIsFinished = false;
-
-		if (patrolPoint)
-			patrolPointPosition = patrolPoint->GameObject().myTransform->Position();
+		for (int i = 0; i < myPatrolPoints.size(); ++i) {
+			if (myPatrolPoints[i] == patrolPoint) {
+				myTarget = i;
+				patrolPointPosition = myPatrolPoints[myTarget]->GameObject().myTransform->Position();
+			}
+		}
 
 		SetPath(myNavMesh->CalculatePath(aPosition, patrolPointPosition, myNavMesh), patrolPointPosition);
 
@@ -117,17 +118,14 @@ Vector3 CPatrol::Update(const Vector3& aPosition)
 	//	Vector3 newPos;
 	//	Vector3 dir;
 
-	//	float epsilon = 0.5f;
+		dir = (myPath[pathSize - 1] - aPosition);
+		dir.Normalize();
 
-	//	dir = (myPath[pathSize - 1] - aPosition);
-	//	dir.Normalize();
-
-	//	if (DirectX::SimpleMath::Vector3::DistanceSquared(aPosition, myPath[pathSize - 1]) < epsilon) {
-	//		myPath.pop_back();
-	//		std::cout << "Popped path at: " << pathSize - 1 << std::endl;
-	//	}
-	//	return dir;
-	//}
+		if (CheckIfOverlap(aPosition, myPath[pathSize - 1])) {
+			myPath.pop_back();
+		}
+		return dir;
+	}
 	return Vector3();
 }
 
@@ -145,6 +143,7 @@ void CPatrol::SetPath(std::vector<Vector3> aPath, Vector3 aFinalPosition)
 	myPath.push_back(aFinalPosition);
 	for (unsigned int i = 0; i < aPath.size(); ++i) {
 		myPath.push_back(aPath[i]);
+		CDebug::GetInstance()->DrawLine(aPath[i], aFinalPosition, 60.0f);
 	}
 }
 
@@ -152,7 +151,7 @@ CPatrolPointComponent* CPatrol::FindBestPatrolPoint(const Vector3& aPosition)
 {
 	//const std::vector<CPatrolPointComponent*>& patrolPoints = CEngine::GetInstance()->GetActiveScene().PatrolPoints();
 	std::vector<float> intrestValues;
-	if (myPatrolPoints.empty()) {
+	if (!myPatrolPoints.empty()) {
 		for (int i = 0; i < myPatrolPoints.size(); ++i) {
 			Vector3 patrolPositions = myPatrolPoints[i]->GameObject().myTransform->Position();
 			Vector3 dist = patrolPositions - aPosition;
@@ -242,9 +241,9 @@ void CSeek::SetPath(std::vector<Vector3> aPath, Vector3 aFinalPosition)
 	}
 
 	myPath.clear();
-	myPath.emplace_back(aFinalPosition);
+	myPath.push_back(aFinalPosition);
 	for (unsigned int i = 0; i < aPath.size(); ++i) {
-		myPath.emplace_back(aPath[i]);
+		myPath.push_back(aPath[i]);
 	}
 }
 
@@ -269,7 +268,7 @@ Vector3 CAttack::Update(const Vector3& aPosition)
 	}
 	Vector3 direction = myTarget->WorldPosition() - aPosition;
 
-	//byt ut attacktimer och attackcooldown till animationtimer - Alexander Matthäi 2021-05-07
+	//byt ut attacktimer och attackcooldown till animationtimer - Alexander Matthï¿½i 2021-05-07
 	myAttackTimer += CTimer::Dt();
 	if (myAttackTimer >= myAttackCooldown) {
 		Vector3 origin = aPosition;

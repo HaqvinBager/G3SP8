@@ -13,6 +13,7 @@ namespace ImGui {
 namespace physx {
 	class PxRigidStatic;
 	class PxD6Joint;
+	class PxRigidActor;
 }
 
 struct SGravityGloveSettings {
@@ -54,14 +55,22 @@ public:
 	void Start() override;
 	void Update() override;
 
-	void Pull();
-	void Release();
-	void Push();
-
 	void OnEnable() override;
 	void OnDisable() override;
 
 	void Receive(const SStringMessage& aMessage) override;
+
+private:
+	// USE EITHER InteractionLogicContinuous OR InteractionLogicOnInput. Not both!
+	void InteractionLogicContinuous();
+	// USE EITHER InteractionLogicContinuous OR InteractionLogicOnInput. Not both!
+	void InteractionLogicOnInput();
+
+	void Pull();
+	void Pull(CTransformComponent* aTransform, CRigidBodyComponent* aRigidBodyTarget);
+	void Release();
+	void Push();
+	void Push(CTransformComponent* aTransform, CRigidBodyComponent* aRigidBodyTarget);
 
 private:
 	SGravityGloveSettings mySettings;
@@ -122,4 +131,5 @@ private:
 	//CRigidBodyComponent* myCurrentTarget;
 	physx::PxRigidStatic* myRigidStatic;
 	physx::PxD6Joint* myJoint;
+	PostMaster::SCrossHairData myCrosshairData;
 };

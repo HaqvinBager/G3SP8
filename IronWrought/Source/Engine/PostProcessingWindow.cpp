@@ -70,7 +70,7 @@ void ImGui::CPostProcessingWindow::OnInspectorGUI()
 
 	bufferData.myWhitePointColor = myWhitePointColor;
 
-	if (ImGui::SliderFloat("White Point Intensity", &myWhitePointIntensity, 0.0f, 20.0f, "%.1f"))
+	if (ImGui::SliderFloat("White Point Intensity", &myWhitePointIntensity, 0.0f, 20.0f, "%0.3f"))
 	{
 		bufferData.myWhitePointIntensity = myWhitePointIntensity;
 	}
