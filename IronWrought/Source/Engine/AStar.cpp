@@ -5,9 +5,9 @@
 #include "Scene.h"
 #include "TransformComponent.h"
 
-struct DrefTriangleLessComparer 
+struct DrefTriangleLessComparer
 {
-	bool operator()(STriangle* lhs, STriangle* rhs) const 
+	bool operator()(STriangle* lhs, STriangle* rhs) const
 	{
 		return lhs->myF < rhs->myF;
 	}
@@ -18,36 +18,125 @@ float CalculateH(DirectX::SimpleMath::Vector3& aStartCentroid, DirectX::SimpleMa
 	return (abs(aStartCentroid.x - anEndCentroid.x) + abs(aStartCentroid.y - anEndCentroid.y) + abs(aStartCentroid.z - anEndCentroid.z));
 }
 
-std::vector<DirectX::SimpleMath::Vector3> CAStar::GetPath(const Vector3& aStartPosision, const Vector3& aEndPosision, SNavMesh* aNavMesh, STriangle* aStartTriangle, STriangle* anEndTriangle)
+#define PI 3.141592f
+
+inline float DegreesToRAadians(float aDegree)
 {
-	
+	return aDegree * (PI / 180.0f);
+}
+
+Vector3 GetPointOAnCircle(Vector3 anOrigin, float anAngle, float aRadius)
+{
+	float angle = DegreesToRAadians(anAngle);
+	Vector3 point;
+	point.x = anOrigin.x + cos(angle) * aRadius;
+	point.z = anOrigin.z + sin(angle) * aRadius;
+
+	return point;
+}
+
+std::vector<DirectX::SimpleMath::Vector3> CAStar::GetPath(const Vector3& aStartPosition, const Vector3& anEndPosition, SNavMesh* aNavMesh, STriangle* aStartTriangle, STriangle* anEndTriangle)
+{
+
 	std::vector<DirectX::SimpleMath::Vector3> newPath;
 	if (aStartTriangle == nullptr || anEndTriangle == nullptr) {
 		return newPath;
 	}
 	if (aStartTriangle->myId == anEndTriangle->myId) {
-		newPath.emplace_back(aEndPosision);
+		newPath.emplace_back(anEndPosition);
 		return newPath;
 	}
-	newPath = StringPull(aStartPosision, aEndPosision, GetPortals(AStar(aNavMesh, aStartTriangle, anEndTriangle), aNavMesh));
-	return newPath;
+	newPath = StringPull(aStartPosition, anEndPosition, GetPortals(AStar(aNavMesh, aStartTriangle, anEndTriangle), aNavMesh));
+	std::vector<Vector3> path;
+
+	for (size_t i = 1; i < newPath.size() - 1; ++i)
+	{
+		float degrees;
+		bool hasCollided;
+		for (int j = 0; j < 4; ++j)
+		{
+			degrees = 45.0f + (90.0f * j);
+			hasCollided = false;
+			for (auto& triangle : aNavMesh->myTriangles)
+			{
+				if (aNavMesh->CheckIfOverlap(GetPointOAnCircle(newPath[i], degrees, 0.1f), triangle))
+				{
+					hasCollided = true;
+					break;
+				}
+				else
+					hasCollided = false;
+			}
+			if (!hasCollided)
+			{
+				Vector3 previousPoint = newPath[i - 1];
+				if (newPath[i].x - previousPoint.x < 0.1f && previousPoint.x - newPath[i].x < 0.1f)
+					if (newPath[i].z - previousPoint.z < 0.1f && previousPoint.z - newPath[i].z < 0.1f)
+						continue;
+
+				path.push_back(GetPointOAnCircle(newPath[i], degrees + 180.0f, 0.5f));
+				break;
+			}
+		}
+	}
+
+	return path;
 }
 
-std::vector<DirectX::SimpleMath::Vector3> CAStar::GetPath(const Vector3& aStartPosision, const Vector3& aEndPosision, SNavMesh* aNavMesh/*, STriangle* aStartTriangle, STriangle* anEndTriangle*/) 
-{ 
-	STriangle* startTriangle = aNavMesh->GetTriangleAtPoint(aStartPosision);
-	STriangle* endTriangle = aNavMesh->GetTriangleAtPoint(aEndPosision);
+std::vector<DirectX::SimpleMath::Vector3> CAStar::GetPath(const Vector3& aStartPosition, const Vector3& anEndPosition, SNavMesh* aNavMesh/*, STriangle* aStartTriangle, STriangle* anEndTriangle*/)
+{
+	STriangle* startTriangle = aNavMesh->GetTriangleAtPoint(aStartPosition);
+	STriangle* endTriangle = aNavMesh->GetTriangleAtPoint(anEndPosition);
 
 	std::vector<DirectX::SimpleMath::Vector3> newPath;
 	if (startTriangle == nullptr || endTriangle == nullptr) {
 		return newPath;
 	}
 	if (startTriangle->myId == endTriangle->myId) {
-		newPath.emplace_back(aEndPosision);
+		newPath.emplace_back(anEndPosition);
 		return newPath;
 	}
-	newPath = StringPull(aStartPosision, aEndPosision, GetPortals(AStar(aNavMesh, startTriangle, endTriangle), aNavMesh));
-	return newPath; 
+	newPath = StringPull(aStartPosition, anEndPosition, GetPortals(AStar(aNavMesh, startTriangle, endTriangle), aNavMesh));
+	std::vector<Vector3> path;
+
+
+	//path.push_back(anEndPosition);
+	for (int i = 1; i < newPath.size() - 1; ++i)
+	{
+		float degrees;
+		bool hasCollided;
+		for (int j = 0; j < 4; ++j)
+		{
+			degrees = 45.0f + (90.0f * j);
+			hasCollided = false;
+			for (auto& triangle : aNavMesh->myTriangles)
+			{
+				if (aNavMesh->CheckIfOverlap(GetPointOAnCircle(newPath[i], degrees, 0.1f), triangle))
+				{
+					hasCollided = true;
+					break;
+				}
+				else
+					hasCollided = false;
+			}
+			if (!hasCollided)
+			{
+				Vector3 previousPoint = newPath[i - 1];
+				if (newPath[i].x - previousPoint.x < 0.1f && previousPoint.x - newPath[i].x < 0.1f)
+				{
+					if (newPath[i].y - previousPoint.y < 0.1f && previousPoint.y - newPath[i].y < 0.1f)
+					{
+						continue;
+					}
+				}
+				path.push_back(GetPointOAnCircle(newPath[i], degrees + 180.0f, 1.5f));
+				break;
+			}
+		}
+	}
+	//path.push_back(aStartPosition);
+
+	return path;
 }
 
 std::vector<int> CAStar::AStar(SNavMesh* aNavmesh, STriangle* aStartTriangle, STriangle* anEndTriangle)
@@ -111,21 +200,21 @@ std::vector<int> CAStar::AStar(SNavMesh* aNavmesh, STriangle* aStartTriangle, ST
 	STriangle* iteratorTriangle = anEndTriangle;
 	pathCentroids.emplace_back(anEndTriangle->myCenterPosition);
 	trianglesID.push_back(anEndTriangle->myId);
-	
+
 	while (iteratorTriangle->myId != aStartTriangle->myId && iteratorTriangle != nullptr) {
 		iteratorTriangle = iteratorTriangle->myPredecessor;
 		auto it = std::find(aNavmesh->myTriangles.begin(), aNavmesh->myTriangles.end(), iteratorTriangle);
 		//pathCentroids.emplace_back((*it)->myCenterPosition);
 		trianglesID.push_back(iteratorTriangle->myId);
 	}
-		trianglesID.push_back(aStartTriangle->myId);
+	trianglesID.push_back(aStartTriangle->myId);
 	std::reverse(pathCentroids.begin(), pathCentroids.end());
 	std::reverse(trianglesID.begin(), trianglesID.end());
 	return trianglesID;
 }
 
-std::vector<DirectX::SimpleMath::Vector3> CAStar::GetPortals(std::vector<int> nodePath, SNavMesh* nodes ) 
-{ 
+std::vector<DirectX::SimpleMath::Vector3> CAStar::GetPortals(std::vector<int> nodePath, SNavMesh* nodes)
+{
 	std::vector<Vector3> portals;
 	Vector3 temp;
 
@@ -139,7 +228,7 @@ std::vector<DirectX::SimpleMath::Vector3> CAStar::GetPortals(std::vector<int> no
 		for (int x = 0; x < 3; x++) {
 			bool none = true;
 			for (int y = 0; y < 3; y++) {
-				if (nodes->myTriangles[nodePath[i]]->myIndices[x] == nodes->myTriangles[nodePath[i-1]]->myIndices[y]) {
+				if (nodes->myTriangles[nodePath[i]]->myIndices[x] == nodes->myTriangles[nodePath[i - 1]]->myIndices[y]) {
 					//adds 2 points to create a portal
 					none = false;
 				}
@@ -152,7 +241,7 @@ std::vector<DirectX::SimpleMath::Vector3> CAStar::GetPortals(std::vector<int> no
 				else if (x == 1) {
 					portals.push_back(nodes->myTriangles[nodePath[i]]->myVertexPositions[2]);
 					portals.push_back(nodes->myTriangles[nodePath[i]]->myVertexPositions[0]);
-				}				
+				}
 				else if (x == 2) {
 					portals.push_back(nodes->myTriangles[nodePath[i]]->myVertexPositions[0]);
 					portals.push_back(nodes->myTriangles[nodePath[i]]->myVertexPositions[1]);
@@ -188,7 +277,7 @@ std::vector<DirectX::SimpleMath::Vector3> CAStar::StringPull(Vector3 aStart, Vec
 	portalApex = aStart;
 	portalLeft = somePortals[0];
 	portalRight = somePortals[1];
-	
+
 	//_points.push_back(aStart);
 	//int test = 0;
 	for (int i = 2; i < somePortals.size(); i += 2) {
@@ -257,11 +346,11 @@ std::vector<DirectX::SimpleMath::Vector3> CAStar::StringPull(Vector3 aStart, Vec
 	return points;
 }
 
- float CAStar::Triarea2d(const Vector3 a, const Vector3 b, const Vector3 c) {
+float CAStar::Triarea2d(const Vector3 a, const Vector3 b, const Vector3 c) {
 	const float ax = b.x - a.x;
 	const float ay = b.z - a.z;
 	const float bx = c.x - a.x;
 	const float by = c.z - a.z;
-	const float _return = bx* ay - ax * by;
+	const float _return = bx * ay - ax * by;
 	return _return;
- }
+}
