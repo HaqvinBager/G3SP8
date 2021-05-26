@@ -120,6 +120,7 @@ CScene* CSceneManager::CreateScene(const std::string& aSceneJson)
 			AddFuseboxes(*scene, sceneData["myFuseboxes"].GetArray());
 			AddFuses(*scene, sceneData["myFusePickUps"].GetArray());
 			AddAudioSources(*scene, sceneData["myAudioSources"].GetArray());
+			AddVFX(*scene, sceneData["myVFXLinks"].GetArray());
 			if (sceneData.HasMember("triggerEvents"))
 				AddTriggerEvents(*scene, sceneData["triggerEvents"].GetArray());
 			if (sceneName.find("Gameplay") != std::string::npos)//Om Unity Scene Namnet inneh�ller nyckelordet "Layout"
@@ -659,6 +660,22 @@ void CSceneManager::AddAudioSources(CScene& aScene, RapidArray someData)
 		{
 			gameObject->AddComponent<CPhysicsPropAudioComponent>(*gameObject, static_cast<unsigned int>(m["soundIndex"].GetInt()));
 		}
+	}
+}
+
+void CSceneManager::AddVFX(CScene& aScene, RapidArray someData)
+{
+	for (const auto& m : someData)
+	{
+		const int instanceId = m["instanceID"].GetInt();
+		CGameObject* gameObject = aScene.FindObjectWithID(instanceId);
+		if (!gameObject)
+			continue;
+
+		std::string jsonPath = "Assets/IronWrought/VFX/VFX_JSON/VFXSystem_";
+		auto component = gameObject->AddComponent<CVFXSystemComponent>(*gameObject, ASSETPATH(jsonPath + m["effectName"].GetString() + ".json"));
+		
+		component->EnableEffect(0); // Temp
 	}
 }
 

@@ -465,7 +465,7 @@ CModel* CModelFactory::CreateInstancedModels(const std::string& aFilePath, int a
 		meshData[i].myStride[1] = sizeof(CModel::SInstanceType);
 		meshData[i].myOffset[0] = 0;	
 		meshData[i].myOffset[1] = 0;	
-		//meshData[i].myMaterialIndex = mesh->myModel->myMaterialIndices[i];
+		meshData[i].myMaterialIndex = mesh->myModel->myMaterialIndices[i];
 		meshData[i].myVertexBuffer = vertexBuffer;
 		meshData[i].myIndexBuffer = indexBuffer;
 	}
