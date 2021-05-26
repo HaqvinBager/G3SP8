@@ -5,9 +5,18 @@ namespace PostMaster
 {
 	struct SCrossHairData
 	{
-		unsigned int myIndex	= 0;
-		bool myShouldLoop		= false; 
-		bool myShouldBeReversed = false;
+		enum class ETargetStatus
+		{
+			Targeted,
+			Holding,
+			None
+
+		} myTargetStatus = ETargetStatus::None;
+		// Animation data. TBD if used
+		//unsigned int myIndex	= 0;
+		//bool myShouldLoop		= false;
+		//bool myShouldBeReversed = false;
+
 	};
 
 	struct SGravityGloveTargetData

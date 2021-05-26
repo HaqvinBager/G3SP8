@@ -499,7 +499,7 @@ PrefabInstance:
     - target: {fileID: 6916510335249080516, guid: b143b06aaae21f942ac8b33c54e91af3, type: 3}
       propertyPath: m_Material
       value: 
-      objectReference: {fileID: 116093790}
+      objectReference: {fileID: 1017299661}
     - target: {fileID: 9109855257801759669, guid: b143b06aaae21f942ac8b33c54e91af3, type: 3}
       propertyPath: m_RootOrder
       value: 3
@@ -1406,6 +1406,10 @@ PrefabInstance:
     - target: {fileID: 5280396448920461772, guid: 12d848a820bb263489cc8261ee74c551, type: 3}
       propertyPath: m_Name
       value: Cube (46)
+      objectReference: {fileID: 0}
+    - target: {fileID: 5280396448920461772, guid: 12d848a820bb263489cc8261ee74c551, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 12d848a820bb263489cc8261ee74c551, type: 3}
@@ -4702,18 +4706,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 4108131478240307542, guid: 12d848a820bb263489cc8261ee74c551, type: 3}
   m_PrefabInstance: {fileID: 113745780}
   m_PrefabAsset: {fileID: 0}
---- !u!134 &116093790
-PhysicMaterial:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_Name: 
-  dynamicFriction: 0.6
-  staticFriction: 0.6
-  bounciness: 0
-  frictionCombine: 0
-  bounceCombine: 0
 --- !u!1001 &117752967
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -5619,7 +5611,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5280396448920461772, guid: 12d848a820bb263489cc8261ee74c551, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 12d848a820bb263489cc8261ee74c551, type: 3}
@@ -7947,6 +7939,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Cube (25)
       objectReference: {fileID: 0}
+    - target: {fileID: 5280396448920461772, guid: 12d848a820bb263489cc8261ee74c551, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 12d848a820bb263489cc8261ee74c551, type: 3}
 --- !u!4 &182351083 stripped
@@ -9474,6 +9470,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Cube (22)
       objectReference: {fileID: 0}
+    - target: {fileID: 5280396448920461772, guid: 12d848a820bb263489cc8261ee74c551, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 12d848a820bb263489cc8261ee74c551, type: 3}
 --- !u!4 &216576297 stripped
@@ -10619,7 +10619,7 @@ PrefabInstance:
     - target: {fileID: 4807836856079298442, guid: 7bdb16387a1c08b41a9668681cb9d996, type: 3}
       propertyPath: m_Material
       value: 
-      objectReference: {fileID: 499712507}
+      objectReference: {fileID: 1314505271}
     - target: {fileID: 5891861862629950194, guid: 7bdb16387a1c08b41a9668681cb9d996, type: 3}
       propertyPath: m_Name
       value: Fuse (1)
@@ -13257,7 +13257,7 @@ PrefabInstance:
     - target: {fileID: 4807836856079298442, guid: 7bdb16387a1c08b41a9668681cb9d996, type: 3}
       propertyPath: m_Material
       value: 
-      objectReference: {fileID: 619734828}
+      objectReference: {fileID: 1835030189}
     - target: {fileID: 5891861862629950194, guid: 7bdb16387a1c08b41a9668681cb9d996, type: 3}
       propertyPath: m_Name
       value: Fuse (2)
@@ -13574,6 +13574,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Cube (23)
       objectReference: {fileID: 0}
+    - target: {fileID: 5280396448920461772, guid: 12d848a820bb263489cc8261ee74c551, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 12d848a820bb263489cc8261ee74c551, type: 3}
 --- !u!4 &305271678 stripped
@@ -13778,6 +13782,10 @@ PrefabInstance:
     - target: {fileID: 5280396448920461772, guid: 12d848a820bb263489cc8261ee74c551, type: 3}
       propertyPath: m_Name
       value: Cube (23)
+      objectReference: {fileID: 0}
+    - target: {fileID: 5280396448920461772, guid: 12d848a820bb263489cc8261ee74c551, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 12d848a820bb263489cc8261ee74c551, type: 3}
@@ -14715,6 +14723,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Cube (32)
       objectReference: {fileID: 0}
+    - target: {fileID: 5280396448920461772, guid: 12d848a820bb263489cc8261ee74c551, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 12d848a820bb263489cc8261ee74c551, type: 3}
 --- !u!4 &348198992 stripped
@@ -14788,6 +14800,10 @@ PrefabInstance:
     - target: {fileID: 5280396448920461772, guid: 12d848a820bb263489cc8261ee74c551, type: 3}
       propertyPath: m_Name
       value: Cube (45)
+      objectReference: {fileID: 0}
+    - target: {fileID: 5280396448920461772, guid: 12d848a820bb263489cc8261ee74c551, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 12d848a820bb263489cc8261ee74c551, type: 3}
@@ -16537,18 +16553,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 4108131478240307542, guid: 12d848a820bb263489cc8261ee74c551, type: 3}
   m_PrefabInstance: {fileID: 383506277}
   m_PrefabAsset: {fileID: 0}
---- !u!134 &383731788
-PhysicMaterial:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_Name: 
-  dynamicFriction: 0.6
-  staticFriction: 0.6
-  bounciness: 0
-  frictionCombine: 0
-  bounceCombine: 0
 --- !u!1001 &384092053
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -19133,6 +19137,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Cube (42)
       objectReference: {fileID: 0}
+    - target: {fileID: 5280396448920461772, guid: 12d848a820bb263489cc8261ee74c551, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 12d848a820bb263489cc8261ee74c551, type: 3}
 --- !u!4 &442650720 stripped
@@ -20186,6 +20194,10 @@ PrefabInstance:
     - target: {fileID: 5280396448920461772, guid: 12d848a820bb263489cc8261ee74c551, type: 3}
       propertyPath: m_Name
       value: Cube (47)
+      objectReference: {fileID: 0}
+    - target: {fileID: 5280396448920461772, guid: 12d848a820bb263489cc8261ee74c551, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 12d848a820bb263489cc8261ee74c551, type: 3}
@@ -21319,7 +21331,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5280396448920461772, guid: 12d848a820bb263489cc8261ee74c551, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 12d848a820bb263489cc8261ee74c551, type: 3}
@@ -21869,18 +21881,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 4108131478240307542, guid: 12d848a820bb263489cc8261ee74c551, type: 3}
   m_PrefabInstance: {fileID: 497302194}
   m_PrefabAsset: {fileID: 0}
---- !u!134 &499712507
-PhysicMaterial:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_Name: 
-  dynamicFriction: 0.6
-  staticFriction: 0.6
-  bounciness: 0
-  frictionCombine: 0
-  bounceCombine: 0
 --- !u!1001 &500769038
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -24739,6 +24739,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Cube (39)
       objectReference: {fileID: 0}
+    - target: {fileID: 5280396448920461772, guid: 12d848a820bb263489cc8261ee74c551, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 12d848a820bb263489cc8261ee74c551, type: 3}
 --- !u!4 &578590250 stripped
@@ -26578,18 +26582,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 567889264435103047, guid: ff1e534fc243f724b86c406d871b8ad7, type: 3}
   m_PrefabInstance: {fileID: 619404693}
   m_PrefabAsset: {fileID: 0}
---- !u!134 &619734828
-PhysicMaterial:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_Name: 
-  dynamicFriction: 0.6
-  staticFriction: 0.6
-  bounciness: 0
-  frictionCombine: 0
-  bounceCombine: 0
 --- !u!1001 &619977275
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -27271,7 +27263,7 @@ PrefabInstance:
     - target: {fileID: 8530031555305425461, guid: 20ec9a590276cfe44b1f20073d78f2ab, type: 3}
       propertyPath: m_Material
       value: 
-      objectReference: {fileID: 1202775389}
+      objectReference: {fileID: 1823443597}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 20ec9a590276cfe44b1f20073d78f2ab, type: 3}
 --- !u!1001 &642425275
@@ -28277,6 +28269,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Cube (34)
       objectReference: {fileID: 0}
+    - target: {fileID: 5280396448920461772, guid: 12d848a820bb263489cc8261ee74c551, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 12d848a820bb263489cc8261ee74c551, type: 3}
 --- !u!4 &657613738 stripped
@@ -29136,6 +29132,10 @@ PrefabInstance:
     - target: {fileID: 5280396448920461772, guid: 12d848a820bb263489cc8261ee74c551, type: 3}
       propertyPath: m_Name
       value: Cube (41)
+      objectReference: {fileID: 0}
+    - target: {fileID: 5280396448920461772, guid: 12d848a820bb263489cc8261ee74c551, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 12d848a820bb263489cc8261ee74c551, type: 3}
@@ -33835,6 +33835,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Cube (50)
       objectReference: {fileID: 0}
+    - target: {fileID: 5280396448920461772, guid: 12d848a820bb263489cc8261ee74c551, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 12d848a820bb263489cc8261ee74c551, type: 3}
 --- !u!4 &772926299 stripped
@@ -34339,7 +34343,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &793468945
 Transform:
   m_ObjectHideFlags: 0
@@ -36275,6 +36279,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Cube (40)
       objectReference: {fileID: 0}
+    - target: {fileID: 5280396448920461772, guid: 12d848a820bb263489cc8261ee74c551, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 12d848a820bb263489cc8261ee74c551, type: 3}
 --- !u!4 &829228649 stripped
@@ -37122,6 +37130,10 @@ PrefabInstance:
     - target: {fileID: 5280396448920461772, guid: 12d848a820bb263489cc8261ee74c551, type: 3}
       propertyPath: m_Name
       value: Cube (33)
+      objectReference: {fileID: 0}
+    - target: {fileID: 5280396448920461772, guid: 12d848a820bb263489cc8261ee74c551, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 12d848a820bb263489cc8261ee74c551, type: 3}
@@ -43074,6 +43086,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Cube (39)
       objectReference: {fileID: 0}
+    - target: {fileID: 5280396448920461772, guid: 12d848a820bb263489cc8261ee74c551, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 12d848a820bb263489cc8261ee74c551, type: 3}
 --- !u!4 &973953580 stripped
@@ -43281,6 +43297,10 @@ PrefabInstance:
     - target: {fileID: 5280396448920461772, guid: 12d848a820bb263489cc8261ee74c551, type: 3}
       propertyPath: m_Name
       value: Cube (37)
+      objectReference: {fileID: 0}
+    - target: {fileID: 5280396448920461772, guid: 12d848a820bb263489cc8261ee74c551, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 12d848a820bb263489cc8261ee74c551, type: 3}
@@ -43779,6 +43799,10 @@ PrefabInstance:
     - target: {fileID: 5280396448920461772, guid: 12d848a820bb263489cc8261ee74c551, type: 3}
       propertyPath: m_Name
       value: Cube (43)
+      objectReference: {fileID: 0}
+    - target: {fileID: 5280396448920461772, guid: 12d848a820bb263489cc8261ee74c551, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 12d848a820bb263489cc8261ee74c551, type: 3}
@@ -44947,6 +44971,18 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 4108131478240307542, guid: 12d848a820bb263489cc8261ee74c551, type: 3}
   m_PrefabInstance: {fileID: 1015116029}
   m_PrefabAsset: {fileID: 0}
+--- !u!134 &1017299661
+PhysicMaterial:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: ' (Instance)'
+  dynamicFriction: 0.6
+  staticFriction: 0.6
+  bounciness: 0
+  frictionCombine: 0
+  bounceCombine: 0
 --- !u!1001 &1017956074
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -45911,6 +45947,10 @@ PrefabInstance:
     - target: {fileID: 5280396448920461772, guid: 12d848a820bb263489cc8261ee74c551, type: 3}
       propertyPath: m_Name
       value: Cube (44)
+      objectReference: {fileID: 0}
+    - target: {fileID: 5280396448920461772, guid: 12d848a820bb263489cc8261ee74c551, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 12d848a820bb263489cc8261ee74c551, type: 3}
@@ -48833,7 +48873,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5280396448920461772, guid: 12d848a820bb263489cc8261ee74c551, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 12d848a820bb263489cc8261ee74c551, type: 3}
@@ -49502,7 +49542,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1131226360
 Transform:
   m_ObjectHideFlags: 0
@@ -52447,18 +52487,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 4108131478240307542, guid: 12d848a820bb263489cc8261ee74c551, type: 3}
   m_PrefabInstance: {fileID: 1198753173}
   m_PrefabAsset: {fileID: 0}
---- !u!134 &1202775389
-PhysicMaterial:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_Name: 
-  dynamicFriction: 0.6
-  staticFriction: 0.6
-  bounciness: 0
-  frictionCombine: 0
-  bounceCombine: 0
 --- !u!1001 &1205715710
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -55228,7 +55256,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5280396448920461772, guid: 12d848a820bb263489cc8261ee74c551, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 12d848a820bb263489cc8261ee74c551, type: 3}
@@ -55532,7 +55560,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5280396448920461772, guid: 12d848a820bb263489cc8261ee74c551, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 12d848a820bb263489cc8261ee74c551, type: 3}
@@ -55950,6 +55978,10 @@ PrefabInstance:
     - target: {fileID: 5280396448920461772, guid: 12d848a820bb263489cc8261ee74c551, type: 3}
       propertyPath: m_Name
       value: Cube (38)
+      objectReference: {fileID: 0}
+    - target: {fileID: 5280396448920461772, guid: 12d848a820bb263489cc8261ee74c551, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 12d848a820bb263489cc8261ee74c551, type: 3}
@@ -57363,6 +57395,18 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 3248007924601357613, guid: 3250addfed3ff4346af2d0e93941afa6, type: 3}
   m_PrefabInstance: {fileID: 1312281685}
   m_PrefabAsset: {fileID: 0}
+--- !u!134 &1314505271
+PhysicMaterial:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: ' (Instance)'
+  dynamicFriction: 0.6
+  staticFriction: 0.6
+  bounciness: 0
+  frictionCombine: 0
+  bounceCombine: 0
 --- !u!1001 &1315113236
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -58179,6 +58223,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Cube (35)
       objectReference: {fileID: 0}
+    - target: {fileID: 5280396448920461772, guid: 12d848a820bb263489cc8261ee74c551, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 12d848a820bb263489cc8261ee74c551, type: 3}
 --- !u!4 &1335247392 stripped
@@ -58759,6 +58807,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Cube (26)
       objectReference: {fileID: 0}
+    - target: {fileID: 5280396448920461772, guid: 12d848a820bb263489cc8261ee74c551, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 12d848a820bb263489cc8261ee74c551, type: 3}
 --- !u!4 &1352902279 stripped
@@ -58973,6 +59025,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Cube (31)
       objectReference: {fileID: 0}
+    - target: {fileID: 5280396448920461772, guid: 12d848a820bb263489cc8261ee74c551, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 12d848a820bb263489cc8261ee74c551, type: 3}
 --- !u!4 &1354715462 stripped
@@ -59112,6 +59168,10 @@ PrefabInstance:
     - target: {fileID: 5280396448920461772, guid: 12d848a820bb263489cc8261ee74c551, type: 3}
       propertyPath: m_Name
       value: Cube (36)
+      objectReference: {fileID: 0}
+    - target: {fileID: 5280396448920461772, guid: 12d848a820bb263489cc8261ee74c551, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 12d848a820bb263489cc8261ee74c551, type: 3}
@@ -59753,6 +59813,10 @@ PrefabInstance:
     - target: {fileID: 5280396448920461772, guid: 12d848a820bb263489cc8261ee74c551, type: 3}
       propertyPath: m_Name
       value: Cube (49)
+      objectReference: {fileID: 0}
+    - target: {fileID: 5280396448920461772, guid: 12d848a820bb263489cc8261ee74c551, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 12d848a820bb263489cc8261ee74c551, type: 3}
@@ -61525,6 +61589,18 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 4108131478240307542, guid: 12d848a820bb263489cc8261ee74c551, type: 3}
   m_PrefabInstance: {fileID: 1418446232}
   m_PrefabAsset: {fileID: 0}
+--- !u!134 &1419922510
+PhysicMaterial:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: ' (Instance)'
+  dynamicFriction: 0.6
+  staticFriction: 0.6
+  bounciness: 0
+  frictionCombine: 0
+  bounceCombine: 0
 --- !u!1 &1420091621
 GameObject:
   m_ObjectHideFlags: 0
@@ -62190,6 +62266,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Cube (26)
       objectReference: {fileID: 0}
+    - target: {fileID: 5280396448920461772, guid: 12d848a820bb263489cc8261ee74c551, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 12d848a820bb263489cc8261ee74c551, type: 3}
 --- !u!4 &1432682136 stripped
@@ -62415,6 +62495,10 @@ PrefabInstance:
     - target: {fileID: 5280396448920461772, guid: 12d848a820bb263489cc8261ee74c551, type: 3}
       propertyPath: m_Name
       value: Cube (32)
+      objectReference: {fileID: 0}
+    - target: {fileID: 5280396448920461772, guid: 12d848a820bb263489cc8261ee74c551, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 12d848a820bb263489cc8261ee74c551, type: 3}
@@ -64560,6 +64644,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Cube (37)
       objectReference: {fileID: 0}
+    - target: {fileID: 5280396448920461772, guid: 12d848a820bb263489cc8261ee74c551, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 12d848a820bb263489cc8261ee74c551, type: 3}
 --- !u!4 &1490344693 stripped
@@ -64773,6 +64861,10 @@ PrefabInstance:
     - target: {fileID: 5280396448920461772, guid: 12d848a820bb263489cc8261ee74c551, type: 3}
       propertyPath: m_Name
       value: Cube (48)
+      objectReference: {fileID: 0}
+    - target: {fileID: 5280396448920461772, guid: 12d848a820bb263489cc8261ee74c551, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 12d848a820bb263489cc8261ee74c551, type: 3}
@@ -66329,7 +66421,7 @@ PrefabInstance:
     - target: {fileID: 4807836856079298442, guid: 7bdb16387a1c08b41a9668681cb9d996, type: 3}
       propertyPath: m_Material
       value: 
-      objectReference: {fileID: 383731788}
+      objectReference: {fileID: 1419922510}
     - target: {fileID: 5891861862629950194, guid: 7bdb16387a1c08b41a9668681cb9d996, type: 3}
       propertyPath: m_Name
       value: Fuse
@@ -66554,6 +66646,10 @@ PrefabInstance:
     - target: {fileID: 5280396448920461772, guid: 12d848a820bb263489cc8261ee74c551, type: 3}
       propertyPath: m_Name
       value: Cube (42)
+      objectReference: {fileID: 0}
+    - target: {fileID: 5280396448920461772, guid: 12d848a820bb263489cc8261ee74c551, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 12d848a820bb263489cc8261ee74c551, type: 3}
@@ -67136,6 +67232,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Cube (49)
       objectReference: {fileID: 0}
+    - target: {fileID: 5280396448920461772, guid: 12d848a820bb263489cc8261ee74c551, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 12d848a820bb263489cc8261ee74c551, type: 3}
 --- !u!4 &1555910303 stripped
@@ -67345,6 +67445,10 @@ PrefabInstance:
     - target: {fileID: 5280396448920461772, guid: 12d848a820bb263489cc8261ee74c551, type: 3}
       propertyPath: m_Name
       value: Cube (31)
+      objectReference: {fileID: 0}
+    - target: {fileID: 5280396448920461772, guid: 12d848a820bb263489cc8261ee74c551, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 12d848a820bb263489cc8261ee74c551, type: 3}
@@ -74148,6 +74252,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Cube (24)
       objectReference: {fileID: 0}
+    - target: {fileID: 5280396448920461772, guid: 12d848a820bb263489cc8261ee74c551, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 12d848a820bb263489cc8261ee74c551, type: 3}
 --- !u!4 &1746954175 stripped
@@ -74665,6 +74773,10 @@ PrefabInstance:
     - target: {fileID: 5280396448920461772, guid: 12d848a820bb263489cc8261ee74c551, type: 3}
       propertyPath: m_Name
       value: Cube (38)
+      objectReference: {fileID: 0}
+    - target: {fileID: 5280396448920461772, guid: 12d848a820bb263489cc8261ee74c551, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 12d848a820bb263489cc8261ee74c551, type: 3}
@@ -75187,6 +75299,10 @@ PrefabInstance:
     - target: {fileID: 5280396448920461772, guid: 12d848a820bb263489cc8261ee74c551, type: 3}
       propertyPath: m_Name
       value: Cube (45)
+      objectReference: {fileID: 0}
+    - target: {fileID: 5280396448920461772, guid: 12d848a820bb263489cc8261ee74c551, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 12d848a820bb263489cc8261ee74c551, type: 3}
@@ -77256,6 +77372,18 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 4108131478240307542, guid: 12d848a820bb263489cc8261ee74c551, type: 3}
   m_PrefabInstance: {fileID: 1820271608}
   m_PrefabAsset: {fileID: 0}
+--- !u!134 &1823443597
+PhysicMaterial:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: ' (Instance)'
+  dynamicFriction: 0.6
+  staticFriction: 0.6
+  bounciness: 0
+  frictionCombine: 0
+  bounceCombine: 0
 --- !u!1001 &1824650324
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -77763,6 +77891,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Cube (27)
       objectReference: {fileID: 0}
+    - target: {fileID: 5280396448920461772, guid: 12d848a820bb263489cc8261ee74c551, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 12d848a820bb263489cc8261ee74c551, type: 3}
 --- !u!4 &1832881543 stripped
@@ -77898,6 +78030,18 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 2770071406949908664, guid: e48dda80cdcb737489d9b61a5ac79cea, type: 3}
   m_PrefabInstance: {fileID: 1833403157}
   m_PrefabAsset: {fileID: 0}
+--- !u!134 &1835030189
+PhysicMaterial:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: ' (Instance)'
+  dynamicFriction: 0.6
+  staticFriction: 0.6
+  bounciness: 0
+  frictionCombine: 0
+  bounceCombine: 0
 --- !u!1001 &1838013268
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -78951,6 +79095,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Cube (29)
       objectReference: {fileID: 0}
+    - target: {fileID: 5280396448920461772, guid: 12d848a820bb263489cc8261ee74c551, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 12d848a820bb263489cc8261ee74c551, type: 3}
 --- !u!4 &1860648519 stripped
@@ -79597,6 +79745,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Cube (28)
       objectReference: {fileID: 0}
+    - target: {fileID: 5280396448920461772, guid: 12d848a820bb263489cc8261ee74c551, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 12d848a820bb263489cc8261ee74c551, type: 3}
 --- !u!4 &1889192827 stripped
@@ -80102,6 +80254,10 @@ PrefabInstance:
     - target: {fileID: 5280396448920461772, guid: 12d848a820bb263489cc8261ee74c551, type: 3}
       propertyPath: m_Name
       value: Cube (30)
+      objectReference: {fileID: 0}
+    - target: {fileID: 5280396448920461772, guid: 12d848a820bb263489cc8261ee74c551, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 12d848a820bb263489cc8261ee74c551, type: 3}
@@ -81222,6 +81378,10 @@ PrefabInstance:
     - target: {fileID: 5280396448920461772, guid: 12d848a820bb263489cc8261ee74c551, type: 3}
       propertyPath: m_Name
       value: Cube (22)
+      objectReference: {fileID: 0}
+    - target: {fileID: 5280396448920461772, guid: 12d848a820bb263489cc8261ee74c551, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 12d848a820bb263489cc8261ee74c551, type: 3}
@@ -86119,7 +86279,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5280396448920461772, guid: 12d848a820bb263489cc8261ee74c551, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 12d848a820bb263489cc8261ee74c551, type: 3}
@@ -87117,6 +87277,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Cube (43)
       objectReference: {fileID: 0}
+    - target: {fileID: 5280396448920461772, guid: 12d848a820bb263489cc8261ee74c551, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 12d848a820bb263489cc8261ee74c551, type: 3}
 --- !u!4 &2082071433 stripped
@@ -87264,6 +87428,10 @@ PrefabInstance:
     - target: {fileID: 5280396448920461772, guid: 12d848a820bb263489cc8261ee74c551, type: 3}
       propertyPath: m_Name
       value: Cube (51)
+      objectReference: {fileID: 0}
+    - target: {fileID: 5280396448920461772, guid: 12d848a820bb263489cc8261ee74c551, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 12d848a820bb263489cc8261ee74c551, type: 3}
