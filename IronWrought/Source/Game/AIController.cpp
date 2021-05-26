@@ -75,8 +75,6 @@ Vector3 CPatrol::Update(const Vector3& aPosition)
 		Vector3 newPos;
 		Vector3 dir;
 
-		float epsilon = 0.05f;
-
 		dir = (myPath[pathSize - 1] - aPosition);
 		dir.Normalize();
 

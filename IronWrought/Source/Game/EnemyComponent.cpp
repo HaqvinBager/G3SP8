@@ -131,14 +131,14 @@ void CEnemyComponent::Update()//får bestämma vilket behaviour vi vill köra i 
 				}
 			}
 		}
-		if (myHasFoundPlayer) {
+		/*if (myHasFoundPlayer) {
 			std::cout << "SEEK" << std::endl;
 			SetState(EBehaviour::Seek);
 		}
-		else {
+		else {*/
 			std::cout << "PATROL" << std::endl;
 			SetState(EBehaviour::Patrol);
-		}
+		//}
 
 		//if (mySettings.myRadius * mySettings.myRadius >= distanceToPlayer) {
 		//	/*if (distanceToPlayer <= mySettings.myAttackDistance * mySettings.myAttackDistance)
