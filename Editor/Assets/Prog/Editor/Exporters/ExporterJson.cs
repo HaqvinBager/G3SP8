@@ -98,6 +98,7 @@ public class ExporterJson
         Json.AddToExport(ExportAudioSource.Export(aSceneName));
         Json.AddToExport(ExportVFX.Export(aSceneName));
         Json.AddToExport(ExportSpotLight.Export());
+        Json.AddToExport(ExportEventListener.Export());
         Json.AddToExport(FusePickUpExporter.Export(aSceneName), true);
     }
 
