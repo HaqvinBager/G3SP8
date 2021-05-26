@@ -35,10 +35,8 @@ void CHealthPickupComponent::Update()
 
 void CHealthPickupComponent::OnEnable()
 {
-	Enabled(true);
 }
 
 void CHealthPickupComponent::OnDisable()
 {
-	Enabled(false);
 }

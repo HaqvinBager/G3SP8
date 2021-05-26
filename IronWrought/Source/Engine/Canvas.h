@@ -56,6 +56,8 @@ public:
 	std::vector<CAnimatedUIElement*> EmplaceAnimatedUI(std::vector<CSpriteInstance*>& someFramesToReturn) const;
 
 private:
+	void MenuUpdate();
+
 	bool InitPivotAndPos(const rapidjson::GenericObject<false, rapidjson::Value>& aRapidObject, const Vector2& aParentPivot = { 0.0f,0.0f }, const Vector2& aParentPosition = { 0.0f,0.0f });
 	bool InitButton(const rapidjson::GenericObject<false, rapidjson::Value>& aRapidObject, const int& anIndex);
 	bool InitText(const rapidjson::GenericObject<false, rapidjson::Value>& aRapidObject, const int& anIndex);

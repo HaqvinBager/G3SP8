@@ -35,7 +35,6 @@ CCanvas::CCanvas() :
 
 CCanvas::~CCanvas()
 {
-	CMainSingleton::PostMaster().Unsubscribe(EMessageType::UpdateCrosshair, this);
 	UnsubscribeToMessages();
 	myMessageTypes.clear();
 
@@ -154,11 +153,6 @@ void CCanvas::Init(const std::string& aFilePath, const Vector2& aParentPivot, co
 				myButtons.back()->SetRenderLayer(static_cast<ERenderOrder>(2 + myCurrentRenderLayer));
 			}
 		}
-		//for (int i = 0; i < currentSize; ++i)
-		//{
-		//	InitButton(buttonDataArray[i].GetObjectW(), i, aScene);
-		//	myButtons[i]->SetRenderLayer(static_cast<ERenderOrder>(2 + myCurrentRenderLayer), aScene);
-		//}
 	}
 
 	if (document.HasMember("Texts"))
@@ -187,10 +181,6 @@ void CCanvas::Init(const std::string& aFilePath, const Vector2& aParentPivot, co
 				InitText(textDataArray[i].GetObjectW(), i);
 			}
 		}
-		//for (unsigned int i = 0; i < textDataArray.Size(); ++i)
-		//{
-		//	InitText(textDataArray[i].GetObjectW(), i);
-		//}
 	}
 
 	if (document.HasMember("Animated UI Elements"))
@@ -219,11 +209,6 @@ void CCanvas::Init(const std::string& aFilePath, const Vector2& aParentPivot, co
 				myAnimatedUIs.back()->SetRenderLayer(static_cast<ERenderOrder>(2 + myCurrentRenderLayer));
 			}
 		}
-		//for (int i = 0; i < currentSize; ++i)
-		//{
-		//	InitAnimatedElement(animatedDataArray[i].GetObjectW(), i, aScene);
-		//	myAnimatedUIs.back()->SetRenderLayer(static_cast<ERenderOrder>(2 + myCurrentRenderLayer), aScene);
-		//}
 	}
 
 	if (document.HasMember("Background"))
@@ -258,11 +243,6 @@ void CCanvas::Init(const std::string& aFilePath, const Vector2& aParentPivot, co
 				mySprites.back()->SetRenderOrder(static_cast<ERenderOrder>(2 + myCurrentRenderLayer));
 			}
 		}
-		//for (int i = 0; i < currentSize; ++i)
-		//{
-		//	InitSprite(spriteDataArray[i].GetObjectW(), i);
-		//	mySprites.back()->SetRenderOrder(static_cast<ERenderOrder>(2 + myCurrentRenderLayer), aScene);
-		//}
 	}
 
 	if (document.HasMember("PostmasterEvents"))
@@ -296,11 +276,6 @@ void CCanvas::Init(const std::string& aFilePath, const Vector2& aParentPivot, co
 				myWidgets[i]->SetEnabled(false);
 			}
 		}
-		//for (int i = 0; i < currentSize; ++i)
-		//{
-		//	myWidgets[i]->Init(ASSETPATH(widgetsArray[i]["Path"].GetString()), aScene, true, myPivot, myPosition, 3);
-		//	myWidgets[i]->SetEnabled(false);
-		//}
 	}
 }
 
@@ -321,83 +296,8 @@ void CCanvas::Update()
 		mySprites[i]->Update();
 	}
 
-	if (myButtons.size() <= 0)
-		return;
-
-	if (myWidgets.size() > 0)// This is a quick solution. Nothing to keep.
-	{
-		for (unsigned short i = 0; i < myWidgets.size(); ++i)
-		{
-			switch (i)
-			{
-				case 0:
-						myLevelToLoad = "Level_1-1";
-				break;
-
-				case 1:
-					if(myWidgets[i]->GetEnabled())
-						myLevelToLoad = "Level_1-2";
-				break;
-
-				case 2:
-					if(myWidgets[i]->GetEnabled())
-						myLevelToLoad = "Level_2-1";
-				break;
-
-				case 3:
-					if(myWidgets[i]->GetEnabled())
-						myLevelToLoad = "Level_2-2";
-				break;
-
-				case 7:
-				{
-					if (!myWidgets[i]->GetEnabled())
-						continue;
-
-					for (auto& button : myButtons)
-					{
-						button->Enabled(false);
-					}
-				}	
-				break;
-				default:
-				break;
-						
-			}
-#ifdef VERTICAL_SLICE
-			myLevelToLoad = "VerticalSlice";
-#endif
-		}
-	}
-
-	DirectX::SimpleMath::Vector2 mousePos = { static_cast<float>(Input::GetInstance()->MouseX()), static_cast<float>(Input::GetInstance()->MouseY()) };
-	for (unsigned int i = 0; i < myButtons.size(); ++i)
-	{
-		myButtons[i]->CheckMouseCollision(mousePos);
-	}
-
-	if (Input::GetInstance()->IsMousePressed(Input::EMouseButton::Left))
-	{
-		for (unsigned int i = 0; i < myButtons.size(); ++i)
-		{
-			if (myButtons[i]->Click(true, &myLevelToLoad))
-			{
-				CMainSingleton::PostMaster().Send({ EMessageType::CanvasButtonIndex, &i });
-			}
-		}
-	}
-
-	if (Input::GetInstance()->IsMouseReleased(Input::EMouseButton::Left))
-	{
-		for (unsigned int i = 0; i < myButtons.size(); ++i)
-		{
-			if(myButtons[i]->Click(false, &myLevelToLoad))			
-			{
-				CMainSingleton::PostMaster().Send({ EMessageType::CanvasButtonIndex, &i });
-			}
-		}
-	}
-
+	MenuUpdate();
+	
 	for (auto& widget : myWidgets)
 	{
 		widget->Update();
@@ -410,24 +310,30 @@ void CCanvas::Receive(const SMessage& aMessage)
 	{
 		switch (aMessage.myMessageType)
 		{
-			case EMessageType::PlayerHealthChanged:
-			{
-				if (myAnimatedUIs.size() > 0)
-				{
-					if (myAnimatedUIs[0])
-						myAnimatedUIs[0]->Level(*static_cast<float*>(aMessage.data));
-				}
-			}
-			break;
-
 			case EMessageType::UpdateCrosshair:
 			{
 				if (mySprites.empty())
 					return;
-				if (!myIsHUDCanvas)
-					return;
-				PostMaster::SCrossHairData* aData = reinterpret_cast<PostMaster::SCrossHairData*>(aMessage.data);
-				mySprites[0]->PlayAnimationUsingInternalData(aData->myIndex, aData->myShouldBeReversed);
+
+				PostMaster::SCrossHairData crosshairData = *static_cast<PostMaster::SCrossHairData*>(aMessage.data);
+				if (crosshairData.myTargetStatus == PostMaster::SCrossHairData::ETargetStatus::None)
+				{
+					mySprites[0]->SetShouldRender(true);
+					mySprites[1]->SetShouldRender(false);
+				}
+				else if (crosshairData.myTargetStatus == PostMaster::SCrossHairData::ETargetStatus::Targeted)
+				{
+					mySprites[0]->SetShouldRender(false);
+					mySprites[1]->SetShouldRender(true);
+				}
+				else if (crosshairData.myTargetStatus == PostMaster::SCrossHairData::ETargetStatus::Holding)
+				{
+					mySprites[0]->SetShouldRender(false);
+					mySprites[1]->SetShouldRender(false);
+				}
+				//PostMaster::SCrossHairData* aData = reinterpret_cast<PostMaster::SCrossHairData*>(aMessage.data);
+				//mySprites[0]->PlayAnimationUsingInternalData(aData->myIndex, aData->myShouldBeReversed);
+				return;
 			}break;
 
 			default:
@@ -452,6 +358,7 @@ void CCanvas::Receive(const SMessage& aMessage)
 					CCanvas& widget = *myWidgets[myCurrentWidgetIndex];
 					widget.SetEnabled(!widget.GetEnabled());
 				}
+				return;
 			}break;
 
 			default:
@@ -478,6 +385,7 @@ void CCanvas::SubscribeToMessages()
 	}
 
 	CMainSingleton::PostMaster().Subscribe(EMessageType::ToggleWidget, this);
+	CMainSingleton::PostMaster().Subscribe(EMessageType::UpdateCrosshair, this);
 }
 
 void CCanvas::UnsubscribeToMessages()
@@ -488,6 +396,7 @@ void CCanvas::UnsubscribeToMessages()
 	}
 
 	CMainSingleton::PostMaster().Unsubscribe(EMessageType::ToggleWidget, this);
+	CMainSingleton::PostMaster().Unsubscribe(EMessageType::UpdateCrosshair, this);
 }
 
 bool CCanvas::GetEnabled()
@@ -608,6 +517,83 @@ std::vector<CAnimatedUIElement*> CCanvas::EmplaceAnimatedUI(std::vector<CSpriteI
 	}
 
 	return std::move(elementsToRender);
+}
+
+void CCanvas::MenuUpdate()
+{
+	if (myIsHUDCanvas)
+		return;
+
+	if (myWidgets.size() > 0)// This is a quick solution. Nothing to keep.
+	{
+		for (unsigned short i = 0; i < myWidgets.size(); ++i)
+		{
+			switch (i)
+			{
+				case 0:
+				myLevelToLoad = "Level_1-1";
+				break;
+
+				case 1:
+				if(myWidgets[i]->GetEnabled())
+					myLevelToLoad = "Level_1-2";
+				break;
+
+				case 2:
+				if(myWidgets[i]->GetEnabled())
+					myLevelToLoad = "Level_2-1";
+				break;
+
+				case 3:
+				if(myWidgets[i]->GetEnabled())
+					myLevelToLoad = "Level_2-2";
+				break;
+
+				case 7:
+				{
+					if (!myWidgets[i]->GetEnabled())
+						continue;
+
+					for (auto& button : myButtons)
+					{
+						button->Enabled(false);
+					}
+				}	
+				break;
+				default:
+				break;
+
+			}
+		}
+	}
+
+	DirectX::SimpleMath::Vector2 mousePos = { static_cast<float>(Input::GetInstance()->MouseX()), static_cast<float>(Input::GetInstance()->MouseY()) };
+	for (unsigned int i = 0; i < myButtons.size(); ++i)
+	{
+		myButtons[i]->CheckMouseCollision(mousePos);
+	}
+
+	if (Input::GetInstance()->IsMousePressed(Input::EMouseButton::Left))
+	{
+		for (unsigned int i = 0; i < myButtons.size(); ++i)
+		{
+			if (myButtons[i]->Click(true, &myLevelToLoad))
+			{
+				CMainSingleton::PostMaster().Send({ EMessageType::CanvasButtonIndex, &i });
+			}
+		}
+	}
+
+	if (Input::GetInstance()->IsMouseReleased(Input::EMouseButton::Left))
+	{
+		for (unsigned int i = 0; i < myButtons.size(); ++i)
+		{
+			if(myButtons[i]->Click(false, &myLevelToLoad))			
+			{
+				CMainSingleton::PostMaster().Send({ EMessageType::CanvasButtonIndex, &i });
+			}
+		}
+	}
 }
 
 bool CCanvas::InitPivotAndPos(const rapidjson::GenericObject<false, rapidjson::Value>& aRapidObject, const Vector2& aParentPivot, const Vector2& aParentPosition)
