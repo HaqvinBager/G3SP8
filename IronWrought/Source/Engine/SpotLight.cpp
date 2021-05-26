@@ -102,10 +102,13 @@ const Matrix& CSpotLight::GetProjectionMatrix() const
 
 void CSpotLight::SetPosition(Vector3 aPosition)
 {
-    myPosition = aPosition;
-
-    UpdateWorld();
-    UpdateView();
+    Vector3 vec = (aPosition - myPosition);
+    if (fabsf(vec.LengthSquared()) > 0.0f)
+    {
+        myPosition = aPosition;
+        UpdateWorld();
+        UpdateView();
+    }
 }
 
 void CSpotLight::SetColor(Vector3 aColor)

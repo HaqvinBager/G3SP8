@@ -1,6 +1,4 @@
-﻿using System;
-using System.IO;
-using System.Collections;
+﻿using System.IO;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -163,6 +161,21 @@ public static class BinaryWriterExtensions
         }
     }
 
+    public static void Write(this BinaryWriter aBinWriter, List<SpotLight> someData)
+    {
+        aBinWriter.Write(someData.Count);
+        foreach (var data in someData)
+        {
+            aBinWriter.Write(data.instanceID);
+            aBinWriter.Write(data.range);
+            aBinWriter.Write(data.color);
+            aBinWriter.Write(data.intensity);
+            aBinWriter.Write(data.innerSpotAngle);
+            aBinWriter.Write(data.outerSpotAngle);
+        }
+    }
+
+
     public static void Write(this BinaryWriter aBinWriter, List<ColliderLink> someData)
     {
         aBinWriter.Write(someData.Count);
@@ -290,6 +303,11 @@ public static class BinaryWriterExtensions
     public static void Write(this BinaryWriter aBinWriter, PointLightCollection data)
     {
         aBinWriter.Write(data.lights);
+    }
+
+    public static void Write(this BinaryWriter aBinWriter, SpotLightCollection data)
+    {
+        aBinWriter.Write(data.spotLights);
     }
 
     public static void Write(this BinaryWriter aBinWriter, DecalCollection data)

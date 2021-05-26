@@ -1,4 +1,4 @@
-#include "stdafx.h"
+ï»¿#include "stdafx.h"
 #include "TransformComponent.h"
 #include "AIController.h"
 #include "PhysXWrapper.h"
@@ -33,6 +33,7 @@ CPatrol::CPatrol(const std::vector<CPatrolPointComponent*>& somePositions, SNavM
 
 void CPatrol::Enter(const Vector3& aPosition)
 {
+	myPath.clear();
 	if (myNavMesh == nullptr)
 		return;
 
@@ -51,9 +52,9 @@ Vector3 CPatrol::Update(const Vector3& aPosition)
 		return Vector3::Zero;
 	if (myPatrolPoints.empty())
 		return Vector3::Zero;
-	
+
 	Vector3 patrolPointPosition = myPatrolPoints[myTarget]->GameObject().myTransform->Position();
-	CPatrolPointComponent* patrolPoint = FindBestPatrolPoint(aPosition);
+	CPatrolPointComponent* patrolPoint;// = FindBestPatrolPoint(aPosition);
 
 	if (CheckIfOverlap(aPosition, patrolPointPosition)) // change patrol points & calculate path
 	{
@@ -98,9 +99,9 @@ void CPatrol::SetPath(std::vector<Vector3> aPath, Vector3 aFinalPosition)
 
 	myPath.clear();
 	myPath.push_back(aFinalPosition);
-	for (unsigned int i = 0; i < aPath.size(); ++i) {
+	for (unsigned int i = 1; i < aPath.size(); ++i) {
 		myPath.push_back(aPath[i]);
-		CDebug::GetInstance()->DrawLine(aPath[i], aFinalPosition, 60.0f);
+		CDebug::GetInstance()->DrawLine(aPath[i - 1], aPath[i], 60.0f);
 	}
 }
 
@@ -134,6 +135,8 @@ CSeek::CSeek(SNavMesh* aNavMesh) : myNavMesh(aNavMesh), myTarget(nullptr) {}
 
 void CSeek::Enter(const Vector3& aPosition)
 {
+	myPath.clear();
+
 	aPosition;
 }
 
@@ -210,6 +213,8 @@ CAttack::CAttack(CEnemyComponent* aUser, Vector3 aResetPosition) : myDamage(1.0f
 
 void CAttack::Enter(const Vector3& aPosition)
 {
+	myPath.clear();
+
 	aPosition;
 }
 
@@ -221,7 +226,7 @@ Vector3 CAttack::Update(const Vector3& aPosition)
 	}
 	Vector3 direction = myTarget->WorldPosition() - aPosition;
 
-	//byt ut attacktimer och attackcooldown till animationtimer - Alexander Matthäi 2021-05-07
+	//byt ut attacktimer och attackcooldown till animationtimer - Alexander Matthï¿½i 2021-05-07
 	myAttackTimer += CTimer::Dt();
 	if (myAttackTimer >= myAttackCooldown) {
 		Vector3 origin = aPosition;

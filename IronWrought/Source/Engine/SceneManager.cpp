@@ -40,6 +40,7 @@
 #include <SafetyDoorComponent.h>
 #include <FuseboxComponent.h>
 #include <FuseComponent.h>
+#include "SpotLightComponent.h"
 
 CScene* CSceneManager::ourLastInstantiatedScene = nullptr;
 CSceneManager::CSceneManager()
@@ -103,6 +104,7 @@ CScene* CSceneManager::CreateScene(const std::string& aSceneJson)
 		AddPointLights(*scene, binLevelData.myPointLights);
 		AddModelComponents(*scene, binLevelData.myModels);
 		AddCollider(*scene, binLevelData.myColliders);
+		AddSpotLights(*scene, binLevelData.mySpotLights);
 
 		//CreateCustomEvents(*scene);
 		//CreateCustomEventListeners(*scene);
@@ -513,6 +515,20 @@ void CSceneManager::AddPointLights(CScene& aScene, const std::vector<Binary::SPo
 			pointLight.color,
 			pointLight.intensity);
 		aScene.AddInstance(pointLightComponent->GetPointLight());
+	}
+}
+
+void CSceneManager::AddSpotLights(CScene& aScene, const std::vector<Binary::SSpotLight>& someData)
+{
+	for (const auto& data : someData)
+	{
+		CGameObject* gameObject = aScene.FindObjectWithID(data.instanceID);
+
+		if (gameObject == nullptr)
+			continue;
+
+		auto component = gameObject->AddComponent<CSpotLightComponent>(*gameObject, data);
+		aScene.AddInstance(component->GetSpotLight());
 	}
 }
 

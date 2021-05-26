@@ -1,10 +1,5 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
-using UnityEditor;
-using System.IO;
-using System.Text;
-using UnityEngine.SceneManagement;
 
 [System.Serializable]
 public struct PointLight
@@ -30,15 +25,15 @@ public class ExportPointlights
        
         for(int i = 0; i < allLights.Length; ++i)
         {
+            if (allLights[i].type != LightType.Point)
+                continue;
+
             Transform idTransform = null;
             PointLight lightValue = new PointLight();
             if (allLights[i].transform.parent == null)
                 idTransform = allLights[i].transform;
             else
                 idTransform = allLights[i].transform.parent;
-
-            if (allLights[i].type != LightType.Point)
-                continue;
 
             lightValue.instanceID = idTransform.GetInstanceID();
             lightValue.range = allLights[i].range;

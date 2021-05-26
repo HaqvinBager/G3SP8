@@ -53,6 +53,14 @@ namespace Binary {
 		Vector3 color;
 		float intensity;
 	};
+	struct SSpotLight {
+		int instanceID;
+		float range;
+		Vector3 color;
+		float intensity;
+		float innerSpotAngle;
+		float outerSpotAngle;
+	};
 	struct SPlayer
 	{
 		int instanceID;
@@ -112,6 +120,7 @@ namespace Binary {
 		std::vector<STransform> myTransforms;
 		std::vector<SModel> myModels;
 		std::vector<SPointLight> myPointLights;
+		std::vector<SSpotLight> mySpotLights;
 		std::vector<SCollider> myColliders;
 		std::vector<SInstancedModel> myInstancedModels;
 		//std::vector<SInstanceName> myInstanceNames;

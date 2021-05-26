@@ -56,6 +56,7 @@ public class ExporterBin
         exporter.binWriter.Write(transforms);
         exporter.binWriter.Write(models);
         exporter.binWriter.Write(pointLights);
+        exporter.binWriter.Write(ExportSpotLight.Export());
         exporter.binWriter.Write(colliders);
         exporter.binWriter.Write(instancedModels);
         exporter.binWriter.Close();
