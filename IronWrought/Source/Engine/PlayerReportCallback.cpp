@@ -40,7 +40,7 @@ void CPlayerReportCallback::onShapeHit(const physx::PxControllerShapeHit& hit)
 							
 								CMainSingleton::PostMaster().SendLate({ EMessageType::PlayerHealthPickup, nullptr }); // For AudioManager
 							}
-						}
+						}/*
 						else if (objectTransform->GetComponent<CFuseComponent>()) 
 						{
 							objectTransform->GetComponent<CFuseComponent>()->OnPickUp();
@@ -48,7 +48,7 @@ void CPlayerReportCallback::onShapeHit(const physx::PxControllerShapeHit& hit)
 						else if (objectTransform->GetComponent<CFuseboxComponent>()) 
 						{
 							objectTransform->GetComponent<CFuseboxComponent>()->RunEvent();
-						}
+						}*/
 
 						Vector3 v = player->GetLinearVelocity();
 						Vector3 n = { hit.worldNormal.x, hit.worldNormal.y, hit.worldNormal.z };

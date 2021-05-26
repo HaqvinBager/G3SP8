@@ -1,10 +1,10 @@
 #pragma once
-#include "PickupComponent.h"
+//#include "KeyComponent.h"
 
-class CFuseComponent : public CPickupComponent
+class CFuseComponent/* : public CKeyComponent*/
 {
 public:
-	CFuseComponent(CGameObject& aParent);
+	CFuseComponent(CGameObject& aParent);/*
 	~CFuseComponent() override;
 
 public:
@@ -14,5 +14,5 @@ public:
 
 	void OnEnable() override;
 	void OnDisable() override;
-	void OnPickUp() override;
+	void OnPickUp() override;*/
 };
