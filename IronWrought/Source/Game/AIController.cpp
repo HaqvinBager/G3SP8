@@ -31,7 +31,7 @@ CPatrol::CPatrol(const std::vector<CPatrolPointComponent*>& somePositions, SNavM
 	myNavMesh = aNavMesh;
 }
 
-void CPatrol::Enter(const Vector3& /*aPosition*/)
+void CPatrol::Enter(const Vector3& aPosition)
 {
 	myPath.clear();
 	if (myNavMesh == nullptr)
@@ -40,10 +40,10 @@ void CPatrol::Enter(const Vector3& /*aPosition*/)
 	if (myPatrolPoints.empty())
 		return;
 
-	//CPatrolPointComponent* patrolPoint = myPatrolPoints[0];
-	//if (patrolPoint != nullptr) {
-	//	SetPath(myNavMesh->CalculatePath(aPosition, patrolPoint->GameObject().myTransform->Position(), myNavMesh), patrolPoint->GameObject().myTransform->Position());
-	//}
+	CPatrolPointComponent* patrolPoint = myPatrolPoints[0];
+	if (patrolPoint != nullptr) {
+		SetPath(myNavMesh->CalculatePath(aPosition, patrolPoint->GameObject().myTransform->Position(), myNavMesh), patrolPoint->GameObject().myTransform->Position());
+	}
 }
 
 Vector3 CPatrol::Update(const Vector3& aPosition)
@@ -52,11 +52,11 @@ Vector3 CPatrol::Update(const Vector3& aPosition)
 		return Vector3::Zero;
 	if (myPatrolPoints.empty())
 		return Vector3::Zero;
-	
-	Vector3 patrolPointPosition = myPatrolPoints[myTarget]->GameObject().myTransform->Position();
-	CPatrolPointComponent* patrolPoint = FindBestPatrolPoint(aPosition);
 
-	if (myIsFinished)
+	Vector3 patrolPointPosition = myPatrolPoints[myTarget]->GameObject().myTransform->Position();
+	CPatrolPointComponent* patrolPoint;// = FindBestPatrolPoint(aPosition);
+
+	if (CheckIfOverlap(aPosition, patrolPointPosition)) // change patrol points & calculate path
 	{
 		myPatrolPoints[myTarget]->AddBonusValue(5);
 		patrolPoint = FindBestPatrolPoint(aPosition);
@@ -68,55 +68,13 @@ Vector3 CPatrol::Update(const Vector3& aPosition)
 		}
 
 		SetPath(myNavMesh->CalculatePath(aPosition, patrolPointPosition, myNavMesh), patrolPointPosition);
-
-		myCurrentIndex = myPath.size() - 1;
 	}
 
-	for (int i = 0; i < myPath.size() - 2; ++i)
-	{
-		CDebug::GetInstance()->DrawLine(myPath[i], myPath[i + 1]);
-	}
+	size_t pathSize = myPath.size();
+	if (pathSize > 0) {
 
-	if (!myPath.empty())
-	{
-		if (!myIsFinished)
-		{
-			if (CheckIfOverlap(aPosition, myPath[myCurrentIndex]))
-			{
-				if (myCurrentIndex > 0)
-				{
-					--myCurrentIndex;
-				}
-				else
-				{
-					myIsFinished = true;
-				}
-			}
-			Vector3 direction = { myPath[myCurrentIndex].x - aPosition.x, 0.0f, myPath[myCurrentIndex].z - aPosition.z };
-			direction.Normalize();
-			return direction;
-		}
-	}
-
-	//Vector3 patrolPointPosition;
-	//auto patrolPoint = FindBestPatrolPoint(aPosition);
-	//if (patrolPoint)
-	//	patrolPointPosition = patrolPoint->GameObject().myTransform->Position();
-
-	//if (CheckIfOverlap(aPosition, patrolPointPosition)) // change patrol points & calculate path
-	//{
-	//	patrolPoint->AddBonusValue(10);
-	//	myPath.clear();
-	//	SetPath(myNavMesh->CalculatePath(aPosition, patrolPointPosition, myNavMesh), patrolPointPosition);
-	//}
-
-	//CDebug::GetInstance()->DrawLine(aPosition, patrolPointPosition);
-
-	//size_t pathSize = myPath.size();
-	//if (pathSize > 0) {
-
-	//	Vector3 newPos;
-	//	Vector3 dir;
+		Vector3 newPos;
+		Vector3 dir;
 
 		dir = (myPath[pathSize - 1] - aPosition);
 		dir.Normalize();
@@ -141,9 +99,9 @@ void CPatrol::SetPath(std::vector<Vector3> aPath, Vector3 aFinalPosition)
 
 	myPath.clear();
 	myPath.push_back(aFinalPosition);
-	for (unsigned int i = 0; i < aPath.size(); ++i) {
+	for (unsigned int i = 1; i < aPath.size(); ++i) {
 		myPath.push_back(aPath[i]);
-		CDebug::GetInstance()->DrawLine(aPath[i], aFinalPosition, 60.0f);
+		CDebug::GetInstance()->DrawLine(aPath[i - 1], aPath[i], 60.0f);
 	}
 }
 

@@ -157,15 +157,15 @@ void CEnemyComponent::Update()//får bestämma vilket behaviour vi vill köra i 
 		//	SetState(EBehaviour::Patrol);
 		//}
 
-		if (myRigidBodyComponent) {
+		//if (myRigidBodyComponent) {
 			Vector3 targetDirection = myBehaviours[static_cast<int>(myCurrentState)]->Update(GameObject().myTransform->Position());
 
 			targetDirection.y = 0;
-			myRigidBodyComponent->AddForce(targetDirection, mySettings.mySpeed);
+			GameObject().myTransform->Move(targetDirection * mySettings.mySpeed * CTimer::Dt());
 			float targetOrientation = WrapAngle(atan2f(targetDirection.x, targetDirection.z));
 			myCurrentOrientation = Lerp(myCurrentOrientation, targetOrientation, 2.0f * CTimer::Dt());
 			GameObject().myTransform->Rotation({ 0, DirectX::XMConvertToDegrees(myCurrentOrientation) + 180.f, 0 });
-		}
+		//}
 	}
 	else {
 		myWakeUpTimer += CTimer::Dt();

@@ -35,7 +35,7 @@ Vector3 GetPointOAnCircle(Vector3 anOrigin, float anAngle, float aRadius)
 	return point;
 }
 
-std::vector<DirectX::SimpleMath::Vector3> CAStar::GetPath(const Vector3& aStartPosision, const Vector3& aEndPosision, SNavMesh* aNavMesh, STriangle* aStartTriangle, STriangle* anEndTriangle)
+std::vector<DirectX::SimpleMath::Vector3> CAStar::GetPath(const Vector3& aStartPosition, const Vector3& anEndPosition, SNavMesh* aNavMesh, STriangle* aStartTriangle, STriangle* anEndTriangle)
 {
 
 	std::vector<DirectX::SimpleMath::Vector3> newPath;
@@ -43,76 +43,44 @@ std::vector<DirectX::SimpleMath::Vector3> CAStar::GetPath(const Vector3& aStartP
 		return newPath;
 	}
 	if (aStartTriangle->myId == anEndTriangle->myId) {
-		newPath.emplace_back(aEndPosision);
+		newPath.emplace_back(anEndPosition);
 		return newPath;
 	}
-	newPath = StringPull(aStartPosision, aEndPosision, GetPortals(AStar(aNavMesh, aStartTriangle, anEndTriangle), aNavMesh));
+	newPath = StringPull(aStartPosition, anEndPosition, GetPortals(AStar(aNavMesh, aStartTriangle, anEndTriangle), aNavMesh));
 	std::vector<Vector3> path;
 
-	for (int i = 1; i < newPath.size(); ++i)
+	for (size_t i = 1; i < newPath.size() - 1; ++i)
 	{
-		Vector3 previousPoint = newPath[i - 1];
-		if (newPath[i].x - previousPoint.x < 0.1f && previousPoint.x - newPath[i].x < 0.1f)
+		float degrees;
+		bool hasCollided;
+		for (int j = 0; j < 4; ++j)
 		{
-			if (newPath[i].z - previousPoint.z < 0.1f && previousPoint.z - newPath[i].z < 0.1f)
+			degrees = 45.0f + (90.0f * j);
+			hasCollided = false;
+			for (auto& triangle : aNavMesh->myTriangles)
 			{
-				continue;
+				if (aNavMesh->CheckIfOverlap(GetPointOAnCircle(newPath[i], degrees, 0.1f), triangle))
+				{
+					hasCollided = true;
+					break;
+				}
+				else
+					hasCollided = false;
+			}
+			if (!hasCollided)
+			{
+				Vector3 previousPoint = newPath[i - 1];
+				if (newPath[i].x - previousPoint.x < 0.1f && previousPoint.x - newPath[i].x < 0.1f)
+					if (newPath[i].z - previousPoint.z < 0.1f && previousPoint.z - newPath[i].z < 0.1f)
+						continue;
+
+				path.push_back(GetPointOAnCircle(newPath[i], degrees + 180.0f, 0.5f));
+				break;
 			}
 		}
-		path.push_back(newPath[i]);
-	}
-	newPath.clear();
-
-	for (int i = 1; i < path.size() - 1; ++i)
-	{
-		if (path.size() >= 3)
-		{
-			Vector3 centerPosition = { (path[i - 1].x + path[i].x + path[i + 1].x) / 3.0f,  0.0f,
-				(path[i - 1].z + path[i].z + path[i + 1].z) / 3.0f };
-			Vector3 direction = { path[i].x - centerPosition.x, 0.0f, path[i].z - centerPosition.z };
-			direction.Normalize();
-			direction = { path[i].x + (direction.x * 1.1f), 0.0f, path[i].z + (direction.z * 1.1f) };
-			newPath.push_back(direction);
-		}
 	}
 
-	//path.push_back(anEndPosition);
-	//for (int i = 1; i < newPath.size() - 1; ++i)
-	//{
-	//	float degrees;
-	//	bool hasCollided;
-	//	for (int j = 0; j < 4; ++j)
-	//	{
-	//		degrees = 45.0f + (90.0f * j);
-	//		hasCollided = false;
-	//		for (auto& triangle : aNavMesh->myTriangles)
-	//		{
-	//			if (aNavMesh->CheckIfOverlap(GetPointOAnCircle(newPath[i], degrees, 0.1f), triangle))
-	//			{
-	//				hasCollided = true;
-	//				break;
-	//			}
-	//			else
-	//				hasCollided = false;
-	//		}
-	//		if (!hasCollided)
-	//		{
-	//			Vector3 previousPoint = newPath[i - 1];
-	//			if (newPath[i].x - previousPoint.x < 0.1f && previousPoint.x - newPath[i].x < 0.1f)
-	//			{
-	//				if (newPath[i].z - previousPoint.z < 0.1f && previousPoint.z - newPath[i].z < 0.1f)
-	//				{
-	//					continue;
-	//				}
-	//			}
-	//			path.push_back(GetPointOAnCircle(newPath[i], degrees + 180.0f, 0.1f));
-	//			break;
-	//		}
-	//	}
-	//}
-	//path.push_back(aStartPosition);
-
-	return newPath;
+	return path;
 }
 
 std::vector<DirectX::SimpleMath::Vector3> CAStar::GetPath(const Vector3& aStartPosition, const Vector3& anEndPosition, SNavMesh* aNavMesh/*, STriangle* aStartTriangle, STriangle* anEndTriangle*/)
