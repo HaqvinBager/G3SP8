@@ -206,12 +206,12 @@ bool CFullscreenRenderer::Init(CDirectXFramework* aFramework) {
 	ENGINE_HR_MESSAGE(device->CreateShaderResourceView(noiseTextureBuffer, &noiseSRVDesc, &myNoiseTexture), "Noise Shader Resource View could not be created.");
 	
 	//Level 1-1 & 1-2
-	myPostProcessingBufferData.myWhitePointColor = { 255.0f/255.0f, 170.0f/255.0f, 0.5f, 1.0f };
-	myPostProcessingBufferData.myWhitePointIntensity = 10.0f;
-	myPostProcessingBufferData.myExposure = 1.0f;
+	myPostProcessingBufferData.myWhitePointColor = { 130.0f/255.0f, 167.0f/255.0f, 255.0f/255.0f, 1.0f };
+	myPostProcessingBufferData.myWhitePointIntensity = 1.0f;
+	myPostProcessingBufferData.myExposure = 1.1f;
 	myPostProcessingBufferData.myIsReinhard = false;
-	myPostProcessingBufferData.myIsUncharted = true;
-	myPostProcessingBufferData.myIsACES = false;
+	myPostProcessingBufferData.myIsUncharted = false;
+	myPostProcessingBufferData.myIsACES = true;
 	
 	//Level 2-1 & 2-2
 	//myPostProcessingBufferData.myWhitePointColor = { 128.0f/255.0f, 170.0f/255.0f, 1.0f, 1.0f };
@@ -221,10 +221,10 @@ bool CFullscreenRenderer::Init(CDirectXFramework* aFramework) {
 	//myPostProcessingBufferData.myIsUncharted = true;
 	//myPostProcessingBufferData.myIsACES = false;
 
-	myPostProcessingBufferData.mySSAORadius = 1.1f;
-	myPostProcessingBufferData.mySSAOSampleBias = 0.0163f;
-	myPostProcessingBufferData.mySSAOMagnitude = 1.8f;
-	myPostProcessingBufferData.mySSAOContrast = 0.5f;
+	myPostProcessingBufferData.mySSAORadius = 0.6f;
+	myPostProcessingBufferData.mySSAOSampleBias = 0.2420f;
+	myPostProcessingBufferData.mySSAOMagnitude = 1.4f;
+	myPostProcessingBufferData.mySSAOContrast = 0.6f;
 
 #pragma endregion
 	return true;
