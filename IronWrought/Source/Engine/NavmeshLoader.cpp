@@ -247,3 +247,18 @@ void SNavMesh::ResolveStuck(STriangle* aStartTriangle, const DirectX::SimpleMath
 		aStartTriangle = aNavMesh->GetTriangleAtPoint(newPos);
 	}
 }
+
+bool SNavMesh::CheckIfOverlap(Vector3 aPosition, STriangle* aTriangle)
+{
+	float d1, d2, d3;
+	bool has_neg, has_pos;
+
+	d1 = Sign(aPosition, aTriangle->myVertexPositions[0], aTriangle->myVertexPositions[1]);
+	d2 = Sign(aPosition, aTriangle->myVertexPositions[1], aTriangle->myVertexPositions[2]);
+	d3 = Sign(aPosition, aTriangle->myVertexPositions[2], aTriangle->myVertexPositions[0]);
+
+	has_neg = (d1 < 0) || (d2 < 0) || (d3 < 0);
+	has_pos = (d1 > 0) || (d2 > 0) || (d3 > 0);
+
+	return !(has_neg && has_pos);
+}
