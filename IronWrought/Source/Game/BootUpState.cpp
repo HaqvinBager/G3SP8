@@ -105,7 +105,7 @@ void CBootUpState::Update()
 		if (myLogoToRender >= myLogos.size())
 		{
 			IRONWROUGHT->ShowCursor(false);
-			myStateStack.PopTopAndPush(CStateStack::EState::MainMenu);
+			myStateStack.PopTopAndPush(CStateStack::EState::InGame);
 			return;
 		}
 
@@ -123,7 +123,7 @@ void CBootUpState::Update()
 
 		if (myLogoToRender >= myLogos.size())
 		{
-			myStateStack.PopTopAndPush(CStateStack::EState::MainMenu);
+			myStateStack.PopTopAndPush(CStateStack::EState::InGame);
 			return;
 		}
 		myTimer = 0.0f;
@@ -133,7 +133,7 @@ void CBootUpState::Update()
 
 		if (myLogoToRender >= myLogos.size())
 		{
-			myStateStack.PopTopAndPush(CStateStack::EState::MainMenu);
+			myStateStack.PopTopAndPush(CStateStack::EState::InGame);
 			return;
 		}
 

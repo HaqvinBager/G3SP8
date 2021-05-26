@@ -55,12 +55,12 @@ void CEnemyComponent::Awake()
 void CEnemyComponent::Start()
 {
 	myPlayer = CEngine::GetInstance()->GetActiveScene().Player();
-	CScene &scene = CEngine::GetInstance()->GetActiveScene();
+	CScene& scene = CEngine::GetInstance()->GetActiveScene();
 	myNavMesh = scene.NavMesh();
 
 	if (mySettings.myPatrolGameObjectIds.size() > 0) {
 		for (int i = 0; i < mySettings.myPatrolGameObjectIds.size(); ++i) {
-			CGameObject* patrolGameObject = scene.FindObjectWithID(mySettings.myPatrolGameObjectIds[i]);
+			CGameObject* patrolGameObject = CEngine::GetInstance()->GetActiveScene().FindObjectWithID(mySettings.myPatrolGameObjectIds[i]);
 			float points = mySettings.myPatrolIntrestValue[i];
 			patrolGameObject->AddComponent<CPatrolPointComponent>(*patrolGameObject, points);
 			scene.AddInstance(patrolGameObject->GetComponent<CPatrolPointComponent>());
@@ -131,12 +131,14 @@ void CEnemyComponent::Update()//får bestämma vilket behaviour vi vill köra i 
 				}
 			}
 		}
-		if (myHasFoundPlayer) {
+		/*if (myHasFoundPlayer) {
+			std::cout << "SEEK" << std::endl;
 			SetState(EBehaviour::Seek);
 		}
-		else {
+		else {*/
+			std::cout << "PATROL" << std::endl;
 			SetState(EBehaviour::Patrol);
-		}
+		//}
 
 		//if (mySettings.myRadius * mySettings.myRadius >= distanceToPlayer) {
 		//	/*if (distanceToPlayer <= mySettings.myAttackDistance * mySettings.myAttackDistance)

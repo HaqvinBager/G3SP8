@@ -68,7 +68,6 @@ CInGameState::~CInGameState()
 	}
 }
 
-//CGameObject* enemy = new CGameObject(919);
 void CInGameState::Awake()
 {
 	CJsonReader::Get()->InitFromGenerated();

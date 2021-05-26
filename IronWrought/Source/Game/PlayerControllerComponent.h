@@ -54,6 +54,10 @@ public:
 	void JumpHeight(const float aHeight) { myJumpHeight = aHeight; }
 	const float FallSpeed() const { return myFallSpeed; }
 	void FallSpeed(const float aSpeed) { myFallSpeed = aSpeed; }
+	const float SprintSpeedModifier() const { return mySprintSpeedModifier; }
+	void SprintSpeedModifier(const float aSprintSpeedModifier) { mySprintSpeedModifier = aSprintSpeedModifier; }
+	const float StepTime() const { return myStepTime; }
+	void StepTime(const float aStepTime) { myStepTime = aStepTime; }
 
 	void LadderEnter();
 	void LadderExit();
@@ -109,6 +113,7 @@ private:
 	float myCrouchingLerp;
 	float myWalkSpeed;
 	float myCrouchSpeed;
+	float mySprintSpeedModifier;
 	float myJumpHeight;
 	float myFallSpeed;
 	float myAirborneTimer;
