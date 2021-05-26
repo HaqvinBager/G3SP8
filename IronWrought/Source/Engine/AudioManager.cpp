@@ -335,8 +335,7 @@ void CAudioManager::Receive(const SMessage& aMessage) {
 	{
 		if (myChannels[CAST(EChannel::ResearcherVOX)]->IsPlaying())
 			return;
-		// Todo add max 3 to be playable at the same time. Can be done inside PlayRandomSoundFromCollection
-		// 
+
 		PlayCyclicRandomSoundFromCollection(myRobotAttackSounds, EChannel::RobotVOX, myAttackSoundIndices, AUDIO_MAX_NR_OF_SFX_FROM_COLLECTION);
 	}break;
 
@@ -445,6 +444,7 @@ void CAudioManager::Receive(const SMessage& aMessage) {
 	case EMessageType::PhysicsPropCollision:
 	{
 		unsigned int soundIndex = *reinterpret_cast<unsigned int*>(aMessage.data);
+		myChannels[CAST(EChannel::SFX)]->SetPitch(Random(0.95f, 1.05f));
 		myWrapper.Play(mySFXAudio[soundIndex], myChannels[CAST(EChannel::SFX)]);
 	}break;
 	
@@ -456,6 +456,12 @@ void CAudioManager::Receive(const SMessage& aMessage) {
 	case EMessageType::Resume:
 	{
 		Resume();
+	}break;
+
+	case EMessageType::EnemyStateChange:
+	{
+		unsigned int state = *reinterpret_cast<unsigned int*>(aMessage.data);
+		std::cout << "Enemy State: " << state << std::endl;
 	}break;
 
 	default: break;
@@ -683,6 +689,8 @@ void CAudioManager::SubscribeToMessages()
 	CMainSingleton::PostMaster().Subscribe(EMessageType::SetDynamicAudioSource, this);
 
 	CMainSingleton::PostMaster().Subscribe(EMessageType::PhysicsPropCollision, this);
+
+	CMainSingleton::PostMaster().Subscribe(EMessageType::EnemyStateChange, this);
 }
 
 void CAudioManager::UnsubscribeToMessages()
@@ -733,6 +741,8 @@ void CAudioManager::UnsubscribeToMessages()
 	CMainSingleton::PostMaster().Unsubscribe(EMessageType::SetDynamicAudioSource, this);
 
 	CMainSingleton::PostMaster().Unsubscribe(EMessageType::PhysicsPropCollision, this);
+
+	CMainSingleton::PostMaster().Unsubscribe(EMessageType::EnemyStateChange, this);
 }
 
 std::string CAudioManager::GetPath(EMusic type) const
@@ -782,23 +792,6 @@ std::string CAudioManager::GetPath(EResearcherEventVoiceLine type) const
 	path.append(".mp3");
 	return path;
 }
-
-//std::string CAudioManager::GetPath(EResearcherReactionVoiceLine type) const
-//{
-//	std::string path = myVoxPath;
-//	path.append(TranslateEnum(type));
-//	path.append(".mp3");
-//	return path;
-//}
-
-
-//std::string CAudioManager::GetPath(ERobotVoiceLine type) const
-//{
-//	std::string path = myVoxPath;
-//	path.append(TranslateEnum(type));
-//	path.append(".mp3");
-//	return path;
-//}
 
 std::string CAudioManager::TranslateEnum(EChannel enumerator) const
 {
@@ -863,6 +856,14 @@ std::string CAudioManager::TranslateEnum(EPropAmbience enumerator) const
 	{
 	case EPropAmbience::GrandfatherClock:
 		return "GrandfatherClock";
+	case EPropAmbience::TVStatic:
+		return "TVStatic";
+	case EPropAmbience::ElectricalCabinet:
+		return "ElectricalCabinet";
+	case EPropAmbience::Boiler:
+		return "Boiler";
+	case EPropAmbience::Refrigerator:
+		return "Refrigerator";
 	default:
 		return "";
 	}
@@ -890,6 +891,8 @@ std::string CAudioManager::TranslateEnum(ESFX enumerator) const {
 		return "PickupHeal";
 	case ESFX::EnemyAttack:
 		return "EnemyAttack";
+	case ESFX::CardboardBox:
+		return "CardboardBox";
 	default:
 		return "";
 	}

@@ -19,6 +19,7 @@
 #include "ConvexMeshColliderComponent.h"
 #include "VFXSystemComponent.h"
 #include "PhysicsPropAudioComponent.h"
+#include "EnemyAudioComponent.h"
 #include <GravityGloveComponent.h>
 #include <EnemyComponent.h>
 #include <HealthPickupComponent.h>
@@ -603,6 +604,7 @@ void CSceneManager::AddEnemyComponents(CScene& aScene, RapidArray someData)
 			}
 		}
 		gameObject->AddComponent<CEnemyComponent>(*gameObject, settings);
+		gameObject->AddComponent<CEnemyAudioComponent>(*gameObject);
 		//gameObject->AddComponent<CPatrolPointComponent>(*gameObject, )
 		//gameObject->AddComponent<CVFXSystemComponent>(*gameObject, ASSETPATH("Assets/Graphics/VFX/JSON/VFXSystem_Enemy.json"));
 	}
