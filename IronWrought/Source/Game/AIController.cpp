@@ -53,11 +53,19 @@ Vector3 CPatrol::Update(const Vector3& aPosition)
 		return Vector3::Zero;
 	
 	Vector3 patrolPointPosition = myPatrolPoints[myTarget]->GameObject().myTransform->Position();
+	CPatrolPointComponent* patrolPoint = FindBestPatrolPoint(aPosition);
 
 	if (CheckIfOverlap(aPosition, patrolPointPosition)) // change patrol points & calculate path
 	{
-		myPatrolPoints[myTarget]->AddBonusValue(10);
-		myPath.clear();
+		myPatrolPoints[myTarget]->AddBonusValue(5);
+		patrolPoint = FindBestPatrolPoint(aPosition);
+		for (int i = 0; i < myPatrolPoints.size(); ++i) {
+			if (myPatrolPoints[i] == patrolPoint) {
+				myTarget = i;
+				patrolPointPosition = myPatrolPoints[myTarget]->GameObject().myTransform->Position();
+			}
+		}
+
 		SetPath(myNavMesh->CalculatePath(aPosition, patrolPointPosition, myNavMesh), patrolPointPosition);
 	}
 
@@ -72,7 +80,7 @@ Vector3 CPatrol::Update(const Vector3& aPosition)
 		dir = (myPath[pathSize - 1] - aPosition);
 		dir.Normalize();
 
-		if (DirectX::SimpleMath::Vector3::DistanceSquared(aPosition, myPath[pathSize - 1]) < epsilon) {
+		if (CheckIfOverlap(aPosition, myPath[pathSize - 1])) {
 			myPath.pop_back();
 		}
 		return dir;
@@ -94,6 +102,7 @@ void CPatrol::SetPath(std::vector<Vector3> aPath, Vector3 aFinalPosition)
 	myPath.push_back(aFinalPosition);
 	for (unsigned int i = 0; i < aPath.size(); ++i) {
 		myPath.push_back(aPath[i]);
+		CDebug::GetInstance()->DrawLine(aPath[i], aFinalPosition, 60.0f);
 	}
 }
 
@@ -101,7 +110,7 @@ CPatrolPointComponent* CPatrol::FindBestPatrolPoint(const Vector3& aPosition)
 {
 	//const std::vector<CPatrolPointComponent*>& patrolPoints = CEngine::GetInstance()->GetActiveScene().PatrolPoints();
 	std::vector<float> intrestValues;
-	if (myPatrolPoints.empty()) {
+	if (!myPatrolPoints.empty()) {
 		for (int i = 0; i < myPatrolPoints.size(); ++i) {
 			Vector3 patrolPositions = myPatrolPoints[i]->GameObject().myTransform->Position();
 			Vector3 dist = patrolPositions - aPosition;
@@ -189,9 +198,9 @@ void CSeek::SetPath(std::vector<Vector3> aPath, Vector3 aFinalPosition)
 	}
 
 	myPath.clear();
-	myPath.emplace_back(aFinalPosition);
+	myPath.push_back(aFinalPosition);
 	for (unsigned int i = 0; i < aPath.size(); ++i) {
-		myPath.emplace_back(aPath[i]);
+		myPath.push_back(aPath[i]);
 	}
 }
 
