@@ -21,14 +21,10 @@ CGame::CGame()
 
 CGame::~CGame()
 {
-	/*std::cout << __FUNCTION__ << std::endl;*/ // Aki 2021 04 06 to test something, ok to remove
 }
 
 void CGame::Init()
 {
-	//CSceneFactory::Get()->LoadSceneBin(ASSETPATH("Assets/Generated/PhysXTest_Bin/PhysXTest.bin"), CStateStack::EState::InGame);
-	//CBinReader::Test(ASSETPATH("Assets/Generated/TestBinary.bin"));
-
 #ifdef NDEBUG
 	InitRealGame();
 #else
@@ -47,8 +43,6 @@ void CGame::InitDev()
 {
 	myStateStack.Awake(
 		{
-			CStateStack::EState::MainMenu,
-			CStateStack::EState::PauseMenu,
 			CStateStack::EState::LoadLevel,
 			CStateStack::EState::InGame //This order works, but if InGame is not last in the list we risk getting a crash (pointers to components are still ghosting around).
 		},
@@ -60,9 +54,6 @@ void CGame::InitRealGame()
 	myStateStack.Awake(
 		{
 			CStateStack::EState::BootUp,
-			CStateStack::EState::MainMenu,
-			CStateStack::EState::PauseMenu,
-			CStateStack::EState::LoadLevel,
 			CStateStack::EState::InGame
 		},
 		CStateStack::EState::BootUp);

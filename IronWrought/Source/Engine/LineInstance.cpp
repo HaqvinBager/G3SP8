@@ -12,19 +12,24 @@ CLineInstance::CLineInstance()
 {
 	myLine = nullptr;
 	myIsActive = false;
+	myTakeOwnershipOfLine = false;
 }
 CLineInstance::~CLineInstance()
 {
-	if (myLine != nullptr)
+	if (myTakeOwnershipOfLine)
 	{
-		delete myLine;
-		myLine = nullptr;
+		if (myLine != nullptr)
+		{
+			delete myLine;
+			myLine = nullptr;
+		}
 	}
 }
-CLineInstance& CLineInstance::Init(CLine* aLine )
+CLineInstance& CLineInstance::Init(CLine* aLine, const bool aTakeOwnershipOfLine)
 {
 	myLine = aLine;
 	myIsActive = true;
+	myTakeOwnershipOfLine = aTakeOwnershipOfLine;
 	return *this;
 }
 

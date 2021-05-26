@@ -74,6 +74,9 @@ private:
 	void FadeChannelOverSeconds(const EChannel& aChannel, const float& aNumberOfSeconds, const bool& aShouldFadeOut = true);
 	void SetDynamicTrack(const EAmbience& aFirstTrack, const EAmbience& aSecondTrack, const EAmbience& aThirdTrack);
 
+	void Pause();
+	void Resume();
+
 private:
 	const std::string& myAmbiencePath = "Audio/Ambience/";
 	const std::string& myPropAmbiencePath = "Audio/PropAmbience/";

@@ -1,7 +1,9 @@
 #include "stdafx.h"
+
 #include "LineFactory.h"
 #include "DirectXFramework.h"
 #include "Line.h"
+#include "LineInstance.h"
 
 #include <fstream>
 
@@ -27,16 +29,82 @@ bool CLineFactory::Init(CDirectXFramework* aFramework)
 	return true;
 }
 
-CLine* CLineFactory::CreateLine(const SM::Vector3& aFrom, const SM::Vector3& aTo, const SM::Vector4& aColor)
+CLineInstance* CLineFactory::RequestShape(const EShape aShape, const DirectX::SimpleMath::Vector4& aColor, const std::vector<DirectX::SimpleMath::Vector3>& somePositions)
+{
+	CLineInstance* shape = nullptr;
+	switch (aShape)
+	{
+		case EShape::Custom:
+		{
+			if (somePositions.empty())
+				break;
+
+			CLine* line = CreatePolygon(somePositions, aColor);
+			myLines.push_back(line);
+			myLineInstances.push_back(std::make_unique<CLineInstance>());
+			myLineInstances.back()->Init(line, false);
+			shape = myLineInstances.back().get();
+		}break;
+
+		case EShape::Circle:
+		{
+			CLine* line = CreateCircleXZ(1.0f, 32, aColor);
+			myShapes.emplace(EShape::Circle, line);
+			myLineInstances.push_back(std::make_unique<CLineInstance>());
+			myLineInstances.back()->Init(line, false);
+			shape = myLineInstances.back().get();
+		}break;
+
+		case EShape::Sphere:
+		{
+
+		}break;
+
+		case EShape::Triangle:
+		{
+
+		}break;
+
+		case EShape::Cone:
+		{
+
+		}break;
+
+		case EShape::Square:
+		{
+
+		}break;
+
+		case EShape::Box:
+		{
+
+		}break;
+
+		case EShape::Grid:
+		{
+
+		}break;
+
+		case EShape::AxisMarker:
+		{
+
+		}break;
+
+		case EShape::Line:
+		{
+
+		}break;
+
+		default:break;
+	}
+
+	return shape;
+}
+
+CLine* CLineFactory::CreateLine(const SM::Vector3& aFrom, const SM::Vector3& aTo, const SM::Vector4& aColor, const bool aTakeOwnership)
 {
 	HRESULT hResult;
 	
-	//UINT myNumVertices = 0;
-	//UINT dX = abs(aTo.x - aFrom.x);
-	//UINT dY = abs(aTo.y - aFrom.y);
-	//UINT dZ = abs(aTo.z - aFrom.z);
-	
-
 	struct SVertex
 	{
 		float myX, myY, myZ, myW;
@@ -122,9 +190,10 @@ CLine* CLineFactory::CreateLine(const SM::Vector3& aFrom, const SM::Vector3& aTo
 	lineData.myInputLayout			= inputLayout;
 	line->Init(lineData);
 
-	//Yikes? +8bytes per Line
-	// Don't. full explenation in Line.hpp
-	//line->SetDevice(myDevice);
+	if (aTakeOwnership)
+	{
+		ourInstance->myLines.push_back(line);
+	}
 
 	return line;
 }
@@ -940,6 +1009,26 @@ CLineFactory::CLineFactory()
 }
 CLineFactory::~CLineFactory()
 {
+	for (auto& line : ourInstance->myLines)
+	{
+		delete line;
+	}
+	ourInstance->myLines.clear();
+
+	for (auto& lineInstance : ourInstance->myLineInstances)
+	{
+		lineInstance.release();
+	}
+	ourInstance->myLineInstances.clear();
+
+	auto it = ourInstance->myShapes.begin();
+	while (it != ourInstance->myShapes.end())
+	{
+		delete it->second;
+		++it;
+	}
+	ourInstance->myShapes.clear();
+
 	ourInstance = nullptr;
 	myDevice = nullptr;
 }

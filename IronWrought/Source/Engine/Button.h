@@ -35,7 +35,8 @@ public:
 	void OnClickUp(void* someData);
 	void OnLeave();
 
-	void Click(bool anIsPressed, void* someData);
+	// Returns true if OnClickUp has fired.
+	bool Click(bool anIsPressed, void* someData);
 	void CheckMouseCollision(DirectX::SimpleMath::Vector2 aScreenSpacePosition);
 
 	const std::vector<EMessageType>& GetMessagesToSend() { return myMessagesToSend; }

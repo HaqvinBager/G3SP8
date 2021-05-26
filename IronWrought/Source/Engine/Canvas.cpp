@@ -380,7 +380,10 @@ void CCanvas::Update()
 	{
 		for (unsigned int i = 0; i < myButtons.size(); ++i)
 		{
-			myButtons[i]->Click(true, &myLevelToLoad);
+			if (myButtons[i]->Click(true, &myLevelToLoad))
+			{
+				CMainSingleton::PostMaster().Send({ EMessageType::CanvasButtonIndex, &i });
+			}
 		}
 	}
 
@@ -388,7 +391,10 @@ void CCanvas::Update()
 	{
 		for (unsigned int i = 0; i < myButtons.size(); ++i)
 		{
-			myButtons[i]->Click(false, &myLevelToLoad);
+			if(myButtons[i]->Click(false, &myLevelToLoad))			
+			{
+				CMainSingleton::PostMaster().Send({ EMessageType::CanvasButtonIndex, &i });
+			}
 		}
 	}
 
@@ -618,9 +624,17 @@ bool CCanvas::InitPivotAndPos(const rapidjson::GenericObject<false, rapidjson::V
 
 bool CCanvas::InitButton(const rapidjson::GenericObject<false, rapidjson::Value>& aRapidObject, const int& anIndex)
 {
-	myButtonTexts[anIndex]->Init(CTextFactory::GetInstance()->GetText(ASSETPATH(aRapidObject["FontAndFontSize"].GetString())));
-	myButtonTexts[anIndex]->SetText(aRapidObject["Text"].GetString());
-	myButtonTexts[anIndex]->SetColor({ aRapidObject["Text Color R"].GetFloat(), aRapidObject["Text Color G"].GetFloat(), aRapidObject["Text Color B"].GetFloat(), 1.0f });
+	if (aRapidObject.HasMember("Text"))
+	{
+		if(aRapidObject.HasMember("FontAndFontSize"))
+			myButtonTexts[anIndex]->Init(CTextFactory::GetInstance()->GetText(ASSETPATH(aRapidObject["FontAndFontSize"].GetString())));
+
+		myButtonTexts[anIndex]->SetText(aRapidObject["Text"].GetString());
+		
+		if(aRapidObject.HasMember("Text Color R") && aRapidObject.HasMember("Text Color G") && aRapidObject.HasMember("Text Color B"))
+			myButtonTexts[anIndex]->SetColor({ aRapidObject["Text Color R"].GetFloat(), aRapidObject["Text Color G"].GetFloat(), aRapidObject["Text Color B"].GetFloat(), 1.0f });
+	}
+	
 	Vector2 pos = { aRapidObject["Text Position X"].GetFloat(), aRapidObject["Text Position Y"].GetFloat() };
 	pos += myPosition;
 	myButtonTexts[anIndex]->SetPosition(pos);

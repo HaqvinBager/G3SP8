@@ -13,8 +13,8 @@ using namespace rapidjson;
 #define CAST(type) { static_cast<unsigned int>(type) }
 #define AUDIO_MAX_NR_OF_SFX_FROM_COLLECTION 1
 
-CAudioManager::CAudioManager() 
-	: myWrapper() 
+CAudioManager::CAudioManager()
+	: myWrapper()
 	, myCurrentGroundType(EGroundType::Concrete)
 	, myDynamicChannel1(0.0f)
 	, myDynamicChannel2(0.0f)
@@ -80,9 +80,9 @@ CAudioManager::CAudioManager()
 	IStreamWrapper volumeWrapper(volumeStream);
 	Document volDoc;
 	volDoc.ParseStream(volumeWrapper);
-	
+
 	if (volDoc.HasParseError()) { return; }
-	
+
 	if (volDoc.HasMember("Ambience"))
 	{
 		float value = volDoc["Ambience"].GetFloat();
@@ -202,7 +202,7 @@ CAudioManager::~CAudioManager()
 void CAudioManager::Receive(const SMessage& aMessage) {
 	switch (aMessage.myMessageType)
 	{
-	// UI
+		// UI
 	case EMessageType::UIButtonPress:
 	{
 		if (myUIAudio.size() >= static_cast<unsigned int>(EUI::ButtonClick))
@@ -213,11 +213,13 @@ void CAudioManager::Receive(const SMessage& aMessage) {
 
 	case EMessageType::PlayStepSound:
 	{
-		if (myCurrentGroundType == EGroundType::Concrete)
+		int groundType = *reinterpret_cast<int*>(aMessage.data);
+
+		if (groundType == 0 || groundType == 1/*myCurrentGroundType == EGroundType::Concrete*/)
 		{
 			PlayCyclicRandomSoundFromCollection(myConcreteStepSounds, EChannel::SFX, myStepSoundIndices, 1);
 		}
-		else if (myCurrentGroundType == EGroundType::AirVent)
+		else if (groundType == 2/*myCurrentGroundType == EGroundType::AirVent*/)
 		{
 			PlayCyclicRandomSoundFromCollection(myAirVentStepSounds, EChannel::SFX, myStepSoundIndices, 1);
 		}
@@ -290,7 +292,7 @@ void CAudioManager::Receive(const SMessage& aMessage) {
 		myWrapper.Play(mySFXAudio[CAST(ESFX::EnemyHit)], myChannels[CAST(EChannel::SFX)]);
 	}
 	break;
-	
+
 	case EMessageType::PlayResearcherEvent:
 	{
 		int index = *static_cast<int*>(aMessage.data);
@@ -360,7 +362,7 @@ void CAudioManager::Receive(const SMessage& aMessage) {
 			return;
 
 		if (mySFXAudio[CAST(ESFX::EnemyAttack)])
-		myWrapper.Play(mySFXAudio[CAST(ESFX::EnemyAttack)], myChannels[CAST(EChannel::SFX)]);
+			myWrapper.Play(mySFXAudio[CAST(ESFX::EnemyAttack)], myChannels[CAST(EChannel::SFX)]);
 	}break;
 
 	case EMessageType::GameStarted:
@@ -430,7 +432,7 @@ void CAudioManager::Receive(const SMessage& aMessage) {
 
 		if (data.mySoundIndex < 0 || data.mySoundIndex >= static_cast<int>(EPropAmbience::Count))
 			return;
-		
+
 		this->AddSource(data.myGameObjectID, data.mySoundIndex, data.myPosition);
 	}break;
 
@@ -440,6 +442,21 @@ void CAudioManager::Receive(const SMessage& aMessage) {
 		myDynamicObject = data;
 	}break;
 
+	case EMessageType::PhysicsPropCollision:
+	{
+		unsigned int soundIndex = *reinterpret_cast<unsigned int*>(aMessage.data);
+		myWrapper.Play(mySFXAudio[soundIndex], myChannels[CAST(EChannel::SFX)]);
+	}break;
+	
+	case EMessageType::PauseMenu:
+	{
+		Pause();
+	}break;
+
+	case EMessageType::Resume:
+	{
+		Resume();
+	}break;
 
 	default: break;
 	}
@@ -453,14 +470,14 @@ void CAudioManager::Receive(const SStringMessage& aMessage)
 		myWrapper.Play(myAmbienceAudio[CAST(EAmbience::Inside)], myChannels[CAST(EChannel::Ambience)]);
 		return;
 	}
-	
+
 	if (strcmp(aMessage.myMessageType, "Level_1-2") == 0)
 	{
 		myChannels[CAST(EChannel::Ambience)]->Stop();
 		myWrapper.Play(myAmbienceAudio[CAST(EAmbience::Inside)], myChannels[CAST(EChannel::Ambience)]);
 		return;
 	}
-	
+
 	if (strcmp(aMessage.myMessageType, "Level_2-1") == 0)
 	{
 		myChannels[CAST(EChannel::Ambience)]->Stop();
@@ -480,7 +497,7 @@ void CAudioManager::Update()
 {
 	if (myListener)
 	{
-		myWrapper.SetListenerAttributes(0, myListener->myTransform->WorldPosition(), {0.0f, 0.0f, 0.0f}, myListener->myTransform->GetWorldMatrix().Forward(), myListener->myTransform->GetWorldMatrix().Up());
+		myWrapper.SetListenerAttributes(0, myListener->myTransform->WorldPosition(), { 0.0f, 0.0f, 0.0f }, myListener->myTransform->GetWorldMatrix().Forward(), myListener->myTransform->GetWorldMatrix().Up());
 	}
 
 	if (myDynamicObject)
@@ -529,6 +546,16 @@ void CAudioManager::Update()
 			++it;
 		}
 	}
+
+	//if (INPUT->IsKeyPressed(0x31))
+	//{
+	//	Pause();
+	//}
+
+	//if (INPUT->IsKeyPressed(0x32))
+	//{
+	//	Resume();
+	//}
 
 	//if (INPUT->IsKeyPressed(0x31))
 	//{
@@ -637,7 +664,7 @@ void CAudioManager::SubscribeToMessages()
 
 	//CMainSingleton::PostMaster().Subscribe(EMessageType::PlayVoiceLine, this);
 	//CMainSingleton::PostMaster().Subscribe(EMessageType::StopDialogue, this);
-	
+
 	// Ambience
 	CMainSingleton::PostMaster().Subscribe(EMessageType::StartGame, this);
 	CMainSingleton::PostMaster().Subscribe("Level_1-1", this);
@@ -648,10 +675,14 @@ void CAudioManager::SubscribeToMessages()
 	CMainSingleton::PostMaster().Subscribe(EMessageType::BootUpState, this);
 	CMainSingleton::PostMaster().Subscribe(EMessageType::GameStarted, this);
 	CMainSingleton::PostMaster().Subscribe(EMessageType::MainMenu, this);
+	CMainSingleton::PostMaster().Subscribe(EMessageType::PauseMenu, this);
+	CMainSingleton::PostMaster().Subscribe(EMessageType::Resume, this);
 
 	CMainSingleton::PostMaster().Subscribe(EMessageType::AddStaticAudioSource, this);
 	CMainSingleton::PostMaster().Subscribe(EMessageType::ClearStaticAudioSources, this);
 	CMainSingleton::PostMaster().Subscribe(EMessageType::SetDynamicAudioSource, this);
+
+	CMainSingleton::PostMaster().Subscribe(EMessageType::PhysicsPropCollision, this);
 }
 
 void CAudioManager::UnsubscribeToMessages()
@@ -694,10 +725,14 @@ void CAudioManager::UnsubscribeToMessages()
 	CMainSingleton::PostMaster().Unsubscribe(EMessageType::BootUpState, this);
 	CMainSingleton::PostMaster().Unsubscribe(EMessageType::GameStarted, this);
 	CMainSingleton::PostMaster().Unsubscribe(EMessageType::MainMenu, this);
+	CMainSingleton::PostMaster().Unsubscribe(EMessageType::PauseMenu, this);
+	CMainSingleton::PostMaster().Unsubscribe(EMessageType::Resume, this);
 
 	CMainSingleton::PostMaster().Unsubscribe(EMessageType::AddStaticAudioSource, this);
 	CMainSingleton::PostMaster().Unsubscribe(EMessageType::ClearStaticAudioSources, this);
 	CMainSingleton::PostMaster().Unsubscribe(EMessageType::SetDynamicAudioSource, this);
+
+	CMainSingleton::PostMaster().Unsubscribe(EMessageType::PhysicsPropCollision, this);
 }
 
 std::string CAudioManager::GetPath(EMusic type) const
@@ -969,12 +1004,12 @@ std::string CAudioManager::TranslateEnum(EResearcherEventVoiceLine enumerator) c
 }
 std::string CAudioManager::TranslateEnum(EResearcherReactionVoiceLine enumerator) const
 {
-	switch (enumerator) 
+	switch (enumerator)
 	{
 	case EResearcherReactionVoiceLine::ResearcherReactionExplosives:
 		return "ResearcherReactionExplosives";
 	default:
-		return "";	
+		return "";
 	}
 }
 std::string CAudioManager::TranslateEnum(ERobotVoiceLine enumerator) const
@@ -1014,7 +1049,7 @@ void CAudioManager::FillCollection(ESFXCollection enumerator)
 			sound = myWrapper.TryGetSound(mySFXPath + GetCollectionPath(enumerator, ++counter));
 		}
 	}
-		break;
+	break;
 	case ESFXCollection::StepConcrete:
 	{
 		CAudio* sound = myWrapper.TryGetSound(mySFXPath + GetCollectionPath(enumerator, ++counter));
@@ -1025,7 +1060,7 @@ void CAudioManager::FillCollection(ESFXCollection enumerator)
 			sound = myWrapper.TryGetSound(mySFXPath + GetCollectionPath(enumerator, ++counter));
 		}
 	}
-		break;
+	break;
 	default:
 		break;
 	}
@@ -1040,14 +1075,14 @@ void CAudioManager::FillCollection(EResearcherReactionVoiceLine enumerator)
 	case EResearcherReactionVoiceLine::ResearcherReactionExplosives:
 	{
 		CAudio* sound = myWrapper.TryGetSound(myVoxPath + GetCollectionPath(enumerator, ++counter));
-		
+
 		while (sound != nullptr)
 		{
 			myResearcherReactionsExplosives.push_back(sound);
 			sound = myWrapper.TryGetSound(myVoxPath + GetCollectionPath(enumerator, ++counter));
 		}
 	}
-		break;
+	break;
 	default:
 		break;
 	}
@@ -1062,7 +1097,7 @@ void CAudioManager::FillCollection(ERobotVoiceLine enumerator)
 	case ERobotVoiceLine::RobotAttack:
 	{
 		CAudio* sound = myWrapper.TryGetSound(myVoxPath + GetCollectionPath(enumerator, ++counter));
-		
+
 		while (sound != nullptr)
 		{
 			myRobotAttackSounds.push_back(sound);
@@ -1142,8 +1177,8 @@ void CAudioManager::PlayRandomSoundFromCollection(const std::vector<CAudio*>& aC
 		return;
 
 	//std::cout << __FUNCTION__ << " " << myChannels[CAST(aChannel)]->PlayCount() << std::endl;
-	if(myChannels[CAST(aChannel)]->PlayCount() > aMaxNrOfChannelsActive)
-	   return;
+	if (myChannels[CAST(aChannel)]->PlayCount() > aMaxNrOfChannelsActive)
+		return;
 
 	unsigned int randomIndex = Random(0, static_cast<int>(aCollection.size()) - 1);
 	myWrapper.Play(aCollection[randomIndex], myChannels[CAST(aChannel)]);
@@ -1171,4 +1206,42 @@ void CAudioManager::SetDynamicTrack(const EAmbience& aFirstTrack, const EAmbienc
 	myWrapper.Play(myAmbienceAudio[CAST(aFirstTrack)], myChannels[CAST(EChannel::DynamicChannel1)]);
 	myWrapper.Play(myAmbienceAudio[CAST(aSecondTrack)], myChannels[CAST(EChannel::DynamicChannel2)]);
 	myWrapper.Play(myAmbienceAudio[CAST(aThirdTrack)], myChannels[CAST(EChannel::DynamicChannel3)]);
+}
+
+void CAudioManager::Pause()
+{
+	myChannels[CAST(EChannel::Ambience)]->SetPaused(true);
+	myChannels[CAST(EChannel::Music)]->SetPaused(true);
+	myChannels[CAST(EChannel::SFX)]->SetPaused(true);
+	myChannels[CAST(EChannel::ResearcherVOX)]->SetPaused(true);
+	myChannels[CAST(EChannel::RobotVOX)]->SetPaused(true);
+	myChannels[CAST(EChannel::DynamicChannel1)]->SetPaused(true);
+	myChannels[CAST(EChannel::DynamicChannel2)]->SetPaused(true);
+	myChannels[CAST(EChannel::DynamicChannel3)]->SetPaused(true);
+
+	for (unsigned int i = 0; i < myStaticAudioSources.size(); ++i)
+	{
+		myStaticAudioSources[i].myChannel->SetPaused(true);
+	}
+
+	myDynamicSource->SetPaused(true);
+}
+
+void CAudioManager::Resume()
+{
+	myChannels[CAST(EChannel::Ambience)]->SetPaused(false);
+	myChannels[CAST(EChannel::Music)]->SetPaused(false);
+	myChannels[CAST(EChannel::SFX)]->SetPaused(false);
+	myChannels[CAST(EChannel::ResearcherVOX)]->SetPaused(false);
+	myChannels[CAST(EChannel::RobotVOX)]->SetPaused(false);
+	myChannels[CAST(EChannel::DynamicChannel1)]->SetPaused(false);
+	myChannels[CAST(EChannel::DynamicChannel2)]->SetPaused(false);
+	myChannels[CAST(EChannel::DynamicChannel3)]->SetPaused(false);
+
+	for (unsigned int i = 0; i < myStaticAudioSources.size(); ++i)
+	{
+		myStaticAudioSources[i].myChannel->SetPaused(false);
+	}
+
+	myDynamicSource->SetPaused(false);
 }

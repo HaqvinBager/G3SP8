@@ -18,7 +18,7 @@ CPauseMenuState::~CPauseMenuState()
 
 void CPauseMenuState::Awake()
 {
-	CScene* scene = CSceneManager::CreateMenuScene("PauseMenu", ASSETPATH("Assets/Graphics/UI/JSON/UI_PauseMenu.json"));
+	CScene* scene = CSceneManager::CreateMenuScene(ASSETPATH("Assets/IronWrought/UI/JSON/UI_PauseMenu.json"));
 
 	CEngine::GetInstance()->AddScene(myState, scene);
 }

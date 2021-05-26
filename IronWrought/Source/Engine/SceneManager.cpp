@@ -18,6 +18,7 @@
 #include "CapsuleColliderComponent.h"
 #include "ConvexMeshColliderComponent.h"
 #include "VFXSystemComponent.h"
+#include "PhysicsPropAudioComponent.h"
 #include <GravityGloveComponent.h>
 #include <EnemyComponent.h>
 #include <HealthPickupComponent.h>
@@ -167,11 +168,17 @@ CScene* CSceneManager::CreateScene(const std::string& aSceneJson)
 	return scene;
 }
 
-CScene* CSceneManager::CreateMenuScene(const std::string& aSceneName, const std::string& aCanvasPath)
+CScene* CSceneManager::CreateMenuScene(const std::string& aCanvasPath)
 {
-	aSceneName;
 	CScene* scene = CreateEmpty();
+
+	assert(scene != nullptr && "Scene is nullptr. This shouldn't happen.");
 	scene->MainCamera()->GameObject().GetComponent<CCameraControllerComponent>()->SetCameraMode(CCameraControllerComponent::ECameraMode::MenuCam);
+	if (aCanvasPath.empty())
+	{
+		//assert(false && "aCanvasPath parameter is empty.");
+		return scene;
+	}
 	scene->InitCanvas(aCanvasPath);
 
 	return scene;
@@ -643,8 +650,15 @@ void CSceneManager::AddAudioSources(CScene& aScene, RapidArray someData)
 		if (!gameObject)
 			continue;
 
-		PostMaster::SStaticAudioSourceInitData data = { gameObject->myTransform->Position(), m["soundIndex"].GetInt(), instanceId };
-		CMainSingleton::PostMaster().Send({ EMessageType::AddStaticAudioSource, &data });
+		if (m["is3D"].GetBool())
+		{ 
+			PostMaster::SStaticAudioSourceInitData data = { gameObject->myTransform->Position(), m["soundIndex"].GetInt(), instanceId };
+			CMainSingleton::PostMaster().Send({ EMessageType::AddStaticAudioSource, &data });
+		}
+		else
+		{
+			gameObject->AddComponent<CPhysicsPropAudioComponent>(*gameObject, static_cast<unsigned int>(m["soundIndex"].GetInt()));
+		}
 	}
 }
 

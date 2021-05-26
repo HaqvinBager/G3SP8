@@ -43,6 +43,7 @@ CPlayerControllerComponent::CPlayerControllerComponent(CGameObject& gameObject, 
 	, myStepTimer(0.0f)
 	, myStepTime(aWalkSpeed * 5.0f)
 	, myMovementLockTimer(0.0f)
+	, myCurrentFloorMaterial(EFloorMaterial::Default)
 {
 	INPUT_MAPPER->AddObserver(EInputEvent::Jump, this);
 	INPUT_MAPPER->AddObserver(EInputEvent::Crouch, this);
@@ -270,7 +271,7 @@ void CPlayerControllerComponent::Move(Vector3 aDir)
 	
 	if (!myIsGrounded && (collisionflag & physx::PxControllerCollisionFlag::eCOLLISION_DOWN)) 
 	{
-		CMainSingleton::PostMaster().SendLate({ EMessageType::PlayStepSound, nullptr }); // Landing
+		CMainSingleton::PostMaster().SendLate({ EMessageType::PlayStepSound, &myCurrentFloorMaterial }); // Landing
 	}
 	
 	myIsGrounded = (collisionflag & physx::PxControllerCollisionFlag::eCOLLISION_DOWN);
@@ -285,7 +286,7 @@ void CPlayerControllerComponent::Move(Vector3 aDir)
 			if (myStepTimer <= 0.0f && !myIsCrouching) 
 			{
 				myStepTimer = myStepTime;
-				CMainSingleton::PostMaster().SendLate({ EMessageType::PlayStepSound, nullptr });
+				CMainSingleton::PostMaster().SendLate({ EMessageType::PlayStepSound, &myCurrentFloorMaterial });
 			}
 		}
 	}
@@ -398,6 +399,18 @@ void CPlayerControllerComponent::LadderExit()
 void CPlayerControllerComponent::SetRespawnPosition()
 {
 	myRespawnPosition = myController->GetPosition();
+}
+
+void CPlayerControllerComponent::SetCurrentFloorMaterial(const std::string& anObjectTag)
+{
+	if (anObjectTag == "WoodFloor")
+		myCurrentFloorMaterial = EFloorMaterial::WoodFloor;
+
+	else if (anObjectTag == "Carpet")
+		myCurrentFloorMaterial = EFloorMaterial::Carpet;
+
+	else
+		myCurrentFloorMaterial = EFloorMaterial::Default;
 }
 
 void CPlayerControllerComponent::LockMovementFor(const float& someSeconds)

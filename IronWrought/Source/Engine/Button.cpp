@@ -51,10 +51,10 @@ void CButton::OnLeave()
 	mySprites.at(static_cast<size_t>(EButtonState::Idle))->SetShouldRender(true);
 }
 
-void CButton::Click(bool anIsPressed, void* someData)
+bool CButton::Click(bool anIsPressed, void* someData)
 {
 	if (!myEnabled)
-		return;
+		return false;
 
 	switch (myState)
 	{
@@ -66,6 +66,7 @@ void CButton::Click(bool anIsPressed, void* someData)
 	case EButtonState::Click:
 		if (!anIsPressed && myIsMouseHover) {
 			OnClickUp(someData);
+			return true;
 		}
 		else if (!myIsMouseHover) {
 			OnLeave();
@@ -74,6 +75,8 @@ void CButton::Click(bool anIsPressed, void* someData)
 	default:
 		break;
 	}
+
+	return false;
 }
 
 void CButton::CheckMouseCollision(DirectX::SimpleMath::Vector2 aScreenSpacePosition)

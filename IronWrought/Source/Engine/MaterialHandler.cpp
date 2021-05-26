@@ -52,9 +52,9 @@ std::array<ID3D11ShaderResourceView*, 3> CMaterialHandler::RequestMaterial(const
 			newTextures[2] = Graphics::GetShaderResourceView(myDevice, ASSETPATH("Assets/IronWrought/Texture/ErrorTextures/Checkboard_128x128_n"));
 
 		myMaterials.emplace(materialName, std::move(newTextures));
-		myMaterialReferences.emplace(materialName, 0);	
+		myMaterialReferences.emplace(materialName, 0);
 		myMaterialIsAlphaMap.emplace(aMaterialID, MaterialIsAlpha(texturePaths));
-		
+
 	}
 
 	myMaterialReferences[materialName] += 1;
@@ -268,15 +268,33 @@ void CMaterialHandler::ReleaseVertexColors(unsigned int aVertexColorID)
 const std::array<Microsoft::WRL::ComPtr<ID3D11ShaderResourceView>, 3>& CMaterialHandler::GetMaterial(const int aMaterialID) const
 {
 	std::string materialName = {};
-	CJsonReader::Get()->TryGetMaterialName(aMaterialID, materialName);
-	return myMaterials.at(materialName);
+	//CJsonReader::Get()->TryGetMaterialName(aMaterialID, materialName);
+	//return myMaterials.at(materialName);
+
+	if (CJsonReader::Get()->TryGetMaterialName(aMaterialID, materialName))
+	{
+		return myMaterials.at(materialName);
+	}
+	else
+	{
+		return myMaterials.at("DefaultMaterial");
+	}
 }
 
 const SMaterialInstance CMaterialHandler::GetMaterialInstance(const int aMaterialID) const
 {
 	std::string materialName = {};
-	CJsonReader::Get()->TryGetMaterialName(aMaterialID, materialName);
-	return SMaterialInstance{ 5, 3, myMaterials.at(materialName) };
+	//CJsonReader::Get()->TryGetMaterialName(aMaterialID, materialName);
+	//return SMaterialInstance{ 5, 3, myMaterials.at(materialName) };
+
+	if (CJsonReader::Get()->TryGetMaterialName(aMaterialID, materialName))
+	{
+		return SMaterialInstance{ 5, 3, myMaterials.at(materialName) };
+	}
+	else
+	{
+		return SMaterialInstance{ 5, 3, myMaterials.at("DefaultMaterial") };
+	}
 }
 
 const bool CMaterialHandler::IsMaterialAlpha(const int aMaterialID) const

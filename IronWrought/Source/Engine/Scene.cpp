@@ -50,6 +50,8 @@ CScene::CScene(const unsigned int aGameObjectCount)
 	, myPlayer(nullptr)
 	, myCanvas(nullptr)
 	, myActiveCamera(ESceneCamera::NoCamera)
+	, myDeleteCanvas(true)
+	, myUpdateOnlyCanvas(false)
 #ifdef _DEBUG
 	, myGrid(nullptr)
 #endif
@@ -83,7 +85,8 @@ CScene::~CScene()
 	delete myEnvironmentLight;
 	myEnvironmentLight = nullptr;
 
-	delete myCanvas;
+	if(myDeleteCanvas)
+		delete myCanvas;
 	myCanvas = nullptr;
 
 	myVFXTester = nullptr;
@@ -158,6 +161,12 @@ bool CScene::InitNavMesh(const std::string& aPath)
 
 bool CScene::InitCanvas(const std::string& aPath)
 {
+	if (!myDeleteCanvas)
+	{
+		myCanvas = nullptr;
+		myDeleteCanvas = true;
+	}
+
 	if (!myCanvas)
 		myCanvas = new CCanvas();
 
@@ -167,6 +176,12 @@ bool CScene::InitCanvas(const std::string& aPath)
 }
 bool CScene::InitCanvas()
 {
+	if (!myDeleteCanvas)
+	{
+		myCanvas = nullptr;
+		myDeleteCanvas = true;
+	}
+
 	if (!myCanvas)
 		myCanvas = new CCanvas();
 
@@ -175,7 +190,7 @@ bool CScene::InitCanvas()
 }
 bool CScene::ReInitCanvas(const std::string& aPath, const bool& aDelete)
 {
-	if (aDelete)
+	if (aDelete && myDeleteCanvas)
 	{
 		delete myCanvas;
 		myCanvas = nullptr;
@@ -207,6 +222,23 @@ void CScene::CanvasToggle(const bool& anIsEnabled, const bool& anIsForceEnable)
 	}
 }
 
+void CScene::SetCanvas(CCanvas* aCanvas)
+{
+	if (myDeleteCanvas)
+	{
+		if (myCanvas)
+			delete myCanvas;
+		myCanvas = nullptr;
+	}
+	myDeleteCanvas = false;
+	myCanvas = aCanvas;
+}
+
+void CScene::UpdateOnlyCanvas(const bool anUpdateOnlyCanvas)
+{
+	myUpdateOnlyCanvas = anUpdateOnlyCanvas;
+}
+
 //No longer needed due to Components Awake being called via EMessageType "AddComponent"
 void CScene::Awake()
 {
@@ -228,6 +260,12 @@ void CScene::Update()
 {
 	InitAnyNewComponents();
 
+	if (myUpdateOnlyCanvas)
+	{
+		myCanvas->Update();
+		return;
+	}
+
 	for (auto& gameObject : myGameObjects)
 		gameObject->Update();
 
@@ -245,6 +283,9 @@ void CScene::Update()
 
 void CScene::FixedUpdate()
 {
+	if (myUpdateOnlyCanvas)
+		return;
+
 	for (auto& gameObject : myGameObjects)
 		gameObject->FixedUpdate();
 }

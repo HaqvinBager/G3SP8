@@ -7,6 +7,7 @@ public struct AudioSourceLink
 {
     public int instanceID;
     public int soundIndex;
+    public bool is3D;
 }
 
 [System.Serializable]
@@ -22,12 +23,13 @@ public class ExportAudioSource
         AudioSourceCollection collection = new AudioSourceCollection();
         collection.myAudioSources = new List<AudioSourceLink>();
 
-        StaticAudioSource[] allAudioSources = GameObject.FindObjectsOfType<StaticAudioSource>();
-        foreach (StaticAudioSource source in allAudioSources)
+        IronAudioSource[] allAudioSources = GameObject.FindObjectsOfType<IronAudioSource>();
+        foreach (IronAudioSource source in allAudioSources)
         {
             AudioSourceLink audioSourceLink;
             audioSourceLink.instanceID = source.transform.GetInstanceID();
             audioSourceLink.soundIndex = source.mySoundIndex;
+            audioSourceLink.is3D = source.myIs3D;
             collection.myAudioSources.Add(audioSourceLink);
         }
 

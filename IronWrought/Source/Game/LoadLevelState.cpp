@@ -14,7 +14,7 @@ CLoadLevelState::~CLoadLevelState()
 
 void CLoadLevelState::Awake()
 {
-	CScene* scene = CSceneManager::CreateMenuScene("MainMenu", ASSETPATH("Assets/IronWrought/UI/JSON/UI_LoadingScreen.json"));
+	CScene* scene = CSceneManager::CreateMenuScene(ASSETPATH("Assets/IronWrought/UI/JSON/UI_LoadingScreen.json"));
 	CEngine::GetInstance()->AddScene(myState, scene);
 
 	CMainSingleton::PostMaster().Subscribe(EMessageType::StartGame, this);
