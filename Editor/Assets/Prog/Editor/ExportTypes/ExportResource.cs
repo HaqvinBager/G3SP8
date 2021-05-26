@@ -35,12 +35,12 @@ public struct MaterialAsset
     public List<int> textureAssets;
 }
 
-
-//[System.Serializable]
-//public struct Textures
-//{
-//    public List<TextureAsset> textureAssets;
-//}
+[System.Serializable]
+public struct EventAsset
+{
+    public int id;
+    public string eventName;
+}
 
 
 [System.Serializable]
@@ -50,6 +50,7 @@ public struct Assets
     public List<VertexColorAsset> vertexColors;
     public List<TextureAsset> textures;
     public List<MaterialAsset> materials;
+    public List<EventAsset> events;
 }
 
 public class ExportResource 
@@ -66,7 +67,9 @@ public class ExportResource
         Assets assets = new Assets();
         assets.models = new List<ModelAsset>();
         assets.vertexColors = new List<VertexColorAsset>();
-
+        assets.textures = new List<TextureAsset>();
+        assets.materials = new List<MaterialAsset>();
+        assets.events = new List<EventAsset>();
 
         List<Object> models = MagicString.LoadAssets<Object>("t:Model", "Assets/IronWrought/Mesh");
         Debug.Log(models.Count);
@@ -79,7 +82,6 @@ public class ExportResource
         }
 
         List<Texture> textures = MagicString.GetTextures();
-        assets.textures = new List<TextureAsset>();
         foreach (Texture t in textures)
         {
             TextureAsset asset = new TextureAsset();
@@ -89,7 +91,6 @@ public class ExportResource
         }
 
         List<Material> materials = MagicString.LoadAssets<Material>("t:Material", "Assets/Material");
-        assets.materials = new List<MaterialAsset>();
         foreach(Material mat in materials)
         {
             MaterialAsset asset = new MaterialAsset();
@@ -107,7 +108,15 @@ public class ExportResource
             assets.materials.Add(asset);
         }
 
-
+        List<IronEvent> events = MagicString.LoadAssets<IronEvent>("l:IronEvent", "Assets/CustomEvents");
+        foreach(IronEvent ironEvent in events)
+        {
+            Debug.Log(ironEvent?.name);
+            //EventAsset asset = new EventAsset();
+            //asset.id = ironEvent.GetInstanceID();
+            //asset.eventName = ironEvent.name;
+            //assets.events.Add(asset);
+        }
 
         foreach (string assetPath in allAssetPaths)
         {
@@ -122,34 +131,7 @@ public class ExportResource
                     assets.vertexColors.Add(vertexColorAsset);
                 }
             }
-
-            //if (assetPath.Contains("Mesh"))
-            //{
-            //    Object asset = AssetDatabase.LoadAssetAtPath<Object>(assetPath);
-            //    if (asset != null)
-            //    {
-            //        if (PrefabUtility.GetPrefabAssetType(asset) == PrefabAssetType.Model)
-            //        {
-            //            GameObject gameObject = asset as GameObject;
-            //            ModelAsset modelAsset = new ModelAsset();
-            //            modelAsset.id = gameObject.transform.GetInstanceID();
-            //            modelAsset.path = assetPath;
-            //            assets.models.Add(modelAsset);
-            //        }
-            //        else
-            //        {
-            //            //Add Other types of Resources
-            //            //Textures
-            //            //Crazy references to values or something
-            //        }
-            //    }
-            //}
-            //else
-
-
         }
-
-
 
         Json.ExportToJson(assets, "Resource");
         return assets;

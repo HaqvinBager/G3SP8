@@ -338,9 +338,7 @@ void CDeferredRenderer::GenerateGBuffer(CCameraComponent* aCamera, std::vector<C
 		unsigned int vertexColorID = modelComponent->VertexPaintColorID();
 
 		// Render all meshes
-
-		//for (unsigned int i = 0; i < modelData.myMeshes.size(); ++i)
-		for (unsigned int i = 0; i < modelComponent->GetMaterialCount(); ++i)
+		for (unsigned int i = 0; i < modelData.myMeshes.size(); ++i)
 		{
 			if (vertexColorID > 0)
 			{
@@ -367,7 +365,9 @@ void CDeferredRenderer::GenerateGBuffer(CCameraComponent* aCamera, std::vector<C
 			//myContext->PSSetShaderResources(5, 3, material[0].GetAddressOf());
 				//&modelData.myMaterials[modelComponent->GetMaterialIndex()][0]);
 
-			SetShaderResource(modelComponent->GetMaterialID(i));
+			SetShaderResource(modelComponent->GetMaterialID(modelData.myMeshes[i].myMaterialIndex));
+
+			//SetShaderResource(modelComponent->GetMaterialID(i));
 			myContext->DrawIndexed(modelData.myMeshes[i].myNumberOfIndices, 0, 0);
 			CRenderManager::myNumberOfDrawCallsThisFrame++;
 		}
@@ -434,8 +434,7 @@ void CDeferredRenderer::GenerateGBuffer(CCameraComponent* aCamera, std::vector<C
 
 		// Render all meshes
 		
-		//for (unsigned int i = 0; i < modelData.myMeshes.size(); ++i)
-		for(unsigned int i = 0; i < instanceComponent->GetMaterialCount(); ++i)
+		for (unsigned int i = 0; i < modelData.myMeshes.size(); ++i)
 		{
 			ID3D11Buffer* bufferPointers[2] = { modelData.myMeshes[i].myVertexBuffer, modelData.myInstanceBuffer };
 			myContext->IASetVertexBuffers(0, 2, bufferPointers, modelData.myMeshes[i].myStride, modelData.myMeshes[i].myOffset);
@@ -443,7 +442,7 @@ void CDeferredRenderer::GenerateGBuffer(CCameraComponent* aCamera, std::vector<C
 			
 			//const unsigned int materialID = instanceComponent->GetMaterialID();
 			//SetShaderResource()
-			SetShaderResource(instanceComponent->GetMaterialID(i));
+			SetShaderResource(instanceComponent->GetMaterialID(modelData.myMeshes[i].myMaterialIndex));
 			//myContext->PSSetShaderResources(5, 3, &modelData.myMaterials[modelData.myMeshes[i].myMaterialIndex][0]);
 			myContext->DrawIndexedInstanced(modelData.myMeshes[i].myNumberOfIndices, model->InstanceCount(), 0, 0, 0);
 			CRenderManager::myNumberOfDrawCallsThisFrame++;

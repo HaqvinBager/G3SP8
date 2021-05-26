@@ -6,6 +6,7 @@ public enum IronEventType
 {
     //SoundEffectEvent,
     GameEvent,
+    Move,
     //VFXEvent
 }
 
@@ -22,4 +23,13 @@ public class IronEvent : MonoBehaviour
     public IronEventType eventType;
     public GameEvent eventObject;
     public EEventFilter eventFilter = EEventFilter.Any;
+    public int audioIndex = -1;
+    public bool triggerOnce = false;
+}
+
+public class IronMoveEvent : IronEvent
+{
+    public Vector3 start;
+    public Vector3 end;
+    public float moveSpeed;
 }

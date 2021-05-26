@@ -45,6 +45,10 @@ public class IronEventEditor : Editor
                 OnInspectorGUIGameEvents();
                 break;
 
+            case IronEventType.Move:
+                OnInspectorGUIMoveEvent();
+                break;
+
             //case IronEventType.VFXEvent:
             //    OnInspectorGUIVFXEvents();
             //    break;
@@ -57,6 +61,11 @@ public class IronEventEditor : Editor
         EditorGUILayout.PropertyField(triggerOnce);
 
         serializedObject.ApplyModifiedProperties();
+    }
+
+    private void OnInspectorGUIMoveEvent()
+    {
+        throw new NotImplementedException();
     }
 
     private void OnInspectorGUISoundEffects()
@@ -91,6 +100,10 @@ public class IronEventEditor : Editor
     }
     private void OnInspectorGUIVFXEvents()
     {
+        var start = serializedObject.FindProperty("start");
+        var end = serializedObject.FindProperty("end");
+
+
 
     }
 }
