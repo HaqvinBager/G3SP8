@@ -58,10 +58,8 @@ void CSphereColliderComponent::Update()
 
 void CSphereColliderComponent::OnEnable()
 {
-	Enabled(true);
 }
 
 void CSphereColliderComponent::OnDisable()
 {
-	Enabled(false);
 }

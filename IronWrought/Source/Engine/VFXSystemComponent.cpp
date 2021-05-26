@@ -265,7 +265,6 @@ void CVFXSystemComponent::LateUpdate()
 
 void CVFXSystemComponent::OnEnable()
 {
-	Enabled(true);
 
 	// VFX should not start to play by default 
 	//for (auto& effect : myEffects) 
@@ -276,7 +275,6 @@ void CVFXSystemComponent::OnEnable()
 
 void CVFXSystemComponent::OnDisable()
 {
-	Enabled(false);
 
 	for (auto& effect : myEffects)
 	{
