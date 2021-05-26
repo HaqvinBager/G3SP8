@@ -44,8 +44,11 @@ CPlayerControllerComponent::CPlayerControllerComponent(CGameObject& gameObject, 
 	, myStepTime(aWalkSpeed * 5.0f)
 	, myMovementLockTimer(0.0f)
 	, myCurrentFloorMaterial(EFloorMaterial::Default)
+	, mySprintSpeedModifier(1.333f)
 {
 	INPUT_MAPPER->AddObserver(EInputEvent::Jump, this);
+	INPUT_MAPPER->AddObserver(EInputEvent::StartSprint, this);
+	INPUT_MAPPER->AddObserver(EInputEvent::EndSprint, this);
 	INPUT_MAPPER->AddObserver(EInputEvent::Crouch, this);
 	INPUT_MAPPER->AddObserver(EInputEvent::ResetEntities, this);
 	INPUT_MAPPER->AddObserver(EInputEvent::SetResetPointEntities, this);
@@ -80,6 +83,8 @@ CPlayerControllerComponent::CPlayerControllerComponent(CGameObject& gameObject, 
 CPlayerControllerComponent::~CPlayerControllerComponent()
 {
 	INPUT_MAPPER->RemoveObserver(EInputEvent::Jump, this);
+	INPUT_MAPPER->RemoveObserver(EInputEvent::StartSprint, this);
+	INPUT_MAPPER->RemoveObserver(EInputEvent::EndSprint, this);
 	INPUT_MAPPER->RemoveObserver(EInputEvent::Crouch, this);
 	INPUT_MAPPER->RemoveObserver(EInputEvent::ResetEntities, this);
 	INPUT_MAPPER->RemoveObserver(EInputEvent::SetResetPointEntities, this);
@@ -108,11 +113,6 @@ void CPlayerControllerComponent::Update()
 
 		return;
 	}
-
-	//if (INPUT->IsKeyPressed('M'))
-	//{
-	//	LockMovementFor(3.0f);
-	//}
 #endif
 
 	GameObject().myTransform->Position(myController->GetPosition());
@@ -181,7 +181,7 @@ void CPlayerControllerComponent::FixedUpdate()
 
 void CPlayerControllerComponent::ReceiveEvent(const EInputEvent aEvent)
 {
-switch (myPlayerMovementLock)
+	switch (myPlayerMovementLock)
 	{
 		case EPlayerMovementLock::None:
 		{}break;
@@ -209,9 +209,6 @@ switch (myPlayerMovementLock)
 		return;
 	}
 #endif
-
-	float y = myMovement.y;
-
 	switch (aEvent)
 	{
 		case EInputEvent::Jump:
@@ -223,9 +220,26 @@ switch (myPlayerMovementLock)
 			}
 			break;
 		case EInputEvent::Crouch:
-			/*Crouch();*/
 			OnCrouch();
 			break;
+
+		case EInputEvent::StartSprint:
+		{
+			if (myIsCrouching)
+				return;
+
+			mySpeed = myWalkSpeed * mySprintSpeedModifier;
+
+		}break;
+
+		case EInputEvent::EndSprint:
+		{
+			if (myIsCrouching)
+				return;
+
+			mySpeed = myWalkSpeed / mySprintSpeedModifier;
+
+		}break;
 
 		case EInputEvent::ResetEntities:
 			myController->SetPosition(myRespawnPosition);
@@ -238,8 +252,6 @@ switch (myPlayerMovementLock)
 
 		default:break;
 	}
-
-	myMovement.y = y;
 }
 
 void CPlayerControllerComponent::Receive(const SStringMessage& /*aMsg*/)
@@ -285,7 +297,7 @@ void CPlayerControllerComponent::Move(Vector3 aDir)
 			myStepTimer -= CTimer::FixedDt();
 			if (myStepTimer <= 0.0f && !myIsCrouching) 
 			{
-				myStepTimer = myStepTime;
+				myStepTimer = myStepTime * (myWalkSpeed / mySpeed);// If mySpeed == myWalkSpeed => myStepTime * 1.0f. 
 				CMainSingleton::PostMaster().SendLate({ EMessageType::PlayStepSound, &myCurrentFloorMaterial });
 			}
 		}
@@ -310,9 +322,6 @@ void CPlayerControllerComponent::Crouch()
 		myController->GetController().resize(myColliderHeightCrouched);
 		GameObject().myTransform->FetchChildren()[0]->Position({ 0.0f, myCameraPosYCrouching, myCameraPosZ });// Equivalent to myCamera->GameObject().myTransform->Position
 		mySpeed = myCrouchSpeed;
-		// THIS IS TEMP :)
-		//myAnimationComponentController->TakeDamage();// TEMP :)
-		// SUPER TEMP :)
 	}
 	else
 	{

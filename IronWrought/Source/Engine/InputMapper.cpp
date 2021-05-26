@@ -35,7 +35,8 @@ bool CInputMapper::Init()
 	MapEvent(IInputObserver::EInputAction::CTRL, IInputObserver::EInputEvent::Crouch);
 	MapEvent(IInputObserver::EInputAction::KeyF5, IInputObserver::EInputEvent::ResetEntities);
 	MapEvent(IInputObserver::EInputAction::KeyF8, IInputObserver::EInputEvent::SetResetPointEntities);
-
+	MapEvent(IInputObserver::EInputAction::KeyShiftDown, IInputObserver::EInputEvent::StartSprint);
+	MapEvent(IInputObserver::EInputAction::KeyShiftRelease, IInputObserver::EInputEvent::EndSprint);
 
 	if (this == nullptr)
 		return false;
