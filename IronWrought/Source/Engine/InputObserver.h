@@ -42,7 +42,9 @@ public:
 		Jump,
 		Crouch,
 		ResetEntities,
-		SetResetPointEntities
+		SetResetPointEntities,
+		StartSprint,
+		EndSprint
 	};
 
 public:
