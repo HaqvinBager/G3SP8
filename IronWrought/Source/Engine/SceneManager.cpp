@@ -119,9 +119,9 @@ CScene* CSceneManager::CreateScene(const std::string& aSceneJson)
 			if (sceneData.HasMember("parents"))
 				SetParents(*scene, sceneData["parents"].GetArray());
 
-			AddPuzzleLock(*scene, sceneData["puzzleLock"].GetArray());
-			AddPuzzleKey(*scene, sceneData["puzzleKey"].GetArray());
-			AddPuzzleResponse(*scene, sceneData["puzzleResponse"].GetArray());
+			AddPuzzleLock(*scene, sceneData["locks"].GetArray());
+			AddPuzzleKey(*scene, sceneData["keys"].GetArray());
+			AddPuzzleResponse(*scene, sceneData["responses"].GetArray());
 			AddDirectionalLights(*scene, sceneData["directionalLights"].GetArray());
 			SetVertexPaintedColors(*scene, sceneData["vertexColors"].GetArray(), vertexPaintData);
 			AddDecalComponents(*scene, sceneData["decals"].GetArray());
