@@ -116,7 +116,6 @@ void CPlayerControllerComponent::Update()
 #endif
 
 	GameObject().myTransform->Position(myController->GetPosition());
-	//myAnimationComponentController->Update(myMovement);
 
 	switch (myPlayerMovementLock)
 	{
@@ -262,7 +261,6 @@ void CPlayerControllerComponent::Receive(const SMessage& aMsg)
 {
 	if (aMsg.myMessageType == EMessageType::PlayerTakeDamage)
 	{
-		//myAnimationComponentController->TakeDamage();
 	}
 }
 
@@ -306,7 +304,7 @@ void CPlayerControllerComponent::Move(Vector3 aDir)
 
 void CPlayerControllerComponent::SetControllerPosition(const Vector3& aPos)
 {
-	myController->GetController().setPosition({ aPos.x, aPos.y, aPos.x });
+	myController->GetController().setPosition({ aPos.x, aPos.y, aPos.z });
 }
 
 inline const float Lerp(const float& A, const float& B, const float& T)

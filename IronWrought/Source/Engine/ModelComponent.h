@@ -50,7 +50,7 @@ public:
 	const std::string& GetModelPath() const { return myModelPath; }
 	const unsigned int GetMaterialIndex() const { return myMaterialIndex; }
 
-	const int GetMaterialID(const unsigned int aMeshIndex) const { return myMaterialIDs[aMeshIndex]; }
+	const int GetMaterialID(const unsigned int aMeshIndex) const;
 	const unsigned int GetMaterialCount() const { return static_cast<unsigned int>(myMaterialIDs.size()); }
 
 	void OnEnable() override;

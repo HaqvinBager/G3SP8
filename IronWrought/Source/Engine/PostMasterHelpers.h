@@ -17,6 +17,8 @@ namespace PostMaster
 	static const char* SMSG_UICROUCH = "UICrouch";
 	static const char* SMSG_UIJUMP = "UIJump";
 
+	static const char* SMSG_TELEPORT = "Teleport";
+
 	// SP7: compares a string received from SStringMessage.aMessageType with the levels we have.
 	const bool LevelCheck(const char* aStringMessageToCheck);
 	const bool DisableGravityGlove(const char* aStringMsg);

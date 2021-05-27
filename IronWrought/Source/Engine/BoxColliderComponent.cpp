@@ -7,6 +7,7 @@
 #include "RigidDynamicBody.h"
 #include "TransformComponent.h"
 #include "PlayerControllerComponent.h"
+#include "TeleporterComponent.h"
 
 #include "LineFactory.h"
 #include "LineInstance.h"
@@ -133,9 +134,17 @@ void CBoxColliderComponent::OnTriggerEnter(CTransformComponent* aOther)
 				CMainSingleton::PostMaster().SendLate({ EMessageType::PlayResearcherEvent, &myAudioEventIndex });
 			}
 
+			CTeleporterComponent* teleporter = nullptr;
+			if (GameObject().TryGetComponent<CTeleporterComponent>(&teleporter))
+			{
+				teleporter->TriggerTeleport(true, aOther);
+				return;
+			}
+
 			PostMaster::SBoxColliderEvenTriggerData data = {};
 			data.myState = true;
-			data.myTransform = GameObject().myTransform;
+			data.myCollidersTransform = GameObject().myTransform;
+			data.myOthersTransform = aOther;
 
 			//Send Player Has entered Collision Message here
 			/*bool state = true;*/
@@ -147,7 +156,8 @@ void CBoxColliderComponent::OnTriggerEnter(CTransformComponent* aOther)
 	{
 		PostMaster::SBoxColliderEvenTriggerData data = {};
 		data.myState = true;
-		data.myTransform = GameObject().myTransform;
+		data.myCollidersTransform = GameObject().myTransform;
+		data.myOthersTransform = aOther;
 		SStringMessage message = { myEventMessage.c_str(), &data };
 		CMainSingleton::PostMaster().Send(message);
 
@@ -174,9 +184,18 @@ void CBoxColliderComponent::OnTriggerExit(CTransformComponent* aOther)
 			{
 				CMainSingleton::PostMaster().SendLate({ EMessageType::PlayResearcherEvent, &myAudioEventIndex });
 			}
+
+			CTeleporterComponent* teleporter = nullptr;
+			if (GameObject().TryGetComponent<CTeleporterComponent>(&teleporter))
+			{
+				teleporter->TriggerTeleport(false, aOther);
+				return;
+			}
+
 			PostMaster::SBoxColliderEvenTriggerData data = {};
 			data.myState = false;
-			data.myTransform = GameObject().myTransform;
+			data.myCollidersTransform = GameObject().myTransform;
+			data.myOthersTransform = aOther;
 			SStringMessage message = { myEventMessage.c_str(), &data };
 			CMainSingleton::PostMaster().Send(message);
 		}
@@ -185,7 +204,8 @@ void CBoxColliderComponent::OnTriggerExit(CTransformComponent* aOther)
 	{
 		PostMaster::SBoxColliderEvenTriggerData data = {};
 		data.myState = false;
-		data.myTransform = GameObject().myTransform;
+		data.myCollidersTransform = GameObject().myTransform;
+		data.myOthersTransform = aOther;
 		SStringMessage message = { myEventMessage.c_str(), &data };
 		CMainSingleton::PostMaster().Send(message);
 

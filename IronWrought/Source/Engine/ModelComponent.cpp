@@ -71,6 +71,13 @@ CModel* CModelComponent::GetMyModel() const
 	return myModel;
 }
 
+const int CModelComponent::GetMaterialID(const unsigned int aMeshIndex) const
+{
+	assert(myMaterialIDs.empty() == false && "myMaterialIDs is empty!");
+	assert(aMeshIndex < myMaterialIDs.size() && "aMeshIndex is incorrect!");
+	return myMaterialIDs[aMeshIndex];
+}
+
 void CModelComponent::OnEnable()
 {
 }
