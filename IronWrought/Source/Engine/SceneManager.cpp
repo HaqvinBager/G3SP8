@@ -108,7 +108,16 @@ CScene* CSceneManager::CreateScene(const std::string& aSceneJson)
 		AddCollider(*scene, binLevelData.myColliders);
 		AddSpotLights(*scene, binLevelData.mySpotLights);
 
-		scene->InitNavMesh(ASSETPATH(doc.GetObjectW()["NavMeshData"].GetObjectW()["path"].GetString()));
+		std::string navMeshPath = doc.GetObjectW()["NavMeshData"].GetObjectW()["path"].GetString();
+
+		if (!navMeshPath.empty())
+		{
+			std::cout << __FUNCTION__ << " navmesh found: " << navMeshPath << "\n";
+			scene->InitNavMesh(ASSETPATH(navMeshPath));
+		}
+		else
+			std::cout << __FUNCTION__ << " navmesh not found!\n";
+
 		//CreateCustomEvents(*scene);
 		//CreateCustomEventListeners(*scene);
 
