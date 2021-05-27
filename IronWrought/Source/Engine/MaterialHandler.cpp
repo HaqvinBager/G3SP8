@@ -302,9 +302,9 @@ const bool CMaterialHandler::IsMaterialAlpha(const int aMaterialID) const
 	{
 #ifdef _DEBUG
 		std::string id = std::to_string(aMaterialID);
-		id.append(": Material ID does not exist in myMaterialIsAlphaMap!");
+		//id.append(": Material ID does not exist in myMaterialIsAlphaMap!");
 		//ENGINE_ERROR_BOOL_MESSAGE(false, id.c_str());
-		std::cout << __FUNCTION__ << " " << id << std::endl;
+		//std::cout << __FUNCTION__ << " " << id << std::endl;
 #endif
 		return false;
 	}
