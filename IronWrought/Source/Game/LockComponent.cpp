@@ -1,18 +1,18 @@
 #include "stdafx.h"
 #include "LockComponent.h"
 
-CLockComponent::CLockComponent(CGameObject& aParent, std::string aCreateListenStringMessage, std::string aDestroyListenStringMessage, std::string aSendStringMessage, void* someData) :
-	CBehaviour(aParent),
-	myCreateListenStringMessage(aCreateListenStringMessage),
-	myDestroyListenStringMessage(aDestroyListenStringMessage),
-	mySendStringMessage(aSendStringMessage),
+CLockComponent::CLockComponent(CGameObject& aParent, std::string aCreateReceiveMessage, std::string aDestroyReceiveMessage, std::string aSendMessage, void* someData) :
+	CBehavior(aParent),
+	myCreateReceiveMessage(aCreateReceiveMessage),
+	myDestroyReceiveMessage(aDestroyReceiveMessage),
+	mySendMessage(aSendMessage),
 	myMaxAmountOfKeys(0),
 	myAmountOfKeys(0),
 	myHasTriggered(false),
 	myData(someData)
 {
-	CMainSingleton::PostMaster().Subscribe(myCreateListenStringMessage.c_str(), this);
-	CMainSingleton::PostMaster().Subscribe(myDestroyListenStringMessage.c_str(), this);
+	CMainSingleton::PostMaster().Subscribe(myCreateReceiveMessage.c_str(), this);
+	CMainSingleton::PostMaster().Subscribe(myDestroyReceiveMessage.c_str(), this);
 }
 
 CLockComponent::~CLockComponent()
@@ -50,14 +50,14 @@ void CLockComponent::RunEvent()
 		if (myMaxAmountOfKeys <= myAmountOfKeys)
 		{
 			myHasTriggered = true;
-			CMainSingleton::PostMaster().Send({mySendStringMessage.c_str(), myData});
+			CMainSingleton::PostMaster().Send({mySendMessage.c_str(), myData});
 		}
 	}
 }
 
 void CLockComponent::Receive(const SStringMessage& aMessage)
 {
-	if (aMessage.myMessageType == myCreateListenStringMessage.c_str())
+	if (aMessage.myMessageType == myCreateReceiveMessage.c_str())
 		++myMaxAmountOfKeys;
 	else
 		++myAmountOfKeys;

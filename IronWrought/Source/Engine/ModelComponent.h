@@ -1,5 +1,5 @@
 #pragma once
-#include "Behaviour.h"
+#include "Behavior.h"
 
 class CGameObject;
 class CModel;
@@ -28,7 +28,7 @@ private:
 	std::array<int, 3> myMaterialLods;
 };
 
-class CModelComponent : public CBehaviour
+class CModelComponent : public CBehavior
 {
 public:
 	CModelComponent(CGameObject& aParent, const Binary::SModel& aData);

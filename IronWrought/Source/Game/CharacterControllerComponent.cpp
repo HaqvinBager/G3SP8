@@ -5,7 +5,7 @@
 #include "Engine.h"
 
 CCharacterControllerComponent::CCharacterControllerComponent(CGameObject& aParent, const Vector3& aPos, const float& aRadius, const float aHeight)
-	: CBehaviour(aParent)
+	: CBehavior(aParent)
 {
 	myCharacterController = CEngine::GetInstance()->GetPhysx().CreateCharacterController( aPos, aRadius, aHeight);
 }

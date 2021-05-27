@@ -1,5 +1,5 @@
 #pragma once
-#include "Behaviour.h"
+#include "Behavior.h"
 
 namespace physx
 {
@@ -15,7 +15,7 @@ class CLineInstance;
 #define DEBUG_COLLIDER_BOX // DOES NOT WORK PROPERLY, UPDATE TRANSFORM 
 #endif
 
-class CBoxColliderComponent : public CBehaviour
+class CBoxColliderComponent : public CBehavior
 {
 public:
 	enum class EEventFilter

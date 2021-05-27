@@ -1,5 +1,5 @@
 #pragma once
-#include "Behaviour.h"
+#include "Behavior.h"
 //#include <GravityGloveEditor.h>
 #include "Observer.h"
 
@@ -44,7 +44,7 @@ struct SRigidBodyTarget
 	}
 };
 
-class CGravityGloveComponent : public CBehaviour, public IStringObserver
+class CGravityGloveComponent : public CBehavior, public IStringObserver
 {
 	friend class ImGui::CGravityGloveEditor;
 public:

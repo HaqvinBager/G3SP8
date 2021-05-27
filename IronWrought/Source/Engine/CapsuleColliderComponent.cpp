@@ -6,7 +6,7 @@
 #include "RigidDynamicBody.h"
 
 CCapsuleColliderComponent::CCapsuleColliderComponent(CGameObject& aParent, const Vector3& aPositionOffset, const float& aRadius, const float& aHeight, PxMaterial* aMaterial)
-	: CBehaviour(aParent)
+	: CBehavior(aParent)
 	, myPositionOffset(aPositionOffset)
 	, myRadius(aRadius)
 	, myHeight(aHeight)

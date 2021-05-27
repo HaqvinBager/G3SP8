@@ -1,10 +1,10 @@
 #pragma once
-#include "Behaviour.h"
+#include "Behavior.h"
 
-class CKeyComponent : public CBehaviour
+class CKeyComponent : public CBehavior
 {
 public:
-	CKeyComponent(CGameObject& aParent, std::string aCreateMessage, std::string aDestroyMessage, void* someData);
+	CKeyComponent(CGameObject& aParent, std::string aCreateSendMessage, std::string aPickUpSendMessage, void* someData);
 	virtual ~CKeyComponent() override;
 	virtual void Destroy();
 
@@ -18,8 +18,8 @@ public:
 public:
 	virtual void OnPickUp();
 
-	std::string myCreateStringMessage;
-	std::string myPickUpStringMessage;
+	std::string myCreateSendMessage;
+	std::string myPickUpSendMessage;
 
 	void* myData;
 };

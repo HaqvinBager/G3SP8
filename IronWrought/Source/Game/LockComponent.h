@@ -1,11 +1,11 @@
 #pragma once
-#include "Behaviour.h"
+#include "Behavior.h"
 #include "Observer.h"
 
-class CLockComponent : public CBehaviour, public IStringObserver
+class CLockComponent : public CBehavior, public IStringObserver
 {
 public:
-	CLockComponent(CGameObject& aParent, std::string aCreateListenStringMessage, std::string aDestroyListenStringMessage, std::string aSendStringMessage, void* someData);
+	CLockComponent(CGameObject& aParent, std::string aCreateRecieveMessage, std::string aDestroyRecieveStringMessage, std::string aSendMessage, void* someData);
 	~CLockComponent();
 	void Destroy();
 
@@ -23,9 +23,9 @@ public:
 private:
 	void Receive(const SStringMessage& aMessage) override;
 
-	std::string myCreateListenStringMessage;
-	std::string myDestroyListenStringMessage;
-	std::string mySendStringMessage;
+	std::string myCreateReceiveMessage;
+	std::string myDestroyReceiveMessage;
+	std::string mySendMessage;
 
 	int myMaxAmountOfKeys;
 	int myAmountOfKeys;

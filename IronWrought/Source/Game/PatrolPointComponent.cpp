@@ -2,7 +2,7 @@
 #include "PatrolPointComponent.h"
 
 CPatrolPointComponent::CPatrolPointComponent(CGameObject& aParent, float aIntrestValue) 
-	: CBehaviour(aParent)
+	: CBehavior(aParent)
 	, myBaseIntrestValue(aIntrestValue)
 	, myCurrentIntrestValue(myBaseIntrestValue)
 	, myBonusIntrestValue(0)

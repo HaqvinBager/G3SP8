@@ -1,5 +1,5 @@
 #pragma once
-#include "Behaviour.h"
+#include "Behavior.h"
 
 class CGameObject;
 class CSpotLight;
@@ -8,7 +8,7 @@ namespace Binary {
 	struct SSpotLight;
 }
 
-class CSpotLightComponent : public CBehaviour
+class CSpotLightComponent : public CBehavior
 {
 public:
 	CSpotLightComponent(CGameObject& aParent, const Binary::SSpotLight& aData);

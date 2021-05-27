@@ -1,11 +1,11 @@
 #pragma once
-#include "Behaviour.h"
+#include "Behavior.h"
 
 class CGameObject;
 
 struct SVFXEffect;
 
-class CVFXSystemComponent : public CBehaviour
+class CVFXSystemComponent : public CBehavior
 {
 public:
 	CVFXSystemComponent(CGameObject& aParent, const std::string& aVFXDataPath);

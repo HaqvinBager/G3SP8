@@ -1,9 +1,9 @@
 #include "stdafx.h"
 #include "ResponseComponent.h"
 
-CResponseComponent::CResponseComponent(CGameObject& aParent, std::string aListenStringMessage) : CBehaviour(aParent), myListenStringMessage(aListenStringMessage), myHasTriggered(false)
+CResponseComponent::CResponseComponent(CGameObject& aParent, std::string aReceiveMessage) : CBehavior(aParent), myReceiveMessage(aReceiveMessage), myHasTriggered(false)
 {
-	CMainSingleton::PostMaster().Subscribe(myListenStringMessage.c_str(), this);
+	CMainSingleton::PostMaster().Subscribe(myReceiveMessage.c_str(), this);
 }
 
 CResponseComponent::~CResponseComponent()

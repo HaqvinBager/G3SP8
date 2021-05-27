@@ -5,7 +5,7 @@
 #include "Scene.h"
 
 CHealthPickupComponent::CHealthPickupComponent(CGameObject& aParent, const float& aHealthPickupAmount)
-	: CBehaviour(aParent)
+	: CBehavior(aParent)
 	, myHealthPickupAmount(aHealthPickupAmount)
 {
 }

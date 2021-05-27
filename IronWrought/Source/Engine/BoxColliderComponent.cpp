@@ -12,7 +12,7 @@
 #include "LineInstance.h"
 
 CBoxColliderComponent::CBoxColliderComponent(CGameObject& aParent, const Vector3& aPositionOffset, const Vector3& aBoxSize, const bool aIsTrigger, const unsigned int aLayerValue, PxMaterial* aMaterial)
-	: CBehaviour(aParent)
+	: CBehavior(aParent)
 	, myShape(nullptr)
 	, myPositionOffset(aPositionOffset)
 	, myBoxSize(aBoxSize)

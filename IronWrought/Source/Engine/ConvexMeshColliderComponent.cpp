@@ -7,7 +7,7 @@
 #include "Scene.h"
 
 CConvexMeshColliderComponent::CConvexMeshColliderComponent(CGameObject& aParent, PxMaterial* aMaterial)
-	: CBehaviour(aParent)
+	: CBehavior(aParent)
 	, myShape(nullptr)
 	, myMaterial(aMaterial)
 {

@@ -1,11 +1,11 @@
 #pragma once
-#include <Behaviour.h>
+#include <Behavior.h>
 #include <Observer.h>
 
-class CResponseComponent : public CBehaviour, public IStringObserver
+class CResponseComponent : public CBehavior, public IStringObserver
 {
 public:
-	CResponseComponent(CGameObject& aParent, std::string aListenStringMessage);
+	CResponseComponent(CGameObject& aParent, std::string aReceiveMessage);
 	~CResponseComponent();
 	
 public:
@@ -21,7 +21,7 @@ public:
 private:
 	void Receive(const SStringMessage& aMessage) override;
 
-	std::string myListenStringMessage;
+	std::string myReceiveMessage;
 
 	bool myHasTriggered;
 };

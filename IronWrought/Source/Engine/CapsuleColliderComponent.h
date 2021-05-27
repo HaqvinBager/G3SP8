@@ -1,5 +1,5 @@
 #pragma once
-#include "Behaviour.h"
+#include "Behavior.h"
 
 namespace physx
 {
@@ -8,7 +8,7 @@ namespace physx
 	class PxRigidStatic;
 }
 
-class CCapsuleColliderComponent : public CBehaviour
+class CCapsuleColliderComponent : public CBehavior
 {
 public:
 	CCapsuleColliderComponent(CGameObject& aParent, const Vector3& aPositionOffset, const float& aRadius, const float& aHeight, physx::PxMaterial* aMaterial = nullptr);

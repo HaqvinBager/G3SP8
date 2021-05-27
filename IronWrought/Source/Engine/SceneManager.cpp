@@ -38,9 +38,6 @@
 #include <concurrent_vector.h>
 #include "CustomEventComponent.h"
 #include "CustomEventListenerComponent.h"
-#include <SafetyDoorComponent.h>
-#include <FuseboxComponent.h>
-#include <FuseComponent.h>
 #include "SpotLightComponent.h"
 
 CScene* CSceneManager::ourLastInstantiatedScene = nullptr;
@@ -119,9 +116,6 @@ CScene* CSceneManager::CreateScene(const std::string& aSceneJson)
 			SetVertexPaintedColors(*scene, sceneData["vertexColors"].GetArray(), vertexPaintData);
 			AddDecalComponents(*scene, sceneData["decals"].GetArray());
 			AddPickups(*scene, sceneData["healthPickups"].GetArray());
-			AddSafetyDoors(*scene, sceneData["mySafetyDoors"].GetArray());/*
-			AddFuseboxes(*scene, sceneData["myFuseboxes"].GetArray());
-			AddFuses(*scene, sceneData["myFusePickUps"].GetArray());*/
 			AddAudioSources(*scene, sceneData["myAudioSources"].GetArray());
 			AddVFX(*scene, sceneData["myVFXLinks"].GetArray());
 			if (sceneData.HasMember("triggerEvents"))
@@ -623,45 +617,6 @@ void CSceneManager::AddPickups(CScene& aScene, RapidArray someData)
 		gameObject->AddComponent<CHealthPickupComponent>(*gameObject, healthPickupAmount);
 	}
 }
-
-void CSceneManager::AddSafetyDoors(CScene& aScene, RapidArray someData)
-{
-	for (const auto& m : someData)
-	{
-		const int instanceId = m["instanceID"].GetInt();
-		CGameObject* gameObject = aScene.FindObjectWithID(instanceId);
-		if (!gameObject)
-			continue;
-
-		gameObject->AddComponent<CSafetyDoorComponent>(*gameObject);
-	}
-}
-//
-//void CSceneManager::AddFuseboxes(CScene& aScene, RapidArray someData)
-//{
-//	for (const auto& m : someData)
-//	{
-//		const int instanceId = m["instanceID"].GetInt();
-//		CGameObject* gameObject = aScene.FindObjectWithID(instanceId);
-//		if (!gameObject)
-//			continue;
-//
-//		gameObject->AddComponent<CFuseboxComponent>(*gameObject);
-//	}
-//}
-//
-//void CSceneManager::AddFuses(CScene& aScene, RapidArray someData)
-//{
-//	for (const auto& m : someData)
-//	{
-//		const int instanceId = m["instanceID"].GetInt();
-//		CGameObject* gameObject = aScene.FindObjectWithID(instanceId);
-//		if (!gameObject)
-//			continue;
-//
-//		gameObject->AddComponent<CFuseComponent>(*gameObject);
-//	}
-//}
 
 void CSceneManager::AddAudioSources(CScene& aScene, RapidArray someData)
 {

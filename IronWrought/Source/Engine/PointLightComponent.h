@@ -1,10 +1,10 @@
 #pragma once
-#include "Behaviour.h"
+#include "Behavior.h"
 
 class CGameObject;
 class CPointLight;
 
-class CPointLightComponent : public CBehaviour
+class CPointLightComponent : public CBehavior
 {
 public:
 	CPointLightComponent(CGameObject& aParent, float aRange, DirectX::SimpleMath::Vector3 aColorAndIntensity, float anIntensity);

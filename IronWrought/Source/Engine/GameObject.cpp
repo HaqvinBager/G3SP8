@@ -2,7 +2,7 @@
 #include "GameObject.h"
 #include "Component.h"
 #include "TransformComponent.h"
-#include "Behaviour.h"
+#include "Behavior.h"
 
 CGameObject::CGameObject(const int aInstanceID, const std::string& aName, const std::string& aTag)
 	: myInstanceID(aInstanceID)

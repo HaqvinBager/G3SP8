@@ -3,9 +3,9 @@
 #include "RigidBodyComponent.h"
 #include "Scene.h"
 
-CKeyComponent::CKeyComponent(CGameObject& aParent, std::string aCreateMessage, std::string aDestroyMessage, void* someData) : CBehaviour(aParent), myCreateStringMessage(aCreateMessage), myPickUpStringMessage(aDestroyMessage), myData(someData)
+CKeyComponent::CKeyComponent(CGameObject& aParent, std::string aCreateSendMessage, std::string aPickUpSendMessage, void* someData) : CBehavior(aParent), myCreateSendMessage(aCreateSendMessage), myPickUpSendMessage(aPickUpSendMessage), myData(someData)
 {
-	CMainSingleton::PostMaster().Send({ myCreateStringMessage.c_str(), myData });
+	CMainSingleton::PostMaster().Send({ myCreateSendMessage.c_str(), myData });
 
 }
 
@@ -41,6 +41,6 @@ void CKeyComponent::OnDisable()
 
 void CKeyComponent::OnPickUp()
 {
-	CMainSingleton::PostMaster().Send({ myPickUpStringMessage.c_str(), myData });
+	CMainSingleton::PostMaster().Send({ myPickUpSendMessage.c_str(), myData });
 	Destroy();
 }

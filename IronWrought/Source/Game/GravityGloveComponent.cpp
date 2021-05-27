@@ -18,7 +18,7 @@
 #include "BoxColliderComponent.h"
 
 CGravityGloveComponent::CGravityGloveComponent(CGameObject& aParent, CTransformComponent* aGravitySlot)
-	: CBehaviour(aParent)
+	: CBehavior(aParent)
 	, myGravitySlot(aGravitySlot)
 	, myRigidStatic(nullptr)
 {

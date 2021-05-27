@@ -1,13 +1,13 @@
 #pragma once
 #include "Component.h"
 
-class CBehaviour : public CComponent
+class CBehavior : public CComponent
 {
 public:
 
-	CBehaviour(CGameObject& aParent) : CComponent(aParent), myEnabled(true) {}
+	CBehavior(CGameObject& aParent) : CComponent(aParent), myEnabled(true) {}
 
-	virtual ~CBehaviour() {}
+	virtual ~CBehavior() {}
 
 	virtual void OnEnable() = 0;
 	virtual void OnDisable() = 0;

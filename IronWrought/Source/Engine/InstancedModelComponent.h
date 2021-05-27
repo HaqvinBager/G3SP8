@@ -1,5 +1,5 @@
 #pragma once
-#include "Behaviour.h"
+#include "Behavior.h"
 
 class CGameObject;
 class CModel;
@@ -8,7 +8,7 @@ namespace Binary {
 	struct SInstancedModel;
 }
 
-class CInstancedModelComponent : public CBehaviour
+class CInstancedModelComponent : public CBehavior
 {
 public:
 	CInstancedModelComponent(CGameObject& aParent, const Binary::SInstancedModel& aData);

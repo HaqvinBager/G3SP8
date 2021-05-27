@@ -7,7 +7,7 @@
 #include <BinReader.h>
 
 CInstancedModelComponent::CInstancedModelComponent(CGameObject& aParent, const Binary::SInstancedModel& aData)
-	: CBehaviour(aParent)
+	: CBehavior(aParent)
 {
 	myModelPath = CJsonReader::Get()->GetAssetPath(aData.assetID);
 	myModel = CModelFactory::GetInstance()->GetInstancedModel(ASSETPATH(myModelPath), static_cast<int>(aData.transforms.size()));
