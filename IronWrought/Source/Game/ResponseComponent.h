@@ -1,6 +1,12 @@
 #pragma once
-#include <Behavior.h>
-#include <Observer.h>
+#include "Behavior.h"
+#include "Observer.h"
+
+enum class EResponseType
+{
+	Rotate,
+	Move
+};
 
 class CResponseComponent : public CBehavior, public IStringObserver
 {

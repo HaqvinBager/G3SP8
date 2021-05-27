@@ -2,6 +2,12 @@
 #include "Behavior.h"
 #include "Observer.h"
 
+enum class ELockInteractionTypes
+{
+	OnTriggerEnter,
+	OnLeftClickDown
+};
+
 class CLockComponent : public CBehavior, public IStringObserver
 {
 public:

@@ -40,6 +40,10 @@
 #include "CustomEventListenerComponent.h"
 #include "SpotLightComponent.h"
 
+#include <LockComponent.h>
+#include <KeyComponent.h>
+#include <ResponseComponent.h>
+
 CScene* CSceneManager::ourLastInstantiatedScene = nullptr;
 CSceneManager::CSceneManager()
 {
@@ -104,7 +108,7 @@ CScene* CSceneManager::CreateScene(const std::string& aSceneJson)
 		AddCollider(*scene, binLevelData.myColliders);
 		AddSpotLights(*scene, binLevelData.mySpotLights);
 
-
+		scene->InitNavMesh(ASSETPATH(doc.GetObjectW()["NavMeshData"].GetObjectW()["path"].GetString()));
 		//CreateCustomEvents(*scene);
 		//CreateCustomEventListeners(*scene);
 
@@ -135,7 +139,6 @@ CScene* CSceneManager::CreateScene(const std::string& aSceneJson)
 		}
 	}
 
-	scene->InitNavMesh(ASSETPATH("Assets/Generated/SP_GameplayExportedNavMesh.obj"));
 	//scene->NavMesh();
 	//if (AddGameObjects(*scene, sceneData["Ids"].GetArray()))
 	//{
@@ -538,7 +541,28 @@ void CSceneManager::AddPuzzleKey(CScene& aScene, RapidArray someData)
 {
 	for (const auto& key : someData)
 	{
+		std::string onCreateNotify = key["onCreateNotify"].GetString();
+		std::string onInteractNotify = key["onInteractNotify"].GetString();
 		CGameObject* gameObject = aScene.FindObjectWithID(key["instanceID"].GetInt());
+		gameObject;
+
+		EKeyInteractionTypes interactionType = static_cast<EKeyInteractionTypes>(key["interactionType"].GetInt());
+
+		switch (interactionType)
+		{
+		case EKeyInteractionTypes::Destroy:
+		{
+			//add destroykeycomponent to gameobject
+		}
+		break;
+		case EKeyInteractionTypes::Animate:
+		{
+			//add animatekeycomponent to gameobject
+		}
+		break;
+		default:
+			break;
+		}
 	}
 }
 
@@ -546,7 +570,29 @@ void CSceneManager::AddPuzzleLock(CScene& aScene, RapidArray someData)
 {
 	for (const auto& lock : someData)
 	{
+		std::string onNotify = lock["onNotify"].GetString();
+		std::string onKeyCreateNotify = lock["onKeyCreateNotify"].GetString();
+		std::string onKeyInteractNotify = lock["onKeyInteractNotify"].GetString();
 		CGameObject* gameObject = aScene.FindObjectWithID(lock["instanceID"].GetInt());
+		gameObject;
+
+		ELockInteractionTypes interactionType = static_cast<ELockInteractionTypes>(lock["interactionType"].GetInt());
+
+		switch (interactionType)
+		{
+		case ELockInteractionTypes::OnTriggerEnter:
+		{
+			//add ontriggerlockcomponent to gameobject
+		}
+		break;
+		case ELockInteractionTypes::OnLeftClickDown:
+		{
+			//add leftclickdownlockcomponent to gameobject
+		}
+		break;
+		default:
+			break;
+		}
 	}
 }
 
@@ -554,7 +600,10 @@ void CSceneManager::AddPuzzleResponse(CScene& aScene, RapidArray someData)
 {
 	for (const auto& response : someData)
 	{
+		std::string onResponseNotify = response["onResponseNotify"].GetString();
 		CGameObject* gameObject = aScene.FindObjectWithID(response["instanceID"].GetInt());
+		gameObject;
+		//create the propper response component and add to gameobject
 	}
 }
 
