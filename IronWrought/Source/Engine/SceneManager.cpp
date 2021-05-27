@@ -539,6 +539,7 @@ void CSceneManager::AddPuzzleKey(CScene& aScene, RapidArray someData)
 	for (const auto& key : someData)
 	{
 		CGameObject* gameObject = aScene.FindObjectWithID(key["instanceID"].GetInt());
+		gameObject;
 	}
 }
 
@@ -547,6 +548,7 @@ void CSceneManager::AddPuzzleLock(CScene& aScene, RapidArray someData)
 	for (const auto& lock : someData)
 	{
 		CGameObject* gameObject = aScene.FindObjectWithID(lock["instanceID"].GetInt());
+		gameObject;
 	}
 }
 
@@ -555,6 +557,7 @@ void CSceneManager::AddPuzzleResponse(CScene& aScene, RapidArray someData)
 	for (const auto& response : someData)
 	{
 		CGameObject* gameObject = aScene.FindObjectWithID(response["instanceID"].GetInt());
+		gameObject;
 	}
 }
 
