@@ -238,7 +238,7 @@ Vector3 CAttack::Update(const Vector3& aPosition)
 		CEngine::GetInstance()->GetActiveScene().AddInstance(myLine2);*/
 
 		if (hits > 0) {
-			std::cout << "Player Hit " << std::endl;
+			//std::cout << __FUNCTION__ <<  " Player Hit " << std::endl;
 			myUser->GameObject().myTransform->PositionRigidbody(myResetPosition);
 			CMainSingleton::PostMaster().SendLate({ EMessageType::EnemyAttack, myUser });
 			CMainSingleton::PostMaster().Send({ EMessageType::PlayerTakeDamage });

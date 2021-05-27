@@ -136,7 +136,7 @@ void CEnemyComponent::Update()//får bestämma vilket behaviour vi vill köra i 
 			SetState(EBehaviour::Seek);
 		}
 		else {*/
-			std::cout << "PATROL" << std::endl;
+			//std::cout << __FUNCTION__ << " PATROL" << std::endl;
 			SetState(EBehaviour::Patrol);
 		//}
 

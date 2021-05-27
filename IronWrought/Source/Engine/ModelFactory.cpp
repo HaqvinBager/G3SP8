@@ -162,7 +162,7 @@ CModel* CModelFactory::LoadModel(const std::string& aFilePath)
 	//VertexShader
 	std::ifstream vsFile;
 #ifdef ALLOW_ANIMATIONS
-	if (mesh->myModel->myNumBones > 0)
+	if (mesh->myModel->myNumBones > 0 && mesh->myModel->myNumBones < 128)
 		vsFile.open("Shaders/AnimatedVertexShader.cso", std::ios::binary);
 	else 
 		vsFile.open("Shaders/VertexShader.cso", std::ios::binary);
@@ -278,7 +278,7 @@ CModel* CModelFactory::LoadModel(const std::string& aFilePath)
 
 	model->Init(modelData);
 #ifdef ALLOW_ANIMATIONS
-	model->HasBones(mesh->myModel->myNumBones > 0);
+	model->HasBones(mesh->myModel->myNumBones > 0 && mesh->myModel->myNumBones < 128);
 #endif
 
 	//myModelMap.emplace(aFilePath, model);
