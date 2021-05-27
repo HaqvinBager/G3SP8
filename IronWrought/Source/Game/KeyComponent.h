@@ -1,6 +1,12 @@
 #pragma once
 #include "Behavior.h"
 
+enum class EKeyInteractionTypes
+{
+	Destroy,
+	Animate
+};
+
 class CKeyComponent : public CBehavior
 {
 public:
