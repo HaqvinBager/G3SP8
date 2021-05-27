@@ -1,7 +1,7 @@
 #pragma once
-#include "Behaviour.h"
+#include "Behavior.h"
 
-class CCustomAnimation : public CBehaviour
+class CCustomAnimation : public CBehavior
 {
 public:
 	CCustomAnimation(CGameObject& aParent);

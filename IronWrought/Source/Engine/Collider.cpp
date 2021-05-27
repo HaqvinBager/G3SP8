@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "Collider.h"
 
-CCollider::CCollider(CGameObject& aParent, ECollisionLayer aCollisionLayer, uint64_t someCollisionFlags) : CBehaviour(aParent), myCollisionLayer(aCollisionLayer), myCollisionFlags(someCollisionFlags)
+CCollider::CCollider(CGameObject& aParent, ECollisionLayer aCollisionLayer, uint64_t someCollisionFlags) : CBehavior(aParent), myCollisionLayer(aCollisionLayer), myCollisionFlags(someCollisionFlags)
 {
 }
 

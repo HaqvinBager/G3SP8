@@ -1,11 +1,11 @@
 #pragma once
-#include "Behaviour.h"
+#include "Behavior.h"
 #include "NavmeshLoader.h"
 
 struct SNavMesh;
 class CGameObject;
 
-class CNavMeshComponent : public CBehaviour
+class CNavMeshComponent : public CBehavior
 {
 public:
 	CNavMeshComponent(CGameObject& aParent);

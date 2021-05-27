@@ -1,5 +1,5 @@
 #pragma once
-#include "Behaviour.h"
+#include "Behavior.h"
 #include "StringID.hpp"
 #include "SimpleMath.h"
 #include "ModelMath.h"
@@ -20,7 +20,7 @@ struct SAnimationBlend
 };
 
 class CGameObject;
-class CAnimationComponent : public CBehaviour
+class CAnimationComponent : public CBehavior
 {
 public:// Component/ Behaviour inherited
 #ifdef _DEBUG

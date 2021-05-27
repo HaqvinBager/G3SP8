@@ -1,8 +1,8 @@
 #pragma once
-#include "Behaviour.h"
+#include "Behavior.h"
 #include "CollisionManager.h"
 
-class CCollider : public CBehaviour
+class CCollider : public CBehavior
 {
 public:
 	CCollider(CGameObject& aParent, ECollisionLayer aCollisionLayer, uint64_t someCollisionFlags);

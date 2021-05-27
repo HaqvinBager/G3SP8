@@ -1,11 +1,11 @@
 #pragma once
-#include "Behaviour.h"
+#include "Behavior.h"
 #include <PxPhysicsAPI.h>
 using namespace physx;
 
 class CCharacterController;
 
-class CCharacterControllerComponent : public CBehaviour
+class CCharacterControllerComponent : public CBehavior
 {
 public:
 	CCharacterControllerComponent(CGameObject& aParent, const Vector3& aPos = {0, 1, 0}, const float& aRadius = 0.6f, const float aHeight = 1.8f);

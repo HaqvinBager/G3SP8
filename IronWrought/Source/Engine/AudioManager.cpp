@@ -432,7 +432,7 @@ void CAudioManager::Receive(const SMessage& aMessage) {
 		if (data.mySoundIndex < 0 || data.mySoundIndex >= static_cast<int>(EPropAmbience::Count))
 			return;
 
-		this->AddSource(data.myGameObjectID, data.mySoundIndex, data.myPosition);
+		this->AddSource(data.myGameObjectID, data.mySoundIndex, data.myPosition, data.myForward, data.myStartAttenuationAngle, data.myMaxAttenuationAngle, data.myMinimumVolume);
 	}break;
 
 	case EMessageType::SetDynamicAudioSource:
@@ -625,10 +625,11 @@ void CAudioManager::SetListener(CGameObject* aGameObject)
 	myListener = aGameObject;
 }
 
-void CAudioManager::AddSource(const int anIdentifier, const unsigned int aSoundIndex, const Vector3& aPosition)
+void CAudioManager::AddSource(const int anIdentifier, const unsigned int aSoundIndex, const Vector3& aPosition, const Vector3& aDirection, float aStartAttenuationAngle, float aMaxAttenuationAngle, float aMinimumVolume)
 {
 	myStaticAudioSources.push_back({ anIdentifier, aSoundIndex, myWrapper.RequestAudioSource("3D") });
 	myStaticAudioSources.back().myChannel->Set3DAttributes(aPosition, Vector3::Zero);
+	myStaticAudioSources.back().myChannel->Set3DConeAttributes(aDirection, aStartAttenuationAngle, aMaxAttenuationAngle, aMinimumVolume);
 	myWrapper.Play(myPropAmbienceAudio[aSoundIndex], myStaticAudioSources.back().myChannel);
 }
 

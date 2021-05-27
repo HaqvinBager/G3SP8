@@ -8,7 +8,7 @@
 #include "Timer.h"
 
 CAnimationComponent::CAnimationComponent(CGameObject& aParent, const std::string& aModelFilePath, std::vector<std::string>& someAnimationPaths, bool aUseSafeMode)
-	: CBehaviour(aParent)
+	: CBehavior(aParent)
 	, myShouldUseLerp(false)
 {
 	myController = new CAnimationController();

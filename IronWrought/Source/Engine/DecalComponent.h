@@ -1,10 +1,10 @@
 #pragma once
-#include "Behaviour.h"
+#include "Behavior.h"
 
 class CGameObject;
 class CDecal;
 
-class CDecalComponent : public CBehaviour
+class CDecalComponent : public CBehavior
 {
 public:
 	CDecalComponent(CGameObject& aParent, const std::string& aFBXPath);

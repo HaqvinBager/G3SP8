@@ -8,7 +8,7 @@
 
 class CTransformComponent;
 class CComponent;
-class CBehaviour;
+class CBehavior;
 
 class CGameObject
 {

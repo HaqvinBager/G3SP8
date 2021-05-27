@@ -2,7 +2,7 @@
 #include "CustomAnimation.h"
 
 CCustomAnimation::CCustomAnimation(CGameObject& aParent) 
-	: CBehaviour(aParent)
+	: CBehavior(aParent)
 {
 
 }

@@ -1,7 +1,7 @@
 #pragma once
-#include "Behaviour.h"
+#include "Behavior.h"
 
-class CHealthPickupComponent : public CBehaviour
+class CHealthPickupComponent : public CBehavior
 {
 public:
 	CHealthPickupComponent(CGameObject& aParent, const float& aHealthPickupAmount);

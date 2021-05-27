@@ -9,7 +9,7 @@
 #include "JsonReader.h"
 
 CModelComponent::CModelComponent(CGameObject& aParent, const Binary::SModel& aData)
-	: CBehaviour(aParent)
+	: CBehavior(aParent)
 {
 	myModelPath = CJsonReader::Get()->GetAssetPath(aData.assetID);
 	myModel = CModelFactory::GetInstance()->GetModel(ASSETPATH(myModelPath));	

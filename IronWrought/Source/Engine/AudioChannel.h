@@ -19,6 +19,7 @@ public:
 	void SetPitch(float aPitch);
 
 	void Set3DAttributes(const Vector3& aPosition, const Vector3& aVelocity);
+	void Set3DConeAttributes(const Vector3& aDirection, float anUnattenuatedAngleSpread, float anAttenuatedAngleSpread, float anAttenuatedVolume);
 	
 public:
 	~CAudioChannel();// 2020 12 04  - Destruction of CAudioChannel is not taken care of by FMOD
