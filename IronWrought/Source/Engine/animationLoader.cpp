@@ -55,7 +55,7 @@ namespace AnimationLoader
 	{
 		if (!ShouldLoadAnimations(aGameObject))
 		{
-			assert(false && "Trying to add CAnimationComponent to GameObject that holds no CModel with bones!");
+			//assert(false && "Trying to add CAnimationComponent to GameObject that holds no CModel with bones!");
 			return nullptr;
 		}
 

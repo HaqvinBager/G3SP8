@@ -24,7 +24,7 @@
 #include <EnemyComponent.h>
 #include <HealthPickupComponent.h>
 #include <PatrolPointComponent.h>
-//#include <iostream>
+
 #include "NavmeshLoader.h"
 #include <BinReader.h>
 #include <PlayerControllerComponent.h>
@@ -97,12 +97,13 @@ CScene* CSceneManager::CreateScene(const std::string& aSceneJson)
 	if (AddGameObjects(*scene, binLevelData.myInstanceIDs))
 	{
 		SetTransforms(*scene, binLevelData.myTransforms);
-		
+
 		AddInstancedModelComponents(*scene, binLevelData.myInstancedModels);
 		AddPointLights(*scene, binLevelData.myPointLights);
 		AddModelComponents(*scene, binLevelData.myModels);
 		AddCollider(*scene, binLevelData.myColliders);
 		AddSpotLights(*scene, binLevelData.mySpotLights);
+
 
 		//CreateCustomEvents(*scene);
 		//CreateCustomEventListeners(*scene);
@@ -110,20 +111,26 @@ CScene* CSceneManager::CreateScene(const std::string& aSceneJson)
 		for (const auto& sceneData : scenes)
 		{
 			std::string sceneName = sceneData["sceneName"].GetString();
+
 			if (sceneData.HasMember("parents"))
 				SetParents(*scene, sceneData["parents"].GetArray());
+
+			AddPuzzleLock(*scene, sceneData["locks"].GetArray());
+			AddPuzzleKey(*scene, sceneData["keys"].GetArray());
+			AddPuzzleResponse(*scene, sceneData["responses"].GetArray());
 			AddDirectionalLights(*scene, sceneData["directionalLights"].GetArray());
 			SetVertexPaintedColors(*scene, sceneData["vertexColors"].GetArray(), vertexPaintData);
 			AddDecalComponents(*scene, sceneData["decals"].GetArray());
 			AddPickups(*scene, sceneData["healthPickups"].GetArray());
 			AddAudioSources(*scene, sceneData["myAudioSources"].GetArray());
 			AddVFX(*scene, sceneData["myVFXLinks"].GetArray());
+
 			if (sceneData.HasMember("triggerEvents"))
 				AddTriggerEvents(*scene, sceneData["triggerEvents"].GetArray());
+
 			if (sceneName.find("Gameplay") != std::string::npos)//Om Unity Scene Namnet inneh�ller nyckelordet "Layout"
-			{
 				AddPlayer(*scene, sceneData["player"].GetObjectW());
-			}
+
 			AddEnemyComponents(*scene, sceneData["enemies"].GetArray());
 		}
 	}
@@ -314,14 +321,14 @@ void CSceneManager::AddModelComponents(CScene& aScene, const std::vector<Binary:
 			continue;
 
 		gameObject->AddComponent<CModelComponent>(*gameObject, m);
-
-
-		//std::string assetPath = {};
-		//if (CJsonReader::Get()->TryGetAssetPath(m.assetID, assetPath))
+		AnimationLoader::AddAnimationsToGameObject(gameObject, CJsonReader::Get()->GetAssetPath(m.assetID));
+		//if (AnimationLoader::AddAnimationsToGameObject(gameObject, CJsonReader::Get()->GetAssetPath(m.assetID)))
 		//{
-		//	assetPath = ASSETPATH(assetPath);
-		//	gameObject->AddComponent<CModelComponent>(*gameObject, assetPath);
-		//	AnimationLoader::AddAnimationsToGameObject(gameObject, assetPath);
+		//	std::cout << __FUNCTION__ << " Animation " << CJsonReader::Get()->GetAssetPath(m.assetID) << std::endl;
+		//}
+		//else
+		//{
+		//	std::cout << __FUNCTION__ << " No animation " << CJsonReader::Get()->GetAssetPath(m.assetID) << std::endl;
 		//}
 	}
 }
@@ -420,12 +427,12 @@ void CSceneManager::AddDirectionalLight(CScene& aScene, RapidObject someData)
 		*gameObject,
 		someData["cubemapName"].GetString(),
 		Vector3(someData["r"].GetFloat(),
-		someData["g"].GetFloat(),
-		someData["b"].GetFloat()),
+			someData["g"].GetFloat(),
+			someData["b"].GetFloat()),
 		someData["intensity"].GetFloat(),
 		Vector3(someData["direction"]["x"].GetFloat(),
-		someData["direction"]["y"].GetFloat(),
-		someData["direction"]["z"].GetFloat())
+			someData["direction"]["y"].GetFloat(),
+			someData["direction"]["z"].GetFloat())
 		);
 
 	if (someData["isMainDirectionalLight"].GetBool())
@@ -449,12 +456,12 @@ void CSceneManager::AddDirectionalLights(CScene& aScene, RapidArray someData)
 			*gameObject,
 			directionalLight["cubemapName"].GetString(),
 			Vector3(directionalLight["r"].GetFloat(),
-			directionalLight["g"].GetFloat(),
-			directionalLight["b"].GetFloat()),
+				directionalLight["g"].GetFloat(),
+				directionalLight["b"].GetFloat()),
 			directionalLight["intensity"].GetFloat(),
 			Vector3(directionalLight["direction"]["x"].GetFloat(),
-			directionalLight["direction"]["y"].GetFloat(),
-			directionalLight["direction"]["z"].GetFloat())
+				directionalLight["direction"]["y"].GetFloat(),
+				directionalLight["direction"]["z"].GetFloat())
 			);
 
 		auto light = gameObject->GetComponent<CEnvironmentLightComponent>()->GetEnvironmentLight();
@@ -487,8 +494,8 @@ void CSceneManager::AddPointLights(CScene& aScene, RapidArray someData)
 			*gameObject,
 			pointLight["range"].GetFloat(),
 			Vector3(pointLight["r"].GetFloat(),
-			pointLight["g"].GetFloat(),
-			pointLight["b"].GetFloat()),
+				pointLight["g"].GetFloat(),
+				pointLight["b"].GetFloat()),
 			pointLight["intensity"].GetFloat());
 		aScene.AddInstance(pointLightComponent->GetPointLight());
 	}
@@ -527,6 +534,33 @@ void CSceneManager::AddSpotLights(CScene& aScene, const std::vector<Binary::SSpo
 	}
 }
 
+void CSceneManager::AddPuzzleKey(CScene& aScene, RapidArray someData)
+{
+	for (const auto& key : someData)
+	{
+		CGameObject* gameObject = aScene.FindObjectWithID(key["instanceID"].GetInt());
+		gameObject;
+	}
+}
+
+void CSceneManager::AddPuzzleLock(CScene& aScene, RapidArray someData)
+{
+	for (const auto& lock : someData)
+	{
+		CGameObject* gameObject = aScene.FindObjectWithID(lock["instanceID"].GetInt());
+		gameObject;
+	}
+}
+
+void CSceneManager::AddPuzzleResponse(CScene& aScene, RapidArray someData)
+{
+	for (const auto& response : someData)
+	{
+		CGameObject* gameObject = aScene.FindObjectWithID(response["instanceID"].GetInt());
+		gameObject;
+	}
+}
+
 void CSceneManager::AddDecalComponents(CScene& aScene, RapidArray someData)
 {
 	for (const auto& decal : someData)
@@ -560,7 +594,7 @@ void CSceneManager::AddPlayer(CScene& aScene, RapidObject someData)
 	float walkSpeed = 0.09f * speedModifider;
 	CPlayerControllerComponent* pcc = player->AddComponent<CPlayerControllerComponent>(*player, walkSpeed, walkSpeed * 0.4f, CEngine::GetInstance()->GetPhysx().GetPlayerReportBack());// CPlayerControllerComponent constructor sets position of camera child object.
 	pcc->SprintSpeedModifier(speedModifider * 2.0f);
-	pcc->StepTime((walkSpeed / speedModifider) * (5.0f / speedModifider) );// Short explanation: for SP7 Nico added a steptimer for playback of stepsounds. It was set to walkSpeed * 5.0f. Changing walk speed to something lower does not give desirable results (shorter timer for slower speed sounds odd). Hence this.
+	pcc->StepTime((walkSpeed / speedModifider) * (5.0f / speedModifider));// Short explanation: for SP7 Nico added a steptimer for playback of stepsounds. It was set to walkSpeed * 5.0f. Changing walk speed to something lower does not give desirable results (shorter timer for slower speed sounds odd). Hence this.
 	//camera->AddComponent<CVFXSystemComponent>(*camera, ASSETPATH("Assets/Graphics/VFX/JSON/VFXSystem_Player.json"));
 
 	//aScene.AddInstance(model);
@@ -628,16 +662,16 @@ void CSceneManager::AddAudioSources(CScene& aScene, RapidArray someData)
 			continue;
 
 		if (m["is3D"].GetBool())
-		{ 
-			PostMaster::SStaticAudioSourceInitData data = 
-			{ 
+		{
+			PostMaster::SStaticAudioSourceInitData data =
+			{
 				  gameObject->myTransform->Position()
 				, { m["coneDirection"]["x"].GetFloat(), m["coneDirection"]["y"].GetFloat(), m["coneDirection"]["z"].GetFloat() }
 				, m["minAttenuationAngle"].GetFloat()
 				, m["maxAttenuationAngle"].GetFloat()
 				, m["minimumVolume"].GetFloat()
 				, m["soundIndex"].GetInt()
-				, instanceId 
+				, instanceId
 			};
 			CMainSingleton::PostMaster().Send({ EMessageType::AddStaticAudioSource, &data });
 		}
@@ -659,7 +693,7 @@ void CSceneManager::AddVFX(CScene& aScene, RapidArray someData)
 
 		std::string jsonPath = "Assets/IronWrought/VFX/VFX_JSON/VFXSystem_";
 		auto component = gameObject->AddComponent<CVFXSystemComponent>(*gameObject, ASSETPATH(jsonPath + m["effectName"].GetString() + ".json"));
-		
+
 		component->EnableEffect(0); // Temp
 	}
 }
@@ -710,32 +744,32 @@ void CSceneManager::AddCollider(CScene& aScene, RapidArray someData)
 		switch (colliderType)
 		{
 		case ColliderType::BoxCollider:
-			{
-				Vector3 boxSize;
-				boxSize.x = c["boxSize"]["x"].GetFloat();
-				boxSize.y = c["boxSize"]["y"].GetFloat();
-				boxSize.z = c["boxSize"]["z"].GetFloat();
-				gameObject->AddComponent<CBoxColliderComponent>(*gameObject, posOffset, boxSize, isTrigger, layer, CEngine::GetInstance()->GetPhysx().CreateCustomMaterial(dynamicFriction, staticFriction, bounciness));
-			}
-			break;
+		{
+			Vector3 boxSize;
+			boxSize.x = c["boxSize"]["x"].GetFloat();
+			boxSize.y = c["boxSize"]["y"].GetFloat();
+			boxSize.z = c["boxSize"]["z"].GetFloat();
+			gameObject->AddComponent<CBoxColliderComponent>(*gameObject, posOffset, boxSize, isTrigger, layer, CEngine::GetInstance()->GetPhysx().CreateCustomMaterial(dynamicFriction, staticFriction, bounciness));
+		}
+		break;
 		case ColliderType::SphereCollider:
-			{
-				float radius = c["sphereRadius"].GetFloat();
-				gameObject->AddComponent<CSphereColliderComponent>(*gameObject, posOffset, radius, CEngine::GetInstance()->GetPhysx().CreateCustomMaterial(dynamicFriction, staticFriction, bounciness));
-			}
-			break;
+		{
+			float radius = c["sphereRadius"].GetFloat();
+			gameObject->AddComponent<CSphereColliderComponent>(*gameObject, posOffset, radius, CEngine::GetInstance()->GetPhysx().CreateCustomMaterial(dynamicFriction, staticFriction, bounciness));
+		}
+		break;
 		case ColliderType::CapsuleCollider:
-			{
-				float radius = c["capsuleRadius"].GetFloat();
-				float height = c["capsuleHeight"].GetFloat();
-				gameObject->AddComponent<CCapsuleColliderComponent>(*gameObject, posOffset, radius, height, CEngine::GetInstance()->GetPhysx().CreateCustomMaterial(dynamicFriction, staticFriction, bounciness));
-			}
-			break;
+		{
+			float radius = c["capsuleRadius"].GetFloat();
+			float height = c["capsuleHeight"].GetFloat();
+			gameObject->AddComponent<CCapsuleColliderComponent>(*gameObject, posOffset, radius, height, CEngine::GetInstance()->GetPhysx().CreateCustomMaterial(dynamicFriction, staticFriction, bounciness));
+		}
+		break;
 		case ColliderType::MeshCollider:
-			{
-				gameObject->AddComponent<CConvexMeshColliderComponent>(*gameObject, CEngine::GetInstance()->GetPhysx().CreateCustomMaterial(dynamicFriction, staticFriction, bounciness));
-			}
-			break;
+		{
+			gameObject->AddComponent<CConvexMeshColliderComponent>(*gameObject, CEngine::GetInstance()->GetPhysx().CreateCustomMaterial(dynamicFriction, staticFriction, bounciness));
+		}
+		break;
 		}
 	}
 }
@@ -755,25 +789,25 @@ void CSceneManager::AddCollider(CScene& aScene, const std::vector<Binary::SColli
 		switch (colliderType)
 		{
 		case ColliderType::BoxCollider:
-			{
-				gameObject->AddComponent<CBoxColliderComponent>(*gameObject, c.positionOffest, c.boxSize, c.isTrigger, c.layer, CEngine::GetInstance()->GetPhysx().CreateCustomMaterial(c.dynamicFriction, c.staticFriction, c.bounciness));
-			}
-			break;
+		{
+			gameObject->AddComponent<CBoxColliderComponent>(*gameObject, c.positionOffest, c.boxSize, c.isTrigger, c.layer, CEngine::GetInstance()->GetPhysx().CreateCustomMaterial(c.dynamicFriction, c.staticFriction, c.bounciness));
+		}
+		break;
 		case ColliderType::SphereCollider:
-			{
-				gameObject->AddComponent<CSphereColliderComponent>(*gameObject, c.positionOffest, c.sphereRadius, CEngine::GetInstance()->GetPhysx().CreateCustomMaterial(c.dynamicFriction, c.staticFriction, c.bounciness));
-			}
-			break;
+		{
+			gameObject->AddComponent<CSphereColliderComponent>(*gameObject, c.positionOffest, c.sphereRadius, CEngine::GetInstance()->GetPhysx().CreateCustomMaterial(c.dynamicFriction, c.staticFriction, c.bounciness));
+		}
+		break;
 		case ColliderType::CapsuleCollider:
-			{
-				gameObject->AddComponent<CCapsuleColliderComponent>(*gameObject, c.positionOffest, c.capsuleRadius, c.capsuleHeight, CEngine::GetInstance()->GetPhysx().CreateCustomMaterial(c.dynamicFriction, c.staticFriction, c.bounciness));
-			}
-			break;
+		{
+			gameObject->AddComponent<CCapsuleColliderComponent>(*gameObject, c.positionOffest, c.capsuleRadius, c.capsuleHeight, CEngine::GetInstance()->GetPhysx().CreateCustomMaterial(c.dynamicFriction, c.staticFriction, c.bounciness));
+		}
+		break;
 		case ColliderType::MeshCollider:
-			{
-				gameObject->AddComponent<CConvexMeshColliderComponent>(*gameObject, CEngine::GetInstance()->GetPhysx().CreateCustomMaterial(c.dynamicFriction, c.staticFriction, c.bounciness));
-			}
-			break;
+		{
+			gameObject->AddComponent<CConvexMeshColliderComponent>(*gameObject, CEngine::GetInstance()->GetPhysx().CreateCustomMaterial(c.dynamicFriction, c.staticFriction, c.bounciness));
+		}
+		break;
 		}
 	}
 }

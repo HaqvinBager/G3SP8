@@ -4,11 +4,9 @@
 #include "JsonReader.h"
 #include "StateStack.h"
 
-
 #include <ppl.h>
 #include <concurrent_unordered_map.h>
 #include <concurrent_vector.h>
-
 
 struct SVertexPaintCollection;
 class CBinReader;
@@ -52,7 +50,9 @@ private:
 	static void AddPointLights(CScene& aScene, const std::vector<Binary::SPointLight>& someData);
 	static void AddSpotLights(CScene& aScene, const std::vector<Binary::SSpotLight>& someData);
 
-
+	static void AddPuzzleKey(CScene& aScene, RapidArray someData);
+	static void AddPuzzleLock(CScene& aScene, RapidArray someData);
+	static void AddPuzzleResponse(CScene& aScene, RapidArray someData);
 
 	static void AddCollider(CScene& aScene, RapidArray someData);
 	static void AddCollider(CScene& aScene, const std::vector<Binary::SCollider>& someData);

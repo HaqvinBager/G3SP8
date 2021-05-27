@@ -16,13 +16,22 @@ public class Test
         text = text.Substring(text.IndexOf("//START") + 7, text.IndexOf("//STOP") - text.IndexOf("//START"));
         List<string> enums = text.Split('\n').ToList();
 
+        var file = File.CreateText("Assets/Generated/AudioFile.cs");
+        foreach(var str in enums)
+        {
+            file.WriteLine(str);
+        }
+        file.Close();
+
+
         foreach (var str in enums)
             if (str.Length == 0)
                 enums.Remove(str);
 
         foreach (var str in enums)
         {
-            List<string> actualEnumNames = str.Split('{', ',', '}', '\n').ToList();
+            char[] seperators = new char[4] { '{', ',', '}', '\n' };
+            List<string> actualEnumNames = str.Split(seperators, StringSplitOptions.RemoveEmptyEntries).ToList();
             actualEnumNames.TrimExcess();
             foreach (var enumName in actualEnumNames)
             {             
@@ -30,9 +39,6 @@ public class Test
                     Debug.Log(enumName);
             }
         }
-
-
-
         
         //while(currentIndex != -1)
         //{

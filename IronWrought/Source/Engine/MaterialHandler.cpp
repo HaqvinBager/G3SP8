@@ -296,9 +296,19 @@ const SMaterialInstance CMaterialHandler::GetMaterialInstance(const int aMateria
 		return SMaterialInstance{ 5, 3, myMaterials.at("DefaultMaterial") };
 	}
 }
-
 const bool CMaterialHandler::IsMaterialAlpha(const int aMaterialID) const
 {
+	if (myMaterialIsAlphaMap.find(aMaterialID) == myMaterialIsAlphaMap.end())
+	{
+#ifdef _DEBUG
+		std::string id = std::to_string(aMaterialID);
+		id.append(": Material ID does not exist in myMaterialIsAlphaMap!");
+		//ENGINE_ERROR_BOOL_MESSAGE(false, id.c_str());
+		std::cout << __FUNCTION__ << " " << id << std::endl;
+#endif
+		return false;
+	}
+
 	return myMaterialIsAlphaMap.at(aMaterialID);
 }
 
