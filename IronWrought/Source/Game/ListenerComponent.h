@@ -24,6 +24,10 @@ public:
 	void OnEnable() override;
 	void OnDisable() override;
 
+	void Register(IResponseBehavior* aBehaviour);
+	void UnRegister(IResponseBehavior* aBehaviour);
+
+
 	void TriggerResponses();
 
 private:

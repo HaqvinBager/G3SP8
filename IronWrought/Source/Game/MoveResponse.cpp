@@ -2,15 +2,12 @@
 #include "MoveResponse.h"
 #include "TransformComponent.h"
 
-CMoveResponse::CMoveResponse(CGameObject& aParent, const SSettings& someSettings) 
+CMoveResponse::CMoveResponse(CGameObject& aParent, const SSettings& someSettings)
 	: IResponseBehavior(aParent)
 	, myTime(0.0f)
 	, mySettings(someSettings)
 {
-}
-
-CMoveResponse::~CMoveResponse()
-{
+	Enabled(false);
 }
 
 void CMoveResponse::Update()

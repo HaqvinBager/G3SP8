@@ -29,7 +29,7 @@ public struct RotateData
 [System.Serializable]
 public struct ListenerCollection
 {
-    public List<ListenerData> responses;
+    public List<ListenerData> listeners;
     public List<MoveData> moves;
     public List<RotateData> rotates;
 }
@@ -39,7 +39,7 @@ public class ExportResponse
     public static ListenerCollection Export()
     {
         ListenerCollection collection = new ListenerCollection();
-        collection.responses = new List<ListenerData>();
+        collection.listeners = new List<ListenerData>();
         collection.moves = new List<MoveData>();
         collection.rotates = new List<RotateData>();
 
@@ -49,7 +49,7 @@ public class ExportResponse
             ListenerData data = new ListenerData();
             data.onResponseNotify = listener.myLock.onLockNotify.name;
             data.instanceID = listener.transform.GetInstanceID();
-            collection.responses.Add(data);
+            collection.listeners.Add(data);
 
             ExportRotateResponses(collection, listener);
             ExportMoveResponses(collection, listener);

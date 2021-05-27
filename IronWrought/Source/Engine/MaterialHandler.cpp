@@ -28,12 +28,7 @@ std::array<ID3D11ShaderResourceView*, 3> CMaterialHandler::RequestMaterial(const
 		if (!CJsonReader::Get()->TryGetMaterialsPath(aMaterialID, texturePaths))
 			return std::array<ID3D11ShaderResourceView*, 3>();
 
-		std::cout << "Loading Material: " << materialName << " [ "
-			<< texturePaths[0].substr(texturePaths[0].size() / 2, texturePaths[0].size() - texturePaths[0].size() / 2) << ", "
-			<< texturePaths[1].substr(texturePaths[1].size() / 2, texturePaths[1].size() - texturePaths[1].size() / 2) << ", "
-			<< texturePaths[2].substr(texturePaths[2].size() / 2, texturePaths[2].size() - texturePaths[2].size() / 2) << ", "
-			<< std::endl;
-
+		std::cout << "Loading Material: " << materialName << "\n";
 		std::array<Microsoft::WRL::ComPtr<ID3D11ShaderResourceView>, 3> newTextures;
 
 		if (!texturePaths[0].empty())

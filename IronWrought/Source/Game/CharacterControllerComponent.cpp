@@ -31,9 +31,9 @@ void CCharacterControllerComponent::Update()
 	moveInput.x = Input::GetInstance()->IsKeyDown('A') ? -2.f : moveInput.x;
 	//moveInput.y = CMainSingleton::PhysXWrapper().GetPXScene()->getGravity().y;
 	myCharacterController->GetController().move(moveInput, 1.f, CTimer::Dt(), NULL, NULL);
-	std::cout << "X: " << moveInput.x << std::endl;
-	std::cout << "Y: " << moveInput.y << std::endl;
-	std::cout << "Z: " << moveInput.z << std::endl;
+	//std::cout << "X: " << moveInput.x << std::endl;
+	//std::cout << "Y: " << moveInput.y << std::endl;
+	//std::cout << "Z: " << moveInput.z << std::endl;
 }
 
 void CCharacterControllerComponent::OnEnable()

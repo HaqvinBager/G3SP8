@@ -12,7 +12,7 @@ public:
 	};
 	
 	CMoveResponse(CGameObject& aParent, const SSettings& someSettings);
-	~CMoveResponse();
+	~CMoveResponse() override { }
 	void Update() override;
 	void OnRespond() override;
 

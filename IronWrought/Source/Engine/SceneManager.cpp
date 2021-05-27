@@ -132,8 +132,8 @@ CScene* CSceneManager::CreateScene(const std::string& aSceneJson)
 			AddPuzzleLock(*scene, sceneData["locks"].GetArray());
 			AddPuzzleKey(*scene, sceneData["keys"].GetArray());
 			AddPuzzleListener(*scene, sceneData["listeners"].GetArray());
-			AddPuzzleResponseMove(*scene, sceneData["moveResponses"].GetArray());
-			AddPuzzleResponseRotate(*scene, sceneData["rotateResponses"].GetArray());
+			AddPuzzleResponseMove(*scene, sceneData["moves"].GetArray());
+			AddPuzzleResponseRotate(*scene, sceneData["rotates"].GetArray());
 
 			AddDirectionalLights(*scene, sceneData["directionalLights"].GetArray());
 			SetVertexPaintedColors(*scene, sceneData["vertexColors"].GetArray(), vertexPaintData);
