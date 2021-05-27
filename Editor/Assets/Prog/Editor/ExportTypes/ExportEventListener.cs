@@ -13,23 +13,25 @@ public struct EventListener
 [System.Serializable]
 public struct IronEventCollection
 {
-    public List<EventListener> collection;
+    public List<EventListener> ironEvents;
 }
 
 public class ExportEventListener 
 {
-
     public static IronEventCollection Export()
     {
         IronEventCollection collection = new IronEventCollection();
-        collection.collection = new List<EventListener>();
+        collection.ironEvents = new List<EventListener>();
         IronEvent[] ironEvents = GameObject.FindObjectsOfType<IronEvent>();
         foreach(IronEvent ironEvent in ironEvents)
         {
+            if (ironEvent.eventObject == null)
+                continue;
+
             EventListener data = new EventListener();
             data.instanceID = ironEvent.transform.GetInstanceID();
             data.eventName = ironEvent.eventObject.name;
-            collection.collection.Add(data);
+            collection.ironEvents.Add(data);
         }
         return collection;
     }

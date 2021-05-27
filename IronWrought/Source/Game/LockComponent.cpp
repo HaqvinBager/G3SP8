@@ -1,10 +1,10 @@
 #include "stdafx.h"
 #include "LockComponent.h"
 
-CLockComponent::CLockComponent(CGameObject& aParent, std::string aCreateReceiveMessage, std::string aDestroyReceiveMessage, std::string aSendMessage, void* someData) :
+CLockComponent::CLockComponent(CGameObject& aParent, std::string aCreateReceiveMessage, std::string aPickUpReceiveMessage, std::string aSendMessage, void* someData) :
 	CBehavior(aParent),
 	myCreateReceiveMessage(aCreateReceiveMessage),
-	myDestroyReceiveMessage(aDestroyReceiveMessage),
+	myPickUpReceiveMessage(aPickUpReceiveMessage),
 	mySendMessage(aSendMessage),
 	myMaxAmountOfKeys(0),
 	myAmountOfKeys(0),
@@ -12,7 +12,7 @@ CLockComponent::CLockComponent(CGameObject& aParent, std::string aCreateReceiveM
 	myData(someData)
 {
 	CMainSingleton::PostMaster().Subscribe(myCreateReceiveMessage.c_str(), this);
-	CMainSingleton::PostMaster().Subscribe(myDestroyReceiveMessage.c_str(), this);
+	CMainSingleton::PostMaster().Subscribe(myPickUpReceiveMessage.c_str(), this);
 }
 
 CLockComponent::~CLockComponent()

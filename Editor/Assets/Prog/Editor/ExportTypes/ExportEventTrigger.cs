@@ -29,13 +29,16 @@ public class ExportEventTrigger
         IronEvent[] ironEvents = GameObject.FindObjectsOfType<IronEvent>();
         foreach (IronEvent ironEvent in ironEvents)
         {
+            if (ironEvent.eventObject == null)
+                continue;
+
             collection.triggerEvents.Add(new EventData {
                 instanceID = ironEvent.transform,
                 gameEvent = ironEvent.eventObject.name,
                 eventFilter = ironEvent.eventFilter,
                 audioIndex = ironEvent.audioIndex,
                 triggerOnce = ironEvent.triggerOnce
-            }); ;
+            });
         }
 
         return collection;
