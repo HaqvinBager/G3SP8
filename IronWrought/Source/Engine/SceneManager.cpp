@@ -321,14 +321,14 @@ void CSceneManager::AddModelComponents(CScene& aScene, const std::vector<Binary:
 			continue;
 
 		gameObject->AddComponent<CModelComponent>(*gameObject, m);
-
-
-		//std::string assetPath = {};
-		//if (CJsonReader::Get()->TryGetAssetPath(m.assetID, assetPath))
+		AnimationLoader::AddAnimationsToGameObject(gameObject, CJsonReader::Get()->GetAssetPath(m.assetID));
+		//if (AnimationLoader::AddAnimationsToGameObject(gameObject, CJsonReader::Get()->GetAssetPath(m.assetID)))
 		//{
-		//	assetPath = ASSETPATH(assetPath);
-		//	gameObject->AddComponent<CModelComponent>(*gameObject, assetPath);
-		//	AnimationLoader::AddAnimationsToGameObject(gameObject, assetPath);
+		//	std::cout << __FUNCTION__ << " Animation " << CJsonReader::Get()->GetAssetPath(m.assetID) << std::endl;
+		//}
+		//else
+		//{
+		//	std::cout << __FUNCTION__ << " No animation " << CJsonReader::Get()->GetAssetPath(m.assetID) << std::endl;
 		//}
 	}
 }

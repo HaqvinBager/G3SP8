@@ -93,13 +93,18 @@ public class ExporterJson
         Json.AddToExport(ExportParents.Export(aSceneName));
         Json.AddToExport(ExportEventTrigger.Export(aSceneName));
         Json.AddToExport(HealthPickupExporter.Export(aSceneName));
-        Json.AddToExport(ExportSafetyDoors.Export(aSceneName));
-        Json.AddToExport(ExportFusebox.Export(aSceneName));
         Json.AddToExport(ExportAudioSource.Export(aSceneName));
         Json.AddToExport(ExportVFX.Export(aSceneName));
         Json.AddToExport(ExportSpotLight.Export());
         Json.AddToExport(ExportEventListener.Export());
-        Json.AddToExport(FusePickUpExporter.Export(aSceneName), true);
+
+        //Json.AddToExport(ExportSafetyDoors.Export(aSceneName));
+        //Json.AddToExport(ExportFusebox.Export(aSceneName));
+        //Json.AddToExport(FusePickUpExporter.Export(aSceneName));
+        
+        Json.AddToExport(ExportLock.Export());
+        Json.AddToExport(ExportKey.Export());
+        Json.AddToExport(ExportResponse.Export(), true);
     }
 
     public static Player ExportPlayer(string aSceneName)

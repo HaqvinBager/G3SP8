@@ -36,7 +36,8 @@ public class EnemySettings : MonoBehaviour
     private void Awake()
     {
         myAgent = gameObject.AddComponent<NavMeshAgent>();
-        
+        gameObject.AddComponent<CapsuleCollider>();
+
         myTarget = FindBestPatrolPoint(transform.position);
     }
 

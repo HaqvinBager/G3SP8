@@ -351,9 +351,11 @@ void CPlayerControllerComponent::CrouchUpdate(const float& dt)
 
 void CPlayerControllerComponent::OnCrouch()
 {
-if (myCanStand) {
+	if (myCanStand) 
+	{
 		myIsCrouching = !myIsCrouching;
 	}
+
 	if (myIsCrouching)
 	{
 		myController->GetController().resize(myColliderHeightCrouched);
