@@ -6,7 +6,7 @@
 #include "TransformComponent.h"
 
 CPointLightComponent::CPointLightComponent(CGameObject& aParent, float aRange, DirectX::SimpleMath::Vector3 aColor, float anIntensity)
-    : CBehaviour(aParent),
+    : CBehavior(aParent),
     myRange(aRange),
     myColor(aColor),
     myIntensity(anIntensity),

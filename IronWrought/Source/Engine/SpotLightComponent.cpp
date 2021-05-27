@@ -7,7 +7,7 @@
 #include <BinReader.h>
 
 CSpotLightComponent::CSpotLightComponent(CGameObject& aParent, const Binary::SSpotLight& aData)
-	: CBehaviour(aParent)
+	: CBehavior(aParent)
 	, myColor(aData.color)
 	, myIntensity(aData.intensity)
 	, myDirection(GameObject().myTransform->Transform().Forward())
@@ -25,7 +25,7 @@ CSpotLightComponent::CSpotLightComponent(CGameObject& aParent, const Binary::SSp
 }
 
 CSpotLightComponent::CSpotLightComponent(CGameObject& aParent, Vector3 aColor, float anIntensity, Vector3 aDirection, float aRange, float aWideness)
-	: CBehaviour(aParent)
+	: CBehavior(aParent)
 	, myColor(aColor)
 	, myIntensity(anIntensity)
 	, myDirection(aDirection)

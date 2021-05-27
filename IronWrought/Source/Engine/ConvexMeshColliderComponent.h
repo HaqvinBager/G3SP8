@@ -1,5 +1,5 @@
 #pragma once
-#include "Behaviour.h"
+#include "Behavior.h"
 
 namespace physx
 {
@@ -7,7 +7,7 @@ namespace physx
 	class PxMaterial;
 }
 
-class CConvexMeshColliderComponent : public CBehaviour
+class CConvexMeshColliderComponent : public CBehavior
 {
 public:
 	CConvexMeshColliderComponent(CGameObject& aParent, physx::PxMaterial* aMaterial = nullptr);

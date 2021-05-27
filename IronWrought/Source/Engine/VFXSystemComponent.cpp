@@ -18,7 +18,7 @@
 #include "VFXEffect.h"
 
 CVFXSystemComponent::CVFXSystemComponent(CGameObject& aParent, const std::string& aVFXDataPath)
-	: CBehaviour(aParent) 
+	: CBehavior(aParent) 
 {
 	myEnabled = true;
 

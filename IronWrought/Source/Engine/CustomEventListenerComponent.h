@@ -1,10 +1,10 @@
 #pragma once
-#include "Behaviour.h"
+#include "Behavior.h"
 
 class CGameObject;
 class CCustomEventComponent;
 
-class CCustomEventListenerComponent : public CBehaviour
+class CCustomEventListenerComponent : public CBehavior
 {
 public:
 	CCustomEventListenerComponent(CGameObject& aParent, CCustomEventComponent* aCustomEvent);

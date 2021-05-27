@@ -4,8 +4,6 @@
 #include "RigidBodyComponent.h"
 #include <PlayerControllerComponent.h>
 #include <HealthPickupComponent.h>
-#include <FuseComponent.h>
-#include <FuseboxComponent.h>
 #include <PlayerComponent.h>
 #include "RigidDynamicBody.h"
 #include <EnemyComponent.h>
@@ -40,14 +38,6 @@ void CPlayerReportCallback::onShapeHit(const physx::PxControllerShapeHit& hit)
 							
 								CMainSingleton::PostMaster().SendLate({ EMessageType::PlayerHealthPickup, nullptr }); // For AudioManager
 							}
-						}
-						else if (objectTransform->GetComponent<CFuseComponent>()) 
-						{
-							objectTransform->GetComponent<CFuseComponent>()->OnPickUp();
-						}
-						else if (objectTransform->GetComponent<CFuseboxComponent>()) 
-						{
-							objectTransform->GetComponent<CFuseboxComponent>()->RunEvent();
 						}
 
 						Vector3 v = player->GetLinearVelocity();

@@ -1,10 +1,10 @@
 #pragma once
-#include "Behaviour.h"
+#include "Behavior.h"
 
 class CGameObject;
 class CBoxLight;
 
-class CBoxLightComponent : public CBehaviour
+class CBoxLightComponent : public CBehavior
 {
 public:
 	CBoxLightComponent(CGameObject& aParent, const Vector3& aDirection, const Vector3& aColor, float anIntensity, float aRange = 1.0f, float aWidth = 1.0f, float aHeight = 1.0f);

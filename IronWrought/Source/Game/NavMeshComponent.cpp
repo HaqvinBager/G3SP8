@@ -9,7 +9,7 @@
 
 
 CNavMeshComponent::CNavMeshComponent(CGameObject& aParent) 
-	: CBehaviour(aParent)
+	: CBehavior(aParent)
 {
 	myEnabled = true;
 	myNavMesh = nullptr;

@@ -6,7 +6,7 @@
 #include "Decal.h"
 
 CDecalComponent::CDecalComponent(CGameObject& aParent, const std::string& aFBXPath)
-    : CBehaviour(aParent)
+    : CBehavior(aParent)
 {
     myDecal = CDecalFactory::GetInstance()->GetDecal(aFBXPath);
     myDecalPath = aFBXPath;

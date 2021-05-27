@@ -6,7 +6,7 @@
 #include "RigidDynamicBody.h"
 
 CSphereColliderComponent::CSphereColliderComponent(CGameObject& aParent, const Vector3& aPositionOffset, const float& aRadius, PxMaterial* aMaterial) 
-	: CBehaviour(aParent)
+	: CBehavior(aParent)
 	, myShape(nullptr)
 	, myMaterial(aMaterial)
 {

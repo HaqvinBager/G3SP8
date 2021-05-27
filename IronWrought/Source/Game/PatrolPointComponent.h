@@ -1,7 +1,7 @@
 #pragma once
-#include "Behaviour.h"
+#include "Behavior.h"
 
-class CPatrolPointComponent : public CBehaviour
+class CPatrolPointComponent : public CBehavior
 {
 public:
 	CPatrolPointComponent(CGameObject& aParent, float aIntrestValue);

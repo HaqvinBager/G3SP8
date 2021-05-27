@@ -6,7 +6,7 @@
 #include "TransformComponent.h"
 
 CBoxLightComponent::CBoxLightComponent(CGameObject& aParent, const Vector3& aDirection, const Vector3& aColor, float anIntensity, float aRange, float aWidth, float aHeight)
-	: CBehaviour(aParent)
+	: CBehavior(aParent)
 	, myBoxLight(nullptr)
 {
 	myBoxLight = CLightFactory::GetInstance()->CreateBoxLight();

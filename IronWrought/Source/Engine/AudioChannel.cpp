@@ -48,6 +48,13 @@ void CAudioChannel::Set3DAttributes(const Vector3& aPosition, const Vector3& aVe
     myFModChannel->set3DAttributes(&pos, &vel);
 }
 
+void CAudioChannel::Set3DConeAttributes(const Vector3& aDirection, float anUnattenuatedAngleSpread, float anAttenuatedAngleSpread, float anAttenuatedVolume)
+{
+    FMOD_VECTOR orientation = { aDirection.x, aDirection.y, aDirection.z };
+    myFModChannel->set3DConeOrientation(&orientation);
+    myFModChannel->set3DConeSettings(anUnattenuatedAngleSpread, anAttenuatedAngleSpread, anAttenuatedVolume);
+}
+
 CAudioChannel::CAudioChannel(FMOD::ChannelGroup* aChannelPointer)
 {
     myFModChannel = aChannelPointer;

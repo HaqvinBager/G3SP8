@@ -5,7 +5,7 @@
 
 
 CCustomEventListenerComponent::CCustomEventListenerComponent(CGameObject& aParent, CCustomEventComponent* aCustomEvent)
-	: CBehaviour(aParent)
+	: CBehavior(aParent)
 	, myCustomEvent(aCustomEvent)
 {
 
