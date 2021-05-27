@@ -19,9 +19,17 @@ public class Test
         var file = File.CreateText("Assets/Generated/AudioFile.cs");
         foreach(var str in enums)
         {
-            file.WriteLine(str);
+            string final = str;
+            int startIndex = final.IndexOf("class");
+            if (startIndex < 0)
+                continue;
+
+            final = final.Replace("enum class", "public enum");
+            //final = final.Insert(0, "public enum");
+            file.WriteLine(final);
         }
         file.Close();
+        AssetDatabase.Refresh();
 
 
         foreach (var str in enums)

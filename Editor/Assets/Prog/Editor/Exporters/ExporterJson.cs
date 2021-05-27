@@ -28,12 +28,11 @@ public class ExporterJson
             return;
         }
 
-        //string sceneName = SceneManager.GetActiveScene().name;
-        // string baseSceneName = sceneName.Substring(0, sceneName.LastIndexOf('_') + 2);
         DirectoryInfo parentDirectory = Directory.GetParent(SceneManager.GetActiveScene().path);
         ExporterBin.Export();
-        Json.BeginExport(parentDirectory.Name);
 
+        NavMeshData navMesh = ExportNavMeshToObj.Export(parentDirectory.Name);
+        Json.BeginExport(parentDirectory.Name, navMesh);
         List<GameObject> allScenesActiveObjects = GetAllOpenedSceneActiveObjects();
         for (int i = 0; i < SceneManager.sceneCount; ++i)
         {
@@ -97,6 +96,7 @@ public class ExporterJson
         Json.AddToExport(ExportVFX.Export(aSceneName));
         Json.AddToExport(ExportSpotLight.Export());
         Json.AddToExport(ExportEventListener.Export());
+
 
         //Json.AddToExport(ExportSafetyDoors.Export(aSceneName));
         //Json.AddToExport(ExportFusebox.Export(aSceneName));

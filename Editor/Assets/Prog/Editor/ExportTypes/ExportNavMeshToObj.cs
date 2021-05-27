@@ -3,13 +3,18 @@ using System.Text;
 using UnityEditor;
 using UnityEngine;
 
+[System.Serializable]
+public struct NavMeshData
+{
+    public string path;
+}
+
 public class ExportNavMeshToObj
 {
     [MenuItem("Custom/[Deprecated] Export NavMesh to mesh")]
-    public static void Export()
+    public static NavMeshData Export(string levelCollectionName)
     {
         UnityEngine.AI.NavMeshTriangulation triangulatedNavMesh = UnityEngine.AI.NavMesh.CalculateTriangulation();
-
         Mesh mesh = new Mesh
         {
             name = "ExportedNavMesh",
@@ -17,10 +22,23 @@ public class ExportNavMeshToObj
             triangles = triangulatedNavMesh.indices
         };
 
-        string fileName = MagicString.GeneratedPath + UnityEngine.SceneManagement.SceneManager.GetActiveScene().name + mesh.name + ".obj";
+        string fileName = MagicString.GeneratedPath + levelCollectionName + "/" + mesh.name + ".obj";
+
+        NavMeshData data = new NavMeshData();
+        data.path = fileName;
+
+        if (mesh.vertexCount == 0)
+        {
+            data.path = "";
+            return data;
+        }
+
         MeshToFile(mesh, fileName);
         Debug.Log("NavMesh exported as '" + fileName + "'");
         AssetDatabase.Refresh();
+
+        return data;
+        //return navMeshData;
     }
 
     static string MeshToString(Mesh mesh)

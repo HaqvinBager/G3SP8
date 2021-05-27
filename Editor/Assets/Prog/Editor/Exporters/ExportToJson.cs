@@ -14,6 +14,23 @@ public static class Json
     //static string myFolderName = "";
     static StringBuilder myCurrentExportJson = new StringBuilder();
 
+    public static void BeginExport<T>(string baseSceneName, T initData)
+    {
+        myCurrentExportJson.Clear();
+        myCurrentExportJson.AppendLine("{");
+        myCurrentExportJson.AppendLine("\"Root\" : \"" + baseSceneName + "\",");
+        myCurrentExportJson.AppendLine("\"" + initData.GetType().Name + "\" : ");
+        
+        string initJsonTxt = string.Empty;
+        initJsonTxt = JsonUtility.ToJson(initData);
+        myCurrentExportJson.Append(initJsonTxt);
+        myCurrentExportJson.AppendLine(",");
+
+        //myCurrentExportJson.AppendLine("}");
+        myCurrentExportJson.Append("\"Scenes\" : [\n");
+        mySceneName = baseSceneName;
+    }
+
     public static void BeginExport(string baseSceneName)
     {
         myCurrentExportJson.Clear();
