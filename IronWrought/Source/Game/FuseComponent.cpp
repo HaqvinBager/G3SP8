@@ -10,10 +10,11 @@ CFuseComponent::CFuseComponent(CGameObject& /*aParent*/)/* : CKeyComponent(aPare
 	int value = 1;
 	CMainSingleton::PostMaster().Send({ EMessageType::FuseCreated, &value });
 }
-
+/*
 CFuseComponent::~CFuseComponent()
 {
-}/*
+}
+
 
 void CFuseComponent::Awake()
 {

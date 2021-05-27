@@ -4,9 +4,9 @@
 class CFuseComponent/* : public CKeyComponent*/
 {
 public:
-	CFuseComponent(CGameObject& aParent);/*
-	~CFuseComponent() override;
-
+	CFuseComponent(CGameObject& aParent);
+	/*~CFuseComponent() override;
+	
 public:
 	void Awake() override;
 	void Start() override;
