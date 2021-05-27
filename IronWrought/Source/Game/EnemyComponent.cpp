@@ -31,11 +31,14 @@ CEnemyComponent::CEnemyComponent(CGameObject& aParent, const SEnemySetting& some
 	, myMovementLocked(false)
 	, myWakeUpTimer(0.f)
 	, myHasFoundPlayer(false)
+	, myHasReachedTarget(true)
 {
 	//myController = CEngine::GetInstance()->GetPhysx().CreateCharacterController(GameObject().myTransform->Position(), 0.6f * 0.5f, 1.8f * 0.5f, GameObject().myTransform, aHitReport);
 	//myController->GetController().getActor()->setRigidBodyFlag(PxRigidBodyFlag::eUSE_KINEMATIC_TARGET_FOR_SCENE_QUERIES, true);
 	mySettings = someSettings;
 	CMainSingleton::PostMaster().Subscribe(EMessageType::EnemyAttackedPlayer, this);
+	CMainSingleton::PostMaster().Subscribe(EMessageType::PropCollided, this);
+	CMainSingleton::PostMaster().Subscribe(EMessageType::EnemyReachedTarget, this);
 }
 
 CEnemyComponent::~CEnemyComponent()
@@ -46,6 +49,8 @@ CEnemyComponent::~CEnemyComponent()
 		delete myBehaviours[i];
 	}
 	CMainSingleton::PostMaster().Unsubscribe(EMessageType::EnemyAttackedPlayer, this);
+	CMainSingleton::PostMaster().Unsubscribe(EMessageType::PropCollided, this);
+	CMainSingleton::PostMaster().Unsubscribe(EMessageType::EnemyReachedTarget, this);
 }
 
 void CEnemyComponent::Awake()
@@ -137,7 +142,9 @@ void CEnemyComponent::Update()//får bestämma vilket behaviour vi vill köra i 
 		}
 		else {*/
 			//std::cout << __FUNCTION__ << " PATROL" << std::endl;
+		if (myHasReachedTarget) {
 			SetState(EBehaviour::Patrol);
+		}
 		//}
 
 		//if (mySettings.myRadius * mySettings.myRadius >= distanceToPlayer) {
@@ -232,6 +239,24 @@ void CEnemyComponent::Receive(const SMessage& aMsg)
 	if (aMsg.myMessageType == EMessageType::EnemyAttackedPlayer)
 	{
 		myMovementLocked = true;
+	}
+
+	if (aMsg.myMessageType == EMessageType::PropCollided) {
+		CGameObject* gameobject = reinterpret_cast<CGameObject*>(aMsg.data);
+		if (gameobject) {
+ 			std::vector<Vector3> path = myNavMesh->CalculatePath(GameObject().myTransform->Position(), gameobject->myTransform->Position(), myNavMesh);
+			if (myNavMesh->PathLength(path, GameObject().myTransform->Position()) <= 20.f) {
+				SetState(EBehaviour::Seek);
+				CSeek* seekBehaviour = static_cast<CSeek*>(myBehaviours[static_cast<int>(myCurrentState)]);
+				if (seekBehaviour) {
+					seekBehaviour->SetTarget(gameobject->myTransform);
+					myHasReachedTarget = false;
+				}
+			}
+		}
+	}
+	if (aMsg.myMessageType == EMessageType::EnemyReachedTarget) {
+		myHasReachedTarget = true;
 	}
 }
 

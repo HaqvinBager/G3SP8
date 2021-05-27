@@ -82,6 +82,7 @@ private:
 
 	bool myHasFoundPlayer;
 	bool myMovementLocked;
+	bool myHasReachedTarget;
 	float myWakeUpTimer;
 	SNavMesh* myNavMesh;
 };

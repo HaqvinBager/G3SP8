@@ -75,6 +75,7 @@ enum class EMessageType
 	EnemyTargetLost,
 	EnemyTakeDamage,
 	EnemyAttackedPlayer,
+	EnemyReachedTarget,
 
 	FuseCreated,
 	FusePickedUp,
@@ -97,6 +98,7 @@ enum class EMessageType
 	CanvasButtonIndex,
 	PauseMenu,
 	PhysicsPropCollision,
+	PropCollided,
 
 	EnemyStateChange,
 

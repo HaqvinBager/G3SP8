@@ -115,8 +115,10 @@ void CContactReportCallback::onContact(const physx::PxContactPairHeader& pairHea
 			float velocity = audioComponent->GetComponent<CRigidBodyComponent>()->GetDynamicRigidBody()->GetLinearVelocity().LengthSquared();
 			if (velocity > 0.05f)
 			{
-				if (audioComponent->Ready())
+				if (audioComponent->Ready()) {
 					CMainSingleton::PostMaster().SendLate({ EMessageType::PhysicsPropCollision, &audioComponent->GetSoundIndex() });
+					CMainSingleton::PostMaster().SendLate({ EMessageType::PropCollided, &audioComponent->GameObject()});
+				}
 			}
 		}
 	}

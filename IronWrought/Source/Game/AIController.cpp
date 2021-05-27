@@ -72,7 +72,6 @@ Vector3 CPatrol::Update(const Vector3& aPosition)
 
 	size_t pathSize = myPath.size();
 	if (pathSize > 0) {
-
 		Vector3 newPos;
 		Vector3 dir;
 
@@ -147,6 +146,7 @@ Vector3 CSeek::Update(const Vector3& aPosition)//aPostion == EnemyRobot Position
 		return Vector3();
 
 	myPathTarget = 0;
+
 	SetPath(myNavMesh->CalculatePath(aPosition, myTarget->Position(), myNavMesh), myTarget->Position());
 
 	//myPath = CAStar::GetInstance()->GetPath(aPosition, myTarget->Position(), myNavMesh);
@@ -168,6 +168,11 @@ Vector3 CSeek::Update(const Vector3& aPosition)//aPostion == EnemyRobot Position
 
 	//return std::move(direction);
 
+	float dist = DirectX::SimpleMath::Vector3::DistanceSquared(aPosition, myTarget->Position());
+	float epsilon = 0.15f;
+	if (dist < epsilon) {
+		CMainSingleton::PostMaster().Send({ EMessageType::EnemyReachedTarget });
+	}
 
 	size_t pathSize = myPath.size();
 	if (pathSize > 0) {
@@ -175,7 +180,7 @@ Vector3 CSeek::Update(const Vector3& aPosition)//aPostion == EnemyRobot Position
 		Vector3 newPos;
 		Vector3 dir;
 
-		float epsilon = 0.05f;
+		/*float*/ epsilon = 0.05f;
 
 		dir = (myPath[pathSize - 1] - aPosition);
 		dir.Normalize();

@@ -48,6 +48,7 @@ struct SNavMesh {
 	STriangle* ReturnClosestTriangle(const DirectX::SimpleMath::Vector3& aStartPosition, SNavMesh* aNavMesh);
 	void ResolveStuck(STriangle* aStartTriangle, const DirectX::SimpleMath::Vector3& aStartPosition, const DirectX::SimpleMath::Vector3& aFinalPosition, SNavMesh* aNavMesh);
 	bool CheckIfOverlap(Vector3 aPosition, STriangle* aTriangle);
+	const float PathLength(const std::vector<Vector3>& aPath, const Vector3& aCurrentPosition);
 
 public:
 	~SNavMesh();
