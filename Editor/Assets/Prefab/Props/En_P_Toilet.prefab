@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3248007924601357613}
   - component: {fileID: 1355064750146616631}
+  - component: {fileID: 5294066961552421413}
   m_Layer: 0
   m_Name: En_P_Toilet
   m_TagString: Untagged
@@ -44,6 +45,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5c562e108cc65394cb59634177042694, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &5294066961552421413
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7442963267805683501}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fcacea507542a2d47be01cfec7f83296, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  mySoundIndex: 5
+  myIs3D: 1
+  myConeDirection: {x: -1, y: 0, z: 1}
+  myMinAttenuationAngle: 80
+  myMaxAttenuationAngle: 90
+  myMinimumVolume: 0.2
 --- !u!1001 &7769410833482082890
 PrefabInstance:
   m_ObjectHideFlags: 0

@@ -42,7 +42,8 @@
 
 #include <LockComponent.h>
 #include <KeyComponent.h>
-#include <ResponseComponent.h>
+#include <ListenerComponent.h>
+#include <MoveResponse.h>
 
 CScene* CSceneManager::ourLastInstantiatedScene = nullptr;
 CSceneManager::CSceneManager()
@@ -130,7 +131,10 @@ CScene* CSceneManager::CreateScene(const std::string& aSceneJson)
 
 			AddPuzzleLock(*scene, sceneData["locks"].GetArray());
 			AddPuzzleKey(*scene, sceneData["keys"].GetArray());
-			AddPuzzleResponse(*scene, sceneData["responses"].GetArray());
+			AddPuzzleListener(*scene, sceneData["listeners"].GetArray());
+			AddPuzzleResponseMove(*scene, sceneData["moveResponses"].GetArray());
+			AddPuzzleResponseRotate(*scene, sceneData["rotateResponses"].GetArray());
+
 			AddDirectionalLights(*scene, sceneData["directionalLights"].GetArray());
 			SetVertexPaintedColors(*scene, sceneData["vertexColors"].GetArray(), vertexPaintData);
 			AddDecalComponents(*scene, sceneData["decals"].GetArray());
@@ -605,15 +609,42 @@ void CSceneManager::AddPuzzleLock(CScene& aScene, RapidArray someData)
 	}
 }
 
-void CSceneManager::AddPuzzleResponse(CScene& aScene, RapidArray someData)
+void CSceneManager::AddPuzzleListener(CScene& aScene, RapidArray someData)
+{
+	for (const auto& listener : someData)
+	{
+		std::string onResponseNotify = listener["onResponseNotify"].GetString();
+		CGameObject* gameObject = aScene.FindObjectWithID(listener["instanceID"].GetInt());
+
+		gameObject->AddComponent<CListenerComponent>(*gameObject, onResponseNotify);
+	}
+}
+
+void CSceneManager::AddPuzzleResponseMove(CScene& aScene, RapidArray someData)
 {
 	for (const auto& response : someData)
 	{
-		std::string onResponseNotify = response["onResponseNotify"].GetString();
 		CGameObject* gameObject = aScene.FindObjectWithID(response["instanceID"].GetInt());
-		gameObject;
-		//create the propper response component and add to gameobject
+		if (!gameObject)
+			continue;
+
+		CMoveResponse::SSettings settings = {};
+		settings.myDuration = response["duration"].GetFloat();
+
+		settings.myStartPosition = { response["start"]["x"].GetFloat(),
+									 response["start"]["y"].GetFloat(),
+									 response["start"]["z"].GetFloat() };
+
+		settings.myEndPosition = {  response["end"]["x"].GetFloat(),
+									response["end"]["y"].GetFloat(),
+									response["end"]["z"].GetFloat() };
+
+		gameObject->AddComponent<CMoveResponse>(*gameObject, settings);
 	}
+}
+
+void CSceneManager::AddPuzzleResponseRotate(CScene& /*aScene*/, RapidArray /*someData*/)
+{
 }
 
 void CSceneManager::AddDecalComponents(CScene& aScene, RapidArray someData)

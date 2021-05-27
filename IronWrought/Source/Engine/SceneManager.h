@@ -52,7 +52,9 @@ private:
 
 	static void AddPuzzleKey(CScene& aScene, RapidArray someData);
 	static void AddPuzzleLock(CScene& aScene, RapidArray someData);
-	static void AddPuzzleResponse(CScene& aScene, RapidArray someData);
+	static void AddPuzzleListener(CScene& aScene, RapidArray someData);
+	static void AddPuzzleResponseMove(CScene& aScene, RapidArray someData);
+	static void AddPuzzleResponseRotate(CScene& aScene, RapidArray someData);
 
 	static void AddCollider(CScene& aScene, RapidArray someData);
 	static void AddCollider(CScene& aScene, const std::vector<Binary::SCollider>& someData);

@@ -8,11 +8,13 @@ enum class EResponseType
 	Move
 };
 
-class CResponseComponent : public CBehavior, public IStringObserver
+class IResponseBehavior;
+
+class CListenerComponent : public CBehavior, public IStringObserver
 {
 public:
-	CResponseComponent(CGameObject& aParent, std::string aReceiveMessage);
-	~CResponseComponent();
+	CListenerComponent(CGameObject& aParent, std::string aReceiveMessage);
+	~CListenerComponent();
 	
 public:
 	void Awake() override;
@@ -22,13 +24,13 @@ public:
 	void OnEnable() override;
 	void OnDisable() override;
 
-	virtual void TriggerResponse() = 0;
+	void TriggerResponses();
 
 private:
 	void Receive(const SStringMessage& aMessage) override;
 
 	std::string myReceiveMessage;
-
+	std::vector<IResponseBehavior*> myResponses;
 	bool myHasTriggered;
 };
 
