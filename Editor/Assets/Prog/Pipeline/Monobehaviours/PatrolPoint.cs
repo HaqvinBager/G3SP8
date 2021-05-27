@@ -19,6 +19,8 @@ public class PatrolPoint : MonoBehaviour
         }
 
         var collider = gameObject.AddComponent<SphereCollider>();
+
+        collider.isTrigger = true;
         collider.radius = 1.17f;
     }
 
