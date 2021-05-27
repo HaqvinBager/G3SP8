@@ -64,6 +64,7 @@ private:
 	
 	static void AddTriggerEvents(CScene& aScene, RapidArray someData);
 	//static void AddTriggerEvents(CScene& aScene, const std::vector<Binary::SEventData>& someData);
+	static void AddTeleporters(CScene& aScene, const RapidArray& someData);
 
 	static void CreateCustomEvents(CScene& aScene);
 	static void CreateCustomEventListeners(CScene& aScene);
@@ -71,6 +72,7 @@ private:
 	static void SetParents(CScene& aScene, RapidArray someData);
 	
 	static void SetVertexPaintedColors(CScene& aScene, RapidArray someData, const SVertexPaintCollection& vertexColorData);
+
 
 	static void AddDirectionalLight(CScene& aScene, RapidObject someData);
 	static void AddDirectionalLights(CScene& aScene, RapidArray someData);

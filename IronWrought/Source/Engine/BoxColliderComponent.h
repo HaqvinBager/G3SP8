@@ -8,6 +8,7 @@ namespace physx
 }
 
 class CScene;
+class CTeleporterComponent;
 
 class CLineInstance;
 
@@ -37,8 +38,8 @@ public:
 
 	void CreateBoxCollider();
 
-	void OnTriggerEnter(CTransformComponent* aOther);
-	void OnTriggerExit(CTransformComponent* aOther);
+	virtual void OnTriggerEnter(CTransformComponent* aOther);
+	virtual void OnTriggerExit(CTransformComponent* aOther);
 	void RegisterEventTriggerMessage(const std::string& aMessage) { myEventMessage = aMessage; }
 	void RegisterEventTriggerFilter(const int& anEventFilter);
 	void RegisterEventTriggerAudioIndex(const int& anIndex);
