@@ -35,7 +35,7 @@ public:
 class CLoaderModel
 {
 public:
-	CLoaderModel() : myNumBones(), myScene(nullptr) { myIsLoaded = false; myAnimationDuration = 0.0f; }
+	CLoaderModel() : myNumBones(0), myScene(nullptr) { myIsLoaded = false; myAnimationDuration = 0.0f; }
 	~CLoaderModel();
 	void SetData(const char* aModelPath){ myModelPath = aModelPath; }
 	
