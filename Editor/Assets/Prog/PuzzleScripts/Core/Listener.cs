@@ -6,26 +6,25 @@ using UnityEngine;
 using UnityEditor;
 #endif
 
-public enum ResponseType
+public enum ListenerType
 {
     None,
     Rotate,
     Move,
 }
 
-interface IResponse
+interface IListener
 {
     void Remove();
 }
 
 [System.Serializable]
 [ExecuteAlways]
-public class Response : MonoBehaviour
+public class Listener : MonoBehaviour
 {
     public Lock myLock;
-    public ResponseType responseType;
-
-    private ResponseType old;
+    public ListenerType responseType;
+    private ListenerType old;
 
     [ExecuteAlways]
     private void Update()
@@ -34,29 +33,29 @@ public class Response : MonoBehaviour
         {
             switch (responseType)
             {
-                case ResponseType.Rotate:
-                    if (GetComponent<ResponseRotate>() == null)
+                case ListenerType.Rotate:
+                    if (GetComponent<Rotate>() == null)
                     {
 #if UNITY_EDITOR
-                        Undo.AddComponent(gameObject, typeof(ResponseRotate));
+                        Undo.AddComponent(gameObject, typeof(Rotate));
 #endif
                         break;
                     }
                     break;
 
-                case ResponseType.Move:
-                    if (GetComponent<ResponseMove>() == null)
+                case ListenerType.Move:
+                    if (GetComponent<Move>() == null)
                     {
 #if UNITY_EDITOR
-                        Undo.AddComponent(gameObject, typeof(ResponseMove));
+                        Undo.AddComponent(gameObject, typeof(Move));
 #endif
                         break;
                     }
                     break;
                 default:
                     {
-                        IResponse[] others = GetComponents<IResponse>();
-                        foreach (IResponse other in others)
+                        IListener[] others = GetComponents<IListener>();
+                        foreach (IListener other in others)
                             other.Remove();
                     }
                     break;

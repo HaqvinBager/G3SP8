@@ -8,6 +8,9 @@ using System.Linq;
 
 public class Test 
 {
+    public static string monoTxt =
+        "public class AudioClipGenerated : Monobehaviour { \n";
+
     [MenuItem("Custom/Test Read")]
     public static void TestRead()
     {
@@ -28,6 +31,20 @@ public class Test
             //final = final.Insert(0, "public enum");
             file.WriteLine(final);
         }
+
+        //string script = monoTxt;
+        //foreach(var str in enums)
+        //{
+        //    string final = str;
+        //    if (final.IndexOf("class") < 0)
+        //        continue;
+        //    //script.Append("public enum");
+        //}
+
+        
+
+
+
         file.Close();
         AssetDatabase.Refresh();
 

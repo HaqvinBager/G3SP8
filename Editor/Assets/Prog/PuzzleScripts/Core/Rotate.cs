@@ -6,7 +6,7 @@ using UnityEditor;
 #endif
 
 [System.Serializable]
-public class ResponseMove : MonoBehaviour, IResponse
+public class Rotate : MonoBehaviour, IListener
 {
     public Vector3 start;
     public Vector3 end;

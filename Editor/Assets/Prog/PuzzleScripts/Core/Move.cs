@@ -6,11 +6,13 @@ using UnityEditor;
 #endif
 
 [System.Serializable]
-public class ResponseRotate : MonoBehaviour, IResponse
+public class Move : MonoBehaviour, IListener
 {
     public Vector3 start;
     public Vector3 end;
     public float duration;
+
+
 
     public void Remove()
     {
@@ -19,4 +21,3 @@ public class ResponseRotate : MonoBehaviour, IResponse
 #endif
     }
 }
-
