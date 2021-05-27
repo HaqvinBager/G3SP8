@@ -24,7 +24,8 @@ private:
 	void Receive(const SStringMessage& aMessage) override;
 
 	std::string myCreateReceiveMessage;
-	std::string myDestroyReceiveMessage;
+	std::string myPickUpReceiveMessage;
+
 	std::string mySendMessage;
 
 	int myMaxAmountOfKeys;
