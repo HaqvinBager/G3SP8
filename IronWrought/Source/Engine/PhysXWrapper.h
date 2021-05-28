@@ -10,6 +10,7 @@ class CScene;
 class CCharacterController;
 class CDynamicRigidBody;
 class CCharacterReportCallback;
+class CContactFilterCallback;
 
 class CPhysXWrapper
 {
@@ -112,5 +113,6 @@ private:
 	CContactReportCallback* myContactReportCallback;
 	PxControllerManager* myControllerManager;
 	physx::PxUserControllerHitReport* myPlayerReportCallback;
+	CContactFilterCallback* myContactFilterReportCallback;;
 	//std::queue<CRigidDynamicBody*> myAddBodyQueue;
 };

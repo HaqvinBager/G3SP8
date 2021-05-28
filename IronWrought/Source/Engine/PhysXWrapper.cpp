@@ -17,6 +17,7 @@
 #include "PlayerReportCallback.h"
 #include "ConvexMeshColliderComponent.h"
 #include "EnemyReportCallback.h"
+#include "ContactFilterCallback.h"
 
 PxFilterFlags contactReportFilterShader(PxFilterObjectAttributes attributes0, PxFilterData filterData0,
 	PxFilterObjectAttributes attributes1, PxFilterData filterData1,
@@ -38,7 +39,6 @@ PxFilterFlags contactReportFilterShader(PxFilterObjectAttributes attributes0, Px
 		| PxPairFlag::eTRIGGER_DEFAULT;
 
 	return PxFilterFlag::eDEFAULT;*/
-
 	if (PxFilterObjectIsTrigger(attributes0) || PxFilterObjectIsTrigger(attributes1))
 	{
 		pairFlags = PxPairFlag::eTRIGGER_DEFAULT;
@@ -64,8 +64,10 @@ PxFilterFlags contactReportFilterShader(PxFilterObjectAttributes attributes0, Px
 	if (keep) {
 		pairFlags |= PxPairFlag::eNOTIFY_TOUCH_FOUND;
 	}
-
-	return PxFilterFlag::eDEFAULT;
+	PxFilterFlags flags;
+	flags.set(PxFilterFlag::eCALLBACK);
+	flags.set(PxFilterFlag::eNOTIFY);
+	return flags;
 }
 
 CPhysXWrapper::CPhysXWrapper()
@@ -79,6 +81,7 @@ CPhysXWrapper::CPhysXWrapper()
 	myContactReportCallback = nullptr;
 	myControllerManager = nullptr;
 	myPlayerReportCallback = nullptr;
+	myContactFilterReportCallback = nullptr;
 }
 
 CPhysXWrapper::~CPhysXWrapper()
@@ -139,6 +142,7 @@ bool CPhysXWrapper::Init()
 	// All collisions gets pushed to this class
 	myContactReportCallback = new CContactReportCallback();
 	myPlayerReportCallback = new CPlayerReportCallback();
+	myContactFilterReportCallback = new CContactFilterCallback();
     return true;
 }
 
@@ -150,6 +154,7 @@ PxScene* CPhysXWrapper::CreatePXScene()
 	sceneDesc.cpuDispatcher = myDispatcher;
 	sceneDesc.filterShader = contactReportFilterShader;
 	sceneDesc.simulationEventCallback = myContactReportCallback;
+	sceneDesc.filterCallback = myContactFilterReportCallback;
 	sceneDesc.flags = PxSceneFlag::eENABLE_CCD;
 
 

@@ -41,10 +41,15 @@
 #include "CustomEventListenerComponent.h"
 #include "SpotLightComponent.h"
 
-#include <LockComponent.h>
-#include <KeyComponent.h>
+#include <LockBehavior.h>
+#include <OnTriggerLock.h>
+#include <LeftClickDownLock.h>
+#include <KeyBehavior.h>
+#include <DestroyKey.h>
+#include <AnimateKey.h>
 #include <ListenerComponent.h>
 #include <MoveResponse.h>
+#include <RotateResponse.h>
 
 CScene* CSceneManager::ourLastInstantiatedScene = nullptr;
 CSceneManager::CSceneManager()
@@ -112,7 +117,7 @@ CScene* CSceneManager::CreateScene(const std::string& aSceneJson)
 
 		if (doc.HasMember("NavMeshData"))
 		{
-			if (doc.GetObjectW()["NavMeshData"].HasMember("Path"))
+			if (doc.GetObjectW()["NavMeshData"].HasMember("path"))
 			{
 				std::string navMeshPath = doc.GetObjectW()["NavMeshData"].GetObjectW()["path"].GetString();
 				if (!navMeshPath.empty())
@@ -571,23 +576,20 @@ void CSceneManager::AddPuzzleKey(CScene& aScene, RapidArray someData)
 {
 	for (const auto& key : someData)
 	{
-		std::string onCreateNotify = key["onCreateNotify"].GetString();
-		std::string onInteractNotify = key["onInteractNotify"].GetString();
 		CGameObject* gameObject = aScene.FindObjectWithID(key["instanceID"].GetInt());
 		gameObject;
-
+		CKeyBehavior::SSettings settings = { key["onCreateNotify"].GetString(), key["onInteractNotify"].GetString(), nullptr };
 		EKeyInteractionTypes interactionType = static_cast<EKeyInteractionTypes>(key["interactionType"].GetInt());
-
 		switch (interactionType)
 		{
 		case EKeyInteractionTypes::Destroy:
 		{
-			//add destroykeycomponent to gameobject
+			gameObject->AddComponent<CDestroyKey>(*gameObject, settings);
 		}
 		break;
 		case EKeyInteractionTypes::Animate:
 		{
-			//add animatekeycomponent to gameobject
+			gameObject->AddComponent<CAnimateKey>(*gameObject, settings);
 		}
 		break;
 		default:
@@ -600,24 +602,20 @@ void CSceneManager::AddPuzzleLock(CScene& aScene, RapidArray someData)
 {
 	for (const auto& lock : someData)
 	{
-		std::string onNotify = lock["onNotify"].GetString();
-		std::string onKeyCreateNotify = lock["onKeyCreateNotify"].GetString();
-		std::string onKeyInteractNotify = lock["onKeyInteractNotify"].GetString();
 		CGameObject* gameObject = aScene.FindObjectWithID(lock["instanceID"].GetInt());
 		gameObject;
-
+		CLockBehavior::SSettings settings = { lock["onKeyCreateNotify"].GetString(), lock["onKeyInteractNotify"].GetString(), lock["onNotify"].GetString(), nullptr};
 		ELockInteractionTypes interactionType = static_cast<ELockInteractionTypes>(lock["interactionType"].GetInt());
-
 		switch (interactionType)
 		{
 		case ELockInteractionTypes::OnTriggerEnter:
 		{
-			//add ontriggerlockcomponent to gameobject
+			gameObject->AddComponent<COnTriggerLock>(*gameObject, settings);
 		}
 		break;
 		case ELockInteractionTypes::OnLeftClickDown:
 		{
-			//add leftclickdownlockcomponent to gameobject
+			gameObject->AddComponent<CLeftClickDownLock>(*gameObject, settings);
 		}
 		break;
 		default:
@@ -660,8 +658,27 @@ void CSceneManager::AddPuzzleResponseMove(CScene& aScene, RapidArray someData)
 	}
 }
 
-void CSceneManager::AddPuzzleResponseRotate(CScene& /*aScene*/, RapidArray /*someData*/)
+void CSceneManager::AddPuzzleResponseRotate(CScene& aScene, RapidArray someData)
 {
+	for (const auto& response : someData)
+	{
+		CGameObject* gameObject = aScene.FindObjectWithID(response["instanceID"].GetInt());
+		if (!gameObject)
+			continue;
+
+		CRotateResponse::SSettings settings = {};
+		settings.myDuration = response["duration"].GetFloat();
+
+		settings.myStartRotation = { response["start"]["x"].GetFloat(),
+									 response["start"]["y"].GetFloat(),
+									 response["start"]["z"].GetFloat() };
+
+		settings.myEndRotation = { response["end"]["x"].GetFloat(),
+									response["end"]["y"].GetFloat(),
+									response["end"]["z"].GetFloat() };
+
+		gameObject->AddComponent<CRotateResponse>(*gameObject, settings);
+	}
 }
 
 void CSceneManager::AddDecalComponents(CScene& aScene, RapidArray someData)

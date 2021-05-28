@@ -5,14 +5,18 @@
 IResponseBehavior::IResponseBehavior(CGameObject& aParent)
 	: CBehavior(aParent)
 {
+	GetComponent<CListenerComponent>()->Register(this);
+}
+
+IResponseBehavior::~IResponseBehavior()
+{
+	GetComponent<CListenerComponent>()->Deregister(this);
 }
 
 void IResponseBehavior::OnEnable()
 {
-	GetComponent<CListenerComponent>()->Register(this);
 }
 
 void IResponseBehavior::OnDisable()
 {
-	GetComponent<CListenerComponent>()->UnRegister(this);
 }
