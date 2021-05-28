@@ -281,7 +281,10 @@ void CPlayerControllerComponent::Move(Vector3 aDir)
 	
 	if (!myIsGrounded && (collisionflag & physx::PxControllerCollisionFlag::eCOLLISION_DOWN)) 
 	{
-		CMainSingleton::PostMaster().SendLate({ EMessageType::PlayStepSound, &myCurrentFloorMaterial }); // Landing
+		PostMaster::SStepSoundData stepData;
+		stepData.myIsSprint = false;
+		stepData.myGroundMaterial = static_cast<int>(myCurrentFloorMaterial);
+		CMainSingleton::PostMaster().Send({ EMessageType::PlayStepSound, &stepData }); // Landing
 	}
 	
 	myIsGrounded = (collisionflag & physx::PxControllerCollisionFlag::eCOLLISION_DOWN);
@@ -296,7 +299,11 @@ void CPlayerControllerComponent::Move(Vector3 aDir)
 			if (myStepTimer <= 0.0f && !myIsCrouching) 
 			{
 				myStepTimer = myStepTime * (myWalkSpeed / mySpeed);// If mySpeed == myWalkSpeed => myStepTime * 1.0f. 
-				CMainSingleton::PostMaster().SendLate({ EMessageType::PlayStepSound, &myCurrentFloorMaterial });
+				
+				PostMaster::SStepSoundData stepData;
+				stepData.myIsSprint = (myStepTimer < myStepTime);
+				stepData.myGroundMaterial = static_cast<int>(myCurrentFloorMaterial);
+				CMainSingleton::PostMaster().Send({ EMessageType::PlayStepSound, &stepData });
 			}
 		}
 	}
