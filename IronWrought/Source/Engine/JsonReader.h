@@ -16,12 +16,14 @@ struct SDirectory {
 class CJsonReader
 {
 public:
+	
 	static CJsonReader* Get();
 	rapidjson::Document LoadDocument(const std::string& json_path);
 private:
 	CJsonReader() {}
 	~CJsonReader() {}
 	static CJsonReader* ourInstance;
+	static const std::string ourErrorString;
 
 public:
 	static bool IsValid(const rapidjson::Document& aDoc, const std::vector<std::string>& someMembers);
