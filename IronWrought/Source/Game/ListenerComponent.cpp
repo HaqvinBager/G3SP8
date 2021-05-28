@@ -37,7 +37,7 @@ void CListenerComponent::Register(IResponseBehavior* aBehaviour)
 	myResponses.push_back(aBehaviour);
 }
 
-void CListenerComponent::UnRegister(IResponseBehavior* aBehaviour)
+void CListenerComponent::Deregister(IResponseBehavior* aBehaviour)
 {
 	auto it = std::find(myResponses.begin(), myResponses.end(), aBehaviour);
 	if (it != myResponses.end())
@@ -48,7 +48,9 @@ void CListenerComponent::TriggerResponses()
 {
 	std::cout << "Event Triggered: " << myReceiveMessage << "\n";
 	for (auto& response : myResponses)
+	{
 		response->OnRespond();
+	}
 }
 
 void CListenerComponent::Receive(const SStringMessage& /*aMessage*/)

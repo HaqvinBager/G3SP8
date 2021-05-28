@@ -25,7 +25,7 @@ public:
 	void OnDisable() override;
 
 	void Register(IResponseBehavior* aBehaviour);
-	void UnRegister(IResponseBehavior* aBehaviour);
+	void Deregister(IResponseBehavior* aBehaviour);
 
 
 	void TriggerResponses();
