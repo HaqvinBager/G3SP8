@@ -112,7 +112,7 @@ CScene* CSceneManager::CreateScene(const std::string& aSceneJson)
 
 		if (doc.HasMember("NavMeshData"))
 		{
-			if (doc.GetObjectW()["NavMeshData"].HasMember("Path"))
+			if (doc.GetObjectW()["NavMeshData"].HasMember("path"))
 			{
 				std::string navMeshPath = doc.GetObjectW()["NavMeshData"].GetObjectW()["path"].GetString();
 				if (!navMeshPath.empty())
