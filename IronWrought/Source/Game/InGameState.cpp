@@ -1,12 +1,10 @@
 #include "stdafx.h"
 #include "InGameState.h"
-
 #include <GameObject.h>
 #include <TransformComponent.h>
 #include <ModelComponent.h>
 #include <DecalComponent.h>
 #include <PointLightComponent.h>
-
 #include <Scene.h>
 #include <Engine.h>
 #include <PostMaster.h>
