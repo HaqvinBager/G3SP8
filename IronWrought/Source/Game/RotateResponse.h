@@ -19,5 +19,6 @@ public:
 private:
 	SSettings mySettings;
 	float myTime;
+	Quaternion myStartRotation;
 };
 
