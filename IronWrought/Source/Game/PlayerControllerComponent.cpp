@@ -273,6 +273,11 @@ void CPlayerControllerComponent::ControllerUpdate()
 	float y = myMovement.y;
 	myMovement = (horizontal + vertical) * mySpeed;
 	myMovement.y = y;
+
+	if (myMovement.x == 0.0f && myMovement.z == 0.0f) // Reset Steps if standing still
+	{
+		myStepTimer = 0.0f;
+	}
 }
 
 void CPlayerControllerComponent::Move(Vector3 aDir)
