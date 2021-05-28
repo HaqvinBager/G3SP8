@@ -91,9 +91,7 @@ private:
 		{
 			aTo.reserve(aFrom.size());
 			for (const auto& vec : aFrom)
-			{
-				aTo.push_back(PxVec3(vec.x, vec.y, vec.z));
-			}
+				aTo.push_back(PxVec3(vec.x, vec.y, vec.z));			
 		}
 	};
 
