@@ -128,7 +128,7 @@ CScene* CSceneManager::CreateSceneFromSeveral(const std::vector<std::string>& so
 		AddToScene(*scene, binLevelData, doc);
 	}
 
-	return nullptr;
+	return scene;
 }
 
 CScene* CSceneManager::CreateMenuScene(const std::string& aCanvasPath)
