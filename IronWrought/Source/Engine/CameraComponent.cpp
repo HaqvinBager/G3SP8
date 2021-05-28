@@ -20,7 +20,7 @@ CCameraComponent::CCameraComponent(CGameObject& aParent, const float aFoV/*, flo
 	DirectX::BoundingFrustum::CreateFromMatrix(myViewFrustum, myProjection);
 
 	myTrauma = 0.0f;
-	myTestTrauma = 0.45f;
+	myTestTrauma = 0.4f;
 	myShake = 0.0f;
 	myDecayInSeconds = 0.5f;
 	myShakeSpeed = 0.685f;
