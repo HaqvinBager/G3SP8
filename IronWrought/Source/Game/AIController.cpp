@@ -169,7 +169,7 @@ Vector3 CSeek::Update(const Vector3& aPosition)//aPostion == EnemyRobot Position
 	//return std::move(direction);
 
 	float dist = DirectX::SimpleMath::Vector3::DistanceSquared(aPosition, myTarget->Position());
-	float epsilon = 0.15f;
+	float epsilon = 0.3f;
 	if (dist < epsilon) {
 		CMainSingleton::PostMaster().Send({ EMessageType::EnemyReachedTarget });
 	}
