@@ -17,6 +17,9 @@
 #include "AnimationComponent.h"
 #include "CustomEventComponent.h"
 #include "CustomEventListenerComponent.h"
+#include "LeftClickDownLock.h"
+#include "OnTriggerLock.h"
+
 
 #include <EnemyComponent.h>
 #include <PlayerComponent.h>
