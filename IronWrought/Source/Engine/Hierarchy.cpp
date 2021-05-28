@@ -33,6 +33,10 @@ ImGui::CHierarchy::CHierarchy(const char* aName)
 	myComponentMap[typeid(CGravityGloveComponent)] = [&](CComponent* aComponent)		{ Edit(dynamic_cast<CGravityGloveComponent*>(aComponent)); };
 	myComponentMap[typeid(CHealthPickupComponent)] = [&](CComponent* aComponent)		{ Edit(dynamic_cast<CHealthPickupComponent*>(aComponent)); };
 	myComponentMap[typeid(CPlayerControllerComponent)] = [&](CComponent* aComponent)	{ Edit(dynamic_cast<CPlayerControllerComponent*>(aComponent)); };
+	
+	myComponentMap[typeid(CLeftClickDownLock)] = [&](CComponent* aComponent) { Edit(dynamic_cast<CLeftClickDownLock*>(aComponent)); };
+	myComponentMap[typeid(COnTriggerLock)] = [&](CComponent* aComponent) { Edit(dynamic_cast<COnTriggerLock*>(aComponent)); };
+
 }
 
 ImGui::CHierarchy::~CHierarchy()
@@ -235,5 +239,23 @@ void ImGui::CHierarchy::Edit(CPlayerControllerComponent* aComponent)
 	if (DragFloat("Walk Speed", &walkSpeed, 0.001f))
 	{
 		aComponent->WalkSpeed(walkSpeed);
+	}
+}
+
+void ImGui::CHierarchy::Edit(CLeftClickDownLock* aComponent)
+{
+	ImGui::Checkbox("Is Triggered", &aComponent->myHasTriggered);
+	if (ImGui::Button("Raise Event"))
+	{
+		aComponent->RunEventEditor();
+	}
+}
+
+void ImGui::CHierarchy::Edit(COnTriggerLock* aComponent)
+{
+	ImGui::Checkbox("Is Triggered", &aComponent->myHasTriggered);
+	if (ImGui::Button("Raise Event"))
+	{
+		aComponent->RunEventEditor();
 	}
 }

@@ -13,7 +13,7 @@ enum class EMusic { Count };
 enum class EAmbience { AirVent, Inside, Outside, EnemyArea, DynamicTestDrums, DynamicTestGlitches, DynamicTestScreamer, Count };
 enum class EPropAmbience { GrandfatherClock, TVStatic, ElectricalCabinet, Boiler, Refrigerator, Toilet, Count };
 enum class ESFX { GravityGlovePullBuildup, GravityGlovePullHit, GravityGlovePush, GravityGlovePullRelease, Jump, EnemyHit, SwitchPress, PickupGravityGlove, PickupHeal, EnemyAttack, CardboardBox, Count };
-enum class ESFXCollection { StepAirVent, StepConcrete, Count };
+enum class ESFXCollection { StepWood, StepWoodFast, StepCarpet, StepCarpetFast, StepConcrete, StepConcreteFast, Count };
 enum class EUI { ButtonClick, PlayClick, Count };
 enum class EResearcherEventVoiceLine { V1, V2, BootUp, Intro, Line1, Line2, Line3, Line4, Line5, Line6, Line7, Line8, Line9, Line10, Line11, Line12, Line13, Line14, Line15, Line16, Line17, Line18, Line19, Line20, Line21, Line22, Line23, Line24, Line25, Line26, Line27, Outro1, Outro2, Outro3, Outro4, Outro5, Outro6, Outro7, Count };
 enum class EResearcherReactionVoiceLine { ResearcherReactionExplosives, Count };
@@ -97,8 +97,12 @@ private:
 	std::vector<CAudio*> mySFXAudio;
 	std::vector<CAudio*> myUIAudio;
 
-	std::vector<CAudio*> myAirVentStepSounds;
+	std::vector<CAudio*> myWoodStepSounds;
+	std::vector<CAudio*> myWoodFastStepSounds;
+	std::vector<CAudio*> myCarpetStepSounds;
+	std::vector<CAudio*> myCarpetFastStepSounds;
 	std::vector<CAudio*> myConcreteStepSounds;
+	std::vector<CAudio*> myConcreteFastStepSounds;
 
 	std::vector<CAudio*> myResearcherEventSounds;
 	std::vector<CAudio*> myResearcherReactionsExplosives;

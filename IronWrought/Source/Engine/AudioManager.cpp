@@ -152,12 +152,32 @@ CAudioManager::~CAudioManager()
 		delete ui;
 		ui = nullptr;
 	}
-	for (auto& sound : myAirVentStepSounds)
+	for (auto& sound : myWoodStepSounds)
+	{
+		delete sound;
+		sound = nullptr;
+	}
+	for (auto& sound : myWoodFastStepSounds)
+	{
+		delete sound;
+		sound = nullptr;
+	}
+	for (auto& sound : myCarpetStepSounds)
+	{
+		delete sound;
+		sound = nullptr;
+	}
+	for (auto& sound : myCarpetFastStepSounds)
 	{
 		delete sound;
 		sound = nullptr;
 	}
 	for (auto& sound : myConcreteStepSounds)
+	{
+		delete sound;
+		sound = nullptr;
+	}
+	for (auto& sound : myConcreteFastStepSounds)
 	{
 		delete sound;
 		sound = nullptr;
@@ -213,15 +233,31 @@ void CAudioManager::Receive(const SMessage& aMessage) {
 
 	case EMessageType::PlayStepSound:
 	{
-		int groundType = *reinterpret_cast<int*>(aMessage.data);
+		PostMaster::SStepSoundData stepData = *reinterpret_cast<PostMaster::SStepSoundData*>(aMessage.data);
+		int groundType = stepData.myGroundMaterial/**reinterpret_cast<int*>(aMessage.data)*/;
 
 		if (groundType == 0 || groundType == 1/*myCurrentGroundType == EGroundType::Concrete*/)
 		{
-			PlayCyclicRandomSoundFromCollection(myConcreteStepSounds, EChannel::SFX, myStepSoundIndices, 1);
+			if (stepData.myIsSprint)
+				PlayCyclicRandomSoundFromCollection(myWoodFastStepSounds, EChannel::SFX, myStepSoundIndices, 1);
+			else
+				PlayCyclicRandomSoundFromCollection(myWoodStepSounds, EChannel::SFX, myStepSoundIndices, 1);
+
 		}
 		else if (groundType == 2/*myCurrentGroundType == EGroundType::AirVent*/)
 		{
-			PlayCyclicRandomSoundFromCollection(myAirVentStepSounds, EChannel::SFX, myStepSoundIndices, 1);
+			if (stepData.myIsSprint)
+				PlayCyclicRandomSoundFromCollection(myCarpetFastStepSounds, EChannel::SFX, myStepSoundIndices, 1);
+			else
+				PlayCyclicRandomSoundFromCollection(myCarpetStepSounds, EChannel::SFX, myStepSoundIndices, 1);
+		}
+		else if (groundType == 3/*myCurrentGroundType == EGroundType::AirVent*/)
+		{
+			if (stepData.myIsSprint)
+				PlayCyclicRandomSoundFromCollection(myConcreteFastStepSounds, EChannel::SFX, myStepSoundIndices, 1);
+			else 
+				PlayCyclicRandomSoundFromCollection(myConcreteStepSounds, EChannel::SFX, myStepSoundIndices, 1);
+
 		}
 	}
 	break;
@@ -904,10 +940,18 @@ std::string CAudioManager::TranslateEnum(ESFXCollection enumerator) const
 {
 	switch (enumerator)
 	{
-	case ESFXCollection::StepAirVent:
-		return "StepAirVent";
+	case ESFXCollection::StepWood:
+		return "StepWood";
+	case ESFXCollection::StepWoodFast:
+		return "StepWoodFast";
+	case ESFXCollection::StepCarpet:
+		return "StepCarpet";
+	case ESFXCollection::StepCarpetFast:
+		return "StepCarpetFast";
 	case ESFXCollection::StepConcrete:
 		return "StepConcrete";
+	case ESFXCollection::StepConcreteFast:
+		return "StepConcreteFast";
 	default:
 		return "";
 	}
@@ -1045,13 +1089,46 @@ void CAudioManager::FillCollection(ESFXCollection enumerator)
 
 	switch (enumerator)
 	{
-	case ESFXCollection::StepAirVent:
+	case ESFXCollection::StepWood:
 	{
 		CAudio* sound = myWrapper.TryGetSound(mySFXPath + GetCollectionPath(enumerator, ++counter));
 
 		while (sound != nullptr)
 		{
-			myAirVentStepSounds.push_back(sound);
+			myWoodStepSounds.push_back(sound);
+			sound = myWrapper.TryGetSound(mySFXPath + GetCollectionPath(enumerator, ++counter));
+		}
+	}
+	break;
+	case ESFXCollection::StepWoodFast:
+	{
+		CAudio* sound = myWrapper.TryGetSound(mySFXPath + GetCollectionPath(enumerator, ++counter));
+
+		while (sound != nullptr)
+		{
+			myWoodFastStepSounds.push_back(sound);
+			sound = myWrapper.TryGetSound(mySFXPath + GetCollectionPath(enumerator, ++counter));
+		}
+	}
+	break;
+	case ESFXCollection::StepCarpet:
+	{
+		CAudio* sound = myWrapper.TryGetSound(mySFXPath + GetCollectionPath(enumerator, ++counter));
+
+		while (sound != nullptr)
+		{
+			myCarpetStepSounds.push_back(sound);
+			sound = myWrapper.TryGetSound(mySFXPath + GetCollectionPath(enumerator, ++counter));
+		}
+	}
+	break;
+	case ESFXCollection::StepCarpetFast:
+	{
+		CAudio* sound = myWrapper.TryGetSound(mySFXPath + GetCollectionPath(enumerator, ++counter));
+
+		while (sound != nullptr)
+		{
+			myCarpetFastStepSounds.push_back(sound);
 			sound = myWrapper.TryGetSound(mySFXPath + GetCollectionPath(enumerator, ++counter));
 		}
 	}
@@ -1063,6 +1140,17 @@ void CAudioManager::FillCollection(ESFXCollection enumerator)
 		while (sound != nullptr)
 		{
 			myConcreteStepSounds.push_back(sound);
+			sound = myWrapper.TryGetSound(mySFXPath + GetCollectionPath(enumerator, ++counter));
+		}
+	}
+	break;
+	case ESFXCollection::StepConcreteFast:
+	{
+		CAudio* sound = myWrapper.TryGetSound(mySFXPath + GetCollectionPath(enumerator, ++counter));
+
+		while (sound != nullptr)
+		{
+			myConcreteFastStepSounds.push_back(sound);
 			sound = myWrapper.TryGetSound(mySFXPath + GetCollectionPath(enumerator, ++counter));
 		}
 	}

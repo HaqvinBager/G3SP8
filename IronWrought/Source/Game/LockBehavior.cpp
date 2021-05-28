@@ -49,10 +49,20 @@ void CLockBehavior::RunEvent()
 		if (myMaxAmountOfKeys <= myAmountOfKeys)
 		{
 			myHasTriggered = true;
-			CMainSingleton::PostMaster().Send({ mySettings.myOnNotify.c_str(), mySettings.myData});
+			CMainSingleton::PostMaster().Send({ mySettings.myOnNotify.c_str(), mySettings.myData });
 		}
 	}
 }
+
+void CLockBehavior::RunEventEditor()
+{
+	if (!myHasTriggered)
+	{
+		myHasTriggered = true;
+		CMainSingleton::PostMaster().Send({ mySettings.myOnNotify.c_str(), mySettings.myData });
+	}
+}
+
 
 void CLockBehavior::Receive(const SStringMessage& aMessage)
 {
