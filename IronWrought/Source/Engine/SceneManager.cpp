@@ -714,7 +714,10 @@ void CSceneManager::AddPuzzleResponsePrint(CScene& aScene, RapidArray someData)
 		if (!gameObject)
 			continue;
 
-		gameObject->AddComponent<CPrintResponse>(*gameObject);
+		CPrintResponse::SSettings settings = {};
+		settings.myData = response["data"].GetString();
+
+		gameObject->AddComponent<CPrintResponse>(*gameObject, settings);
 	}
 }
 

@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "PrintResponse.h"
 
-CPrintResponse::CPrintResponse(CGameObject& aParent)
+CPrintResponse::CPrintResponse(CGameObject& aParent, const SSettings& someSettings)
 	: IResponseBehavior(aParent)
 {
 	Enabled(false);
@@ -9,7 +9,7 @@ CPrintResponse::CPrintResponse(CGameObject& aParent)
 
 void CPrintResponse::Update()
 {
-	std::cout << ResponseNotify() << "has triggered!\n";
+	std::cout << mySettings.myData << "\n";
 	Enabled(false);
 }
 

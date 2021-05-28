@@ -4,10 +4,15 @@
 class CPrintResponse : public IResponseBehavior
 {
 public:
-	CPrintResponse(CGameObject& aParent);
+	struct SSettings
+	{
+		std::string myData;
+	};
+	CPrintResponse(CGameObject& aParent, const SSettings& someSettings);
 	~CPrintResponse() override { }
 	void Update() override;
 	void OnRespond() override;
-
+private:
+	SSettings mySettings;
 };
 
