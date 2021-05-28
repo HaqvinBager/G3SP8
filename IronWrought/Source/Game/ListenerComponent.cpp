@@ -8,6 +8,7 @@ CListenerComponent::CListenerComponent(CGameObject& aParent, std::string aReceiv
 
 CListenerComponent::~CListenerComponent()
 {
+	myResponses.clear();
 }
 
 void CListenerComponent::Awake()
@@ -35,13 +36,6 @@ void CListenerComponent::OnDisable()
 void CListenerComponent::Register(IResponseBehavior* aBehaviour)
 {
 	myResponses.push_back(aBehaviour);
-}
-
-void CListenerComponent::Deregister(IResponseBehavior* aBehaviour)
-{
-	auto it = std::find(myResponses.begin(), myResponses.end(), aBehaviour);
-	if (it != myResponses.end())
-		myResponses.erase(it);
 }
 
 void CListenerComponent::TriggerResponses()

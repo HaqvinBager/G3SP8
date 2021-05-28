@@ -10,7 +10,6 @@ IResponseBehavior::IResponseBehavior(CGameObject& aParent)
 
 IResponseBehavior::~IResponseBehavior()
 {
-	GetComponent<CListenerComponent>()->Deregister(this);
 }
 
 void IResponseBehavior::OnEnable()
