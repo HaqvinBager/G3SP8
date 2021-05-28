@@ -6,6 +6,8 @@
 namespace fs = std::filesystem;
 
 CJsonReader* CJsonReader::ourInstance = nullptr;
+const std::string CJsonReader::ourErrorString = "";
+
 CJsonReader* CJsonReader::Get()
 {
 	if (ourInstance == nullptr)
@@ -180,5 +182,10 @@ const bool CJsonReader::TryGetMaterialID(const std::string& aMaterialName, int& 
 
 const std::string& CJsonReader::GetAssetPath(const int anAssetID) const
 {
+	if (myPathsMap.find(anAssetID) == myPathsMap.end())
+	{
+		std::cout << __FUNCTION__ << " Asset ID: " << anAssetID << " could not be found in myPathsMap! Might be an issue with prefab exported from Unity." << std::endl;
+		return ourErrorString;
+	}
 	return myPathsMap.at(anAssetID);
 }

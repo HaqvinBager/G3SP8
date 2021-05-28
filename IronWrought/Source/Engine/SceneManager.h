@@ -30,10 +30,12 @@ public:
 	~CSceneManager();
 	static CScene* CreateEmpty();
 	static CScene* CreateScene(const std::string& aSceneName);
+	static CScene* CreateSceneFromSeveral(const std::vector<std::string>& someSceneNames);// Got an error with std::async, it coulnd't figure out which definition to use when CreateScene was overloaded. // Aki 2021 05 28
 	static CScene* CreateMenuScene(const std::string& aCanvasPath);
 
 private:
 	static CScene* Instantiate();
+	static bool AddToScene(CScene& aScene, Binary::SLevelData& aBinLevelData, const rapidjson::Document& aDoc);
 
 	static bool AddGameObjects(CScene& aScene, RapidArray someData);
 	static bool AddGameObjects(CScene& aScene, const std::vector<Binary::SInstanceID>& someData);
