@@ -6,7 +6,7 @@ class CAnimateKey : public CKeyBehavior
 public:
 	CAnimateKey(CGameObject& aParent, const SSettings& someSettings);
 	~CAnimateKey() override;
-	void OnPickUp() override;
+	void OnInteract() override;
 private:
 
 };
