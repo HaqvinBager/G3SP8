@@ -344,12 +344,12 @@ void CPhysXWrapper::Cooking(const std::vector<CGameObject*>& gameObjectsToCook, 
 			const CModel::SModelData& modelData = model->GetMyModel()->GetModelData();
 			std::vector<PxVec3> verts = {};		
 			Convert<Vector3, PxVec3>()(modelData.myMeshFilter.myVertecies, verts);
-			GetMeshDesc(verts, modelData.myMeshFilter.myIndexes, PxConvexFlag::eCOMPUTE_CONVEX);
-
-
+			GetMeshDesc(verts, modelData.myMeshFilter.myIndexes, PxConvexFlag::eCOMPUTE_CONVEX);	
+		  //convexCollider->SetShape(CreateCookedShape(gameObject)); 
 		}
 	}
 	*/
+	
 
 	
 
@@ -386,6 +386,8 @@ void CPhysXWrapper::Cooking(const std::vector<CGameObject*>& gameObjectsToCook, 
 
 			PxShape* convexShape = myPhysics->createShape(pMeshGeometry, *gameObjectsToCook[i]->GetComponent<CConvexMeshColliderComponent>()->GetMaterial(), true);
 			gameObjectsToCook[i]->GetComponent<CConvexMeshColliderComponent>()->SetShape(convexShape);
+
+
 		}
 
 		if (gameObjectsToCook[i]->GetComponent<CInstancedModelComponent>() &&
@@ -535,5 +537,5 @@ PxConvexMeshDesc CPhysXWrapper::GetMeshDesc(const std::vector<PxVec3>& someVerts
 	meshDesc.indices.count = (PxU32)indexes.size();
 	meshDesc.indices.stride = sizeof(PxU32);
 	meshDesc.indices.data = indexes.data();
-	return PxConvexMeshDesc();
+	return meshDesc;
 }

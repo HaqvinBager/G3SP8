@@ -113,7 +113,7 @@ void CCameraControllerComponent::Update()
 CGameObject* CCameraControllerComponent::CreatePlayerFirstPersonCamera(CGameObject* aParentObject)
 {
 	CGameObject* camera = new CGameObject(PLAYER_CAMERA_ID, "Player Camera");
-	camera->AddComponent<CCameraComponent>(*camera, 70.0f);
+	camera->AddComponent<CCameraComponent>(*camera, 59.5f);
 	camera->AddComponent<CCameraControllerComponent>(*camera, 2.0f, ECameraMode::PlayerFirstPerson);
 	camera->myTransform->SetParent(aParentObject->myTransform);
 	camera->myTransform->Position({ 0.f,0.f,0.f });
@@ -152,7 +152,8 @@ void CCameraControllerComponent::RotateTransformWithYawAndPitch(const Vector2& s
 	if (myCameraMode == ECameraMode::FreeCam) {
 		GameObject().myTransform->Rotation({ myPitch, myYaw, 0 });
 	} else if (GameObject().myTransform->GetParent()) {
-		GameObject().myTransform->Rotation({ myPitch, 0, 0 });
+		const Vector3& shakeVector = GameObject().GetComponent<CCameraComponent>()->GetShakeVector();
+		GameObject().myTransform->Rotation({ myPitch + shakeVector.x, shakeVector.y, shakeVector.z });
 		GameObject().myTransform->GetParent()->Rotation({ 0, myYaw, 0 });
 	}
 }
