@@ -7,10 +7,7 @@
 #include <strsafe.h>
 #include "EngineException.h"
 #include "DL_Debug.h"
-
 #include <iostream>
-//#define USE_ALLOCATION_METRICS
-
 #ifdef _DEBUG
 #ifdef USE_ALLOCATION_METRICS
 struct AllocationMetrics

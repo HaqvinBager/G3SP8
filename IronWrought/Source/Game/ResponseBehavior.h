@@ -12,7 +12,7 @@ public:
 	void OnEnable() override;
 	void OnDisable() override; 
 	virtual void OnRespond() = 0;
-
+	const std::string ResponseNotify() { return myResponseNotify; }
 private:
 	std::string myResponseNotify;
 };
