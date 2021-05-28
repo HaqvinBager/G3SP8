@@ -73,6 +73,34 @@ public:
 	void Cooking(const std::vector<CGameObject*>& gameObjectsToCook, CScene* aScene);
 	physx::PxShape* CookObject(CGameObject& aGameObject);
 
+
+private:
+
+	template<typename From, typename To>
+	struct Convert {
+		void operator()(const std::vector<From>& aFrom, std::vector<To>& aTo)
+		{
+
+		}
+	};
+
+	template<>
+	struct Convert<Vector3, PxVec3> {
+		void operator()(const std::vector<Vector3>& aFrom, std::vector<PxVec3>& aTo)
+		{
+			aTo.reserve(aFrom.size());
+			for (const auto& vec : aFrom)
+			{
+				aTo.push_back(PxVec3(vec.x, vec.y, vec.z));
+			}
+		}
+	};
+
+
+	//void FromVector3ToPxVec3(const std::vector<Vector3>& aData, std::vector<PxVec3>& outVector);
+	PxConvexMeshDesc GetMeshDesc(const std::vector<PxVec3>& verts, const std::vector<unsigned int>& indexes, const PxConvexFlags someFlags);
+
+
 private:
 	PxFoundation* myFoundation;
 	PxPhysics* myPhysics;
