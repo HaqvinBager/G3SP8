@@ -34,9 +34,8 @@ public:
 	enum class EBehaviour {
 		Patrol,
 		Seek,
+		Alerted,
 		Attack,
-		TakeDamage,
-
 		Count
 	};
 
@@ -81,6 +80,7 @@ private:
 	CRigidBodyComponent* myRigidBodyComponent;
 
 	bool myHasFoundPlayer;
+	bool myHasReachedLastPlayerPosition;
 	bool myMovementLocked;
 	bool myHasReachedTarget;
 	float myWakeUpTimer;

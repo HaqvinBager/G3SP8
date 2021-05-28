@@ -36,21 +36,24 @@ private:
 	std::vector<CPatrolPointComponent*> myPatrolPoints;
 };
 
-class CSeek: public CAIController 
+class CSeek: public CAIController, public IObserver
 {
 public:
 	CSeek(SNavMesh* aNavMesh);
-	~CSeek()override { myTarget = nullptr; }
+	~CSeek()override; 
 	void Enter(const Vector3& aPosition)override;
 	Vector3 Update(const Vector3& aPosition) override;
 	void ClearPath() override;
 	void SetPath(std::vector<Vector3> aPath, Vector3 aFinalPosition);
 	void SetTarget(CTransformComponent* aTarget);
+	void Receive(const SMessage& aMsg) override;
 private:
 	int myPathTarget;
 	CTransformComponent* myTarget;
 	SNavMesh* myNavMesh;
 	std::vector<Vector3> myPath;
+	bool myFoundPlayer;
+	Vector3 myLastPlayerPosition;
 };
 
 class CAttack : public CAIController
@@ -71,4 +74,20 @@ private:
 	CEnemyComponent* myUser;
 	std::vector<Vector3> myPath;
 	Vector3 myResetPosition;
+};
+
+class CAlerted : public CAIController {
+public:
+	CAlerted(SNavMesh* aNavMesh);
+	~CAlerted() override {}
+	void Enter(const Vector3& aPosition)override;
+	Vector3 Update(const Vector3& aPosition) override;
+	void ClearPath() override;
+	void SetAlertedPosition(const Vector3& aAlertedPosition);
+	void SetPath(std::vector<Vector3> aPath, Vector3 aFinalPosition);
+private:
+	Vector3 myAlertedPosition;
+	std::vector<Vector3> myPath;
+	Vector3 myResetPosition;
+	SNavMesh* myNavMesh;
 };
