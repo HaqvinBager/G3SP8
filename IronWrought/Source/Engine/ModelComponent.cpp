@@ -12,6 +12,14 @@ CModelComponent::CModelComponent(CGameObject& aParent, const Binary::SModel& aDa
 	: CBehavior(aParent)
 {
 	myModelPath = CJsonReader::Get()->GetAssetPath(aData.assetID);
+	if (myModelPath.empty())
+	{
+		myModelPath = "Assets/IronWrought/Mesh/Error/error_model.fbx";
+		std::string msg = "Asset ID: " + std::to_string(aData.assetID);
+		msg.append(" has issues with the model, path was not found. Probably an issue with the prefab in Unity.");
+		std::cout << __FUNCTION__ << " " << msg << std::endl;
+		//ENGINE_BOOL_POPUP(false, msg.c_str())
+	}
 	myModel = CModelFactory::GetInstance()->GetModel(ASSETPATH(myModelPath));	
 	myMaterialIDs = aData.materialIDs;
 	for(const auto materialID : aData.materialIDs)

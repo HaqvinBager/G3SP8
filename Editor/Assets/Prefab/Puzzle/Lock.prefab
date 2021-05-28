@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3906651569399797678}
   - component: {fileID: 3906651569399797673}
+  - component: {fileID: 2442863163747408466}
   m_Layer: 0
   m_Name: Lock
   m_TagString: Untagged
@@ -47,3 +48,17 @@ MonoBehaviour:
   onKeyInteractNotify: {fileID: 0}
   onLockNotify: {fileID: 0}
   interactionType: 0
+--- !u!114 &2442863163747408466
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3906651569399797672}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3dbb6903c11edef4580eb322a4b22fbb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  radius: 1
+  color: {r: 1, g: 0.917454, b: 0, a: 1}

@@ -32,6 +32,7 @@ public:
 	void OnDisable() override;
 
 	void RunEvent();
+	void RunEventEditor();
 	virtual void ActivateEvent() = 0;
 
 private:
@@ -42,6 +43,7 @@ private:
 	int myMaxAmountOfKeys;
 	int myAmountOfKeys;
 
+public:
 	bool myHasTriggered;
 
 };
