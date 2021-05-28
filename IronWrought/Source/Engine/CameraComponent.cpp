@@ -206,9 +206,14 @@ const Matrix& CCameraComponent::GetViewMatrix()
 	return myView;
 }
 
-const Matrix& CCameraComponent::GetShakenMatrix() const
+const Matrix& CCameraComponent::GetShakenMatrix() 
 {
 	return myShakenMatrix;
+}
+
+const Vector3& CCameraComponent::GetShakeVector() const
+{
+	return myShakeVector;
 }
 
 const DirectX::BoundingFrustum CCameraComponent::GetViewFrustum()
@@ -233,6 +238,7 @@ void CCameraComponent::Shake()
 
 		DirectX::SimpleMath::Vector3 newRotation = { newRotX, newRotY, newRotZ };
 
+		myShakeVector = newRotation;
 		myShakenMatrix = DirectX::SimpleMath::Matrix::CreateFromYawPitchRoll(0.0f, 0.0f, DirectX::XMConvertToRadians(newRotZ));
 		//myShakenMatrix = myShakenMatrix.Transpose();
 		

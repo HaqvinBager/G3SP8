@@ -152,7 +152,8 @@ void CCameraControllerComponent::RotateTransformWithYawAndPitch(const Vector2& s
 	if (myCameraMode == ECameraMode::FreeCam) {
 		GameObject().myTransform->Rotation({ myPitch, myYaw, 0 });
 	} else if (GameObject().myTransform->GetParent()) {
-		GameObject().myTransform->Rotation({ myPitch, 0, 0 });
+		const Vector3& shakeVector = GameObject().GetComponent<CCameraComponent>()->GetShakeVector();
+		GameObject().myTransform->Rotation({ myPitch + shakeVector.x, shakeVector.y, shakeVector.z });
 		GameObject().myTransform->GetParent()->Rotation({ 0, myYaw, 0 });
 	}
 }

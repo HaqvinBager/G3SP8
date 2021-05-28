@@ -27,7 +27,8 @@ public:
 	void EmplaceSprites(std::vector<CSpriteInstance*>& someSprites) const;
 
 	const Matrix& GetViewMatrix();
-	const Matrix& GetShakenMatrix() const;
+	const Matrix& GetShakenMatrix();
+	const Vector3& GetShakeVector() const;
 
 	const DirectX::BoundingFrustum GetViewFrustum();
 
@@ -52,6 +53,7 @@ private:
 	
 	DirectX::SimpleMath::Vector3 myStartingRotation;
 	DirectX::SimpleMath::Vector3 myMaxShakeRotation;
+	DirectX::SimpleMath::Vector3 myShakeVector;
 	PerlinNoise myNoise;
 	float myTrauma;
 	float myShake;
