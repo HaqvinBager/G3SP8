@@ -23,6 +23,8 @@ CBoxColliderComponent::CBoxColliderComponent(CGameObject& aParent, const Vector3
 	, myAudioEventIndex(-1)
 	, myTriggerOnce(false)
 	, myHasTriggered(false)
+	, mySceneSection(-1)
+	, myCanBeDeactivated(true)
 	//, myEventFilter(static_cast<EEventFilter>(aLayerValue))
 #ifdef DEBUG_COLLIDER_BOX
 	, myColliderDraw(nullptr)
@@ -120,8 +122,13 @@ void CBoxColliderComponent::CreateBoxCollider()
 
 void CBoxColliderComponent::OnTriggerEnter(CTransformComponent* aOther)
 {
-	if (GameObject().Active() == false)
+	if (GameObject().Active() == false && myCanBeDeactivated)
 		return;
+
+	if (IRONWROUGHT->GetActiveScene().CurrentSection() == mySceneSection && PostMaster::CompareStringMessage(PostMaster::SMSG_SECTION, myEventMessage.c_str()))
+	{
+		return;
+	}
 
 	if (myEventFilter == EEventFilter::PlayerOnly)
 	{
@@ -145,9 +152,7 @@ void CBoxColliderComponent::OnTriggerEnter(CTransformComponent* aOther)
 			data.myState = true;
 			data.myCollidersTransform = GameObject().myTransform;
 			data.myOthersTransform = aOther;
-
-			//Send Player Has entered Collision Message here
-			/*bool state = true;*/
+			data.mySceneSection = mySceneSection;
 			SStringMessage message = { myEventMessage.c_str(), &data };
 			CMainSingleton::PostMaster().Send(message);
 		}
@@ -158,6 +163,7 @@ void CBoxColliderComponent::OnTriggerEnter(CTransformComponent* aOther)
 		data.myState = true;
 		data.myCollidersTransform = GameObject().myTransform;
 		data.myOthersTransform = aOther;
+		data.mySceneSection = mySceneSection;
 		SStringMessage message = { myEventMessage.c_str(), &data };
 		CMainSingleton::PostMaster().Send(message);
 
@@ -171,8 +177,13 @@ void CBoxColliderComponent::OnTriggerEnter(CTransformComponent* aOther)
 
 void CBoxColliderComponent::OnTriggerExit(CTransformComponent* aOther)
 {
-	if (GameObject().Active() == false)
+	if (GameObject().Active() == false && myCanBeDeactivated)
 		return;
+
+	if (IRONWROUGHT->GetActiveScene().CurrentSection() == mySceneSection && PostMaster::CompareStringMessage(PostMaster::SMSG_SECTION, myEventMessage.c_str()))
+	{
+		return;
+	}
 
 	if (myEventFilter == EEventFilter::PlayerOnly)
 	{
@@ -196,6 +207,7 @@ void CBoxColliderComponent::OnTriggerExit(CTransformComponent* aOther)
 			data.myState = false;
 			data.myCollidersTransform = GameObject().myTransform;
 			data.myOthersTransform = aOther;
+			data.mySceneSection = mySceneSection;
 			SStringMessage message = { myEventMessage.c_str(), &data };
 			CMainSingleton::PostMaster().Send(message);
 		}
@@ -206,6 +218,7 @@ void CBoxColliderComponent::OnTriggerExit(CTransformComponent* aOther)
 		data.myState = false;
 		data.myCollidersTransform = GameObject().myTransform;
 		data.myOthersTransform = aOther;
+		data.mySceneSection = mySceneSection;
 		SStringMessage message = { myEventMessage.c_str(), &data };
 		CMainSingleton::PostMaster().Send(message);
 
@@ -215,6 +228,15 @@ void CBoxColliderComponent::OnTriggerExit(CTransformComponent* aOther)
 	if (myTriggerOnce)
 		if (myHasTriggered)
 			GameObject().Active(false);
+}
+
+void CBoxColliderComponent::RegisterEventTriggerMessage(const std::string& aMessage)
+{
+	if (PostMaster::CompareStringMessage(PostMaster::SMSG_SECTION, aMessage.c_str()))
+	{
+		myCanBeDeactivated = false;
+	}
+	myEventMessage = aMessage;
 }
 
 void CBoxColliderComponent::RegisterEventTriggerFilter(const int& anEventFilter)
@@ -237,6 +259,11 @@ void CBoxColliderComponent::RegisterEventTriggerAudioIndex(const int& anAudioInd
 void CBoxColliderComponent::RegisterEventTriggerOnce(const bool& aTriggerOnce)
 {
 	myTriggerOnce = aTriggerOnce;
+}
+
+void CBoxColliderComponent::RegisterSceneSection(const int aSceneSection)
+{
+	mySceneSection = aSceneSection;
 }
 
 void CBoxColliderComponent::OnEnable()

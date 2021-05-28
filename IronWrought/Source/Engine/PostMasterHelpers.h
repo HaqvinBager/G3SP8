@@ -18,6 +18,7 @@ namespace PostMaster
 	static const char* SMSG_UIJUMP = "UIJump";
 
 	static const char* SMSG_TELEPORT = "Teleport";
+	static const char* SMSG_SECTION = "Section";
 
 	// SP7: compares a string received from SStringMessage.aMessageType with the levels we have.
 	const bool LevelCheck(const char* aStringMessageToCheck);

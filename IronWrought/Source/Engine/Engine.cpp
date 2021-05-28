@@ -354,10 +354,7 @@ void CEngine::UpdateScene(const CStateStack::EState& aState)
 		return;
 
 	CScene& scene = *mySceneMap[aState];
-	for (auto& gameObject : scene.myGameObjects)
-	{
-		gameObject->Update();
-	}
+	scene.Update();
 }
 
 const bool CEngine::IsInGameScene() const

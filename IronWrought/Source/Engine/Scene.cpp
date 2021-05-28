@@ -40,7 +40,7 @@
 
 #include "Debug.h"
 //SETUP START
-CScene::CScene(const unsigned int aGameObjectCount)
+CScene::CScene(const int aNumberOfSections, const unsigned int aGameObjectCount)
 	: myIsReadyToRender(false)
 	, myMainCamera(nullptr)
 	, myEnvironmentLight(nullptr)
@@ -52,11 +52,16 @@ CScene::CScene(const unsigned int aGameObjectCount)
 	, myActiveCamera(ESceneCamera::NoCamera)
 	, myDeleteCanvas(true)
 	, myUpdateOnlyCanvas(false)
+	, myCurrentSection(0)
 #ifdef _DEBUG
 	, myGrid(nullptr)
 #endif
 {
-	myGameObjects.reserve(aGameObjectCount);
+	SetNumberOfSections(aNumberOfSections);
+	for (auto& gameObjects : myGameObjects)
+	{
+		gameObjects.reserve(aGameObjectCount);
+	}
 	myPXScene = CEngine::GetInstance()->GetPhysx().CreatePXScene();
 
 	myModelsToOutline.resize(2);
@@ -248,12 +253,22 @@ void CScene::Start()
 {	
 	IRONWROUGHT->SetAudioListener(myPlayer);
 	
-	auto enemyComponent = FindFirstObjectWithComponent<CEnemyComponent>();
-	if (enemyComponent)
+	for (int i = 0; i < myGameObjects.size(); ++i) 
 	{
-		CGameObject* enemy = &enemyComponent->GameObject();
-		CMainSingleton::PostMaster().Send({ EMessageType::SetDynamicAudioSource, enemy });
+		auto enemyComponent = FindFirstObjectWithComponentInSection<CEnemyComponent>(i);
+		if (enemyComponent)
+		{
+			CGameObject* enemy = &enemyComponent->GameObject();
+			CMainSingleton::PostMaster().Send({ EMessageType::SetDynamicAudioSource, enemy });
+			AddEnemyShortcut(enemy, i);
+		}
 	}
+	//auto enemyComponent = FindFirstObjectWithComponent<CEnemyComponent>();
+	//if (enemyComponent)
+	//{
+	//	CGameObject* enemy = &enemyComponent->GameObject();
+	//	CMainSingleton::PostMaster().Send({ EMessageType::SetDynamicAudioSource, enemy });
+	//}
 }
 
 void CScene::Update()
@@ -266,11 +281,17 @@ void CScene::Update()
 		return;
 	}
 
-	for (auto& gameObject : myGameObjects)
-		gameObject->Update();
+	// Why not just update (auto& gameObjects : myGameObjects[myCurrentSection)? 
+	//		1: Not doing it is faster to get into a working state.
+	//		2: Player is in one of the vectors and needs to be updated.
+	for (auto& gameObjects : myGameObjects)
+	{
+		for (auto& gameObject : gameObjects)
+			gameObject->Update();
 
-	for (auto& gameObject : myGameObjects)
-		gameObject->LateUpdate();
+		for (auto& gameObject : gameObjects)
+			gameObject->LateUpdate();
+	}
 
 	if (myCanvas)
 		myCanvas->Update();
@@ -286,8 +307,11 @@ void CScene::FixedUpdate()
 	if (myUpdateOnlyCanvas)
 		return;
 
-	for (auto& gameObject : myGameObjects)
-		gameObject->FixedUpdate();
+	for (auto& gameObjects : myGameObjects)
+	{
+		for (auto& gameObject : gameObjects)
+			gameObject->FixedUpdate();
+	}
 }
 
 void CScene::InitAnyNewComponents()
@@ -387,6 +411,21 @@ void CScene::Player(CGameObject* aPlayerObject)
 	myPlayer = aPlayerObject;
 }
 
+void CScene::AddEnemyShortcut(CGameObject* anEnemyObject, const int aSection)
+{
+	if (SectionBoundsCheck(aSection))
+	{
+		if(myEnemies.find(aSection) == myEnemies.end())
+			myEnemies.emplace(aSection, anEnemyObject);
+		else
+			std::cout << __FUNCTION__ << " Enemy was not added to myEnemies due to one already existing in the requested section." << std::endl;
+	}
+	else
+	{
+		std::cout << __FUNCTION__ << " Enemy was not added to myEnemies due to aSection being out of bounds." << std::endl;
+	}
+}
+
 bool CScene::EnvironmentLight(CEnvironmentLight* anEnvironmentLight)
 {
 	myEnvironmentLight = anEnvironmentLight;
@@ -407,6 +446,21 @@ void CScene::ShouldRenderLineInstance(const bool aShouldRender)
 CGameObject* CScene::Player()
 {
 	return myPlayer;
+}
+
+CGameObject* CScene::GetEnemyInSection(const int aSection)
+{
+	if (!SectionBoundsCheck(aSection))
+	{
+		std::cout << __FUNCTION__ << " aSection is out of bounds!" << std::endl;
+		return nullptr;
+	}
+	if (myEnemies.find(aSection) == myEnemies.end())
+	{
+		std::cout << __FUNCTION__ << " Enemy has not been added for aSection!" << std::endl;
+		return nullptr;
+	}
+	return myEnemies[aSection];
 }
 
 CPlayerControllerComponent* CScene::PlayerController()
@@ -453,7 +507,7 @@ const std::vector<CPatrolPointComponent*>& CScene::PatrolPoints() const
 
 const std::vector<CGameObject*>& CScene::ActiveGameObjects() const
 {
-	return myGameObjects;
+	return myGameObjects[myCurrentSection];
 }
 std::vector<CEnvironmentLight*> CScene::CullSecondaryEnvironmentLights(CGameObject* /*aGameObject*/)
 {
@@ -550,29 +604,69 @@ std::vector<CGameObject*> CScene::CullGameObjects(CCameraComponent* aMainCamera)
 	auto& viewFrustum = aMainCamera->GetViewFrustum();
 	DirectX::BoundingSphere currentSphere;
 	std::vector<CGameObject*> culledGameObjects;
-	for (auto& gameObject : myGameObjects)
+	// Test to see if this speeds it up a bit:
+		size_t gameObjectsTotalSize = 0;
+		for (auto& gameObjectsInSection : myGameObjects)
+		{
+			gameObjectsTotalSize += gameObjectsInSection.size();
+		}
+		culledGameObjects.reserve(gameObjectsTotalSize);
+	// !Test 
+// Render only current section.
+	//for (auto& gameObject : myGameObjects[myCurrentSection])
+	//{
+	//	if (gameObject->InstanceID() == PLAYER_CAMERA_ID)
+	//	{
+	//		culledGameObjects.push_back(gameObject);
+	//		continue;
+	//	}
+
+	//	if (gameObject->GetComponent<CInstancedModelComponent>())
+	//	{
+	//		culledGameObjects.push_back(gameObject);
+	//		continue;
+	//	}
+
+	//	if (!gameObject->Active())// Might cause issues, time will tell. Remove if it does harm. // Aki 2021 05 28
+	//		continue;
+
+	//	currentSphere = DirectX::BoundingSphere(gameObject->myTransform->Position(), 24.0f);
+	//	if (viewFrustum.Intersects(currentSphere))
+	//	{
+	//		culledGameObjects.push_back(gameObject);
+	//	}
+	//}
+// ! Render only current section
+
+// Render all sections
+	for (auto& gameObjectsInSection : myGameObjects)
 	{
-		if (gameObject->InstanceID() == PLAYER_CAMERA_ID)
+		for (auto& gameObject : gameObjectsInSection)
 		{
-			culledGameObjects.push_back(gameObject);
-			continue;
-		}
-
-		if (gameObject->GetComponent<CInstancedModelComponent>())
-		{
-			culledGameObjects.push_back(gameObject);
-			continue;
-		}
-
-		currentSphere = DirectX::BoundingSphere(gameObject->myTransform->Position(), 24.0f);
-		if (viewFrustum.Intersects(currentSphere))
-		{
-			culledGameObjects.push_back(gameObject);
+			if (gameObject->InstanceID() == PLAYER_CAMERA_ID)
+			{
+				culledGameObjects.push_back(gameObject);
+				continue;
+			}
+	
+			if (gameObject->GetComponent<CInstancedModelComponent>())
+			{
+				culledGameObjects.push_back(gameObject);
+				continue;
+			}
+	
+			if (!gameObject->Active())// Might cause issues, time will tell. Remove if it does harm. // Aki 2021 05 28
+				continue;
+	
+			currentSphere = DirectX::BoundingSphere(gameObject->myTransform->Position(), 24.0f);
+			if (viewFrustum.Intersects(currentSphere))
+			{
+				culledGameObjects.push_back(gameObject);
+			}
 		}
 	}
+// ! Render all sections
 	return culledGameObjects;
-
-	//return myGameObjects;
 }
 
 CGameObject* CScene::FindObjectWithID(const int aGameObjectInstanceID)
@@ -627,11 +721,24 @@ bool CScene::AddInstance(CLineInstance* aLineInstance)
 	return true;
 }
 
-bool CScene::AddInstance(CGameObject* aGameObject)
+bool CScene::AddInstance(CGameObject* aGameObject, const int aToASection)
 {
 	//Lägg in dom i en "Next frame i will be initied vector, Then when they are inited we move it into myGameObjects
 
-	myGameObjects.emplace_back(aGameObject);
+	if (aToASection < 0)
+	{
+		myGameObjects[myCurrentSection].push_back(aGameObject);
+	}
+	else
+	{
+		if (!SectionBoundsCheck(aToASection))
+		{
+			std::cout << __FUNCTION__ << " GameObject was not added du to aToASection being out of bounds!" << std::endl;
+			return false;
+		}
+		myGameObjects[aToASection].push_back(aGameObject);
+	}
+	/*myGameObjects.emplace_back(aGameObject);*/
 	myIDGameObjectMap[aGameObject->InstanceID()] = aGameObject;
 	myGameObjectTagMap[aGameObject->Tag()].push_back(aGameObject);
 
@@ -642,14 +749,14 @@ bool CScene::AddInstance(CGameObject* aGameObject)
 	return true;
 }
 
-bool CScene::AddInstances(std::vector<CGameObject*>& someGameObjects)
+bool CScene::AddInstances(std::vector<CGameObject*>& someGameObjects, const int aToASection)
 {
 	if (someGameObjects.size() == 0)
 		return false;
 
 	for (unsigned int i = 0; i < someGameObjects.size(); ++i)
 	{
-		AddInstance(someGameObjects[i]);
+		AddInstance(someGameObjects[i], aToASection);
 		//myGameObjects.emplace_back(someGameObjects[i]);
 	}
 
@@ -732,16 +839,20 @@ bool CScene::RemoveInstance(CBoxLight* aBoxLight)
 
 bool CScene::RemoveInstance(CGameObject* aGameObject)
 {
-	for (int i = 0; i < myGameObjects.size(); ++i)
+	for (auto& gameObjects : myGameObjects)
 	{
-		if (aGameObject == myGameObjects[i])
+		for (int i = 0; i < gameObjects.size(); ++i)
 		{
-			//std::swap(myGameObjects[i], myGameObjects[myGameObjects.size() - 1]);
-			//myGameObjects.pop_back();
-			myGameObjects.erase(myGameObjects.begin() + i);
-			return true;
+			if (aGameObject == gameObjects[i])
+			{
+				//std::swap(myGameObjects[i], myGameObjects[myGameObjects.size() - 1]);
+				//myGameObjects.pop_back();
+				gameObjects.erase(gameObjects.begin() + i);
+				return true;
+			}
 		}
 	}
+
 	return false;
 }
 bool CScene::ClearSecondaryEnvironmentLights()
@@ -805,24 +916,123 @@ bool CScene::ClearLineInstances()
 
 bool CScene::ClearGameObjects()
 {
-	for (auto& gameObject : myGameObjects)
+	for (int o = 0; o < myGameObjects.size(); ++o)
+	{
+		DisableSection(o);
+		for (int i = 0; i < myGameObjects[o].size(); ++i)
+		{
+			delete myGameObjects[o][i];
+			myGameObjects[o][i] = nullptr;
+		}
+		myGameObjects[o].clear();
+	}
+	myCurrentSection = -1;
+	myGameObjects.clear();
+
+	return true;
+}
+void CScene::AddSection(const bool aSetToCurrent)
+{
+	myGameObjects.push_back(std::vector<CGameObject*>());
+	if (aSetToCurrent)
+		myCurrentSection = static_cast<int>(myGameObjects.size()) - 1;
+}
+void CScene::SetNumberOfSections(const int aNumberOfSections)
+{
+	if (myGameObjects.size() > 0)
+	{
+		std::cout << __FUNCTION__ << " myGameObjects Size is not 0. Will not be resized." << std::endl;
+		return;
+	}
+	myGameObjects.resize(aNumberOfSections);
+	myCurrentSection = 0;
+}
+void CScene::NextSection(const bool aShouldToggle)
+{
+	myCurrentSection = myCurrentSection + 1 >= myGameObjects.size() ? myCurrentSection : myCurrentSection + 1;
+	if (aShouldToggle)
+		ToggleSections(myCurrentSection);
+}
+void CScene::PreviousSection(const bool aShouldToggle)
+{
+	myCurrentSection = myCurrentSection - 1 < 0 ? myCurrentSection : myCurrentSection - 1;
+	if (aShouldToggle)
+		ToggleSections(myCurrentSection);
+}
+void CScene::SetCurrentSection(const int aSection)
+{
+	if (!SectionBoundsCheck(aSection))
+	{
+		std::cout << __FUNCTION__ << " Remaining on current section. aSection requested is out of bounds: " << aSection << std::endl;
+		return;
+	}
+	myCurrentSection = aSection;
+}
+void CScene::ToggleSections(const int aSection)
+{
+	if (!SectionBoundsCheck(aSection))
+	{
+		std::cout << __FUNCTION__ << " Won't toggle sections, aSection is out of bounds: " << aSection << std::endl;
+		return;
+	}
+	for (int i = 0; i < myGameObjects.size(); ++i)
+	{
+		auto& gameObjectsInSection = myGameObjects[i];
+		for (auto& gameObject : gameObjectsInSection)
+		{
+			gameObject->Active(i == aSection);
+		}
+	}
+	myCurrentSection = aSection;
+	if(myPlayer)
+		myPlayer->Active(true);
+}
+void CScene::EnableSection(const int aSection)
+{
+	if (!SectionBoundsCheck(aSection))
+	{
+		std::cout << __FUNCTION__ << " Can't enable section, aSection is out of bounds: " << aSection << std::endl;
+		return;
+	}
+	auto& gameObjectsInSection = myGameObjects[aSection];
+	for (auto& gameObject : gameObjectsInSection)
 	{
 		gameObject->Active(false);
 	}
-
-	// So that we can see which index might be giving us issues.
-	for (size_t i = 0; i < myGameObjects.size(); ++i)
+	myCurrentSection = aSection;
+	if(myPlayer)
+		myPlayer->Active(true);
+}
+void CScene::DisableSection(const int aSection)
+{
+	if (!SectionBoundsCheck(aSection))
 	{
-		delete myGameObjects[i];
-		myGameObjects[i] = nullptr;
+		std::cout << __FUNCTION__ << " Can't disable section, aSection is out of bounds: " << aSection << std::endl;
+		return;
 	}
-	//for (auto& gameObject : myGameObjects)
-	//{
-	//	delete gameObject;
-	//	gameObject = nullptr;
-	//}
-	myGameObjects.clear();
-	return true;
+	auto& gameObjectsInSection = myGameObjects[aSection];
+	for (auto& gameObject : gameObjectsInSection)
+	{
+		gameObject->Active(false);
+	}
+	if(myPlayer)
+		myPlayer->Active(true);
+}
+void CScene::EnableCurrent()
+{
+	EnableSection(myCurrentSection);
+}
+void CScene::DisableCurrent()
+{
+	DisableSection(myCurrentSection);
+}
+void CScene::ToggleToCurrent()
+{
+	ToggleSections(myCurrentSection);
+}
+bool CScene::SectionBoundsCheck(const int aSection)
+{
+	return aSection >= 0 && aSection < myGameObjects.size();
 }
 //CLEAR SCENE OF INSTANCES END
 

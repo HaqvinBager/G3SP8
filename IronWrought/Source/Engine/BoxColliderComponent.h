@@ -40,10 +40,11 @@ public:
 
 	virtual void OnTriggerEnter(CTransformComponent* aOther);
 	virtual void OnTriggerExit(CTransformComponent* aOther);
-	void RegisterEventTriggerMessage(const std::string& aMessage) { myEventMessage = aMessage; }
+	void RegisterEventTriggerMessage(const std::string& aMessage);
 	void RegisterEventTriggerFilter(const int& anEventFilter);
 	void RegisterEventTriggerAudioIndex(const int& anIndex);
 	void RegisterEventTriggerOnce(const bool& aTriggerOnce);
+	void RegisterSceneSection(const int aLevelIndex);
 	//const SStringMessage& EventTriggerMessage() { return myTriggerMessage; }
 
 	void OnEnable() override;
@@ -63,8 +64,10 @@ private:
 	std::string myEventMessage;
 	EEventFilter myEventFilter;
 	int myAudioEventIndex;
+	int mySceneSection;
 	bool myHasTriggered;
 	bool myTriggerOnce;
+	bool myCanBeDeactivated;
 
 #ifdef DEBUG_COLLIDER_BOX
 	CLineInstance* myColliderDraw;

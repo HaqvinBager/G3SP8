@@ -47,7 +47,7 @@ class CScene : public IObserver {
 	friend class CPauseMenuState;
 public:
 //SETUP START
-	CScene(const unsigned int aGameObjectCount = 0);
+	CScene(const int aNumberOfSections = 1, const unsigned int aGameObjectCount = 0);
 	~CScene();
 
 	//static CScene* GetInstance();
@@ -85,6 +85,7 @@ public:
 	void AddCamera(CCameraComponent* aCamera, const ESceneCamera aCameraType);
 	void MainCamera(const ESceneCamera aCameraType);
 	void Player(CGameObject* aPlayerObject);
+	void AddEnemyShortcut(CGameObject* anEnemyObject, const int aSection = 0);
 	bool EnvironmentLight(CEnvironmentLight* anEnvironmentLight);
 	void ShouldRenderLineInstance(const bool aShouldRender);
 #ifdef _DEBUG
@@ -95,9 +96,24 @@ public:
 public:
 	template <class T>
 	T* FindFirstObjectWithComponent() {
-		for (auto& gameObject : myGameObjects) {
-			if (gameObject->GetComponent<T>() != nullptr) {
-				return gameObject->GetComponent<T>();
+		for (auto& gameObjects : myGameObjects)
+		{
+			for (auto& gameObject : gameObjects) {
+				if (gameObject->GetComponent<T>() != nullptr) {
+					return gameObject->GetComponent<T>();
+				}
+			}
+		}
+		return nullptr;
+	}
+	template <class T>
+	T* FindFirstObjectWithComponentInSection(const int aInSection = 0) {
+		if (aInSection >= 0 && aInSection < myGameObjects.size())
+		{
+			for (auto& gameObject : myGameObjects[aInSection]) {
+				if (gameObject->GetComponent<T>() != nullptr) {
+					return gameObject->GetComponent<T>();
+				}
 			}
 		}
 		return nullptr;
@@ -106,6 +122,7 @@ public:
 //GETTERS START
 	CCameraComponent* MainCamera();
 	CGameObject* Player();
+	CGameObject* GetEnemyInSection(const int aSection = 0);
 	CPlayerControllerComponent* PlayerController();
 	CEnvironmentLight* EnvironmentLight();
 	SNavMesh* NavMesh();
@@ -145,8 +162,8 @@ public:
 	bool AddInstance(CSpotLight* aSpotLight);
 	bool AddInstance(CBoxLight* aBoxLight);
 	bool AddInstance(CLineInstance* aLineInstance);
-	bool AddInstance(CGameObject* aGameObject);
-	bool AddInstances(std::vector<CGameObject*>& someGameObjects);
+	bool AddInstance(CGameObject* aGameObject, const int aToASection = -1);
+	bool AddInstances(std::vector<CGameObject*>& someGameObjects, const int aToASection = -1);
 	bool AddInstance(CPatrolPointComponent* aPatrolComponent);
 	//PhysX
 	bool AddPXScene(PxScene* aPXScene);
@@ -169,6 +186,25 @@ public:
 //CLEAR SCENE OF INSTANCES START
 
 
+public:
+	void AddSection(const bool aSetToCurrent = false);
+	void SetNumberOfSections(const int aNumberOfSections);
+	void NextSection(const bool aShouldToggle = false);
+	void PreviousSection(const bool aShouldToggle = false);
+	void SetCurrentSection(const int aSection);
+	// Enables this section, disables all others. Player is unchanged.
+	void ToggleSections(const int aSection);
+	void EnableSection(const int aSection);
+	// Disables this section. Player is unchanged.
+	void DisableSection(const int aSection);
+	void EnableCurrent();
+	void DisableCurrent();
+	void ToggleToCurrent();
+	const int& CurrentSection() const { return myCurrentSection; }
+
+private:
+	bool SectionBoundsCheck(const int aSection);
+	
 private:
 	//Struct left because it might be needed later
 	struct NearestPlayerComparer {
@@ -182,13 +218,13 @@ private:
 	std::vector<CSpotLight*> mySpotLights;
 	std::vector<CBoxLight*> myBoxLights;
 	std::vector<CLineInstance*> myLineInstances;
-	std::vector<CGameObject*> myGameObjects;
+	std::vector<std::vector<CGameObject*>> myGameObjects;
 	std::vector<CGameObject*> myModelsToOutline;
 	std::vector<CPatrolPointComponent*> myPatrolPoints;
 	std::unordered_map<int, CGameObject*> myIDGameObjectMap; 
 	std::unordered_map<std::string, std::vector<CGameObject*>> myGameObjectTagMap;
 	std::unordered_map<size_t, std::vector<CComponent*>> myComponentMap;
-	
+	int myCurrentSection;//Used as index for myGameObjects, (more?)
 
 	std::queue<CComponent*> myAwakeComponents;
 	std::queue<CComponent*> myStartComponents;
@@ -207,6 +243,7 @@ private:
 
 	PxScene* myPXScene;
 	CGameObject* myPlayer;
+	std::unordered_map<int, CGameObject*> myEnemies;
 	CCanvas* myCanvas;
 	bool myDeleteCanvas;
 	bool myUpdateOnlyCanvas;

@@ -34,8 +34,8 @@ public:
 	static CScene* CreateMenuScene(const std::string& aCanvasPath);
 
 private:
-	static CScene* Instantiate();
-	static bool AddToScene(CScene& aScene, Binary::SLevelData& aBinLevelData, const rapidjson::Document& aDoc);
+	static CScene* Instantiate(const int aNumberOfSections = 1);
+	static bool AddToScene(CScene& aScene, Binary::SLevelData& aBinLevelData, const rapidjson::Document& aDoc, const int aSceneSection = 0);
 
 	static bool AddGameObjects(CScene& aScene, RapidArray someData);
 	static bool AddGameObjects(CScene& aScene, const std::vector<Binary::SInstanceID>& someData);
@@ -63,8 +63,8 @@ private:
 
 	//static void AddInstancedModelComponents(CScene& aScene, RapidArray someData);
 	static void AddInstancedModelComponents(CScene& aScene, const std::vector<Binary::SInstancedModel>& someData);
-	
-	static void AddTriggerEvents(CScene& aScene, RapidArray someData);
+	// Section == sub-scene.
+	static void AddTriggerEvents(CScene& aScene, RapidArray someData, const int aSection = 0);
 	//static void AddTriggerEvents(CScene& aScene, const std::vector<Binary::SEventData>& someData);
 	static void AddTeleporters(CScene& aScene, const RapidArray& someData);
 

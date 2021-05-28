@@ -118,6 +118,8 @@ void CInGameState::Start()
 	myCurrentCanvas = EInGameCanvases_MainMenu;
 	scene->UpdateOnlyCanvas(false);
 
+	scene->ToggleSections(0);
+
 	CMainSingleton::PostMaster().Subscribe(EMessageType::StartGame, this);
 	CMainSingleton::PostMaster().Subscribe(EMessageType::Credits, this);
 	CMainSingleton::PostMaster().Subscribe(EMessageType::Quit, this);
@@ -136,6 +138,7 @@ void CInGameState::Start()
 	CMainSingleton::PostMaster().Subscribe(PostMaster::SMSG_DISABLE_CANVAS, this);
 	CMainSingleton::PostMaster().Subscribe(PostMaster::SMSG_ENABLE_CANVAS, this);
 	CMainSingleton::PostMaster().Subscribe(PostMaster::SMSG_TO_MAIN_MENU, this);
+	CMainSingleton::PostMaster().Subscribe(PostMaster::SMSG_SECTION, this);
 }
 
 void CInGameState::Stop()
@@ -147,6 +150,7 @@ void CInGameState::Stop()
 	CMainSingleton::PostMaster().Unsubscribe(PostMaster::SMSG_DISABLE_CANVAS, this);
 	CMainSingleton::PostMaster().Unsubscribe(PostMaster::SMSG_ENABLE_CANVAS, this);
 	CMainSingleton::PostMaster().Unsubscribe(PostMaster::SMSG_TO_MAIN_MENU, this);
+	CMainSingleton::PostMaster().Unsubscribe(PostMaster::SMSG_SECTION, this);
 #ifdef INGAME_USE_MENU
 	CMainSingleton::PostMaster().Unsubscribe(EMessageType::StartGame, this);
 	CMainSingleton::PostMaster().Unsubscribe(EMessageType::Credits, this);
@@ -209,22 +213,35 @@ void CInGameState::Update()
 
 void CInGameState::Receive(const SStringMessage& aMessage)
 {
+	if (PostMaster::CompareStringMessage(aMessage.myMessageType, PostMaster::SMSG_SECTION))
+	{
+		const PostMaster::SBoxColliderEvenTriggerData* data = static_cast<PostMaster::SBoxColliderEvenTriggerData*>(aMessage.data);
+		if(data->myState)
+			IRONWROUGHT->GetActiveScene().ToggleSections(data->mySceneSection);
+		else
+			IRONWROUGHT->GetActiveScene().DisableSection(data->mySceneSection);
+	}
+
 	if (PostMaster::LevelCheck(aMessage.myMessageType))
 	{
 		myExitTo = EExitTo::AnotherLevel;
+		return;
 	}
 	if (PostMaster::CompareStringMessage(aMessage.myMessageType, PostMaster::SMSG_TO_MAIN_MENU))
 	{
 		myExitTo = EExitTo::MainMenu;
+		return;
 	}
 
 	if (PostMaster::DisableCanvas(aMessage.myMessageType))
 	{
 		IRONWROUGHT->GetActiveScene().CanvasToggle(false);
+		return;
 	}
 	if (PostMaster::EnableCanvas(aMessage.myMessageType))
 	{
 		IRONWROUGHT->GetActiveScene().CanvasToggle(true);
+		return;
 	}
 }
 
