@@ -93,7 +93,6 @@ CScene* CSceneManager::CreateScene(const std::string& aSceneJson)
 	CScene* scene = Instantiate();
 	//CScene* scene = CreateEmpty();
 
-
 	const auto doc = CJsonReader::Get()->LoadDocument(ASSETPATH("Assets/Generated/" + aSceneJson + "/" + aSceneJson + ".json"));
 	if (doc.HasParseError())
 		return nullptr;
@@ -101,114 +100,15 @@ CScene* CSceneManager::CreateScene(const std::string& aSceneJson)
 	if (!doc.HasMember("Root"))
 		return nullptr;
 
-	SVertexPaintCollection vertexPaintData = CBinReader::LoadVertexPaintCollection(doc["Root"].GetString());
-	const auto& scenes = doc.GetObjectW()["Scenes"].GetArray();
-
 	Binary::SLevelData binLevelData = CBinReader::Load(ASSETPATH("Assets/Generated/" + aSceneJson + "/" + aSceneJson + ".bin"));
-	if (AddGameObjects(*scene, binLevelData.myInstanceIDs))
-	{
-		SetTransforms(*scene, binLevelData.myTransforms);
-
-		AddInstancedModelComponents(*scene, binLevelData.myInstancedModels);
-		AddPointLights(*scene, binLevelData.myPointLights);
-		AddModelComponents(*scene, binLevelData.myModels);
-		AddCollider(*scene, binLevelData.myColliders);
-		AddSpotLights(*scene, binLevelData.mySpotLights);
-
-		if (doc.HasMember("NavMeshData"))
-		{
-			if (doc.GetObjectW()["NavMeshData"].HasMember("path"))
-			{
-				std::string navMeshPath = doc.GetObjectW()["NavMeshData"].GetObjectW()["path"].GetString();
-				if (!navMeshPath.empty())
-				{
-					std::cout << __FUNCTION__ << " navmesh found: " << navMeshPath << "\n";
-					scene->InitNavMesh(ASSETPATH(navMeshPath));
-				}
-				else
-					std::cout << __FUNCTION__ << " navmesh path is empty!\n";
-			}else
-				std::cout << __FUNCTION__ << " level does not contain path to navmesh!\n";
-		}else
-			std::cout << __FUNCTION__ << " navmesh not found!\n";
-
-		//CreateCustomEvents(*scene);
-		//CreateCustomEventListeners(*scene);
-
-		for (const auto& sceneData : scenes)
-		{
-			std::string sceneName = sceneData["sceneName"].GetString();
-
-			if (sceneData.HasMember("parents"))
-				SetParents(*scene, sceneData["parents"].GetArray());
-
-			if (sceneData.HasMember("locks"))
-				AddPuzzleLock(*scene, sceneData["locks"].GetArray());
-			if (sceneData.HasMember("keys"))
-				AddPuzzleKey(*scene, sceneData["keys"].GetArray());
-			if (sceneData.HasMember("listeners"))
-				AddPuzzleListener(*scene, sceneData["listeners"].GetArray());
-			if (sceneData.HasMember("moves"))
-				AddPuzzleResponseMove(*scene, sceneData["moves"].GetArray());
-			if (sceneData.HasMember("rotates"))
-				AddPuzzleResponseRotate(*scene, sceneData["rotates"].GetArray());
-
-			AddDirectionalLights(*scene, sceneData["directionalLights"].GetArray());
-			SetVertexPaintedColors(*scene, sceneData["vertexColors"].GetArray(), vertexPaintData);
-			AddDecalComponents(*scene, sceneData["decals"].GetArray());
-			AddPickups(*scene, sceneData["healthPickups"].GetArray());
-			AddAudioSources(*scene, sceneData["myAudioSources"].GetArray());
-			if (sceneData.HasMember("myVFXLinks"))
-				AddVFX(*scene, sceneData["myVFXLinks"].GetArray());
-
-			if (sceneData.HasMember("triggerEvents"))
-				AddTriggerEvents(*scene, sceneData["triggerEvents"].GetArray());
-			if (sceneData.HasMember("teleporters"))
-				AddTeleporters(*scene, sceneData["teleporters"].GetArray());
-			
-			if (sceneName.find("Gameplay") != std::string::npos)//Om Unity Scene Namnet inneh�ller nyckelordet "Layout"
-				AddPlayer(*scene, sceneData["player"].GetObjectW());
-			
-			if (sceneData.HasMember("enemies"))
-				AddEnemyComponents(*scene, sceneData["enemies"].GetArray());
-		}
-	}
-
-	//scene->NavMesh();
-	//if (AddGameObjects(*scene, sceneData["Ids"].GetArray()))
-	//{
-	//	SetTransforms(*scene, sceneData["transforms"].GetArray());
-
-	//	AddDirectionalLights(*scene, sceneData["directionalLights"].GetArray());
-	//	AddPointLights(*scene, sceneData["lights"].GetArray());
-	//	AddModelComponents(*scene, sceneData["models"].GetArray());
-	//	SetVertexPaintedColors(*scene, sceneData["vertexColors"].GetArray(), vertexPaintData);
-	//	AddDecalComponents(*scene, sceneData["decals"].GetArray());
-	//	AddCollider(*scene, sceneData["colliders"].GetArray());
-	//	if (sceneData.HasMember("triggerEvents"))
-	//		AddTriggerEvents(*scene, sceneData["triggerEvents"].GetArray());
-
-	//	if (sceneName.find("Layout") != std::string::npos)//Om Unity Scene Namnet inneh�ller nyckelordet "Layout"
-	//	{
-	//		AddPlayer(*scene, sceneData["player"].GetObjectW());
-	//	}
-	//	AddEnemyComponents(*scene, sceneData["enemies"].GetArray());
-
-	//	if(sceneData.HasMember("healthPickups"))
-	//		AddPickups(*scene, sceneData["healthPickups"].GetArray());
-	//}
-	//AddInstancedModelComponents(*scene, sceneData["instancedModels"].GetArray());
-//}
-
-
-
-//AddPlayer(*scene); //This add player does not read data from unity. (Yet..!) /Axel 2021-03-24
-
-	CEngine::GetInstance()->GetPhysx().Cooking(scene->ActiveGameObjects(), scene);
-
-	//scene->InitCanvas(ASSETPATH("Assets/IronWrought/UI/JSON/PH_UI_HUD.json"));
-
+	
+	AddToScene(*scene, binLevelData, doc);
 	return scene;
+}
+
+CScene* CSceneManager::CreateSceneFromSeveral(const std::vector<std::string>& /*someSceneNames*/)
+{
+	return nullptr;
 }
 
 CScene* CSceneManager::CreateMenuScene(const std::string& aCanvasPath)
@@ -237,10 +137,112 @@ CScene* CSceneManager::Instantiate()
 
 	//Create Cameras
 
-
-
 	CMainSingleton::PostMaster().Subscribe(EMessageType::ComponentAdded, ourLastInstantiatedScene);
 	return ourLastInstantiatedScene;
+}
+
+bool CSceneManager::AddToScene(CScene& aScene, Binary::SLevelData& aBinLevelData, const rapidjson::Document& aDoc)
+{
+	SVertexPaintCollection vertexPaintData = CBinReader::LoadVertexPaintCollection(aDoc["Root"].GetString());
+	const auto& scenes = aDoc.GetObjectW()["Scenes"].GetArray();
+
+	if (AddGameObjects(aScene, aBinLevelData.myInstanceIDs))
+	{
+		SetTransforms(aScene, aBinLevelData.myTransforms);
+
+		AddInstancedModelComponents(aScene, aBinLevelData.myInstancedModels);
+		AddPointLights(aScene, aBinLevelData.myPointLights);
+		AddModelComponents(aScene, aBinLevelData.myModels);
+		AddCollider(aScene, aBinLevelData.myColliders);
+		AddSpotLights(aScene, aBinLevelData.mySpotLights);
+
+		if (aDoc.HasMember("NavMeshData"))
+		{
+			if (aDoc.GetObjectW()["NavMeshData"].HasMember("path"))
+			{
+				std::string navMeshPath = aDoc.GetObjectW()["NavMeshData"].GetObjectW()["path"].GetString();
+				if (!navMeshPath.empty())
+				{
+					std::cout << __FUNCTION__ << " navmesh found: " << navMeshPath << "\n";
+					aScene.InitNavMesh(ASSETPATH(navMeshPath));
+				}
+				else
+					std::cout << __FUNCTION__ << " navmesh path is empty!\n";
+			}else
+				std::cout << __FUNCTION__ << " level does not contain path to navmesh!\n";
+		}else
+			std::cout << __FUNCTION__ << " navmesh not found!\n";
+
+		//CreateCustomEvents(aScene);
+		//CreateCustomEventListeners(aScene);
+
+		for (const auto& sceneData : scenes)
+		{
+			std::string sceneName = sceneData["sceneName"].GetString();
+
+			if (sceneData.HasMember("parents"))
+				SetParents(aScene, sceneData["parents"].GetArray());
+
+			if (sceneData.HasMember("locks"))
+				AddPuzzleLock(aScene, sceneData["locks"].GetArray());
+			if (sceneData.HasMember("keys"))
+				AddPuzzleKey(aScene, sceneData["keys"].GetArray());
+			if (sceneData.HasMember("listeners"))
+				AddPuzzleListener(aScene, sceneData["listeners"].GetArray());
+			if (sceneData.HasMember("moves"))
+				AddPuzzleResponseMove(aScene, sceneData["moves"].GetArray());
+			if (sceneData.HasMember("rotates"))
+				AddPuzzleResponseRotate(aScene, sceneData["rotates"].GetArray());
+
+			AddDirectionalLights(aScene, sceneData["directionalLights"].GetArray());
+			SetVertexPaintedColors(aScene, sceneData["vertexColors"].GetArray(), vertexPaintData);
+			AddDecalComponents(aScene, sceneData["decals"].GetArray());
+			AddPickups(aScene, sceneData["healthPickups"].GetArray());
+			AddAudioSources(aScene, sceneData["myAudioSources"].GetArray());
+			if (sceneData.HasMember("myVFXLinks"))
+				AddVFX(aScene, sceneData["myVFXLinks"].GetArray());
+
+			if (sceneData.HasMember("triggerEvents"))
+				AddTriggerEvents(aScene, sceneData["triggerEvents"].GetArray());
+			if (sceneData.HasMember("teleporters"))
+				AddTeleporters(aScene, sceneData["teleporters"].GetArray());
+
+			if (sceneName.find("Gameplay") != std::string::npos)//Om Unity Scene Namnet inneh�ller nyckelordet "Layout"
+				AddPlayer(aScene, sceneData["player"].GetObjectW());
+
+			if (sceneData.HasMember("enemies"))
+				AddEnemyComponents(aScene, sceneData["enemies"].GetArray());
+		}
+	}
+
+	//scene->NavMesh();
+	//if (AddGameObjects(aScene, sceneData["Ids"].GetArray()))
+	//{
+	//	SetTransforms(aScene, sceneData["transforms"].GetArray());
+
+	//	AddDirectionalLights(aScene, sceneData["directionalLights"].GetArray());
+	//	AddPointLights(aScene, sceneData["lights"].GetArray());
+	//	AddModelComponents(aScene, sceneData["models"].GetArray());
+	//	SetVertexPaintedColors(aScene, sceneData["vertexColors"].GetArray(), vertexPaintData);
+	//	AddDecalComponents(aScene, sceneData["decals"].GetArray());
+	//	AddCollider(aScene, sceneData["colliders"].GetArray());
+	//	if (sceneData.HasMember("triggerEvents"))
+	//		AddTriggerEvents(aScene, sceneData["triggerEvents"].GetArray());
+
+	//	if (sceneName.find("Layout") != std::string::npos)//Om Unity Scene Namnet inneh�ller nyckelordet "Layout"
+	//	{
+	//		AddPlayer(aScene, sceneData["player"].GetObjectW());
+	//	}
+	//	AddEnemyComponents(aScene, sceneData["enemies"].GetArray());
+
+	//	if(sceneData.HasMember("healthPickups"))
+	//		AddPickups(aScene, sceneData["healthPickups"].GetArray());
+	//}
+	//AddInstancedModelComponents(aScene, sceneData["instancedModels"].GetArray());
+	//}
+
+	CEngine::GetInstance()->GetPhysx().Cooking(aScene.ActiveGameObjects(), &aScene);
+	return true;
 }
 
 bool CSceneManager::AddGameObjects(CScene& aScene, RapidArray someData)
@@ -692,6 +694,9 @@ void CSceneManager::AddDecalComponents(CScene& aScene, RapidArray someData)
 
 void CSceneManager::AddPlayer(CScene& aScene, RapidObject someData)
 {
+	if (aScene.PlayerController())
+		return;
+
 	int instanceID = someData["instanceID"].GetInt();
 	CGameObject* player = aScene.FindObjectWithID(instanceID);
 
