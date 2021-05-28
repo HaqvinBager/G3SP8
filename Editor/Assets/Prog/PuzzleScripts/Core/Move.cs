@@ -12,8 +12,6 @@ public class Move : MonoBehaviour, IListener
     public Vector3 end;
     public float duration;
 
-
-
     public void Remove()
     {
 #if UNITY_EDITOR
