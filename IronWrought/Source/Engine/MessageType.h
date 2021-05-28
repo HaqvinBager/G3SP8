@@ -102,5 +102,7 @@ enum class EMessageType
 
 	EnemyStateChange,
 
+	Teleport,
+
 	Count
 };

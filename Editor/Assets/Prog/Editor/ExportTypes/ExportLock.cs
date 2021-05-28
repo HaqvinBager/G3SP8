@@ -29,8 +29,8 @@ public class ExportLock
         {
             LockData data = new LockData();
             data.onNotify = aLock.onLockNotify.name;
-            data.onKeyCreateNotify = aLock.onKeyCreateNotify.name;
-            data.onKeyInteractNotify = aLock.onKeyInteractNotify.name;
+            data.onKeyCreateNotify = aLock.onKeyCreateNotify?.name;
+            data.onKeyInteractNotify = aLock.onKeyInteractNotify?.name;
             data.interactionType = (int)aLock.interactionType;
             data.instanceID = aLock.transform.GetInstanceID();
             collection.locks.Add(data);

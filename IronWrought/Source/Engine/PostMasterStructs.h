@@ -27,8 +27,9 @@ namespace PostMaster
 
 	struct SBoxColliderEvenTriggerData
 	{
-		bool myState;
-		CTransformComponent* myTransform;
+		bool myState = false;
+		CTransformComponent* myCollidersTransform = nullptr;
+		CTransformComponent* myOthersTransform = nullptr;
 	};
 
 	struct SStaticAudioSourceInitData

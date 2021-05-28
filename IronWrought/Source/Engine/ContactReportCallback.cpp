@@ -57,7 +57,7 @@ void CContactReportCallback::onTrigger(physx::PxTriggerPair* pairs, physx::PxU32
 		else if (pairs[i].status == physx::PxPairFlag::eNOTIFY_TOUCH_LOST) {
 			onTriggerExit(pairs[i].triggerActor, pairs[i].otherActor);
 		}
-		
+
 		// ignore pairs when shapes have been deleted
 		if (pairs[i].flags & (physx::PxTriggerPairFlag::eREMOVED_SHAPE_TRIGGER |
 			physx::PxTriggerPairFlag::eREMOVED_SHAPE_OTHER))
@@ -98,28 +98,12 @@ void CContactReportCallback::onConstraintBreak(physx::PxConstraintInfo* constrai
 	(count);
 }
 
-void CContactReportCallback::onContact(const physx::PxContactPairHeader& pairHeader, const physx::PxContactPair* /*pairs*/, physx::PxU32 /*nbPairs*/)
+void CContactReportCallback::onContact(const physx::PxContactPairHeader& /*pairHeader*/, const physx::PxContactPair* /*pairs*/, physx::PxU32 /*nbPairs*/)
 {
 	// Walls don't uses userData. Only feedback when hamsters collide
-	if (pairHeader.actors[0]->userData != nullptr && pairHeader.actors[1]->userData != nullptr)
-	{
-		CTransformComponent* firstTransform = (CTransformComponent*)pairHeader.actors[0]->userData;
-		CTransformComponent* secondTransform = (CTransformComponent*)pairHeader.actors[1]->userData;
-
-		CPhysicsPropAudioComponent* audioComponent = firstTransform->GameObject().GetComponent<CPhysicsPropAudioComponent>();
-		if (!audioComponent)
-			audioComponent = secondTransform->GameObject().GetComponent<CPhysicsPropAudioComponent>();
-
-		if (audioComponent)
-		{
-			float velocity = audioComponent->GetComponent<CRigidBodyComponent>()->GetDynamicRigidBody()->GetLinearVelocity().LengthSquared();
-			if (velocity > 0.05f)
-			{
-				if (audioComponent->Ready()) {
-					CMainSingleton::PostMaster().SendLate({ EMessageType::PhysicsPropCollision, &audioComponent->GetSoundIndex() });
-					CMainSingleton::PostMaster().SendLate({ EMessageType::PropCollided, &audioComponent->GameObject()});
-				}
-			}
-		}
-	}
+	//if (pairHeader.actors[0]->userData != nullptr && pairHeader.actors[1]->userData != nullptr)
+	//{
+	//	CTransformComponent* firstTransform = (CTransformComponent*)pairHeader.actors[0]->userData;
+	//	CTransformComponent* secondTransform = (CTransformComponent*)pairHeader.actors[1]->userData;
+	//}
 }

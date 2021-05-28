@@ -2,14 +2,14 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [System.Serializable]
-public struct ResponseData
+public struct ListenerData
 {
     public string onResponseNotify;
     public int instanceID;
 }
 
 [System.Serializable]
-public struct MoveResponse
+public struct MoveData
 {
     public Vector3 start;
     public Vector3 end;
@@ -18,7 +18,7 @@ public struct MoveResponse
 }
 
 [System.Serializable]
-public struct RotateResponse
+public struct RotateData
 {
     public Vector3 start;
     public Vector3 end;
@@ -27,58 +27,58 @@ public struct RotateResponse
 }
 
 [System.Serializable]
-public struct ResponseCollection
+public struct ListenerCollection
 {
-    public List<ResponseData> responses;
-    public List<MoveResponse> moves;
-    public List<RotateResponse> rotates;
+    public List<ListenerData> listeners;
+    public List<MoveData> moves;
+    public List<RotateData> rotates;
 }
 
 public class ExportResponse 
 {  
-    public static ResponseCollection Export()
+    public static ListenerCollection Export()
     {
-        ResponseCollection collection = new ResponseCollection();
-        collection.responses = new List<ResponseData>();
-        collection.moves = new List<MoveResponse>();
-        collection.rotates = new List<RotateResponse>();
+        ListenerCollection collection = new ListenerCollection();
+        collection.listeners = new List<ListenerData>();
+        collection.moves = new List<MoveData>();
+        collection.rotates = new List<RotateData>();
 
-        Response[] responses = GameObject.FindObjectsOfType<Response>();
-        foreach(Response response in responses)
+        Listener[] listeners = GameObject.FindObjectsOfType<Listener>();
+        foreach(Listener listener in listeners)
         {
-            ResponseData data = new ResponseData();
-            data.onResponseNotify = response.myLock.onLockNotify.name;
-            data.instanceID = response.transform.GetInstanceID();
-            collection.responses.Add(data);
+            ListenerData data = new ListenerData();
+            data.onResponseNotify = listener.myLock.onLockNotify.name;
+            data.instanceID = listener.transform.GetInstanceID();
+            collection.listeners.Add(data);
 
-            ExportRotateResponses(collection, response);
-            ExportMoveResponses(collection, response);
+            ExportRotateResponses(collection, listener);
+            ExportMoveResponses(collection, listener);
         }
         return collection;
     }
 
-    private static void ExportMoveResponses(ResponseCollection collection, Response response)
+    private static void ExportMoveResponses(ListenerCollection collection, Listener response)
     {
-        if (response.TryGetComponent(out ResponseMove move))
+        if (response.TryGetComponent(out Move move))
         {
-            MoveResponse moveData = new MoveResponse();
+            MoveData moveData = new MoveData();
             moveData.start = move.start;
             moveData.end = move.end;
             moveData.duration = move.duration;
-            moveData.instanceID = move.GetInstanceID();
+            moveData.instanceID = move.transform.GetInstanceID();
             collection.moves.Add(moveData);
         }
     }
 
-    private static void ExportRotateResponses(ResponseCollection collection, Response response)
+    private static void ExportRotateResponses(ListenerCollection collection, Listener response)
     {
-        if (response.TryGetComponent(out ResponseRotate rotate))
+        if (response.TryGetComponent(out Rotate rotate))
         {
-            RotateResponse rotateData = new RotateResponse();
+            RotateData rotateData = new RotateData();
             rotateData.start = rotate.start;
             rotateData.end = rotate.end;
             rotateData.duration = rotate.duration;
-            rotateData.instanceID = rotate.GetInstanceID();
+            rotateData.instanceID = rotate.transform.GetInstanceID();
             collection.rotates.Add(rotateData);
         }
     }

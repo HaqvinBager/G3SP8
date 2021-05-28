@@ -42,6 +42,9 @@ public:
 	T* GetComponent() const;
 
 	template<class T>
+	std::vector<T*> GetComponents() const;
+
+	template<class T>
 	bool TryGetComponent(T** outComponent) const;
 
 	CTransformComponent* myTransform;
@@ -108,6 +111,24 @@ inline T* CGameObject::GetComponent() const
 	//throw std::exception("Component is missing.");
 	return nullptr;
 }
+
+template<class T>
+inline std::vector<T*> CGameObject::GetComponents() const
+{
+	std::vector<T*> components = {};
+	const std::type_info& type = typeid(T);
+	for (size_t i = 0; i < myComponents.size(); ++i)
+	{
+		const std::type_info& componentType = typeid(*myComponents[i]);
+		if (type == componentType)
+		{
+			components.push_back(dynamic_cast<T*>(myComponents[i].get()));
+		}
+	}
+	return components;
+}
+
+
 
 template<class T>
 inline bool CGameObject::TryGetComponent(T** outComponent) const

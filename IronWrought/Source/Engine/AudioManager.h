@@ -11,7 +11,7 @@ class CAudioChannel;
 
 enum class EMusic { Count };
 enum class EAmbience { AirVent, Inside, Outside, EnemyArea, DynamicTestDrums, DynamicTestGlitches, DynamicTestScreamer, Count };
-enum class EPropAmbience { GrandfatherClock, TVStatic, ElectricalCabinet, Boiler, Refrigerator, Count };
+enum class EPropAmbience { GrandfatherClock, TVStatic, ElectricalCabinet, Boiler, Refrigerator, Toilet, Count };
 enum class ESFX { GravityGlovePullBuildup, GravityGlovePullHit, GravityGlovePush, GravityGlovePullRelease, Jump, EnemyHit, SwitchPress, PickupGravityGlove, PickupHeal, EnemyAttack, CardboardBox, Count };
 enum class ESFXCollection { StepAirVent, StepConcrete, Count };
 enum class EUI { ButtonClick, PlayClick, Count };

@@ -154,6 +154,12 @@ void CInGameState::Stop()
 
 void CInGameState::Update()
 {
+	if (Input::GetInstance()->IsKeyPressed('K'))
+	{
+		CMainSingleton::PostMaster().Send({ "KeyDown_K", nullptr });
+	}
+
+
 #ifdef INGAME_USE_MENU
 	if (Input::GetInstance()->IsKeyPressed(VK_ESCAPE))
 	{

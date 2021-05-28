@@ -11,7 +11,7 @@ CGameObject::CGameObject(const int aInstanceID, const std::string& aName, const 
 	, myName(aName)
 	, myTag(aTag)
 {
-	std::cout << "New GameObject: " << aName << " : Tag: " << myTag << std::endl;
+	//std::cout << "New GameObject: " << aName << " : Tag: " << myTag << std::endl;
 	myComponents.push_back(std::make_unique<CTransformComponent>(*this));
 	myTransform = static_cast<CTransformComponent*>(myComponents.back().get());
 }

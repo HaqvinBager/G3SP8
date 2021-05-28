@@ -200,6 +200,7 @@
     <ClInclude Include="Behavior.h" />
     <ClInclude Include="BoxColliderComponent.h" />
     <ClInclude Include="ComponentsInclude.h" />
+    <ClInclude Include="ContactFilterCallback.h" />
     <ClInclude Include="CustomAnimation.h" />
     <ClInclude Include="CustomEventComponent.h" />
     <ClInclude Include="CustomEventListenerComponent.h" />
@@ -226,6 +227,7 @@
     <ClInclude Include="LightRenderer.h" />
     <ClInclude Include="SpotLight.h" />
     <ClInclude Include="SpotLightComponent.h" />
+    <ClInclude Include="TeleporterComponent.h" />
     <ClInclude Include="VFXEditorWindow.h" />
     <ClInclude Include="Interop.h" />
     <ClInclude Include="NodeTypeActionPatrol.h" />
@@ -451,6 +453,7 @@
     <ClCompile Include="AudioChannel.cpp" />
     <ClCompile Include="AudioManager.cpp" />
     <ClCompile Include="BoxColliderComponent.cpp" />
+    <ClCompile Include="ContactFilterCallback.cpp" />
     <ClCompile Include="CustomAnimation.cpp" />
     <ClCompile Include="CustomEventComponent.cpp" />
     <ClCompile Include="CustomEventListenerComponent.cpp" />
@@ -474,6 +477,7 @@
     <ClCompile Include="LightRenderer.cpp" />
     <ClCompile Include="SpotLight.cpp" />
     <ClCompile Include="SpotLightComponent.cpp" />
+    <ClCompile Include="TeleporterComponent.cpp" />
     <ClCompile Include="VFXEditorWindow.cpp" />
     <ClCompile Include="JsonWriter.cpp" />
     <ClCompile Include="NodeTypeActionPatrol.cpp" />

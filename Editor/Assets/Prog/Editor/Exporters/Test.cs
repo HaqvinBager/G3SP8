@@ -8,6 +8,9 @@ using System.Linq;
 
 public class Test 
 {
+    public static string monoTxt =
+        "\n\n\n public class AudioClipGenerated : MonoBehaviour { \n";
+
     [MenuItem("Custom/Test Read")]
     public static void TestRead()
     {
@@ -16,19 +19,46 @@ public class Test
         text = text.Substring(text.IndexOf("//START") + 7, text.IndexOf("//STOP") - text.IndexOf("//START"));
         List<string> enums = text.Split('\n').ToList();
 
+
+        List<string> enumWhole = new List<string>();
         var file = File.CreateText("Assets/Generated/AudioFile.cs");
+        file.Write("using UnityEngine;\n");
         foreach(var str in enums)
         {
+
             string final = str;
             int startIndex = final.IndexOf("class");
             if (startIndex < 0)
                 continue;
 
             final = final.Replace("enum class", "public enum");
-            //final = final.Insert(0, "public enum");
+            enumWhole.Add(final);
+
             file.WriteLine(final);
+            enumWhole.Add(final);
         }
+
+
+        string script =  monoTxt;
+        foreach (var str in enumWhole)
+        {
+            string final = str;
+            if (final.IndexOf("class") < 0)
+                continue;
+            //script.Append("public enum");
+            script += str + "\n";
+        }
+        script += "}";
+
+
+        file.Write(script);
+
+
         file.Close();
+
+
+
+
         AssetDatabase.Refresh();
 
 

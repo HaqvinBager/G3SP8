@@ -174,6 +174,7 @@
     <ClInclude Include="LoadLevelState.h" />
     <ClInclude Include="LockComponent.h" />
     <ClInclude Include="MainMenuState.h" />
+    <ClInclude Include="MoveResponse.h" />
     <ClInclude Include="NavMeshComponent.h" />
     <ClInclude Include="PatrolPointComponent.h" />
     <ClInclude Include="PauseMenuState.h" />
@@ -182,7 +183,8 @@
     <ClInclude Include="PlayerControllerComponent.h" />
     <ClInclude Include="PopupTextService.h" />
     <ClInclude Include="BinReader.h" />
-    <ClInclude Include="ResponseComponent.h" />
+    <ClInclude Include="ListenerComponent.h" />
+    <ClInclude Include="ResponseBehavior.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="TokenPool.h" />
     <ClInclude Include="UnityFactory.h" />
@@ -203,6 +205,7 @@
     <ClCompile Include="LoadLevelState.cpp" />
     <ClCompile Include="LockComponent.cpp" />
     <ClCompile Include="MainMenuState.cpp" />
+    <ClCompile Include="MoveResponse.cpp" />
     <ClCompile Include="NavMeshComponent.cpp" />
     <ClCompile Include="PatrolPointComponent.cpp" />
     <ClCompile Include="PauseMenuState.cpp" />
@@ -211,7 +214,8 @@
     <ClCompile Include="PlayerControllerComponent.cpp" />
     <ClCompile Include="PopupTextService.cpp" />
     <ClCompile Include="BinReader.cpp" />
-    <ClCompile Include="ResponseComponent.cpp" />
+    <ClCompile Include="ListenerComponent.cpp" />
+    <ClCompile Include="ResponseBehavior.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>

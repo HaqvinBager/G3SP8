@@ -23,12 +23,10 @@ ImGui::CDebugPrintoutWindow::~CDebugPrintoutWindow()
 
 void ImGui::CDebugPrintoutWindow::OnEnable()
 {
-	
 }
 
 void ImGui::CDebugPrintoutWindow::OnInspectorGUI()
-{
-	//ImGui::BeginChild(Name(), { 1000.0f, 250.0f }, false, ImGuiWindowFlags_NoDecoration);
+{	
 	ImGui::SetNextWindowBgAlpha(0.1f);
 	ImGui::SetNextWindowPos({ 0.0f, 900.0f }, ImGuiCond_None, {0.0f, 1.0f});
 	ImGui::SetNextWindowSize({ 1200.0f, 350.0f }, ImGuiCond_None);
@@ -43,12 +41,6 @@ void ImGui::CDebugPrintoutWindow::OnInspectorGUI()
 	ImGui::Text(print.c_str());	
 	ImGui::SetScrollHere(0.999f);
 	ImGui::End();
-	//ImGui::EndChild();
-
-	if (Input::GetInstance()->IsKeyDown('K'))
-	{
-		std::cout << "Hej Jag skriver ett langt meddelande" << std::endl;
-	}
 }
 
 void ImGui::CDebugPrintoutWindow::OnDisable()

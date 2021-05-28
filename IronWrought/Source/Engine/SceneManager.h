@@ -52,7 +52,9 @@ private:
 
 	static void AddPuzzleKey(CScene& aScene, RapidArray someData);
 	static void AddPuzzleLock(CScene& aScene, RapidArray someData);
-	static void AddPuzzleResponse(CScene& aScene, RapidArray someData);
+	static void AddPuzzleListener(CScene& aScene, RapidArray someData);
+	static void AddPuzzleResponseMove(CScene& aScene, RapidArray someData);
+	static void AddPuzzleResponseRotate(CScene& aScene, RapidArray someData);
 
 	static void AddCollider(CScene& aScene, RapidArray someData);
 	static void AddCollider(CScene& aScene, const std::vector<Binary::SCollider>& someData);
@@ -62,6 +64,7 @@ private:
 	
 	static void AddTriggerEvents(CScene& aScene, RapidArray someData);
 	//static void AddTriggerEvents(CScene& aScene, const std::vector<Binary::SEventData>& someData);
+	static void AddTeleporters(CScene& aScene, const RapidArray& someData);
 
 	static void CreateCustomEvents(CScene& aScene);
 	static void CreateCustomEventListeners(CScene& aScene);
@@ -69,6 +72,7 @@ private:
 	static void SetParents(CScene& aScene, RapidArray someData);
 	
 	static void SetVertexPaintedColors(CScene& aScene, RapidArray someData, const SVertexPaintCollection& vertexColorData);
+
 
 	static void AddDirectionalLight(CScene& aScene, RapidObject someData);
 	static void AddDirectionalLights(CScene& aScene, RapidArray someData);

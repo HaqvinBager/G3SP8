@@ -865,6 +865,8 @@ std::string CAudioManager::TranslateEnum(EPropAmbience enumerator) const
 		return "Boiler";
 	case EPropAmbience::Refrigerator:
 		return "Refrigerator";
+	case EPropAmbience::Toilet:
+		return "Toilet";
 	default:
 		return "";
 	}

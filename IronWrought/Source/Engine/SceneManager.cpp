@@ -32,6 +32,7 @@
 #include <PlayerComponent.h>
 #include "animationLoader.h"
 #include "AnimationComponent.h"
+#include "TeleporterComponent.h"
 
 #include <ppl.h>
 #include <concurrent_unordered_map.h>
@@ -42,7 +43,8 @@
 
 #include <LockComponent.h>
 #include <KeyComponent.h>
-#include <ResponseComponent.h>
+#include <ListenerComponent.h>
+#include <MoveResponse.h>
 
 CScene* CSceneManager::ourLastInstantiatedScene = nullptr;
 CSceneManager::CSceneManager()
@@ -108,14 +110,21 @@ CScene* CSceneManager::CreateScene(const std::string& aSceneJson)
 		AddCollider(*scene, binLevelData.myColliders);
 		AddSpotLights(*scene, binLevelData.mySpotLights);
 
-		std::string navMeshPath = doc.GetObjectW()["NavMeshData"].GetObjectW()["path"].GetString();
-
-		if (!navMeshPath.empty())
+		if (doc.HasMember("NavMeshData"))
 		{
-			std::cout << __FUNCTION__ << " navmesh found: " << navMeshPath << "\n";
-			scene->InitNavMesh(ASSETPATH(navMeshPath));
-		}
-		else
+			if (doc.GetObjectW()["NavMeshData"].HasMember("Path"))
+			{
+				std::string navMeshPath = doc.GetObjectW()["NavMeshData"].GetObjectW()["path"].GetString();
+				if (!navMeshPath.empty())
+				{
+					std::cout << __FUNCTION__ << " navmesh found: " << navMeshPath << "\n";
+					scene->InitNavMesh(ASSETPATH(navMeshPath));
+				}
+				else
+					std::cout << __FUNCTION__ << " navmesh path is empty!\n";
+			}else
+				std::cout << __FUNCTION__ << " level does not contain path to navmesh!\n";
+		}else
 			std::cout << __FUNCTION__ << " navmesh not found!\n";
 
 		//CreateCustomEvents(*scene);
@@ -128,23 +137,35 @@ CScene* CSceneManager::CreateScene(const std::string& aSceneJson)
 			if (sceneData.HasMember("parents"))
 				SetParents(*scene, sceneData["parents"].GetArray());
 
-			AddPuzzleLock(*scene, sceneData["locks"].GetArray());
-			AddPuzzleKey(*scene, sceneData["keys"].GetArray());
-			AddPuzzleResponse(*scene, sceneData["responses"].GetArray());
+			if (sceneData.HasMember("locks"))
+				AddPuzzleLock(*scene, sceneData["locks"].GetArray());
+			if (sceneData.HasMember("keys"))
+				AddPuzzleKey(*scene, sceneData["keys"].GetArray());
+			if (sceneData.HasMember("listeners"))
+				AddPuzzleListener(*scene, sceneData["listeners"].GetArray());
+			if (sceneData.HasMember("moves"))
+				AddPuzzleResponseMove(*scene, sceneData["moves"].GetArray());
+			if (sceneData.HasMember("rotates"))
+				AddPuzzleResponseRotate(*scene, sceneData["rotates"].GetArray());
+
 			AddDirectionalLights(*scene, sceneData["directionalLights"].GetArray());
 			SetVertexPaintedColors(*scene, sceneData["vertexColors"].GetArray(), vertexPaintData);
 			AddDecalComponents(*scene, sceneData["decals"].GetArray());
 			AddPickups(*scene, sceneData["healthPickups"].GetArray());
 			AddAudioSources(*scene, sceneData["myAudioSources"].GetArray());
-			AddVFX(*scene, sceneData["myVFXLinks"].GetArray());
+			if (sceneData.HasMember("myVFXLinks"))
+				AddVFX(*scene, sceneData["myVFXLinks"].GetArray());
 
 			if (sceneData.HasMember("triggerEvents"))
 				AddTriggerEvents(*scene, sceneData["triggerEvents"].GetArray());
-
+			if (sceneData.HasMember("teleporters"))
+				AddTeleporters(*scene, sceneData["teleporters"].GetArray());
+			
 			if (sceneName.find("Gameplay") != std::string::npos)//Om Unity Scene Namnet inneh�ller nyckelordet "Layout"
 				AddPlayer(*scene, sceneData["player"].GetObjectW());
-
-			AddEnemyComponents(*scene, sceneData["enemies"].GetArray());
+			
+			if (sceneData.HasMember("enemies"))
+				AddEnemyComponents(*scene, sceneData["enemies"].GetArray());
 		}
 	}
 
@@ -605,15 +626,42 @@ void CSceneManager::AddPuzzleLock(CScene& aScene, RapidArray someData)
 	}
 }
 
-void CSceneManager::AddPuzzleResponse(CScene& aScene, RapidArray someData)
+void CSceneManager::AddPuzzleListener(CScene& aScene, RapidArray someData)
+{
+	for (const auto& listener : someData)
+	{
+		std::string onResponseNotify = listener["onResponseNotify"].GetString();
+		CGameObject* gameObject = aScene.FindObjectWithID(listener["instanceID"].GetInt());
+
+		gameObject->AddComponent<CListenerComponent>(*gameObject, onResponseNotify);
+	}
+}
+
+void CSceneManager::AddPuzzleResponseMove(CScene& aScene, RapidArray someData)
 {
 	for (const auto& response : someData)
 	{
-		std::string onResponseNotify = response["onResponseNotify"].GetString();
 		CGameObject* gameObject = aScene.FindObjectWithID(response["instanceID"].GetInt());
-		gameObject;
-		//create the propper response component and add to gameobject
+		if (!gameObject)
+			continue;
+
+		CMoveResponse::SSettings settings = {};
+		settings.myDuration = response["duration"].GetFloat();
+
+		settings.myStartPosition = { response["start"]["x"].GetFloat(),
+									 response["start"]["y"].GetFloat(),
+									 response["start"]["z"].GetFloat() };
+
+		settings.myEndPosition = {  response["end"]["x"].GetFloat(),
+									response["end"]["y"].GetFloat(),
+									response["end"]["z"].GetFloat() };
+
+		gameObject->AddComponent<CMoveResponse>(*gameObject, settings);
 	}
+}
+
+void CSceneManager::AddPuzzleResponseRotate(CScene& /*aScene*/, RapidArray /*someData*/)
+{
 }
 
 void CSceneManager::AddDecalComponents(CScene& aScene, RapidArray someData)
@@ -885,6 +933,29 @@ void CSceneManager::AddTriggerEvents(CScene& aScene, RapidArray someData)
 			triggerVolume->RegisterEventTriggerFilter(eventFilter);
 			triggerVolume->RegisterEventTriggerAudioIndex(audioIndex);
 			triggerVolume->RegisterEventTriggerOnce(triggerOnce);
+		}
+	}
+}
+
+void CSceneManager::AddTeleporters(CScene& aScene, const RapidArray& someData)
+{
+	for (const auto& teleporter : someData)
+	{
+		int instanceID = teleporter["instanceID"]["instanceID"].GetInt();
+		CGameObject* gameObject = aScene.FindObjectWithID(instanceID);
+
+		CBoxColliderComponent* triggerVolume = nullptr;
+		if (gameObject->TryGetComponent<CBoxColliderComponent>(&triggerVolume))
+		{
+			triggerVolume->RegisterEventTriggerMessage(PostMaster::SMSG_TELEPORT);
+			triggerVolume->RegisterEventTriggerFilter(static_cast<int>(CBoxColliderComponent::EEventFilter::PlayerOnly));
+			triggerVolume->RegisterEventTriggerAudioIndex(-1);
+			triggerVolume->RegisterEventTriggerOnce(false);
+
+			CTeleporterComponent::ELevelName teleportersName = static_cast<CTeleporterComponent::ELevelName>(teleporter["myTeleporterName"].GetInt());
+			CTeleporterComponent::ELevelName teleportTo = static_cast<CTeleporterComponent::ELevelName>(teleporter["teleportTo"].GetInt());
+			Vector3 position = { teleporter["teleportObjectToX"].GetFloat(), teleporter["teleportObjectToY"].GetFloat(), teleporter["teleportObjectToZ"].GetFloat() };
+			gameObject->AddComponent<CTeleporterComponent>(*gameObject, teleportersName, teleportTo, position);
 		}
 	}
 }

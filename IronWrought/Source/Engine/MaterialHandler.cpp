@@ -28,12 +28,7 @@ std::array<ID3D11ShaderResourceView*, 3> CMaterialHandler::RequestMaterial(const
 		if (!CJsonReader::Get()->TryGetMaterialsPath(aMaterialID, texturePaths))
 			return std::array<ID3D11ShaderResourceView*, 3>();
 
-		std::cout << "Loading Material: " << materialName << " [ "
-			<< texturePaths[0].substr(texturePaths[0].size() / 2, texturePaths[0].size() - texturePaths[0].size() / 2) << ", "
-			<< texturePaths[1].substr(texturePaths[1].size() / 2, texturePaths[1].size() - texturePaths[1].size() / 2) << ", "
-			<< texturePaths[2].substr(texturePaths[2].size() / 2, texturePaths[2].size() - texturePaths[2].size() / 2) << ", "
-			<< std::endl;
-
+		std::cout << "Loading Material: " << materialName << "\n";
 		std::array<Microsoft::WRL::ComPtr<ID3D11ShaderResourceView>, 3> newTextures;
 
 		if (!texturePaths[0].empty())
@@ -301,10 +296,10 @@ const bool CMaterialHandler::IsMaterialAlpha(const int aMaterialID) const
 	if (myMaterialIsAlphaMap.find(aMaterialID) == myMaterialIsAlphaMap.end())
 	{
 #ifdef _DEBUG
-		std::string id = std::to_string(aMaterialID);
-		id.append(": Material ID does not exist in myMaterialIsAlphaMap!");
+		//std::string id = std::to_string(aMaterialID);
+		//id.append(": Material ID does not exist in myMaterialIsAlphaMap!");
 		//ENGINE_ERROR_BOOL_MESSAGE(false, id.c_str());
-		std::cout << __FUNCTION__ << " " << id << std::endl;
+		//std::cout << __FUNCTION__ << " " << id << std::endl;
 #endif
 		return false;
 	}

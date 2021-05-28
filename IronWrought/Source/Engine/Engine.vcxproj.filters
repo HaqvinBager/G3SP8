@@ -894,7 +894,6 @@
     <ClCompile Include="NodeTypeGameObjectRotateDegrees.cpp">
       <Filter>Imgui\Node Editor\Nodes\Game Object</Filter>
     </ClCompile>
-    <ClCompile Include="EnemyReportCallback.cpp" />
     <ClCompile Include="EnvironmentLightWindow.cpp">
       <Filter>Imgui\Windows</Filter>
     </ClCompile>
@@ -924,6 +923,13 @@
     </ClCompile>
     <ClCompile Include="EnemyAudioComponent.cpp">
       <Filter>GameObject and Component\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="TeleporterComponent.cpp" />
+    <ClCompile Include="ContactFilterCallback.cpp">
+      <Filter>PhysX</Filter>
+    </ClCompile>
+    <ClCompile Include="EnemyReportCallback.cpp">
+      <Filter>PhysX</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1655,7 +1661,6 @@
     <ClInclude Include="NodeTypeGameObjectRotateDegrees.h">
       <Filter>Imgui\Node Editor\Nodes\Game Object</Filter>
     </ClInclude>
-    <ClInclude Include="EnemyReportCallback.h" />
     <ClInclude Include="EnvironmentLightWindow.h">
       <Filter>Imgui\Windows</Filter>
     </ClInclude>
@@ -1693,6 +1698,13 @@
     </ClInclude>
     <ClInclude Include="Behavior.h">
       <Filter>GameObject and Component</Filter>
+    </ClInclude>
+    <ClInclude Include="TeleporterComponent.h" />
+    <ClInclude Include="ContactFilterCallback.h">
+      <Filter>PhysX</Filter>
+    </ClInclude>
+    <ClInclude Include="EnemyReportCallback.h">
+      <Filter>PhysX</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
