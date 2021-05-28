@@ -1,12 +1,10 @@
 #include "stdafx.h"
 #include "InGameState.h"
-
 #include <GameObject.h>
 #include <TransformComponent.h>
 #include <ModelComponent.h>
 #include <DecalComponent.h>
 #include <PointLightComponent.h>
-
 #include <Scene.h>
 #include <Engine.h>
 #include <PostMaster.h>
@@ -93,7 +91,12 @@ void CInGameState::Awake()
 void CInGameState::Start()
 {
 #ifdef INGAME_USE_MENU
-	CScene* scene = CSceneManager::CreateScene("Level_Cottage");
+	//CScene* scene = CSceneManager::CreateScene("Level_Cottage");
+	std::vector<std::string> levels(3);
+	levels[0] = "Level_Cottage";
+	levels[1] = "Level_Basement1";
+	levels[2] = "Level_Basement2";
+	CScene* scene = CSceneManager::CreateSceneFromSeveral(levels);
 	Vector3 playerPos = scene->Player()->myTransform->Position();
 	Vector3 firstPos = playerPos + scene->Player()->myTransform->FetchChildren()[0]->GameObject().GetComponent<CCameraComponent>()->GameObject().myTransform->Position();
 	//Quaternion playerRot = scene->Player()->myTransform->Rotation();

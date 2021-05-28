@@ -27,6 +27,8 @@ class CPlayerComponent;
 class CGravityGloveComponent;
 class CHealthPickupComponent;
 class CPlayerControllerComponent;
+class CLeftClickDownLock;
+class COnTriggerLock;
 
 namespace ImGui {
 	class CHierarchy : public CWindow
@@ -64,6 +66,8 @@ namespace ImGui {
 		void Edit(CGravityGloveComponent*		aComponent);
 		void Edit(CHealthPickupComponent*		aComponent);
 		void Edit(CPlayerControllerComponent*	aComponent);
+		void Edit(CLeftClickDownLock* aComponent);
+		void Edit(COnTriggerLock* aComponent);
 
 	private:
 		std::unordered_map<std::type_index, std::function<void(CComponent*)>> myComponentMap;

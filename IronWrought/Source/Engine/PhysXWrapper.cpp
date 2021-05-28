@@ -332,6 +332,27 @@ PxControllerManager* CPhysXWrapper::GetControllerManager()
 
 void CPhysXWrapper::Cooking(const std::vector<CGameObject*>& gameObjectsToCook, CScene* aScene)
 {
+	 //Refactor Start - Axel Savage 2021-05-28
+	 //Goal Verify SubMeshes Creating Static Collision
+	/*
+	for (const auto& gameObject : gameObjectsToCook)
+	{
+		CModelComponent* model;
+		CConvexMeshColliderComponent* convexCollider;
+		if (gameObject->TryGetComponent(&model) && gameObject->TryGetComponent(&convexCollider))
+		{
+			const CModel::SModelData& modelData = model->GetMyModel()->GetModelData();
+			std::vector<PxVec3> verts = {};		
+			Convert<Vector3, PxVec3>()(modelData.myMeshFilter.myVertecies, verts);
+			GetMeshDesc(verts, modelData.myMeshFilter.myIndexes, PxConvexFlag::eCOMPUTE_CONVEX);
+
+
+		}
+	}
+	*/
+
+	
+
 	for (int i = 0; i < gameObjectsToCook.size(); ++i) {
 		if (gameObjectsToCook[i]->GetComponent<CModelComponent>() && gameObjectsToCook[i]->GetComponent<CConvexMeshColliderComponent>()) {
 			std::vector<PxVec3> verts(gameObjectsToCook[i]->GetComponent<CModelComponent>()->GetMyModel()->GetModelData().myMeshFilter.myVertecies.size());
@@ -500,4 +521,19 @@ physx::PxShape* CPhysXWrapper::CookObject(CGameObject& aGameObject)
 	PxShape* convexShape = myPhysics->createShape(pMeshGeometry, *CreateMaterial(CPhysXWrapper::materialfriction::basic), true);
 	//aGameObject->GetComponent<CConvexMeshColliderComponent>()->SetShape(convexShape);
 	return convexShape;
+}
+
+PxConvexMeshDesc CPhysXWrapper::GetMeshDesc(const std::vector<PxVec3>& someVerts, const std::vector<unsigned int>& someIndexes, const PxConvexFlags someFlags)
+{
+	PxConvexMeshDesc meshDesc;
+	meshDesc.points.count = (PxU32)someVerts.size();
+	meshDesc.points.stride = sizeof(PxVec3);
+	meshDesc.points.data = someVerts.data();
+	meshDesc.flags = someFlags;//PxConvexFlag::eCOMPUTE_CONVEX;
+
+	std::vector<unsigned int> indexes = someIndexes;
+	meshDesc.indices.count = (PxU32)indexes.size();
+	meshDesc.indices.stride = sizeof(PxU32);
+	meshDesc.indices.data = indexes.data();
+	return PxConvexMeshDesc();
 }
