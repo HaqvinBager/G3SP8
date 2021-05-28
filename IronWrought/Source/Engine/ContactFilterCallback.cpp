@@ -10,9 +10,6 @@ physx::PxFilterFlags CContactFilterCallback::pairFound(physx::PxU32 /*pairID*/, 
 	CTransformComponent* firstTransform = (CTransformComponent*)a0->userData;
 	CTransformComponent* secondTransform = (CTransformComponent*)a1->userData;
 	CPhysicsPropAudioComponent* audioComponent = nullptr;
-	/*if (firstTransform) {
-
-	}*/
 	if (firstTransform) {
 		audioComponent = firstTransform->GameObject().GetComponent<CPhysicsPropAudioComponent>();
 	}
@@ -29,7 +26,6 @@ physx::PxFilterFlags CContactFilterCallback::pairFound(physx::PxU32 /*pairID*/, 
 		{
 			if (audioComponent->Ready()) {
 				CMainSingleton::PostMaster().SendLate({ EMessageType::PhysicsPropCollision, &audioComponent->GetSoundIndex() });
-				CMainSingleton::PostMaster().SendLate({ EMessageType::PropCollided, &audioComponent->GameObject() });
 			}
 		}
 	}
