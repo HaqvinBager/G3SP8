@@ -43,6 +43,12 @@ namespace PostMaster
 		int myGameObjectID;
 	};
 
+	struct SStepSoundData
+	{
+		int myGroundMaterial;
+		bool myIsSprint;
+	};
+
 	// SP7: Checks if the string is equivalent to any of our levels
 	const bool LevelCheck(const char* aMessageToCompare);
 }
