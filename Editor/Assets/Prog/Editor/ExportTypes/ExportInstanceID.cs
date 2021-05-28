@@ -44,11 +44,6 @@ public class ExportInstanceID
                 id.tag = transform.tag;
 
                 sceneIDCollection.Ids.Add(id);//transform.GetInstanceID());
-
-                //InstanceName instanceName = new InstanceName();
-                //instanceName.id = transform.GetInstanceID();
-                //instanceName.name = transform.name;
-                //names.Add(instanceName);
             }   
             else if (Json.TryIsValidExport(transform, out GameObject prefabParent))
             {
@@ -63,12 +58,6 @@ public class ExportInstanceID
                 id.tag = prefabParent.transform.tag;
                 sceneIDCollection.Ids.Add(id);
 
-                //InstanceName instanceName = new InstanceName();
-                //instanceName.id = prefabParent.transform.GetInstanceID();
-                //instanceName.name = prefabParent.name;
-                //names.Add(instanceName);
-
-
                 if (prefabParent.name.Contains("BP_"))
                 {
                     foreach(Transform childTransform in prefabParent.transform)
@@ -78,12 +67,6 @@ public class ExportInstanceID
                         id.name = childTransform.name;
                         id.tag = childTransform.tag;
                         sceneIDCollection.Ids.Add(childID);
-
-                        //sceneIDCollection.Ids.Add(childTransform.GetInstanceID());
-                        //InstanceName childInstanceName = new InstanceName();
-                        //instanceName.id = childTransform.GetInstanceID();
-                        //instanceName.name = childTransform.name;
-                        //names.Add(childInstanceName);
                     }
                 }
             }
@@ -92,4 +75,20 @@ public class ExportInstanceID
         sceneIDCollection.sceneName = aSceneName;
         return sceneIDCollection;
     }
+
+    static bool SaveToExport(GameObject gameObject, ref InstanceIDCollection collection)
+    {
+        if (collection.Ids.Exists(e => e.instanceID == gameObject.transform.GetInstanceID()))
+        {
+            return false;
+        }
+
+        InstanceID id = new InstanceID();
+        id.instanceID = gameObject.transform.GetInstanceID();
+        id.name = gameObject.name;
+        id.tag = gameObject.tag;
+        collection.Ids.Add(id);
+        return true;
+    }
+
 }
