@@ -6,7 +6,7 @@ class CDestroyKey : public CKeyBehavior
 public:
 	CDestroyKey(CGameObject& aParent, const SSettings& someSettings);
 	~CDestroyKey() override;
-	void OnPickUp() override;
+	void OnInteract() override;
 private:
 
 };
