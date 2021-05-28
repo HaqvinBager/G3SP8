@@ -1,6 +1,7 @@
 #pragma once
 #include "Component.h"
 #include "PerlinNoise.h"
+#include <FastNoise\FastNoise.h>
 
 class CGameObject;
 class CSpriteInstance;
@@ -32,6 +33,11 @@ public:
 
 	const DirectX::BoundingFrustum GetViewFrustum();
 
+	void SetShakeDecay(float aDecayInSeconds);
+	void SetShakeSpeed(float aSpeed);
+	void SetMaxShakeRotation(const Vector3& aMaxRotation);
+	void SetTestTrauma(float aTrauma);
+
 private:
 	void Shake();
 
@@ -54,8 +60,10 @@ private:
 	DirectX::SimpleMath::Vector3 myStartingRotation;
 	DirectX::SimpleMath::Vector3 myMaxShakeRotation;
 	DirectX::SimpleMath::Vector3 myShakeVector;
-	PerlinNoise myNoise;
+	/*PerlinNoise myNoise;*/
+	FastNoise::SmartNode<FastNoise::Simplex> myNoise;
 	float myTrauma;
+	float myTestTrauma;
 	float myShake;
 	float myShakeSpeed;
 	float myDecayInSeconds;
