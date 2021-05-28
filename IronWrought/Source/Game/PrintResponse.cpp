@@ -3,6 +3,7 @@
 
 CPrintResponse::CPrintResponse(CGameObject& aParent, const SSettings& someSettings)
 	: IResponseBehavior(aParent)
+	, mySettings(someSettings)
 {
 	Enabled(false);
 }
