@@ -11,6 +11,7 @@ public enum ListenerType
     None,
     Rotate,
     Move,
+    Print,
 }
 
 interface IListener
@@ -34,23 +35,35 @@ public class Listener : MonoBehaviour
             switch (responseType)
             {
                 case ListenerType.Rotate:
-                    if (GetComponent<Rotate>() == null)
-                    {
-#if UNITY_EDITOR
-                        Undo.AddComponent(gameObject, typeof(Rotate));
-#endif
-                        break;
-                    }
+                    AddType<Rotate>(gameObject);
+//                    if (GetComponent<Rotate>() == null)
+//                    {
+//#if UNITY_EDITOR
+//                        Undo.AddComponent(gameObject, typeof(Rotate));
+//#endif
+//                        break;
+//                    }
                     break;
 
                 case ListenerType.Move:
-                    if (GetComponent<Move>() == null)
-                    {
-#if UNITY_EDITOR
-                        Undo.AddComponent(gameObject, typeof(Move));
-#endif
-                        break;
-                    }
+                    AddType<Move>(gameObject);
+                    //                    if (GetComponent<Move>() == null)
+                    //                    {
+                    //#if UNITY_EDITOR
+                    //                        Undo.AddComponent(gameObject, typeof(Move));
+                    //#endif
+                    //                        break;
+                    //                    }
+                    break;
+                case ListenerType.Print:
+                    AddType<Print>(gameObject);
+//                    if (GetComponent<Print>() == null)
+//                    {
+//#if UNITY_EDITOR
+//                        Undo.AddComponent(gameObject, typeof(Print));
+//#endif
+//                        break;
+//                    }
                     break;
                 default:
                     {
@@ -62,6 +75,16 @@ public class Listener : MonoBehaviour
             }
         }
         old = responseType;
+    }
+
+    void AddType<T>(GameObject gameObject) where T : IListener
+    {
+        if (GetComponent<T>() == null)
+        {
+            #if UNITY_EDITOR
+            Undo.AddComponent(gameObject, typeof(T));
+            #endif
+        }
     }
 }
 
