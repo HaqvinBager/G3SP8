@@ -28,6 +28,9 @@ public class ExportKey
         Key[] keys = GameObject.FindObjectsOfType<Key>();
         foreach(Key key in keys)
         {
+            if (key.myLock == null)
+                continue;
+
             KeyData data = new KeyData();
             data.onCreateNotify = key.myLock.onKeyCreateNotify.name;
             data.onInteractNotify = key.myLock.onKeyInteractNotify.name;

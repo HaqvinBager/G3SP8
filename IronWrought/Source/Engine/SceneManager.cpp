@@ -50,6 +50,7 @@
 #include <ListenerComponent.h>
 #include <MoveResponse.h>
 #include <RotateResponse.h>
+#include <PrintResponse.h>
 
 CScene* CSceneManager::ourLastInstantiatedScene = nullptr;
 CSceneManager::CSceneManager()
@@ -213,6 +214,8 @@ bool CSceneManager::AddToScene(CScene& aScene, Binary::SLevelData& aBinLevelData
 				AddPuzzleResponseMove(aScene, sceneData["moves"].GetArray());
 			if (sceneData.HasMember("rotates"))
 				AddPuzzleResponseRotate(aScene, sceneData["rotates"].GetArray());
+			if (sceneData.HasMember("prints"))
+				AddPuzzleResponsePrint(aScene, sceneData["prints"].GetArray());
 
 			AddDirectionalLights(aScene, sceneData["directionalLights"].GetArray());
 			SetVertexPaintedColors(aScene, sceneData["vertexColors"].GetArray(), vertexPaintData);
@@ -700,6 +703,21 @@ void CSceneManager::AddPuzzleResponseRotate(CScene& aScene, RapidArray someData)
 									response["end"]["z"].GetFloat() };
 
 		gameObject->AddComponent<CRotateResponse>(*gameObject, settings);
+	}
+}
+
+void CSceneManager::AddPuzzleResponsePrint(CScene& aScene, RapidArray someData)
+{
+	for (const auto& response : someData)
+	{
+		CGameObject* gameObject = aScene.FindObjectWithID(response["instanceID"].GetInt());
+		if (!gameObject)
+			continue;
+
+		CPrintResponse::SSettings settings = {};
+		settings.myData = response["data"].GetString();
+
+		gameObject->AddComponent<CPrintResponse>(*gameObject, settings);
 	}
 }
 

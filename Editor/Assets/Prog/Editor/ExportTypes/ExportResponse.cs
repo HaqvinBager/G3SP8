@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -27,11 +28,19 @@ public struct RotateData
 }
 
 [System.Serializable]
+public struct PrintData
+{
+    public string data;
+    public int instanceID;
+}
+
+[System.Serializable]
 public struct ListenerCollection
 {
     public List<ListenerData> listeners;
     public List<MoveData> moves;
     public List<RotateData> rotates;
+    public List<PrintData> prints;
 }
 
 public class ExportResponse 
@@ -42,35 +51,48 @@ public class ExportResponse
         collection.listeners = new List<ListenerData>();
         collection.moves = new List<MoveData>();
         collection.rotates = new List<RotateData>();
+        collection.prints = new List<PrintData>();
 
         Listener[] listeners = GameObject.FindObjectsOfType<Listener>();
         foreach(Listener listener in listeners)
         {
             ListenerData data = new ListenerData();
-            data.onResponseNotify = listener.myLock.onLockNotify.name;
+            data.onResponseNotify = listener.myLock?.onLockNotify?.name;
             data.instanceID = listener.transform.GetInstanceID();
             collection.listeners.Add(data);
 
-            ExportRotateResponses(collection, listener);
-            ExportMoveResponses(collection, listener);
+            ExportRotateResponses(ref collection.rotates, listener);
+            ExportMoveResponses(ref collection.moves, listener);
+            ExportPrintResponses(ref collection.prints, listener);
         }
         return collection;
     }
 
-    private static void ExportMoveResponses(ListenerCollection collection, Listener response)
+    private static void ExportPrintResponses(ref List<PrintData> prints, Listener listener)
     {
-        if (response.TryGetComponent(out Move move))
+        if (listener.TryGetComponent(out Print obj))
+        {
+            PrintData data = new PrintData();
+            data.instanceID = obj.transform.GetInstanceID();
+            data.data = obj.message;
+            prints.Add(data);
+        }
+    }
+
+    private static void ExportMoveResponses(ref List<MoveData> moves, Listener listener)
+    {
+        if (listener.TryGetComponent(out Move move))
         {
             MoveData moveData = new MoveData();
             moveData.start = move.start;
             moveData.end = move.end;
             moveData.duration = move.duration;
             moveData.instanceID = move.transform.GetInstanceID();
-            collection.moves.Add(moveData);
+            moves.Add(moveData);
         }
     }
 
-    private static void ExportRotateResponses(ListenerCollection collection, Listener response)
+    private static void ExportRotateResponses(ref List<RotateData> collection, Listener response)
     {
         if (response.TryGetComponent(out Rotate rotate))
         {
@@ -79,7 +101,7 @@ public class ExportResponse
             rotateData.end = rotate.end;
             rotateData.duration = rotate.duration;
             rotateData.instanceID = rotate.transform.GetInstanceID();
-            collection.rotates.Add(rotateData);
+            collection.Add(rotateData);
         }
     }
 }

@@ -7,6 +7,16 @@ CRotateResponse::CRotateResponse(CGameObject& aParent, const SSettings& someSett
 	, myTime(0.0f)
 	, mySettings(someSettings)
 {
+	mySettings.myStartRotation.x = (-mySettings.myStartRotation.x) - 360.0f;
+	mySettings.myStartRotation.y += 180.0f;
+	mySettings.myStartRotation.z = (-mySettings.myStartRotation.z) - 360.0f;
+
+	mySettings.myEndRotation.x = (-mySettings.myEndRotation.x) - 360.0f;
+	mySettings.myEndRotation.y += 180.0f;
+	mySettings.myEndRotation.z = (-mySettings.myEndRotation.z) - 360.0f;
+
+	myStartRotation = GameObject().myTransform->Rotation();
+
 	Enabled(false);
 }
 
