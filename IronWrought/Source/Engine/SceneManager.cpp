@@ -88,26 +88,46 @@ CScene* CSceneManager::CreateEmpty()
 	return emptyScene;
 }
 
-CScene* CSceneManager::CreateScene(const std::string& aSceneJson)
+CScene* CSceneManager::CreateScene(const std::string& aSceneName)
 {
 	CScene* scene = Instantiate();
 	//CScene* scene = CreateEmpty();
 
-	const auto doc = CJsonReader::Get()->LoadDocument(ASSETPATH("Assets/Generated/" + aSceneJson + "/" + aSceneJson + ".json"));
+	const auto doc = CJsonReader::Get()->LoadDocument(ASSETPATH("Assets/Generated/" + aSceneName + "/" + aSceneName + ".json"));
 	if (doc.HasParseError())
 		return nullptr;
 
 	if (!doc.HasMember("Root"))
 		return nullptr;
 
-	Binary::SLevelData binLevelData = CBinReader::Load(ASSETPATH("Assets/Generated/" + aSceneJson + "/" + aSceneJson + ".bin"));
+	Binary::SLevelData binLevelData = CBinReader::Load(ASSETPATH("Assets/Generated/" + aSceneName + "/" + aSceneName + ".bin"));
 	
 	AddToScene(*scene, binLevelData, doc);
 	return scene;
 }
 
-CScene* CSceneManager::CreateSceneFromSeveral(const std::vector<std::string>& /*someSceneNames*/)
+CScene* CSceneManager::CreateSceneFromSeveral(const std::vector<std::string>& someSceneNames)
 {
+	CScene* scene = Instantiate();
+	for (auto& sceneName : someSceneNames)
+	{
+		const auto doc = CJsonReader::Get()->LoadDocument(ASSETPATH("Assets/Generated/" + sceneName + "/" + sceneName + ".json"));
+		if (doc.HasParseError())
+		{
+			std::cout << __FUNCTION__ << " Scene: " << sceneName << " has parse errors! Unable to load." << std::endl;
+			continue;
+		}
+		if (!doc.HasMember("Root"))
+		{
+			std::cout << __FUNCTION__ << " Scene: " << sceneName << " has no root! Unable to load." << std::endl;
+			continue;
+		}
+
+		Binary::SLevelData binLevelData = CBinReader::Load(ASSETPATH("Assets/Generated/" + sceneName + "/" + sceneName + ".bin"));
+
+		AddToScene(*scene, binLevelData, doc);
+	}
+
 	return nullptr;
 }
 
