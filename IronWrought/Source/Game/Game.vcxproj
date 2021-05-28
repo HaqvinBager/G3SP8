@@ -160,10 +160,12 @@
     <ClInclude Include="AIBehavior.h" />
     <ClInclude Include="AIBehaviorComponent.h" />
     <ClInclude Include="AIController.h" />
+    <ClInclude Include="AnimateKey.h" />
     <ClInclude Include="BootUpState.h" />
     <ClInclude Include="CameraControllerComponent.h" />
     <ClInclude Include="CharacterControllerComponent.h" />
     <ClInclude Include="CollisionEventComponent.h" />
+    <ClInclude Include="DestroyKey.h" />
     <ClInclude Include="DialogueSystem.h" />
     <ClInclude Include="EnemyAnimationController.h" />
     <ClInclude Include="EnemyComponent.h" />
@@ -171,30 +173,35 @@
     <ClInclude Include="GravityGloveComponent.h" />
     <ClInclude Include="HealthPickupComponent.h" />
     <ClInclude Include="InGameState.h" />
+    <ClInclude Include="LeftClickDownLock.h" />
     <ClInclude Include="LoadLevelState.h" />
-    <ClInclude Include="LockComponent.h" />
+    <ClInclude Include="LockBehavior.h" />
     <ClInclude Include="MainMenuState.h" />
     <ClInclude Include="MoveResponse.h" />
     <ClInclude Include="NavMeshComponent.h" />
+    <ClInclude Include="OnTriggerLock.h" />
     <ClInclude Include="PatrolPointComponent.h" />
     <ClInclude Include="PauseMenuState.h" />
-    <ClInclude Include="KeyComponent.h" />
+    <ClInclude Include="KeyBehavior.h" />
     <ClInclude Include="PlayerComponent.h" />
     <ClInclude Include="PlayerControllerComponent.h" />
     <ClInclude Include="PopupTextService.h" />
     <ClInclude Include="BinReader.h" />
     <ClInclude Include="ListenerComponent.h" />
     <ClInclude Include="ResponseBehavior.h" />
+    <ClInclude Include="RotateResponse.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="TokenPool.h" />
     <ClInclude Include="UnityFactory.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AIController.cpp" />
+    <ClCompile Include="AnimateKey.cpp" />
     <ClCompile Include="BootUpState.cpp" />
     <ClCompile Include="CameraControllerComponent.cpp" />
     <ClCompile Include="CharacterControllerComponent.cpp" />
     <ClCompile Include="CollisionEventComponent.cpp" />
+    <ClCompile Include="DestroyKey.cpp" />
     <ClCompile Include="DialogueSystem.cpp" />
     <ClCompile Include="EnemyAnimationController.cpp" />
     <ClCompile Include="EnemyComponent.cpp" />
@@ -202,20 +209,23 @@
     <ClCompile Include="GravityGloveComponent.cpp" />
     <ClCompile Include="HealthPickupComponent.cpp" />
     <ClCompile Include="InGameState.cpp" />
+    <ClCompile Include="LeftClickDownLock.cpp" />
     <ClCompile Include="LoadLevelState.cpp" />
-    <ClCompile Include="LockComponent.cpp" />
+    <ClCompile Include="LockBehavior.cpp" />
     <ClCompile Include="MainMenuState.cpp" />
     <ClCompile Include="MoveResponse.cpp" />
     <ClCompile Include="NavMeshComponent.cpp" />
+    <ClCompile Include="OnTriggerLock.cpp" />
     <ClCompile Include="PatrolPointComponent.cpp" />
     <ClCompile Include="PauseMenuState.cpp" />
-    <ClCompile Include="KeyComponent.cpp" />
+    <ClCompile Include="KeyBehavior.cpp" />
     <ClCompile Include="PlayerComponent.cpp" />
     <ClCompile Include="PlayerControllerComponent.cpp" />
     <ClCompile Include="PopupTextService.cpp" />
     <ClCompile Include="BinReader.cpp" />
     <ClCompile Include="ListenerComponent.cpp" />
     <ClCompile Include="ResponseBehavior.cpp" />
+    <ClCompile Include="RotateResponse.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>

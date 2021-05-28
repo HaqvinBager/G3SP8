@@ -8,11 +8,19 @@ enum class ELockInteractionTypes
 	OnLeftClickDown
 };
 
-class CLockComponent : public CBehavior, public IStringObserver
+class CLockBehavior : public CBehavior, public IStringObserver
 {
 public:
-	CLockComponent(CGameObject& aParent, std::string aCreateRecieveMessage, std::string aDestroyRecieveStringMessage, std::string aSendMessage, void* someData);
-	~CLockComponent();
+	struct SSettings
+	{
+		std::string myOnKeyCreateNotify;
+		std::string myOnKeyInteractNotify;
+		std::string myOnNotify;
+		void* myData;
+	};
+
+	CLockBehavior(CGameObject& aParent, const SSettings someSettings);
+	virtual ~CLockBehavior() override;
 	void Destroy();
 
 public:
@@ -24,20 +32,16 @@ public:
 	void OnDisable() override;
 
 	void RunEvent();
-
+	virtual void ActivateEvent() = 0;
 
 private:
 	void Receive(const SStringMessage& aMessage) override;
 
-	std::string myCreateReceiveMessage;
-	std::string myPickUpReceiveMessage;
-
-	std::string mySendMessage;
+	SSettings mySettings;
 
 	int myMaxAmountOfKeys;
 	int myAmountOfKeys;
 
 	bool myHasTriggered;
 
-	void* myData;
 };
