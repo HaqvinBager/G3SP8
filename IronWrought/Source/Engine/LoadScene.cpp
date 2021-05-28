@@ -72,10 +72,10 @@ bool ImGui::CLoadScene::OnMainMenuGUI()
 				}
 				else
 				{
-					CSceneFactory::Get()->LoadSceneAsync(scene, CStateStack::EState::InGame, [this](std::string aJson) { CLoadScene::OnComplete(aJson); });
+					//CSceneFactory::Get()->LoadSceneAsync(scene, CStateStack::EState::InGame, [this](std::string aJson) { CLoadScene::OnComplete(aJson); });
 					
 					// For Debug: Run without threading:
-					//CSceneFactory::Get()->LoadScene(scene, CStateStack::EState::InGame);
+					CSceneFactory::Get()->LoadScene(scene, CStateStack::EState::InGame);
 				}
 			}
 			index++;
