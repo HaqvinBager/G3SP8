@@ -394,6 +394,29 @@ PxTriangleMeshDesc CPhysXWrapper::GetTriangleMeshDesc(const std::vector<PxVec3>&
 	return meshDesc;
 }
 
+
+
+PxShape* CPhysXWrapper::CookShape(const CModel* aModel, const CTransformComponent* aTransform, const physx::PxMaterial* aMaterial) const
+{
+	const CModel::SModelData& modelData = aModel->GetModelData();
+	std::vector<PxVec3> verts = {};
+	Convert<Vector3, PxVec3>()(modelData.myMeshFilter.myVertecies, verts);
+	const auto meshDesc = GetConvexMeshDesc(verts, modelData.myMeshFilter.myIndexes, PxConvexFlag::eCOMPUTE_CONVEX);
+
+	PxDefaultMemoryOutputStream writeBuffer;
+	PxConvexMeshCookingResult::Enum result;
+	myCooking->cookConvexMesh(meshDesc, writeBuffer, &result);
+	PxDefaultMemoryInputData readBuffer(writeBuffer.getData(), writeBuffer.getSize());
+
+	PxConvexMesh* pxMesh = myPhysics->createConvexMesh(readBuffer);
+	const auto& scale = aTransform->Scale();
+	PxMeshScale meshScale(PxVec3(scale.x, scale.y, scale.z), PxQuat(PxIdentity));
+	PxConvexMeshGeometry pMeshGeometry(pxMesh, meshScale);
+
+	PxShape* convexShape = myPhysics->createShape(pMeshGeometry, *aMaterial, true);
+	return convexShape;
+}
+
 std::vector<PxRigidStatic*> CPhysXWrapper::CookShapes(const CModel* aModel, const CTransformComponent* aTransform, const physx::PxMaterial* aMaterial, const std::vector<Matrix>& someTransforms) const
 {
 	const CModel::SModelInstanceData& modelData = aModel->GetModelInstanceData();
@@ -438,27 +461,6 @@ std::vector<PxRigidStatic*> CPhysXWrapper::CookShapes(const CModel* aModel, cons
 		statics.push_back(staticRigidbody);
 	}
 	return std::move(statics);
-}
-
-PxShape* CPhysXWrapper::CookShape(const CModel* aModel, const CTransformComponent* aTransform, const physx::PxMaterial* aMaterial) const
-{
-	const CModel::SModelData& modelData = aModel->GetModelData();
-	std::vector<PxVec3> verts = {};
-	Convert<Vector3, PxVec3>()(modelData.myMeshFilter.myVertecies, verts);
-	const auto meshDesc = GetConvexMeshDesc(verts, modelData.myMeshFilter.myIndexes, PxConvexFlag::eCOMPUTE_CONVEX);
-
-	PxDefaultMemoryOutputStream writeBuffer;
-	PxConvexMeshCookingResult::Enum result;
-	myCooking->cookConvexMesh(meshDesc, writeBuffer, &result);
-	PxDefaultMemoryInputData readBuffer(writeBuffer.getData(), writeBuffer.getSize());
-
-	PxConvexMesh* pxMesh = myPhysics->createConvexMesh(readBuffer);
-	const auto& scale = aTransform->Scale();
-	PxMeshScale meshScale(PxVec3(scale.x, scale.y, scale.z), PxQuat(PxIdentity));
-	PxConvexMeshGeometry pMeshGeometry(pxMesh, meshScale);
-
-	PxShape* convexShape = myPhysics->createShape(pMeshGeometry, *aMaterial, true);
-	return convexShape;
 }
 
 physx::PxShape* CPhysXWrapper::CookObject(CGameObject& aGameObject)
