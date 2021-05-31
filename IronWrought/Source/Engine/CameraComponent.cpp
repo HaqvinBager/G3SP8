@@ -12,21 +12,25 @@
 #include "JsonReader.h"
 
 CCameraComponent::CCameraComponent(CGameObject& aParent, const float aFoV/*, float aNearPlane, float aFarPlane, DirectX::SimpleMath::Vector2 aResolution*/)
-	: CComponent(aParent),myFoV(aFoV)
+	: CComponent(aParent), myFoV(aFoV)
 {
 	myProjection = DirectX::XMMatrixPerspectiveFovLH(DirectX::XMConvertToRadians(myFoV), (16.0f / 9.0f), 0.1f, 500.0f);
 	myView = DirectX::XMMatrixLookAtLH(GameObject().myTransform->Position(), Vector3::Forward, Vector3::Up);
-	
+
 	DirectX::BoundingFrustum::CreateFromMatrix(myViewFrustum, myProjection);
 
 	myTrauma = 0.0f;
+	myTestTrauma = 0.4f;
 	myShake = 0.0f;
 	myDecayInSeconds = 0.5f;
-	myShakeSpeed = 20.0f;
-	myMaxShakeRotation = { 2.0f, 2.0f, 2.0f };
-	myNoise = PerlinNoise(214125213);
+	myShakeSpeed = 0.685f;
+	myMaxShakeRotation = { 2.0f, 1.0f, 1.0f };
+
+	myNoise = FastNoise::New<FastNoise::Simplex>();
+	//myNoise = PerlinNoise(214125213);
+
 	myShakeTimer = 0.0f;
-	
+
 	myFadingPlane = nullptr;
 	myFadeParameter = 1.0f;
 	myFadeSpeed = 1.0f;
@@ -70,16 +74,18 @@ void CCameraComponent::Update()
 #ifdef _DEBUG
 	if (Input::GetInstance()->IsKeyPressed('H'))
 	{
-		this->SetTrauma(1.5f);
+		this->SetTrauma(myTestTrauma);
 	}
-	if (Input::GetInstance()->IsKeyPressed('J'))
+	if (Input::GetInstance()->IsKeyDown('J'))
 	{
-		this->Fade(false, 5.0f);
+		/*this->Fade(false, 5.0f);*/this->SetTrauma(myTestTrauma);
 	}
 #endif
 
+	this->SetTrauma(myTestTrauma);
+
 	if (myTrauma > 0.0f) {
-		myShakeTimer += CTimer::Dt();
+		//myShakeTimer += CTimer::Dt();
 		myTrauma -= (1 / myDecayInSeconds) * CTimer::Dt();
 		Shake();
 	}
@@ -88,7 +94,7 @@ void CCameraComponent::Update()
 		myTrauma = 0.0f;
 	}
 
-		if (myState != ECameraState::Default)
+	if (myState != ECameraState::Default)
 	{
 		if (myState == ECameraState::FadeIn || myState == ECameraState::FadeOut)
 		{
@@ -113,7 +119,7 @@ void CCameraComponent::Update()
 			else if (myState == ECameraState::FadeOut)
 			{
 				alpha = LogEaseIn(myFadeParameter);
-				if (alpha >= 0.99f) 
+				if (alpha >= 0.99f)
 				{
 					alpha = 1.0f;
 					myState = ECameraState::Default;
@@ -148,13 +154,13 @@ void CCameraComponent::SetFoV(float aFoV)
 {
 	myFoV = aFoV;
 	myProjection = DirectX::XMMatrixPerspectiveFovLH(DirectX::XMConvertToRadians(myFoV), (16.0f / 9.0f), 0.1f, 500.0f);
-	
+
 	DirectX::BoundingFrustum::CreateFromMatrix(myViewFrustum, myProjection);
 }
 
 const DirectX::SimpleMath::Matrix& CCameraComponent::GetProjection() const
 {
-	return myProjection; 
+	return myProjection;
 }
 
 float CCameraComponent::GetFoV()
@@ -206,9 +212,14 @@ const Matrix& CCameraComponent::GetViewMatrix()
 	return myView;
 }
 
-const Matrix& CCameraComponent::GetShakenMatrix() const
+const Matrix& CCameraComponent::GetShakenMatrix()
 {
 	return myShakenMatrix;
+}
+
+const Vector3& CCameraComponent::GetShakeVector() const
+{
+	return myShakeVector;
 }
 
 const DirectX::BoundingFrustum CCameraComponent::GetViewFrustum()
@@ -222,24 +233,44 @@ const DirectX::BoundingFrustum CCameraComponent::GetViewFrustum()
 	return viewFrustum;
 }
 
+void CCameraComponent::SetShakeDecay(float aDecayInSeconds)
+{
+	myDecayInSeconds = aDecayInSeconds;
+}
+
+void CCameraComponent::SetShakeSpeed(float aSpeed)
+{
+	myShakeSpeed = aSpeed;
+}
+
+void CCameraComponent::SetMaxShakeRotation(const Vector3& aMaxRotation)
+{
+	myMaxShakeRotation = aMaxRotation;
+}
+
+void CCameraComponent::SetTestTrauma(float aTrauma)
+{
+	myTestTrauma = aTrauma;
+}
+
 void CCameraComponent::Shake()
 {
 	myShake = myTrauma * myTrauma * myTrauma;
 
-	if (myShakeTimer > 0.0167f) {
-		float newRotX = myMaxShakeRotation.x * myShake * (float(myNoise.noise(Random(-myShakeSpeed, myShakeSpeed), CTimer::Time() * myShakeSpeed, 0.0f) - 0.5f)) * 2;
-		float newRotY = myMaxShakeRotation.y * myShake * (float(myNoise.noise(Random(-myShakeSpeed, myShakeSpeed), CTimer::Time() * myShakeSpeed, 0.0f) - 0.5f)) * 2;
-		float newRotZ = myMaxShakeRotation.z * myShake * (float(myNoise.noise(Random(-myShakeSpeed, myShakeSpeed), CTimer::Time() * myShakeSpeed, 0.0f) - 0.5f)) * 2;
+	static int seed = 1462;
+	float speed = myShakeSpeed * myShakeSpeed * myShakeSpeed;
+	float newRotX = myMaxShakeRotation.x * myShake * myNoise->GenSingle2D(CTimer::Time() * speed, CTimer::Time() * speed, seed);
+	float newRotY = myMaxShakeRotation.y * myShake * myNoise->GenSingle2D(CTimer::Time() * speed, CTimer::Time() * speed, seed+1);
+	float newRotZ = myMaxShakeRotation.z * myShake * myNoise->GenSingle2D(CTimer::Time() * speed, CTimer::Time() * speed, seed+2);
 
-		DirectX::SimpleMath::Vector3 newRotation = { newRotX, newRotY, newRotZ };
+	DirectX::SimpleMath::Vector3 newRotation = { newRotX, newRotY, newRotZ };
 
-		myShakenMatrix = DirectX::SimpleMath::Matrix::CreateFromYawPitchRoll(0.0f, 0.0f, DirectX::XMConvertToRadians(newRotZ));
-		//myShakenMatrix = myShakenMatrix.Transpose();
-		
-		newRotation += myStartingRotation;
-		//GameObject().myTransform->Rotation(newRotation);
-		myShakeTimer -= 0.0167f;
-	}
+	myShakeVector = newRotation;
+	myShakenMatrix = DirectX::SimpleMath::Matrix::CreateFromYawPitchRoll(0.0f, 0.0f, DirectX::XMConvertToRadians(newRotZ));
+
+	newRotation += myStartingRotation;
+	//GameObject().myTransform->Rotation(newRotation);
+	//myShakeTimer -= 0.0167f;
 }
 
 

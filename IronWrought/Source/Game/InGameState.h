@@ -52,7 +52,11 @@ private:
 
 	CGameObject* myMenuCamera;
 	std::array<Vector3, 4> myMenuCameraPositions;
+	std::array<Vector3, 4> myMenuCameraRotations;
+	Vector3 myMenuCameraTargetPosition;
+	Quaternion myMenuCameraTargetRotation;
 	std::array<CCanvas*, EInGameCanvases_Count> myCanvases;
 	EInGameCanvases myCurrentCanvas;
+	float myMenuCameraSpeed;
 
 };

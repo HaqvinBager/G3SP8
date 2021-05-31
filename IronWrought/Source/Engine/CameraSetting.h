@@ -17,6 +17,10 @@ namespace ImGui {
 
         float myCameraSpeed;
         float myCameraFov;
+        float myCameraShakeSpeed;
+        float myShakeDecayInSeconds;
+        float myTestTrauma;
+        Vector3 myShakeMaxRotation;
     };
 }
 

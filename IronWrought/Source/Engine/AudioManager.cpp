@@ -506,6 +506,12 @@ void CAudioManager::Receive(const SMessage& aMessage) {
 
 void CAudioManager::Receive(const SStringMessage& aMessage)
 {
+	//Puzzle Clips
+	//
+
+	//myWrapper.Play(myAmbienceAudio[0], myChannels[0]);
+
+
 	if (strcmp(aMessage.myMessageType, "Level_1-1") == 0)
 	{
 		myChannels[CAST(EChannel::Ambience)]->Stop();
@@ -533,6 +539,7 @@ void CAudioManager::Receive(const SStringMessage& aMessage)
 		myWrapper.Play(myAmbienceAudio[CAST(EAmbience::Outside)], myChannels[CAST(EChannel::Ambience)]);
 		return;
 	}
+
 }
 
 void CAudioManager::Update()
@@ -728,6 +735,8 @@ void CAudioManager::SubscribeToMessages()
 	CMainSingleton::PostMaster().Subscribe(EMessageType::PhysicsPropCollision, this);
 
 	CMainSingleton::PostMaster().Subscribe(EMessageType::EnemyStateChange, this);
+
+	//Pussel
 }
 
 void CAudioManager::UnsubscribeToMessages()

@@ -28,6 +28,7 @@ namespace PostMaster
 	struct SBoxColliderEvenTriggerData
 	{
 		bool myState = false;
+		int mySceneSection = -1;
 		CTransformComponent* myCollidersTransform = nullptr;
 		CTransformComponent* myOthersTransform = nullptr;
 	};

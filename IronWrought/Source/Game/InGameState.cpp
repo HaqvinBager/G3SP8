@@ -24,7 +24,7 @@
 	#include <VFXSystemComponent.h>
 	#include <VFXMeshFactory.h>
 	#include <ParticleEmitterFactory.h>
-	
+
 	#include <TextFactory.h>
 	#include <TextInstance.h>
 	#include "EnemyComponent.h"
@@ -32,9 +32,9 @@
 	#include "AnimationComponent.h"
 	#include "animationLoader.h"
 	#include "ModelComponent.h"
-	
+
 	#include "EngineDefines.h"
-	
+
 	void TEMP_VFX(CScene* aScene);
 #endif
 
@@ -48,20 +48,22 @@ CInGameState::CInGameState(CStateStack& aStateStack, const CStateStack::EState a
 	, myEnemyAnimationController(nullptr)
 	, myExitTo(EExitTo::None)
 	, myMenuCamera(nullptr)
-	, myMenuCameraPositions({ Vector3(-15.0f, 7.0f, -75.55f), Vector3(-16.0f, 5.7f, -95.55f), Vector3(-16.0f, 7.0f, -99.0f), Vector3(-12.0f, 7.7f, -94.55f)})
+	, myMenuCameraPositions({ Vector3(-15.0f, 7.0f, -75.55f), Vector3(15.59f, -0.64f, -37.5f), Vector3(17.36f, -1.04f, -27.89f), Vector3(13.18f, -1.12f, -33.25f) })
+	, myMenuCameraRotations({ Vector3(0.0f, 0.0f, 0.0f), Vector3(0.0f, 85.221f, 0.0f) , Vector3(-20.59f, -30.739f, 0.119f) , Vector3(3.47f, 241.13f, 0.12f) })
 	, myCanvases({ nullptr, nullptr, nullptr })
 	, myCurrentCanvas(EInGameCanvases_Count)
+	, myMenuCameraSpeed(5.0f)
 {
 }
 
-CInGameState::~CInGameState() 
+CInGameState::~CInGameState()
 {
-	if(myEnemyAnimationController)
+	if (myEnemyAnimationController)
 		delete myEnemyAnimationController;
 
 	for (size_t i = 0; i < myCanvases.size(); ++i)
 	{
-		if(myCanvases[i])
+		if (myCanvases[i])
 			delete myCanvases[i];
 	}
 }
@@ -102,11 +104,13 @@ void CInGameState::Start()
 	//Quaternion playerRot = scene->Player()->myTransform->Rotation();
 	Quaternion playerRot = scene->Player()->myTransform->FetchChildren()[0]->GameObject().GetComponent<CCameraComponent>()->GameObject().myTransform->Rotation();
 	myMenuCamera = new CGameObject(0);
-	CCameraComponent* camComp = myMenuCamera->AddComponent<CCameraComponent>(*myMenuCamera);//Default Fov is 70.0f
+	CCameraComponent* camComp = myMenuCamera->AddComponent<CCameraComponent>(*myMenuCamera, 59.5f);//Default Fov is 70.0f
 	myMenuCamera->AddComponent<CCameraControllerComponent>(*myMenuCamera, 1.0f, CCameraControllerComponent::ECameraMode::MenuCam); //Default speed is 2.0f
 	myMenuCamera->myTransform->Position(firstPos);
 	myMenuCamera->myTransform->Rotation(playerRot);
 	myMenuCameraPositions[0] = firstPos;
+	myMenuCameraTargetPosition = firstPos;
+	myMenuCameraTargetRotation = playerRot;
 	scene->AddInstance(myMenuCamera);
 	scene->AddCamera(camComp, ESceneCamera::MenuCam);
 	scene->MainCamera(ESceneCamera::MenuCam);
@@ -115,6 +119,8 @@ void CInGameState::Start()
 	scene->SetCanvas(myCanvases[EInGameCanvases_MainMenu]);
 	myCurrentCanvas = EInGameCanvases_MainMenu;
 	scene->UpdateOnlyCanvas(false);
+
+	scene->ToggleSections(0);
 
 	CMainSingleton::PostMaster().Subscribe(EMessageType::StartGame, this);
 	CMainSingleton::PostMaster().Subscribe(EMessageType::Credits, this);
@@ -134,6 +140,7 @@ void CInGameState::Start()
 	CMainSingleton::PostMaster().Subscribe(PostMaster::SMSG_DISABLE_CANVAS, this);
 	CMainSingleton::PostMaster().Subscribe(PostMaster::SMSG_ENABLE_CANVAS, this);
 	CMainSingleton::PostMaster().Subscribe(PostMaster::SMSG_TO_MAIN_MENU, this);
+	CMainSingleton::PostMaster().Subscribe(PostMaster::SMSG_SECTION, this);
 }
 
 void CInGameState::Stop()
@@ -145,6 +152,7 @@ void CInGameState::Stop()
 	CMainSingleton::PostMaster().Unsubscribe(PostMaster::SMSG_DISABLE_CANVAS, this);
 	CMainSingleton::PostMaster().Unsubscribe(PostMaster::SMSG_ENABLE_CANVAS, this);
 	CMainSingleton::PostMaster().Unsubscribe(PostMaster::SMSG_TO_MAIN_MENU, this);
+	CMainSingleton::PostMaster().Unsubscribe(PostMaster::SMSG_SECTION, this);
 #ifdef INGAME_USE_MENU
 	CMainSingleton::PostMaster().Unsubscribe(EMessageType::StartGame, this);
 	CMainSingleton::PostMaster().Unsubscribe(EMessageType::Credits, this);
@@ -170,59 +178,75 @@ void CInGameState::Update()
 		{
 			ToggleCanvas(EInGameCanvases_PauseMenu);
 		}
-		else if(myCurrentCanvas == EInGameCanvases_PauseMenu)
+		else if (myCurrentCanvas == EInGameCanvases_PauseMenu)
 		{
 			ToggleCanvas(EInGameCanvases_HUD);
 			CMainSingleton::PostMaster().SendLate({ EMessageType::PauseMenu, nullptr });
 		}
 	}
+
+	myMenuCamera->myTransform->Position(Vector3::Lerp(myMenuCamera->myTransform->Position(), myMenuCameraTargetPosition, myMenuCameraSpeed * CTimer::Dt()));
+	myMenuCamera->myTransform->Rotation(Quaternion::Slerp(myMenuCamera->myTransform->Rotation(), myMenuCameraTargetRotation, myMenuCameraSpeed * CTimer::Dt()));
 #endif
 
 	DEBUGFunctionality();
 
 	switch (myExitTo)
 	{
-		case EExitTo::AnotherLevel:
-		{
-			myExitTo = EExitTo::None;
-			myStateStack.PopTopAndPush(CStateStack::EState::LoadLevel);
-		}break;
+	case EExitTo::AnotherLevel:
+	{
+		myExitTo = EExitTo::None;
+		myStateStack.PopTopAndPush(CStateStack::EState::LoadLevel);
+	}break;
 
-		case EExitTo::MainMenu:
-		{
-			myExitTo = EExitTo::None;
-		}break;
+	case EExitTo::MainMenu:
+	{
+		myExitTo = EExitTo::None;
+	}break;
 
-		case EExitTo::Windows:
-		{
-			myStateStack.PopState();
-		}break;
+	case EExitTo::Windows:
+	{
+		myStateStack.PopState();
+	}break;
 
-		case EExitTo::None:
+	case EExitTo::None:
 		break;
 
-		default:break;
+	default:break;
 	}
 }
 
 void CInGameState::Receive(const SStringMessage& aMessage)
 {
+	if (PostMaster::CompareStringMessage(aMessage.myMessageType, PostMaster::SMSG_SECTION))
+	{
+		const PostMaster::SBoxColliderEvenTriggerData* data = static_cast<PostMaster::SBoxColliderEvenTriggerData*>(aMessage.data);
+		if (data->myState)
+			IRONWROUGHT->GetActiveScene().ToggleSections(data->mySceneSection);
+		else
+			IRONWROUGHT->GetActiveScene().DisableSection(data->mySceneSection);
+	}
+
 	if (PostMaster::LevelCheck(aMessage.myMessageType))
 	{
 		myExitTo = EExitTo::AnotherLevel;
+		return;
 	}
 	if (PostMaster::CompareStringMessage(aMessage.myMessageType, PostMaster::SMSG_TO_MAIN_MENU))
 	{
 		myExitTo = EExitTo::MainMenu;
+		return;
 	}
 
 	if (PostMaster::DisableCanvas(aMessage.myMessageType))
 	{
 		IRONWROUGHT->GetActiveScene().CanvasToggle(false);
+		return;
 	}
 	if (PostMaster::EnableCanvas(aMessage.myMessageType))
 	{
 		IRONWROUGHT->GetActiveScene().CanvasToggle(true);
+		return;
 	}
 }
 
@@ -230,54 +254,63 @@ void CInGameState::Receive(const SMessage& aMessage)
 {
 	switch (aMessage.myMessageType)
 	{
-		case EMessageType::StartGame:
-		{
-			ToggleCanvas(EInGameCanvases_HUD);
-		}break;
+	case EMessageType::StartGame:
+	{
+		ToggleCanvas(EInGameCanvases_HUD);
+	}break;
 
-		case EMessageType::Resume:
-		{
-			ToggleCanvas(EInGameCanvases_HUD);
-		}break;
+	case EMessageType::Resume:
+	{
+		ToggleCanvas(EInGameCanvases_HUD);
+	}break;
 
-		case EMessageType::SetResolution1280x720:
-		{
+	case EMessageType::SetResolution1280x720:
+	{
 
-		}break;
+	}break;
 
-		case EMessageType::SetResolution1600x900:
-		{
+	case EMessageType::SetResolution1600x900:
+	{
 
-		}break;
+	}break;
 
-		case EMessageType::SetResolution1920x1080:
-		{
+	case EMessageType::SetResolution1920x1080:
+	{
 
-		}break;
+	}break;
 
-		case EMessageType::MainMenu:
-		{
-			// Don't forget a loading screen.
-			myStateStack.PopTopAndPush(CStateStack::EState::InGame);
-		}break;
+	case EMessageType::MainMenu:
+	{
+		// Don't forget a loading screen.
+		myStateStack.PopTopAndPush(CStateStack::EState::InGame);
+	}break;
 
-		case EMessageType::CanvasButtonIndex:
-		{
+	case EMessageType::CanvasButtonIndex:
+	{
 #ifdef INGAME_USE_MENU
-			int index = *static_cast<int*>(aMessage.data);
-			if (index < 0 || index > myMenuCameraPositions.size() - 1)
-				break;
+		int index = *static_cast<int*>(aMessage.data);
+		if (index < 0 || index > myMenuCameraPositions.size() - 1)
+			break;
 
-			myMenuCamera->myTransform->Position(myMenuCameraPositions[index]);
+		//myMenuCamera->myTransform->Position(myMenuCameraPositions[index]);
+		//myMenuCamera->myTransform->Transform(myMenuCameraPositions[index], myMenuCameraRotations[index]);
+
+		myMenuCameraTargetPosition = myMenuCameraPositions[index];
+		myMenuCameraTargetRotation = Quaternion::CreateFromYawPitchRoll
+		(
+			  DirectX::XMConvertToRadians(myMenuCameraRotations[index].y)
+			, DirectX::XMConvertToRadians(myMenuCameraRotations[index].x)
+			, DirectX::XMConvertToRadians(myMenuCameraRotations[index].z)
+		);
 #endif
-		}break;
+	}break;
 
-		case EMessageType::Quit:
-		{
-			myExitTo = EExitTo::Windows;
-		}break;
+	case EMessageType::Quit:
+	{
+		myExitTo = EExitTo::Windows;
+	}break;
 
-		default:break;
+	default:break;
 	}
 }
 
@@ -317,7 +350,7 @@ void CInGameState::ToggleCanvas(EInGameCanvases anEInGameCanvases)
 #ifdef INGAME_USE_MENU
 	CScene& scene = IRONWROUGHT->GetActiveScene();
 	scene.SetCanvas(myCanvases[myCurrentCanvas]);
-	
+
 	if (myCurrentCanvas == EInGameCanvases_MainMenu)
 	{
 		scene.UpdateOnlyCanvas(true);
@@ -345,13 +378,13 @@ void CInGameState::ToggleCanvas(EInGameCanvases anEInGameCanvases)
 }
 
 #ifndef NDEBUG
-	void TEMP_VFX(CScene* /*aScene*/)
-	{
-		//static int id = 500;
-		//CGameObject* abilityObject = new CGameObject(id++);
-		//abilityObject->AddComponent<CVFXSystemComponent>(*abilityObject, ASSETPATH("Assets/IronWrought/VFX/JSON/VFXSystem_ToLoad.json"));
-		//
-		//aScene->AddInstance(abilityObject);
-		//aScene->SetVFXTester(abilityObject);
-	}
+void TEMP_VFX(CScene* /*aScene*/)
+{
+	//static int id = 500;
+	//CGameObject* abilityObject = new CGameObject(id++);
+	//abilityObject->AddComponent<CVFXSystemComponent>(*abilityObject, ASSETPATH("Assets/IronWrought/VFX/JSON/VFXSystem_ToLoad.json"));
+	//
+	//aScene->AddInstance(abilityObject);
+	//aScene->SetVFXTester(abilityObject);
+}
 #endif

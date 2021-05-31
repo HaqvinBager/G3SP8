@@ -109,25 +109,30 @@ CScene* CSceneManager::CreateScene(const std::string& aSceneName)
 
 CScene* CSceneManager::CreateSceneFromSeveral(const std::vector<std::string>& someSceneNames)
 {
-	CScene* scene = Instantiate();
-	for (auto& sceneName : someSceneNames)
+	CScene* scene = Instantiate(static_cast<int>(someSceneNames.size()));
+	for (int i = 0; i < someSceneNames.size(); ++i)
 	{
+		const std::string& sceneName = someSceneNames[i];
 		const auto doc = CJsonReader::Get()->LoadDocument(ASSETPATH("Assets/Generated/" + sceneName + "/" + sceneName + ".json"));
 		if (doc.HasParseError())
 		{
 			std::cout << __FUNCTION__ << " Scene: " << sceneName << " has parse errors! Unable to load." << std::endl;
+			scene->NextSection();
 			continue;
 		}
 		if (!doc.HasMember("Root"))
 		{
 			std::cout << __FUNCTION__ << " Scene: " << sceneName << " has no root! Unable to load." << std::endl;
+			scene->NextSection();
 			continue;
 		}
 
 		Binary::SLevelData binLevelData = CBinReader::Load(ASSETPATH("Assets/Generated/" + sceneName + "/" + sceneName + ".bin"));
 
-		AddToScene(*scene, binLevelData, doc);
+		AddToScene(*scene, binLevelData, doc, i);
+		scene->NextSection();
 	}
+	scene->SetCurrentSection(0);
 
 	return scene;
 }
@@ -148,13 +153,13 @@ CScene* CSceneManager::CreateMenuScene(const std::string& aCanvasPath)
 	return scene;
 }
 
-CScene* CSceneManager::Instantiate()
+CScene* CSceneManager::Instantiate(const int aNumberOfSections)
 {
 	// Depending on the order in which we Awake() different states/ scenes are created some states/scenes that should not listen to ComponentAdded might do so and will cause issues. / Aki 2021 04 08
 	if (ourLastInstantiatedScene != nullptr)
 		CMainSingleton::PostMaster().Unsubscribe(EMessageType::ComponentAdded, ourLastInstantiatedScene);
 
-	ourLastInstantiatedScene = new CScene(); //Creates a New scene and Leaves total ownership of the Previous scene over to the hands of Engine!
+	ourLastInstantiatedScene = new CScene(aNumberOfSections); //Creates a New scene and Leaves total ownership of the Previous scene over to the hands of Engine!
 
 	//Create Cameras
 
@@ -162,7 +167,7 @@ CScene* CSceneManager::Instantiate()
 	return ourLastInstantiatedScene;
 }
 
-bool CSceneManager::AddToScene(CScene& aScene, Binary::SLevelData& aBinLevelData, const rapidjson::Document& aDoc)
+bool CSceneManager::AddToScene(CScene& aScene, Binary::SLevelData& aBinLevelData, const rapidjson::Document& aDoc, const int aSceneSection)
 {
 	SVertexPaintCollection vertexPaintData = CBinReader::LoadVertexPaintCollection(aDoc["Root"].GetString());
 	const auto& scenes = aDoc.GetObjectW()["Scenes"].GetArray();
@@ -226,7 +231,7 @@ bool CSceneManager::AddToScene(CScene& aScene, Binary::SLevelData& aBinLevelData
 				AddVFX(aScene, sceneData["myVFXLinks"].GetArray());
 
 			if (sceneData.HasMember("triggerEvents"))
-				AddTriggerEvents(aScene, sceneData["triggerEvents"].GetArray());
+				AddTriggerEvents(aScene, sceneData["triggerEvents"].GetArray(), aSceneSection);
 			if (sceneData.HasMember("teleporters"))
 				AddTeleporters(aScene, sceneData["teleporters"].GetArray());
 
@@ -975,7 +980,7 @@ void CSceneManager::AddCollider(CScene& aScene, const std::vector<Binary::SColli
 	}
 }
 
-void CSceneManager::AddTriggerEvents(CScene& aScene, RapidArray someData)
+void CSceneManager::AddTriggerEvents(CScene& aScene, RapidArray someData, const int aSection)
 {
 	for (const auto& triggerEvent : someData)
 	{
@@ -993,6 +998,7 @@ void CSceneManager::AddTriggerEvents(CScene& aScene, RapidArray someData)
 			triggerVolume->RegisterEventTriggerFilter(eventFilter);
 			triggerVolume->RegisterEventTriggerAudioIndex(audioIndex);
 			triggerVolume->RegisterEventTriggerOnce(triggerOnce);
+			triggerVolume->RegisterSceneSection(aSection);
 		}
 	}
 }
