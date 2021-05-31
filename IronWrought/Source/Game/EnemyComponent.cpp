@@ -131,15 +131,15 @@ void CEnemyComponent::Update()//får bestämma vilket behaviour vi vill köra i 
 		float degrees = std::acos(dot / sqrt(lengthSquaredEnemy * lengthSquaredPlayer)) * 180.f / PI;
 		//std::cout << "Degrees: " << degrees << std::endl;
 		float viewAngle = 60.f;
-		myHasFoundPlayer = false;
-		CMainSingleton::PostMaster().Send({ EMessageType::EnemyLostPlayer });
+		//myHasFoundPlayer = false;
+		//CMainSingleton::PostMaster().Send({ EMessageType::EnemyLostPlayer });
 
 		if (degrees <= viewAngle) {
 			Vector3 direction = playerPos - enemyPos;
 			PxRaycastBuffer hit = CEngine::GetInstance()->GetPhysx().Raycast(enemyPos, direction, range, CPhysXWrapper::ELayerMask::STATIC_ENVIRONMENT | CPhysXWrapper::ELayerMask::PLAYER);
 			if (hit.getNbAnyHits() > 0) {
 				CTransformComponent* transform = (CTransformComponent*)hit.getAnyHit(0).actor->userData;
-				if (!transform) {
+				if (!transform && !myHasFoundPlayer) {
 					SMessage msg;
 					msg.data = static_cast<void*>(&playerPos);
 					msg.myMessageType = EMessageType::EnemyFoundPlayer;
@@ -150,19 +150,24 @@ void CEnemyComponent::Update()//får bestämma vilket behaviour vi vill köra i 
 				}
 			}
 		}
+		else if (myHasFoundPlayer)
+		{
+			myHasFoundPlayer = false;
+			CMainSingleton::PostMaster().Send({ EMessageType::EnemyLostPlayer });
+		}
 
 		if (!myHasFoundPlayer && !myHasReachedLastPlayerPosition) {
-			std::cout << "SEEK LAST POSITION" << std::endl;
+			//std::cout << "SEEK LAST POSITION" << std::endl;
 			SetState(EBehaviour::Seek);
 		}
 
 		if (myHasFoundPlayer) {
-			std::cout << "SEEK" << std::endl;
+			//std::cout << "SEEK" << std::endl;
 			SetState(EBehaviour::Seek);
 		}
 		else if(myHasReachedTarget && myHasReachedLastPlayerPosition) {
 			//std::cout << __FUNCTION__ << " PATROL" << std::endl;
-			std::cout << "PATROL" << std::endl;
+			//std::cout << "PATROL" << std::endl;
 			SetState(EBehaviour::Patrol);
 		}
 

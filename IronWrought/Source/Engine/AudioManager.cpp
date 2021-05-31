@@ -112,6 +112,7 @@ CAudioManager::CAudioManager()
 	}
 
 	myDynamicSource = myWrapper.RequestAudioSource("Enemy");
+	myDynamicSource->Set3DMinMaxDistance(10.0f, 1000.0f);
 
 	//SetDynamicTrack(EAmbience::DynamicTestDrums, EAmbience::DynamicTestGlitches, EAmbience::DynamicTestScreamer);
 
@@ -277,45 +278,45 @@ void CAudioManager::Receive(const SMessage& aMessage) {
 	}
 	break;
 
-	case EMessageType::PlayRobotAttackSound:
-	{
-		if (myChannels[CAST(EChannel::ResearcherVOX)]->IsPlaying())
-			return;
-		PlayCyclicRandomSoundFromCollection(myRobotAttackSounds, EChannel::RobotVOX, myAttackSoundIndices, AUDIO_MAX_NR_OF_SFX_FROM_COLLECTION);
-	}
-	break;
+	//case EMessageType::PlayRobotAttackSound:
+	//{
+	//	if (myChannels[CAST(EChannel::ResearcherVOX)]->IsPlaying())
+	//		return;
+	//	PlayCyclicRandomSoundFromCollection(myRobotAttackSounds, EChannel::RobotVOX, myAttackSoundIndices, AUDIO_MAX_NR_OF_SFX_FROM_COLLECTION);
+	//}
+	//break;
 
-	case EMessageType::PlayRobotDeathSound:
-	{
-		if (myChannels[CAST(EChannel::ResearcherVOX)]->IsPlaying())
-			return;
-		PlayCyclicRandomSoundFromCollection(myRobotDeathSounds, EChannel::RobotVOX, myDeathSoundIndices, AUDIO_MAX_NR_OF_SFX_FROM_COLLECTION);
-	}
-	break;
+	//case EMessageType::PlayRobotDeathSound:
+	//{
+	//	if (myChannels[CAST(EChannel::ResearcherVOX)]->IsPlaying())
+	//		return;
+	//	PlayCyclicRandomSoundFromCollection(myRobotDeathSounds, EChannel::RobotVOX, myDeathSoundIndices, AUDIO_MAX_NR_OF_SFX_FROM_COLLECTION);
+	//}
+	//break;
 
-	case EMessageType::PlayRobotIdleSound:
-	{
-		if (myChannels[CAST(EChannel::ResearcherVOX)]->IsPlaying())
-			return;
-		PlayCyclicRandomSoundFromCollection(myRobotIdleSounds, EChannel::RobotVOX, myIdleSoundIndices, AUDIO_MAX_NR_OF_SFX_FROM_COLLECTION);
-	}
-	break;
+	//case EMessageType::PlayRobotIdleSound:
+	//{
+	//	if (myChannels[CAST(EChannel::ResearcherVOX)]->IsPlaying())
+	//		return;
+	//	PlayCyclicRandomSoundFromCollection(myRobotIdleSounds, EChannel::RobotVOX, myIdleSoundIndices, AUDIO_MAX_NR_OF_SFX_FROM_COLLECTION);
+	//}
+	//break;
 
-	case EMessageType::PlayRobotPatrolling:
-	{
-		if (myChannels[CAST(EChannel::ResearcherVOX)]->IsPlaying())
-			return;
-		PlayCyclicRandomSoundFromCollection(myRobotPatrollingSounds, EChannel::RobotVOX, myPatrollingSoundIndices, AUDIO_MAX_NR_OF_SFX_FROM_COLLECTION);
-	}
-	break;
+	//case EMessageType::PlayRobotPatrolling:
+	//{
+	//	if (myChannels[CAST(EChannel::ResearcherVOX)]->IsPlaying())
+	//		return;
+	//	PlayCyclicRandomSoundFromCollection(myRobotPatrollingSounds, EChannel::RobotVOX, myPatrollingSoundIndices, AUDIO_MAX_NR_OF_SFX_FROM_COLLECTION);
+	//}
+	//break;
 
-	case EMessageType::PlayRobotSearching:
-	{
-		if (myChannels[CAST(EChannel::ResearcherVOX)]->IsPlaying())
-			return;
-		PlayCyclicRandomSoundFromCollection(myRobotSearchingSounds, EChannel::RobotVOX, mySearchingSoundIndices, AUDIO_MAX_NR_OF_SFX_FROM_COLLECTION);
-	}
-	break;
+	//case EMessageType::PlayRobotSearching:
+	//{
+	//	if (myChannels[CAST(EChannel::ResearcherVOX)]->IsPlaying())
+	//		return;
+	//	PlayCyclicRandomSoundFromCollection(myRobotSearchingSounds, EChannel::RobotVOX, mySearchingSoundIndices, AUDIO_MAX_NR_OF_SFX_FROM_COLLECTION);
+	//}
+	//break;
 
 	case EMessageType::EnemyTakeDamage:
 	{
@@ -374,18 +375,38 @@ void CAudioManager::Receive(const SMessage& aMessage) {
 
 	case EMessageType::EnemyPatrolState:
 	{
-		if (myChannels[CAST(EChannel::ResearcherVOX)]->IsPlaying())
-			return;
-
-		PlayCyclicRandomSoundFromCollection(myRobotPatrollingSounds, EChannel::RobotVOX, myPatrollingSoundIndices, AUDIO_MAX_NR_OF_SFX_FROM_COLLECTION);
-
+		std::cout << "Play Patrol" << std::endl;
+		myDynamicSource->Stop();
+		myWrapper.Play(myEnemyVoiceSounds[CAST(EEnemyVoiceLine::EnemyPatrol)], myDynamicSource);
 	}break;
 
 	case EMessageType::EnemySeekState:
 	{
-		if (myChannels[CAST(EChannel::ResearcherVOX)]->IsPlaying())
-			return;
-		PlayCyclicRandomSoundFromCollection(myRobotAttackSounds, EChannel::RobotVOX, myAttackSoundIndices, AUDIO_MAX_NR_OF_SFX_FROM_COLLECTION);
+		//myDynamicSource->Stop();
+		//std::cout << "Play Seek" << std::endl;
+		//myWrapper.Play(myEnemyVoiceSounds[CAST(EEnemyVoiceLine::EnemyChasing)], myDynamicSource);
+	}break;
+
+	case EMessageType::EnemyAlertedState:
+	{
+		myDynamicSource->Stop();
+		std::cout << "Play Alerted" << std::endl;
+		myWrapper.Play(myEnemyVoiceSounds[CAST(EEnemyVoiceLine::EnemyHeardNoise)], myDynamicSource);
+	}break;
+
+	case EMessageType::EnemyFoundPlayer:
+	{
+		myDynamicSource->Stop();
+		std::cout << "Play Found Player" << std::endl;
+		myWrapper.Play(myEnemyVoiceSounds[CAST(EEnemyVoiceLine::EnemyFoundPlayer)], myDynamicSource);
+		myDelayedAudio.push_back({myEnemyVoiceSounds[CAST(EEnemyVoiceLine::EnemyChasing)], myDynamicSource, 4.0f});
+	}break;
+
+	case EMessageType::EnemyLostPlayer:
+	{
+		myDynamicSource->Stop();
+		std::cout << "Play Lost Player" << std::endl;
+		myWrapper.Play(myEnemyVoiceSounds[CAST(EEnemyVoiceLine::EnemyLostPlayer)], myDynamicSource);
 	}break;
 
 	case EMessageType::EnemyAttack:
@@ -549,21 +570,22 @@ void CAudioManager::Update()
 	if (myDynamicObject)
 	{
 		myDynamicSource->Set3DAttributes(myDynamicObject->myTransform->WorldPosition(), { 0.0f, 0.0f, 0.0f });
+		myDynamicSource->Set3DConeAttributes(myDynamicObject->myTransform->Transform().Forward(), 90.0f, 300.0f, 0.3f);
 	}
 
 	myWrapper.Update();
 
-	if (myDelayedSFX.size() > 0)
+	if (myDelayedAudio.size() > 0)
 	{
 		const float dt = CTimer::Dt();
 
-		for (auto it = myDelayedSFX.begin(); it != myDelayedSFX.end();)
+		for (auto it = myDelayedAudio.begin(); it != myDelayedAudio.end();)
 		{
 			it->myTimer -= dt;
 			if (it->myTimer <= 0.0f)
 			{
-				myWrapper.Play(mySFXAudio[CAST(it->mySFX)], myChannels[CAST(EChannel::SFX)]);
-				it = myDelayedSFX.erase(it);
+				myWrapper.Play(it->myAudio, it->myChannel);
+				it = myDelayedAudio.erase(it);
 				continue;
 			}
 			++it;
@@ -640,8 +662,11 @@ void CAudioManager::SubscribeToMessages()
 	CMainSingleton::PostMaster().Subscribe(EMessageType::EnemyPatrolState, this);
 	CMainSingleton::PostMaster().Subscribe(EMessageType::EnemySeekState, this);
 	CMainSingleton::PostMaster().Subscribe(EMessageType::EnemyAttackState, this);
-	CMainSingleton::PostMaster().Subscribe(EMessageType::EnemyTakeDamage, this);
+	CMainSingleton::PostMaster().Subscribe(EMessageType::EnemyAlertedState, this);
 	CMainSingleton::PostMaster().Subscribe(EMessageType::EnemyAttack, this);
+	CMainSingleton::PostMaster().Subscribe(EMessageType::EnemyTakeDamage, this);
+	CMainSingleton::PostMaster().Subscribe(EMessageType::EnemyFoundPlayer, this);
+	CMainSingleton::PostMaster().Subscribe(EMessageType::EnemyLostPlayer, this);
 
 	//CMainSingleton::PostMaster().Subscribe(EMessageType::PlayVoiceLine, this);
 	//CMainSingleton::PostMaster().Subscribe(EMessageType::StopDialogue, this);
@@ -694,8 +719,11 @@ void CAudioManager::UnsubscribeToMessages()
 	CMainSingleton::PostMaster().Unsubscribe(EMessageType::EnemyPatrolState, this);
 	CMainSingleton::PostMaster().Unsubscribe(EMessageType::EnemySeekState, this);
 	CMainSingleton::PostMaster().Unsubscribe(EMessageType::EnemyAttackState, this);
-	CMainSingleton::PostMaster().Unsubscribe(EMessageType::EnemyTakeDamage, this);
+	CMainSingleton::PostMaster().Unsubscribe(EMessageType::EnemyAlertedState, this);
 	CMainSingleton::PostMaster().Unsubscribe(EMessageType::EnemyAttack, this);
+	CMainSingleton::PostMaster().Unsubscribe(EMessageType::EnemyTakeDamage, this);
+	CMainSingleton::PostMaster().Unsubscribe(EMessageType::EnemyFoundPlayer, this);
+	CMainSingleton::PostMaster().Unsubscribe(EMessageType::EnemyLostPlayer, this);
 
 	//CMainSingleton::PostMaster().Unsubscribe(EMessageType::PlayVoiceLine, this);
 	//CMainSingleton::PostMaster().Unsubscribe(EMessageType::StopDialogue, this);

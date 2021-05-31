@@ -134,12 +134,13 @@ private:
 	float myDynamicChannel2;
 	float myDynamicChannel3;
 
-	struct SDelayedSFX
+	struct SDelayedAudio
 	{
-		ESFX mySFX;
-		float myTimer = 0.0f;
+		CAudio* myAudio;
+		CAudioChannel* myChannel;
+		float myTimer = 0.0f;	
 	};
-	std::vector<SDelayedSFX> myDelayedSFX;
+	std::vector<SDelayedAudio> myDelayedAudio;
 
 	struct SFadingChannel
 	{
