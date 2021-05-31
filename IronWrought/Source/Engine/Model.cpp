@@ -37,7 +37,7 @@ void CModel::Init(SModelInstanceData data) {
 	myModelInstanceData = std::move(data);
 }
 
-CModel::SModelData& CModel::GetModelData() {
+const CModel::SModelData& CModel::GetModelData() const {
 	return myModelData;
 }
 

@@ -11,6 +11,7 @@ class CCharacterController;
 class CDynamicRigidBody;
 class CCharacterReportCallback;
 class CContactFilterCallback;
+class CModel;
 
 class CPhysXWrapper
 {
@@ -77,28 +78,10 @@ public:
 
 private:
 
-	template<typename From, typename To>
-	struct Convert {
-		void operator()(const std::vector<From>& aFrom, std::vector<To>& aTo)
-		{
-
-		}
-	};
-
-	template<>
-	struct Convert<Vector3, PxVec3> {
-		void operator()(const std::vector<Vector3>& aFrom, std::vector<PxVec3>& aTo)
-		{
-			aTo.reserve(aFrom.size());
-			for (const auto& vec : aFrom)
-				aTo.push_back(PxVec3(vec.x, vec.y, vec.z));			
-		}
-	};
-
-
-	//void FromVector3ToPxVec3(const std::vector<Vector3>& aData, std::vector<PxVec3>& outVector);
-	PxConvexMeshDesc GetMeshDesc(const std::vector<PxVec3>& verts, const std::vector<unsigned int>& indexes, const PxConvexFlags someFlags);
-
+	PxConvexMeshDesc GetConvexMeshDesc(const std::vector<PxVec3>& someVerts, const std::vector<unsigned int>& someIndices, const PxConvexFlags someFlags) const;
+	PxTriangleMeshDesc GetTriangleMeshDesc(const std::vector<PxVec3>& someVerts, const std::vector<unsigned int>& someIndices) const;
+	PxShape* CookShape(const CModel* aModel, const CTransformComponent* aTransform, const physx::PxMaterial* aMaterial) const;
+	std::vector<PxRigidStatic*> CookShapes(const CModel* aModel, const CTransformComponent* aTransform, const physx::PxMaterial* aMaterial, const std::vector<Matrix>& someTransforms) const;
 
 private:
 	PxFoundation* myFoundation;
@@ -113,4 +96,22 @@ private:
 	physx::PxUserControllerHitReport* myPlayerReportCallback;
 	CContactFilterCallback* myContactFilterReportCallback;;
 	//std::queue<CRigidDynamicBody*> myAddBodyQueue;
+
+
+private:
+	template<typename From, typename To>
+	struct Convert {
+		void operator()(const std::vector<From>& aFrom, std::vector<To>& aTo)
+		{ }
+	};
+
+	template<>
+	struct Convert<Vector3, PxVec3> {
+		void operator()(const std::vector<Vector3>& aFrom, std::vector<PxVec3>& aTo)
+		{
+			aTo.reserve(aFrom.size());
+			for (const auto& vec : aFrom)
+				aTo.push_back(PxVec3(vec.x, vec.y, vec.z));
+		}
+	};
 };

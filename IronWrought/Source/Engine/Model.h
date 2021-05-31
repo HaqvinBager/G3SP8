@@ -36,6 +36,7 @@ public:
 	struct SModelData {
 		std::vector<SMeshData> myMeshes { };
 		SMeshFilter myMeshFilter;
+		//std::vector<SMeshFilter> myMeshFilter;
 		ID3D11VertexShader* myVertexShader = nullptr;
 		ID3D11PixelShader* myPixelShader = nullptr;
 		ID3D11SamplerState* mySamplerState = nullptr;
@@ -71,7 +72,7 @@ public:
 	~CModel();
 
 	void Init(SModelData data);
-	SModelData& GetModelData();
+	const SModelData& GetModelData() const;
 	void SetMaterials(const std::vector<std::array<ID3D11ShaderResourceView*, 3>>& someMaterials);
 	unsigned int AddMaterial(const std::array<ID3D11ShaderResourceView*, 3>& aMaterial);
 	void AddMaterial(const int aMaterialID);
@@ -82,7 +83,7 @@ public:
 
 public:
 	void Init(SModelInstanceData aData);
-	SModelInstanceData& GetModelInstanceData() { return myModelInstanceData; }
+	const SModelInstanceData& GetModelInstanceData() const { return myModelInstanceData; }
 
 	void InstanceCount(int aCount);
 	const int& InstanceCount() const { return myInstanceCount; }
