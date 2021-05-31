@@ -438,55 +438,57 @@ PxShape* CPhysXWrapper::CookShape(const CModel* aModel, const CTransformComponen
 	Convert<const std::vector<unsigned int>*, unsigned int>()(vectorIndices, indices);
 	PxTriangleMeshDesc meshDesc = GetTriangleMeshDesc(verts, indices);
 */
-
+#include "DebugTimerUtility.h"
 std::vector<PxRigidStatic*> CPhysXWrapper::CookShapes(const CModel* aModel, const CTransformComponent* aTransform, const physx::PxMaterial* aMaterial, const std::vector<Matrix>& someTransforms) const
 {
 	const CModel::SModelInstanceData& modelData = aModel->GetModelInstanceData();
 	std::vector<PxRigidStatic*> statics = { };
 	statics.reserve(someTransforms.size());
 
-	std::vector<PxVec3> verts = {};
-	Convert<Vector3, PxVec3>()(modelData.myMeshFilter.myVertecies, verts);
-	PxTriangleMeshDesc meshDesc = GetTriangleMeshDesc(verts, modelData.myMeshFilter.myIndexes);
+	DebugTimer timer;
+	timer.Start("Cooking Time");
 
-	for (const auto& transform : someTransforms)
+	for (auto& meshFilter : modelData.myMeshFilters)
 	{
+		std::vector<PxVec3> verts = {};
+		Convert<Vector3, PxVec3>()(meshFilter.myVertecies, verts);
+		PxTriangleMeshDesc meshDesc = GetTriangleMeshDesc(verts, meshFilter.myIndexes);
+
 		PxDefaultMemoryOutputStream writeBuffer;
 		PxTriangleMeshCookingResult::Enum result;
 		myCooking->cookTriangleMesh(meshDesc, writeBuffer, &result);
-
-		DirectX::SimpleMath::Vector3 translation;
-		DirectX::SimpleMath::Vector3 scale;
-		DirectX::SimpleMath::Quaternion quat;
-		DirectX::SimpleMath::Matrix t = transform;
-		t.Decompose(scale, quat, translation);
-
-		PxMeshScale meshScale(PxVec3(scale.x, scale.y, scale.z), PxQuat(PxIdentity));
-
 		PxDefaultMemoryInputData readBuffer(writeBuffer.getData(), writeBuffer.getSize());
 		PxTriangleMesh* pxMesh = myPhysics->createTriangleMesh(readBuffer);
 
-		PxTriangleMeshGeometry pMeshGeometry(pxMesh, meshScale);
+		for (const auto& transform : someTransforms)
+		{
+			DirectX::SimpleMath::Vector3 translation;
+			DirectX::SimpleMath::Vector3 scale;
+			DirectX::SimpleMath::Quaternion quat;
+			DirectX::SimpleMath::Matrix t = transform;
+			t.Decompose(scale, quat, translation);
 
-		PxVec3 pos = { translation.x, translation.y, translation.z };
-		PxQuat pxQuat = { quat.x, quat.y, quat.z, quat.w };
-		//staticRigidbody->setGlobalPose({ pos, pxQuat });
-		PxRigidStatic* staticRigidbody = myPhysics->createRigidStatic(/*{ 0.f, 0.f, 0.f }*/{ pos, pxQuat });
-		staticRigidbody->userData = (void*)aTransform;
-		PxShape* instancedShape = myPhysics->createShape(pMeshGeometry, *aMaterial, true);
+			PxMeshScale meshScale(PxVec3(scale.x, scale.y, scale.z), PxQuat(PxIdentity));
 
-		PxFilterData filterData;
-		filterData.word0 = CPhysXWrapper::ELayerMask::STATIC_ENVIRONMENT;
-		instancedShape->setQueryFilterData(filterData);
-		staticRigidbody->attachShape(*instancedShape);
+			PxTriangleMeshGeometry pMeshGeometry(pxMesh, meshScale);
+
+			PxVec3 pos = { translation.x, translation.y, translation.z };
+			PxQuat pxQuat = { quat.x, quat.y, quat.z, quat.w };
+			//staticRigidbody->setGlobalPose({ pos, pxQuat });
+			PxRigidStatic* staticRigidbody = myPhysics->createRigidStatic(/*{ 0.f, 0.f, 0.f }*/{ pos, pxQuat });
+			staticRigidbody->userData = (void*)aTransform;
+			PxShape* instancedShape = myPhysics->createShape(pMeshGeometry, *aMaterial, true);
+
+			PxFilterData filterData;
+			filterData.word0 = CPhysXWrapper::ELayerMask::STATIC_ENVIRONMENT;
+			instancedShape->setQueryFilterData(filterData);
+			staticRigidbody->attachShape(*instancedShape);
 
 
-		statics.push_back(staticRigidbody);
-		//for (auto& meshFilter : modelData.myMeshFilters)
-		//{
-		//	
-		//}
+			statics.push_back(staticRigidbody);
+		}
 	}
+	timer.End();
 	return std::move(statics);
 }
 

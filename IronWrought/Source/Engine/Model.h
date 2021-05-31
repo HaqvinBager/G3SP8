@@ -49,8 +49,8 @@ public:
 
 	struct SModelInstanceData {
 		std::vector<SInstancedMeshData> myMeshes{ };
-		//std::vector<SMeshFilter> myMeshFilters{ };
-		SMeshFilter myMeshFilter;
+		std::vector<SMeshFilter> myMeshFilters{ };
+		//SMeshFilter myMeshFilter;
 		ID3D11Buffer* myInstanceBuffer = nullptr;
 		ID3D11VertexShader* myVertexShader = nullptr;
 		ID3D11PixelShader* myPixelShader = nullptr;
