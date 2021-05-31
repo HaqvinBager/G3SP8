@@ -233,6 +233,7 @@ void CEnemyComponent::SetState(EBehaviour aState)
 		{
 			msgType = EMessageType::EnemyAttackState;
 		}break;
+
 		case EBehaviour::Alerted: 
 		{
 			msgType = EMessageType::EnemyAlertedState;
