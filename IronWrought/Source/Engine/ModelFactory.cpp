@@ -114,13 +114,14 @@ CModel* CModelFactory::LoadModel(const std::string& aFilePath)
 	}
 	myFBXVertexMap.emplace(aFilePath, vertexPositions);
 
-	
 	SMeshFilter meshFilter;
 	meshFilter.myIndexes = mesh->myIndexes;
 	meshFilter.myVertecies = vertexPositions;
 
 	for (unsigned int i = 0; i < numberOfMeshes; ++i)
 	{
+
+
 		mesh = loaderModel->myMeshes[i];
 
 		// Vertex Buffer

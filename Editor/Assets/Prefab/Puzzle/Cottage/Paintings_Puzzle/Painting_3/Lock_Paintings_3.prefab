@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 3906651569399797673}
   - component: {fileID: 2442863163747408466}
   m_Layer: 0
-  m_Name: Lock_Paintings
+  m_Name: Lock_Paintings_3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -44,9 +44,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 237cfffbe2748d74cb3f937f17147ce5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  onKeyCreateNotify: {fileID: 0}
-  onKeyInteractNotify: {fileID: 0}
-  onLockNotify: {fileID: 0}
+  onKeyCreateNotify: {fileID: 11400000, guid: 21b3b868449dee441ba62146542d00a9, type: 2}
+  onKeyInteractNotify: {fileID: 11400000, guid: 812512cc5358c274bb4d85d3d1653c78, type: 2}
+  onLockNotify: {fileID: 11400000, guid: ea849758f64923b438889e0ada2b7eda, type: 2}
   interactionType: 0
 --- !u!114 &2442863163747408466
 MonoBehaviour:
