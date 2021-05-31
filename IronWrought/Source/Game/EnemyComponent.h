@@ -14,10 +14,9 @@ namespace physx {
 }
 
 struct SEnemySetting {
-	float mySpeed;	//= 0.1f;
-	float myRadius;	//= 10.0f;
-	float myHealth; //= 10.0f
-	float myAttackDistance; //2.0f
+	float mySpeed;	
+	float myRadius;	
+	float myAttackDistance; 
 
 	std::vector<int> myPatrolGameObjectIds;
 	std::vector<float> myPatrolIntrestValue;
@@ -34,9 +33,8 @@ public:
 	enum class EBehaviour {
 		Patrol,
 		Seek,
+		Alerted,
 		Attack,
-		TakeDamage,
-
 		Count
 	};
 
@@ -81,7 +79,9 @@ private:
 	CRigidBodyComponent* myRigidBodyComponent;
 
 	bool myHasFoundPlayer;
+	bool myHasReachedLastPlayerPosition;
 	bool myMovementLocked;
+	bool myHasReachedTarget;
 	float myWakeUpTimer;
 	SNavMesh* myNavMesh;
 };

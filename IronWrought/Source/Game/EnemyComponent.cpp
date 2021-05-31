@@ -31,11 +31,17 @@ CEnemyComponent::CEnemyComponent(CGameObject& aParent, const SEnemySetting& some
 	, myMovementLocked(false)
 	, myWakeUpTimer(0.f)
 	, myHasFoundPlayer(false)
+	, myHasReachedTarget(true)
+	, myHasReachedLastPlayerPosition(true)
+
 {
 	//myController = CEngine::GetInstance()->GetPhysx().CreateCharacterController(GameObject().myTransform->Position(), 0.6f * 0.5f, 1.8f * 0.5f, GameObject().myTransform, aHitReport);
 	//myController->GetController().getActor()->setRigidBodyFlag(PxRigidBodyFlag::eUSE_KINEMATIC_TARGET_FOR_SCENE_QUERIES, true);
 	mySettings = someSettings;
 	CMainSingleton::PostMaster().Subscribe(EMessageType::EnemyAttackedPlayer, this);
+	CMainSingleton::PostMaster().Subscribe(EMessageType::PropCollided, this);
+	CMainSingleton::PostMaster().Subscribe(EMessageType::EnemyReachedTarget, this);
+	CMainSingleton::PostMaster().Subscribe(EMessageType::EnemyReachedLastPlayerPosition, this);
 }
 
 CEnemyComponent::~CEnemyComponent()
@@ -46,6 +52,9 @@ CEnemyComponent::~CEnemyComponent()
 		delete myBehaviours[i];
 	}
 	CMainSingleton::PostMaster().Unsubscribe(EMessageType::EnemyAttackedPlayer, this);
+	CMainSingleton::PostMaster().Unsubscribe(EMessageType::PropCollided, this);
+	CMainSingleton::PostMaster().Unsubscribe(EMessageType::EnemyReachedTarget, this);
+	CMainSingleton::PostMaster().Unsubscribe(EMessageType::EnemyReachedLastPlayerPosition, this);
 }
 
 void CEnemyComponent::Awake()
@@ -85,6 +94,8 @@ void CEnemyComponent::Start()
 		seekBehaviour->SetTarget(myPlayer->myTransform);
 	}
 
+	myBehaviours.push_back(new CAlerted(myNavMesh));
+
 	//CAttack* attack = new CAttack(this, myPatrolPositions[0]);
 	/*if(myPlayer != nullptr)
 		attack->SetTarget(myPlayer->myTransform);
@@ -121,24 +132,39 @@ void CEnemyComponent::Update()//får bestämma vilket behaviour vi vill köra i 
 		//std::cout << "Degrees: " << degrees << std::endl;
 		float viewAngle = 60.f;
 		myHasFoundPlayer = false;
+		CMainSingleton::PostMaster().Send({ EMessageType::EnemyLostPlayer });
+
 		if (degrees <= viewAngle) {
 			Vector3 direction = playerPos - enemyPos;
 			PxRaycastBuffer hit = CEngine::GetInstance()->GetPhysx().Raycast(enemyPos, direction, range, CPhysXWrapper::ELayerMask::STATIC_ENVIRONMENT | CPhysXWrapper::ELayerMask::PLAYER);
 			if (hit.getNbAnyHits() > 0) {
 				CTransformComponent* transform = (CTransformComponent*)hit.getAnyHit(0).actor->userData;
 				if (!transform) {
+					SMessage msg;
+					msg.data = static_cast<void*>(&playerPos);
+					msg.myMessageType = EMessageType::EnemyFoundPlayer;
+					CMainSingleton::PostMaster().Send(msg);
+					
 					myHasFoundPlayer = true;
+					myHasReachedLastPlayerPosition = false;
 				}
 			}
 		}
-		/*if (myHasFoundPlayer) {
+
+		if (!myHasFoundPlayer && !myHasReachedLastPlayerPosition) {
+			std::cout << "SEEK LAST POSITION" << std::endl;
+			SetState(EBehaviour::Seek);
+		}
+
+		if (myHasFoundPlayer) {
 			std::cout << "SEEK" << std::endl;
 			SetState(EBehaviour::Seek);
 		}
-		else {*/
+		else if(myHasReachedTarget && myHasReachedLastPlayerPosition) {
 			//std::cout << __FUNCTION__ << " PATROL" << std::endl;
+			std::cout << "PATROL" << std::endl;
 			SetState(EBehaviour::Patrol);
-		//}
+		}
 
 		//if (mySettings.myRadius * mySettings.myRadius >= distanceToPlayer) {
 		//	/*if (distanceToPlayer <= mySettings.myAttackDistance * mySettings.myAttackDistance)
@@ -163,7 +189,7 @@ void CEnemyComponent::Update()//får bestämma vilket behaviour vi vill köra i 
 			targetDirection.y = 0;
 			GameObject().myTransform->Move(targetDirection * mySettings.mySpeed * CTimer::Dt());
 			float targetOrientation = WrapAngle(atan2f(targetDirection.x, targetDirection.z));
-			myCurrentOrientation = Lerp(myCurrentOrientation, targetOrientation, 2.0f * CTimer::Dt());
+			myCurrentOrientation = Lerp(myCurrentOrientation, targetOrientation,10.0f * CTimer::Dt());
 			GameObject().myTransform->Rotation({ 0, DirectX::XMConvertToDegrees(myCurrentOrientation) + 180.f, 0 });
 		//}
 	}
@@ -189,7 +215,7 @@ void CEnemyComponent::SetState(EBehaviour aState)
 		return;
 
 	myCurrentState = aState;
-	myBehaviours[static_cast<int>(myCurrentState)]->Enter(GameObject().myTransform->Position());
+	myBehaviours[static_cast<int>(myCurrentState)]->Enter(GameObject().myTransform->Position());//krash
 	EMessageType msgType = EMessageType::Count;
 	switch (myCurrentState)
 	{
@@ -208,6 +234,10 @@ void CEnemyComponent::SetState(EBehaviour aState)
 			msgType = EMessageType::EnemyAttackState;
 		}break;
 
+		case EBehaviour::Alerted: 
+		{
+			msgType = EMessageType::EnemyAlertedState;
+		}break;
 
 		default:
 		break;
@@ -232,6 +262,28 @@ void CEnemyComponent::Receive(const SMessage& aMsg)
 	if (aMsg.myMessageType == EMessageType::EnemyAttackedPlayer)
 	{
 		myMovementLocked = true;
+	}
+	
+	if (aMsg.myMessageType == EMessageType::PropCollided) {
+		CGameObject* gameobject = reinterpret_cast<CGameObject*>(aMsg.data);
+		if (gameobject) {
+ 			std::vector<Vector3> path = myNavMesh->CalculatePath(GameObject().myTransform->Position(), gameobject->myTransform->Position(), myNavMesh);
+			if (myNavMesh->PathLength(path, GameObject().myTransform->Position()) <= 20.f) {
+				SetState(EBehaviour::Alerted);
+				CAlerted* alertedBehaviour = static_cast<CAlerted*>(myBehaviours[static_cast<int>(myCurrentState)]);
+				if (alertedBehaviour) {
+					alertedBehaviour->SetAlertedPosition(gameobject->myTransform->Position());
+					myHasReachedTarget = false;
+				}
+			}
+		}
+	}
+	if (aMsg.myMessageType == EMessageType::EnemyReachedLastPlayerPosition) {
+		myHasReachedLastPlayerPosition = true;
+	}
+	
+	if (aMsg.myMessageType == EMessageType::EnemyReachedTarget) {
+		myHasReachedTarget = true;
 	}
 }
 

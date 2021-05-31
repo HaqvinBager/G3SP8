@@ -211,7 +211,6 @@ public static class BinaryWriterExtensions
             aBinWriter.Write(data.instanceID);
             aBinWriter.Write(data.speed);
             aBinWriter.Write(data.radius);
-            aBinWriter.Write(data.health);
             aBinWriter.Write(data.attackDistance);
             //Refactoring Patrol Points out of Enemy into "EnemyPatrolPoints" Not yet implemented with JSon Export /Axel Savage 2021-04-23
         }

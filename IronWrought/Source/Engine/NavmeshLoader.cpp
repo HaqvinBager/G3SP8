@@ -262,3 +262,19 @@ bool SNavMesh::CheckIfOverlap(Vector3 aPosition, STriangle* aTriangle)
 
 	return !(has_neg && has_pos);
 }
+
+const float SNavMesh::PathLength(const std::vector<Vector3>& aPath, const Vector3& aCurrentPosition)
+{
+	float pathLength = 0;
+	std::vector<Vector3> newPath;
+	newPath.push_back(aCurrentPosition);
+	for (int i = 0; i < aPath.size(); ++i)
+	{
+		newPath.push_back(aPath[i]);
+	}
+	for (int i = 0; i < newPath.size() - 1; ++i)
+	{
+		pathLength += Vector3::Distance(newPath[i], newPath[i + 1]);
+	}
+	return pathLength;
+}

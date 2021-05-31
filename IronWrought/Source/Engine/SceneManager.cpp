@@ -785,7 +785,7 @@ void CSceneManager::AddEnemyComponents(CScene& aScene, RapidArray someData)
 		SEnemySetting settings;
 		settings.myRadius = m["radius"].GetFloat();
 		settings.mySpeed = m["speed"].GetFloat();
-		settings.myHealth = m["health"].GetFloat();
+		//settings.myHealth = m["health"].GetFloat();
 		settings.myAttackDistance = m["attackDistance"].GetFloat();
 		if (m.HasMember("interestPoints"))
 		{

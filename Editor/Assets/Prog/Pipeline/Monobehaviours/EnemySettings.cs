@@ -12,7 +12,6 @@ public struct Enemy //Unity Interface for LD
 
     public float speed;
     public float radius;
-    public float health;
     public float attackDistance;
     public List<GameObject> points;
     [HideInInspector]
@@ -22,14 +21,13 @@ public struct Enemy //Unity Interface for LD
 [System.Serializable]
 public struct InterestPoint
 {
-  
     public float interestValue;
     public Transform transform;
 }
 
 public class EnemySettings : MonoBehaviour
 {
-    public Enemy settings = new Enemy { speed = 2.0f, radius = 10.0f,  health = 10.0f, attackDistance = 2.0f};
+    public Enemy settings = new Enemy { speed = 2.0f, radius = 10.0f, attackDistance = 2.0f};
     private NavMeshAgent myAgent;
     public PatrolPoint myTarget = null;
 
