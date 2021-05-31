@@ -375,7 +375,6 @@ void CAudioManager::Receive(const SMessage& aMessage) {
 
 	case EMessageType::EnemyPatrolState:
 	{
-		std::cout << "Play Patrol" << std::endl;
 		myDynamicSource->Stop();
 		myWrapper.Play(myEnemyVoiceSounds[CAST(EEnemyVoiceLine::EnemyPatrol)], myDynamicSource);
 	}break;
@@ -390,14 +389,12 @@ void CAudioManager::Receive(const SMessage& aMessage) {
 	case EMessageType::EnemyAlertedState:
 	{
 		myDynamicSource->Stop();
-		std::cout << "Play Alerted" << std::endl;
 		myWrapper.Play(myEnemyVoiceSounds[CAST(EEnemyVoiceLine::EnemyHeardNoise)], myDynamicSource);
 	}break;
 
 	case EMessageType::EnemyFoundPlayer:
 	{
 		myDynamicSource->Stop();
-		std::cout << "Play Found Player" << std::endl;
 		myWrapper.Play(myEnemyVoiceSounds[CAST(EEnemyVoiceLine::EnemyFoundPlayer)], myDynamicSource);
 		myDelayedAudio.push_back({myEnemyVoiceSounds[CAST(EEnemyVoiceLine::EnemyChasing)], myDynamicSource, 4.0f});
 	}break;
@@ -405,7 +402,6 @@ void CAudioManager::Receive(const SMessage& aMessage) {
 	case EMessageType::EnemyLostPlayer:
 	{
 		myDynamicSource->Stop();
-		std::cout << "Play Lost Player" << std::endl;
 		myWrapper.Play(myEnemyVoiceSounds[CAST(EEnemyVoiceLine::EnemyLostPlayer)], myDynamicSource);
 	}break;
 
