@@ -417,15 +417,37 @@ PxShape* CPhysXWrapper::CookShape(const CModel* aModel, const CTransformComponen
 	return convexShape;
 }
 
+/*
+* // Sub-meshes handling: 2021 05 31. Test
+	std::vector<PxVec3> verts = {};
+	std::vector<const std::vector<Vector3>*> vectorVectors;
+	vectorVectors.reserve(modelData.myMeshFilters.size());
+	for (auto& meshfilter : modelData.myMeshFilters)
+	{
+	vectorVectors.push_back(&meshfilter.myVertecies);
+	}
+	Convert<const std::vector<Vector3>*, PxVec3>()(vectorVectors, verts);
+	
+	std::vector<unsigned int> indices = {};
+	std::vector<const std::vector<unsigned int>*> vectorIndices;
+	vectorIndices.reserve(modelData.myMeshFilters.size());
+	for (auto& meshfilter : modelData.myMeshFilters)
+	{
+	vectorIndices.push_back(&meshfilter.myIndexes);
+	}
+	Convert<const std::vector<unsigned int>*, unsigned int>()(vectorIndices, indices);
+	PxTriangleMeshDesc meshDesc = GetTriangleMeshDesc(verts, indices);
+*/
+
 std::vector<PxRigidStatic*> CPhysXWrapper::CookShapes(const CModel* aModel, const CTransformComponent* aTransform, const physx::PxMaterial* aMaterial, const std::vector<Matrix>& someTransforms) const
 {
 	const CModel::SModelInstanceData& modelData = aModel->GetModelInstanceData();
+	std::vector<PxRigidStatic*> statics = { };
+	statics.reserve(someTransforms.size());
+
 	std::vector<PxVec3> verts = {};
 	Convert<Vector3, PxVec3>()(modelData.myMeshFilter.myVertecies, verts);
 	PxTriangleMeshDesc meshDesc = GetTriangleMeshDesc(verts, modelData.myMeshFilter.myIndexes);
-
-	std::vector<PxRigidStatic*> statics = { };
-	statics.reserve(someTransforms.size());
 
 	for (const auto& transform : someTransforms)
 	{
@@ -446,7 +468,10 @@ std::vector<PxRigidStatic*> CPhysXWrapper::CookShapes(const CModel* aModel, cons
 
 		PxTriangleMeshGeometry pMeshGeometry(pxMesh, meshScale);
 
-		PxRigidStatic* staticRigidbody = myPhysics->createRigidStatic({ 0.f, 0.f, 0.f });
+		PxVec3 pos = { translation.x, translation.y, translation.z };
+		PxQuat pxQuat = { quat.x, quat.y, quat.z, quat.w };
+		//staticRigidbody->setGlobalPose({ pos, pxQuat });
+		PxRigidStatic* staticRigidbody = myPhysics->createRigidStatic(/*{ 0.f, 0.f, 0.f }*/{ pos, pxQuat });
 		staticRigidbody->userData = (void*)aTransform;
 		PxShape* instancedShape = myPhysics->createShape(pMeshGeometry, *aMaterial, true);
 
@@ -455,10 +480,12 @@ std::vector<PxRigidStatic*> CPhysXWrapper::CookShapes(const CModel* aModel, cons
 		instancedShape->setQueryFilterData(filterData);
 		staticRigidbody->attachShape(*instancedShape);
 
-		PxVec3 pos = { translation.x, translation.y, translation.z };
-		PxQuat pxQuat = { quat.x, quat.y, quat.z, quat.w };
-		staticRigidbody->setGlobalPose({ pos, pxQuat });
+
 		statics.push_back(staticRigidbody);
+		//for (auto& meshFilter : modelData.myMeshFilters)
+		//{
+		//	
+		//}
 	}
 	return std::move(statics);
 }

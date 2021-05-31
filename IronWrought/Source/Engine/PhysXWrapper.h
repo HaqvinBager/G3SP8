@@ -114,4 +114,34 @@ private:
 				aTo.push_back(PxVec3(vec.x, vec.y, vec.z));
 		}
 	};
+
+	template<>
+	struct Convert<const std::vector<Vector3>*, PxVec3> {
+		void operator()(const std::vector<const std::vector<Vector3>*>& aFrom, std::vector<PxVec3>& aTo)
+		{
+			size_t size = 0;
+			for (const auto& from : aFrom)
+				size += from->size();
+
+			aTo.reserve(size);
+			for (const auto& from : aFrom)
+				for (const auto& vec : *from)
+					aTo.push_back(PxVec3(vec.x, vec.y, vec.z));
+		}
+	};
+
+	template<>
+	struct Convert<const std::vector<unsigned int>*, unsigned int> {
+		void operator()(const std::vector<const std::vector<unsigned int>*>& aFrom, std::vector<unsigned int>& aTo)
+		{
+			size_t size = 0;
+			for (const auto& from : aFrom)
+				size += from->size();
+
+			aTo.reserve(size);
+			for (const auto& from : aFrom)
+				for (const auto& vec : *from)
+					aTo.push_back(vec);
+		}
+	};
 };

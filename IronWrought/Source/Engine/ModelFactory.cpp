@@ -218,22 +218,7 @@ CModel* CModelFactory::LoadModel(const std::string& aFilePath)
 	ID3D11InputLayout* inputLayout;
 	ENGINE_HR_MESSAGE(myFramework->GetDevice()->CreateInputLayout(layout, sizeof(layout) / sizeof(D3D11_INPUT_ELEMENT_DESC), vsData.data(), vsData.size(), &inputLayout), "Input Layout could not be created.");
 
-	ID3D11Device* device = myFramework->GetDevice();
 	std::string modelDirectoryAndName = modelDirectory + modelName;
-
-	// Check for detail normal
-	ID3D11ShaderResourceView* detailNormal1 = nullptr;
-	ID3D11ShaderResourceView* detailNormal2 = nullptr;
-	ID3D11ShaderResourceView* detailNormal3 = nullptr;
-	ID3D11ShaderResourceView* detailNormal4 = nullptr;
-	std::string dnsuffix = aFilePath.substr(aFilePath.length() - 7, 3);
-	if (dnsuffix == "_dn")
-	{
-		detailNormal1 = GetShaderResourceView(device, "Assets/3D/Exempel_Modeller/DetailNormals/Tufted_Leather/dn_25cm_N.dds");
-		detailNormal2 = GetShaderResourceView(device, "Assets/3D/Exempel_Modeller/DetailNormals/4DN/dns/dn_CarbonFibre_n.dds");
-		detailNormal3 = GetShaderResourceView(device, "Assets/3D/Exempel_Modeller/DetailNormals/4DN/dns/dn_Wool_n.dds");
-		detailNormal4 = GetShaderResourceView(device, "Assets/3D/Exempel_Modeller/DetailNormals/4DN/dns/dn_PlasticPolymer_n.dds");
-	}
 
 #ifdef USING_FBX_MATERIALS
 	std::vector<std::array<ID3D11ShaderResourceView*, 3>> materials;
@@ -271,11 +256,6 @@ CModel* CModelFactory::LoadModel(const std::string& aFilePath)
 	modelData.myInputLayout = inputLayout;
 	//modelData.myMaterials = materials;
 	//modelData.myMaterialNames = materialNames;
-
-	modelData.myDetailNormals[0] = detailNormal1;
-	modelData.myDetailNormals[1] = detailNormal2;
-	modelData.myDetailNormals[2] = detailNormal3;
-	modelData.myDetailNormals[3] = detailNormal4;
 
 	model->Init(modelData);
 #ifdef ALLOW_ANIMATIONS
@@ -415,7 +395,7 @@ CModel* CModelFactory::CreateInstancedModels(const std::string& aFilePath, int a
 
 	unsigned int vertexSize = mesh->myVertexBufferSize;
 	unsigned int vertexCount = mesh->myVertexCount;
-
+	
 	std::vector<Vector3> vertexPositions;
 	vertexPositions.reserve(vertexCount);
 	for (unsigned i = 0; i < vertexCount * vertexSize; i += vertexSize) {
@@ -424,11 +404,12 @@ CModel* CModelFactory::CreateInstancedModels(const std::string& aFilePath, int a
 		vertexPositions.emplace_back(vertexPosition);
 	}
 
-
 	SMeshFilter meshFilter;
 	meshFilter.myIndexes = mesh->myIndexes;
 	meshFilter.myVertecies = vertexPositions;
 
+	std::vector<SMeshFilter> meshFilters = {};
+	meshFilters.resize(numberOfMeshes);
 	for (unsigned int i = 0; i < numberOfMeshes; ++i)
 	{
 		mesh = loaderModel->myMeshes[i];
@@ -442,7 +423,8 @@ CModel* CModelFactory::CreateInstancedModels(const std::string& aFilePath, int a
 		D3D11_SUBRESOURCE_DATA subVertexResourceData = { 0 };
 		subVertexResourceData.pSysMem = mesh->myVerticies;
 
-		if (vertexBufferDesc.ByteWidth == 0) {
+		if (vertexBufferDesc.ByteWidth == 0)
+		{
 			return nullptr;
 		}
 		ID3D11Buffer* vertexBuffer;
@@ -464,11 +446,15 @@ CModel* CModelFactory::CreateInstancedModels(const std::string& aFilePath, int a
 		meshData[i].myNumberOfIndices = static_cast<UINT>(mesh->myIndexes.size());
 		meshData[i].myStride[0] = mesh->myVertexBufferSize;
 		meshData[i].myStride[1] = sizeof(CModel::SInstanceType);
-		meshData[i].myOffset[0] = 0;	
-		meshData[i].myOffset[1] = 0;	
+		meshData[i].myOffset[0] = 0;
+		meshData[i].myOffset[1] = 0;
 		meshData[i].myMaterialIndex = mesh->myModel->myMaterialIndices[i];
 		meshData[i].myVertexBuffer = vertexBuffer;
 		meshData[i].myIndexBuffer = indexBuffer;
+
+		//meshFilters[i].myIndexes = mesh->myIndexes;
+		//meshFilters[i].myVertecies.resize(mesh->myVertexCount);
+		//memcpy(&meshFilters[i].myVertecies.data()[0], loaderModel->myMeshes[i]->myVerticies, sizeof(Vector3) * loaderModel->myMeshes[i]->myVertexCount);
 	}
 
 	//Model
@@ -550,7 +536,6 @@ CModel* CModelFactory::CreateInstancedModels(const std::string& aFilePath, int a
 	ID3D11InputLayout* inputLayout;
 	ENGINE_HR_MESSAGE(myFramework->GetDevice()->CreateInputLayout(layout, sizeof(layout) / sizeof(D3D11_INPUT_ELEMENT_DESC), vsData.data(), vsData.size(), &inputLayout), "Input Layout could not be created.");
 
-	ID3D11Device* device = myFramework->GetDevice();
 	std::string modelDirectoryAndName = modelDirectory + modelName;
 
 #ifdef USING_FBX_MATERIALS
@@ -575,22 +560,10 @@ CModel* CModelFactory::CreateInstancedModels(const std::string& aFilePath, int a
 
 #endif
 
-	// Check for detail normal
-	ID3D11ShaderResourceView* detailNormal1 = nullptr;
-	ID3D11ShaderResourceView* detailNormal2 = nullptr;
-	ID3D11ShaderResourceView* detailNormal3 = nullptr;
-	ID3D11ShaderResourceView* detailNormal4 = nullptr;
-	std::string dnsuffix = aFilePath.substr(aFilePath.length() - 7, 3);
-	if (dnsuffix == "_dn")
-	{
-		detailNormal1 = GetShaderResourceView(device, "Assets/3D/Exempel_Modeller/DetailNormals/Tufted_Leather/dn_25cm_N.dds");
-		detailNormal2 = GetShaderResourceView(device, "Assets/3D/Exempel_Modeller/DetailNormals/4DN/dns/dn_CarbonFibre_n.dds");
-		detailNormal3 = GetShaderResourceView(device, "Assets/3D/Exempel_Modeller/DetailNormals/4DN/dns/dn_Wool_n.dds");
-		detailNormal4 = GetShaderResourceView(device, "Assets/3D/Exempel_Modeller/DetailNormals/4DN/dns/dn_PlasticPolymer_n.dds");
-	}
 
 	CModel::SModelInstanceData modelInstanceData;
 	modelInstanceData.myMeshes = meshData;
+	//modelInstanceData.myMeshFilters = meshFilters;
 	modelInstanceData.myMeshFilter = meshFilter;
 	modelInstanceData.myInstanceBuffer = instanceBuffer;
 	modelInstanceData.myVertexShader = vertexShader;
@@ -600,11 +573,6 @@ CModel* CModelFactory::CreateInstancedModels(const std::string& aFilePath, int a
 	modelInstanceData.myInputLayout = inputLayout;
 	//modelInstanceData.myMaterials = materials;
 	//modelInstanceData.myMaterialNames = materialNames;
-
-	modelInstanceData.myDetailNormals[0] = detailNormal1;
-	modelInstanceData.myDetailNormals[1] = detailNormal2;
-	modelInstanceData.myDetailNormals[2] = detailNormal3;
-	modelInstanceData.myDetailNormals[3] = detailNormal4;
 
 	model->Init(modelInstanceData);
 	SInstancedModel instancedModel = { aFilePath, aNumberOfInstanced };
