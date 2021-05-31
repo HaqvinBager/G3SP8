@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "RotateResponse.h"
 #include "TransformComponent.h"
+#define PI 3.141592f
 
 CRotateResponse::CRotateResponse(CGameObject& aParent, const SSettings& someSettings)
 	: IResponseBehavior(aParent)
@@ -10,10 +11,12 @@ CRotateResponse::CRotateResponse(CGameObject& aParent, const SSettings& someSett
 	mySettings.myStartRotation.x = (-mySettings.myStartRotation.x) - 360.0f;
 	mySettings.myStartRotation.y += 180.0f;
 	mySettings.myStartRotation.z = (-mySettings.myStartRotation.z) - 360.0f;
+	mySettings.myStartRotation *= (PI / 180.0f);
 
 	mySettings.myEndRotation.x = (-mySettings.myEndRotation.x) - 360.0f;
 	mySettings.myEndRotation.y += 180.0f;
 	mySettings.myEndRotation.z = (-mySettings.myEndRotation.z) - 360.0f;
+	mySettings.myEndRotation *= (PI / 180.0f);
 
 	myStartRotation = GameObject().myTransform->Rotation();
 
