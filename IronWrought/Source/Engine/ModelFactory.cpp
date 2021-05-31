@@ -240,8 +240,6 @@ CModel* CModelFactory::LoadModel(const std::string& aFilePath)
 	//}
 #endif
 
-	delete loaderModel;
-
 	//Model
 	CModel* model = new CModel();
 	ENGINE_ERROR_BOOL_MESSAGE(model, "Empty model could not be loaded.");
@@ -267,6 +265,9 @@ CModel* CModelFactory::LoadModel(const std::string& aFilePath)
 	// 	   Testing removing this to load meshes Async at Startup!
 	myModelMap[aFilePath] = std::move(model);
 	mesh = nullptr;
+
+	delete loaderModel;
+
 	return model;
 }
 
