@@ -9,13 +9,10 @@ public:
 	enum class EEnemyAnimations
 	{
 		Attack = 1,
-		Damage,
-		Death,
+		Chase,
 		Idle,
-		MoveFast,
-		MoveSlow,
 		Search,
-		TPose,
+		Walk,
 		Count
 	};
 

@@ -55,6 +55,11 @@ void CAudioChannel::Set3DConeAttributes(const Vector3& aDirection, float anUnatt
     myFModChannel->set3DConeSettings(anUnattenuatedAngleSpread, anAttenuatedAngleSpread, anAttenuatedVolume);
 }
 
+void CAudioChannel::Set3DMinMaxDistance(float aMinDistance, float aMaxDistance)
+{
+    myFModChannel->set3DMinMaxDistance(aMinDistance, aMaxDistance);
+}
+
 CAudioChannel::CAudioChannel(FMOD::ChannelGroup* aChannelPointer)
 {
     myFModChannel = aChannelPointer;

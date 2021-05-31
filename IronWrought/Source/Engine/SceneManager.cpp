@@ -19,7 +19,6 @@
 #include "ConvexMeshColliderComponent.h"
 #include "VFXSystemComponent.h"
 #include "PhysicsPropAudioComponent.h"
-#include "EnemyAudioComponent.h"
 #include <GravityGloveComponent.h>
 #include <EnemyComponent.h>
 #include <HealthPickupComponent.h>
@@ -390,7 +389,7 @@ void CSceneManager::AddModelComponents(CScene& aScene, const std::vector<Binary:
 			continue;
 
 		gameObject->AddComponent<CModelComponent>(*gameObject, m);
-		AnimationLoader::AddAnimationsToGameObject(gameObject, CJsonReader::Get()->GetAssetPath(m.assetID));
+		AnimationLoader::AddAnimationsToGameObject(gameObject, ASSETPATH(CJsonReader::Get()->GetAssetPath(m.assetID)));
 		//if (AnimationLoader::AddAnimationsToGameObject(gameObject, CJsonReader::Get()->GetAssetPath(m.assetID)))
 		//{
 		//	std::cout << __FUNCTION__ << " Animation " << CJsonReader::Get()->GetAssetPath(m.assetID) << std::endl;
@@ -788,7 +787,7 @@ void CSceneManager::AddEnemyComponents(CScene& aScene, RapidArray someData)
 		SEnemySetting settings;
 		settings.myRadius = m["radius"].GetFloat();
 		settings.mySpeed = m["speed"].GetFloat();
-		settings.myHealth = m["health"].GetFloat();
+		//settings.myHealth = m["health"].GetFloat();
 		settings.myAttackDistance = m["attackDistance"].GetFloat();
 		if (m.HasMember("interestPoints"))
 		{
@@ -803,7 +802,10 @@ void CSceneManager::AddEnemyComponents(CScene& aScene, RapidArray someData)
 			}
 		}
 		gameObject->AddComponent<CEnemyComponent>(*gameObject, settings);
-		gameObject->AddComponent<CEnemyAudioComponent>(*gameObject);
+		gameObject->GetComponent<CAnimationComponent>()->BlendLerpBetween(1, 2, 0.2f);
+		//gameObject->AddComponent<CModelComponent>(*gameObject, ASSETPATH("Assets/IronWrought/Mesh/Enemy/CH_Enemy_SK.fbx"));
+		//AnimationLoader::AddAnimationsToGameObject(gameObject, ASSETPATH("Assets/IronWrought/Mesh/Enemy/CH_Enemy_SK.fbx"));
+
 		//gameObject->AddComponent<CPatrolPointComponent>(*gameObject, )
 		//gameObject->AddComponent<CVFXSystemComponent>(*gameObject, ASSETPATH("Assets/Graphics/VFX/JSON/VFXSystem_Enemy.json"));
 	}

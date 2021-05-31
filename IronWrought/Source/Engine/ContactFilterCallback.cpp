@@ -26,6 +26,7 @@ physx::PxFilterFlags CContactFilterCallback::pairFound(physx::PxU32 /*pairID*/, 
 		{
 			if (audioComponent->Ready()) {
 				CMainSingleton::PostMaster().SendLate({ EMessageType::PhysicsPropCollision, &audioComponent->GetSoundIndex() });
+				CMainSingleton::PostMaster().SendLate({ EMessageType::PropCollided, &audioComponent->GameObject() });
 			}
 		}
 	}

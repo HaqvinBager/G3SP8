@@ -97,7 +97,7 @@ void CEnemyAnimationController::OnPatrol(CEnemyComponent* anEnemy)
 	if (!anim)
 		return;
 
-	anim->BlendLerpBetween(UINT_CAST(EEnemyAnimations::MoveSlow), UINT_CAST(EEnemyAnimations::MoveSlow), 0.0f);
+	anim->BlendLerpBetween(UINT_CAST(EEnemyAnimations::Walk), UINT_CAST(EEnemyAnimations::Walk), 0.0f);
 }
 
 void CEnemyAnimationController::OnSeek(CEnemyComponent* anEnemy)
@@ -109,7 +109,7 @@ void CEnemyAnimationController::OnSeek(CEnemyComponent* anEnemy)
 	if (!anim)
 		return;
 
-	anim->BlendLerpBetween(UINT_CAST(EEnemyAnimations::MoveSlow), UINT_CAST(EEnemyAnimations::MoveFast), 0.0f);
+	anim->BlendLerpBetween(UINT_CAST(EEnemyAnimations::Chase), UINT_CAST(EEnemyAnimations::Chase), 0.0f);
 }
 
 void CEnemyAnimationController::OnAttack(CEnemyComponent* anEnemy)
@@ -133,7 +133,7 @@ void CEnemyAnimationController::OnTakeDamage(CEnemyComponent* anEnemy)
 	if (!anim)
 		return;
 
-	anim->BlendToAnimation(UINT_CAST(EEnemyAnimations::Damage), 0.25f, true, true);
+	//anim->BlendToAnimation(UINT_CAST(EEnemyAnimations::Damage), 0.25f, true, true);
 }
 
 void CEnemyAnimationController::OnDeath(CEnemyComponent* anEnemy)
@@ -145,7 +145,7 @@ void CEnemyAnimationController::OnDeath(CEnemyComponent* anEnemy)
 	if (!anim)
 		return;
 
-	anim->BlendLerpBetween(UINT_CAST(EEnemyAnimations::Death), UINT_CAST(EEnemyAnimations::Death), 0.0f);
+	//anim->BlendLerpBetween(UINT_CAST(EEnemyAnimations::Death), UINT_CAST(EEnemyAnimations::Death), 0.0f);
 }
 
 void CEnemyAnimationController::OnDisabled(CEnemyComponent* anEnemy)
