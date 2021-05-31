@@ -71,10 +71,7 @@ CAudioManager::CAudioManager()
 		FillCollection(static_cast<EResearcherReactionVoiceLine>(i));
 	}
 
-	for (unsigned int i = 0; i < static_cast<unsigned int>(ERobotVoiceLine::Count); ++i)
-	{
-		FillCollection(static_cast<ERobotVoiceLine>(i));
-	}
+	LoadEnemyLines();
 
 	std::ifstream volumeStream("Json/Audio/AudioVolume.json");
 	IStreamWrapper volumeWrapper(volumeStream);
@@ -595,72 +592,6 @@ void CAudioManager::Update()
 			++it;
 		}
 	}
-
-	//if (INPUT->IsKeyPressed(0x31))
-	//{
-	//	Pause();
-	//}
-
-	//if (INPUT->IsKeyPressed(0x32))
-	//{
-	//	Resume();
-	//}
-
-	//if (INPUT->IsKeyPressed(0x31))
-	//{
-	//	myWrapper.Play(my3DTester, my3DChannel);
-	//}
-
-	//constexpr float speed = 1.0f;
-	//if (INPUT->IsKeyPressed(VK_UP))
-	//{
-	//	myOffset.z += speed;
-	//}
-
-	//if (INPUT->IsKeyPressed(VK_LEFT))
-	//{
-	//	myOffset.x += speed;
-	//}
-
-	//if (INPUT->IsKeyPressed(VK_DOWN))
-	//{
-	//	myOffset.z -= speed;
-	//}
-
-	//if (INPUT->IsKeyPressed(VK_RIGHT))
-	//{
-	//	myOffset.x -= speed;
-	//}
-
-	//if (INPUT->IsKeyPressed(0x31))
-	//{
-	//	FadeChannelOverSeconds(EChannel::DynamicChannel1, 0.1f, false);
-	//}
-
-	//if (INPUT->IsKeyPressed(0x32))
-	//{
-	//	FadeChannelOverSeconds(EChannel::DynamicChannel2, 2.0f, false);
-	//}
-
-	//if (INPUT->IsKeyPressed(0x33))
-	//{
-	//	FadeChannelOverSeconds(EChannel::DynamicChannel3, 1.0f, false);
-	//}
-
-	//if (INPUT->IsKeyPressed(0x34))
-	//{
-	//	FadeChannelOverSeconds(EChannel::DynamicChannel1, 0.1f);
-	//}
-
-	//if (INPUT->IsKeyPressed(0x35))
-	//{
-	//	FadeChannelOverSeconds(EChannel::DynamicChannel2, 2.0f);
-	//}
-
-	//if (INPUT->IsKeyPressed(0x36))
-	//{
-	//	FadeChannelOverSeconds(EChannel::DynamicChannel3, 1.0f);
-	//}
 }
 
 void CAudioManager::SetListener(CGameObject* aGameObject)
@@ -1071,22 +1002,24 @@ std::string CAudioManager::TranslateEnum(EResearcherReactionVoiceLine enumerator
 		return "";
 	}
 }
-std::string CAudioManager::TranslateEnum(ERobotVoiceLine enumerator) const
+std::string CAudioManager::TranslateEnum(EEnemyVoiceLine enumerator) const
 {
 	switch (enumerator)
 	{
-	case ERobotVoiceLine::RobotAttack:
-		return "RobotAttack";
-	case ERobotVoiceLine::RobotDeath:
-		return "RobotDeath";
-	case ERobotVoiceLine::RobotIdle:
-		return "RobotIdle";
-	case ERobotVoiceLine::RobotPatrolling:
-		return "RobotPatrolling";
-	case ERobotVoiceLine::RobotSearching:
-		return "RobotSearching";
-	case ERobotVoiceLine::RobotDamage:
-		return "RobotDamage";
+	case EEnemyVoiceLine::EnemyDamagePlayer:
+		return "EnemyDamagePlayer";
+	case EEnemyVoiceLine::EnemyHeardNoise:
+		return "EnemyHeardNoise";
+	case EEnemyVoiceLine::EnemyLostPlayer:
+		return "EnemyLostPlayer";
+	case EEnemyVoiceLine::EnemyBackToPatrol:
+		return "EnemyBackToPatrol";
+	case EEnemyVoiceLine::EnemyPatrol:
+		return "EnemyPatrol";
+	case EEnemyVoiceLine::EnemyFoundPlayer:
+		return "EnemyFoundPlayer";
+	case EEnemyVoiceLine::EnemyChasing:
+		return "EnemyChasing";
 	default:
 		return "";
 	}
@@ -1191,87 +1124,42 @@ void CAudioManager::FillCollection(EResearcherReactionVoiceLine enumerator)
 	}
 }
 
-void CAudioManager::FillCollection(ERobotVoiceLine enumerator)
+void CAudioManager::LoadEnemyLines()
 {
-	unsigned int counter = 0;
+	std::string path = myVoxPath;
+	path.append(TranslateEnum(static_cast<EEnemyVoiceLine>(0)));
+	path.append(".mp3");
+	myEnemyVoiceSounds.push_back(myWrapper.RequestSound(path));
 
-	switch (enumerator)
-	{
-	case ERobotVoiceLine::RobotAttack:
-	{
-		CAudio* sound = myWrapper.TryGetSound(myVoxPath + GetCollectionPath(enumerator, ++counter));
+	path = myVoxPath;
+	path.append(TranslateEnum(static_cast<EEnemyVoiceLine>(1)));
+	path.append(".mp3");
+	myEnemyVoiceSounds.push_back(myWrapper.RequestSound(path));
 
-		while (sound != nullptr)
-		{
-			myRobotAttackSounds.push_back(sound);
-			sound = myWrapper.TryGetSound(myVoxPath + GetCollectionPath(enumerator, ++counter));
-		}
-	}
-	break;
+	path = myVoxPath;
+	path.append(TranslateEnum(static_cast<EEnemyVoiceLine>(2)));
+	path.append(".mp3");
+	myEnemyVoiceSounds.push_back(myWrapper.RequestSound(path));
 
-	case ERobotVoiceLine::RobotDeath:
-	{
-		CAudio* sound = myWrapper.TryGetSound(myVoxPath + GetCollectionPath(enumerator, ++counter));
+	path = myVoxPath;
+	path.append(TranslateEnum(static_cast<EEnemyVoiceLine>(3)));
+	path.append(".mp3");
+	myEnemyVoiceSounds.push_back(myWrapper.RequestSound(path));
 
-		while (sound != nullptr)
-		{
-			myRobotDeathSounds.push_back(sound);
-			sound = myWrapper.TryGetSound(myVoxPath + GetCollectionPath(enumerator, ++counter));
-		}
-	}
-	break;
+	path = myVoxPath;
+	path.append(TranslateEnum(static_cast<EEnemyVoiceLine>(4)));
+	path.append(".mp3");
+	myEnemyVoiceSounds.push_back(myWrapper.RequestSound(path, true));
 
-	case ERobotVoiceLine::RobotIdle:
-	{
-		CAudio* sound = myWrapper.TryGetSound(myVoxPath + GetCollectionPath(enumerator, ++counter));
+	path = myVoxPath;
+	path.append(TranslateEnum(static_cast<EEnemyVoiceLine>(5)));
+	path.append(".mp3");
+	myEnemyVoiceSounds.push_back(myWrapper.RequestSound(path));
 
-		while (sound != nullptr)
-		{
-			myRobotIdleSounds.push_back(sound);
-			sound = myWrapper.TryGetSound(myVoxPath + GetCollectionPath(enumerator, ++counter));
-		}
-	}
-	break;
-
-	case ERobotVoiceLine::RobotPatrolling:
-	{
-		CAudio* sound = myWrapper.TryGetSound(myVoxPath + GetCollectionPath(enumerator, ++counter));
-
-		while (sound != nullptr)
-		{
-			myRobotPatrollingSounds.push_back(sound);
-			sound = myWrapper.TryGetSound(myVoxPath + GetCollectionPath(enumerator, ++counter));
-		}
-	}
-	break;
-
-	case ERobotVoiceLine::RobotSearching:
-	{
-		CAudio* sound = myWrapper.TryGetSound(myVoxPath + GetCollectionPath(enumerator, ++counter));
-
-		while (sound != nullptr)
-		{
-			myRobotSearchingSounds.push_back(sound);
-			sound = myWrapper.TryGetSound(myVoxPath + GetCollectionPath(enumerator, ++counter));
-		}
-	}
-	break;
-
-	case ERobotVoiceLine::RobotDamage:
-	{
-		CAudio* sound = myWrapper.TryGetSound(myVoxPath + GetCollectionPath(enumerator, ++counter));
-
-		while (sound != nullptr)
-		{
-			myRobotDamageSounds.push_back(sound);
-			sound = myWrapper.TryGetSound(myVoxPath + GetCollectionPath(enumerator, ++counter));
-		}
-	}
-	break;
-
-	default:
-		break;
-	}
+	path = myVoxPath;
+	path.append(TranslateEnum(static_cast<EEnemyVoiceLine>(6)));
+	path.append(".mp3");
+	myEnemyVoiceSounds.push_back(myWrapper.RequestSound(path, true));
 }
 
 void CAudioManager::PlayRandomSoundFromCollection(const std::vector<CAudio*>& aCollection, const EChannel& aChannel, const int& aMaxNrOfChannelsActive)
