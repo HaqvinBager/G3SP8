@@ -130,7 +130,7 @@ private:
 	const float myColliderHeightCrouched = myColliderHeightStanding - 0.85f;// Lowest height player can crouch under: 1.1
 	const float myCameraPosYStanding = 1.3f * 0.5f;
 	const float myCameraPosYCrouching = 0.95f * 0.5f;
-	const float myCameraPosZ = -0.22f;
+	const float myCameraPosZ = 0.0f;//-0.22f;
 	const float myMaxFallSpeed = -0.36f;
 
 	/*
