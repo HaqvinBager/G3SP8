@@ -438,16 +438,11 @@ PxShape* CPhysXWrapper::CookShape(const CModel* aModel, const CTransformComponen
 	Convert<const std::vector<unsigned int>*, unsigned int>()(vectorIndices, indices);
 	PxTriangleMeshDesc meshDesc = GetTriangleMeshDesc(verts, indices);
 */
-#include "DebugTimerUtility.h"
 std::vector<PxRigidStatic*> CPhysXWrapper::CookShapes(const CModel* aModel, const CTransformComponent* aTransform, const physx::PxMaterial* aMaterial, const std::vector<Matrix>& someTransforms) const
 {
 	const CModel::SModelInstanceData& modelData = aModel->GetModelInstanceData();
 	std::vector<PxRigidStatic*> statics = { };
 	statics.reserve(someTransforms.size());
-
-	DebugTimer timer;
-	timer.Start("Cooking Time");
-
 	for (auto& meshFilter : modelData.myMeshFilters)
 	{
 		std::vector<PxVec3> verts = {};
@@ -475,7 +470,7 @@ std::vector<PxRigidStatic*> CPhysXWrapper::CookShapes(const CModel* aModel, cons
 			PxVec3 pos = { translation.x, translation.y, translation.z };
 			PxQuat pxQuat = { quat.x, quat.y, quat.z, quat.w };
 			//staticRigidbody->setGlobalPose({ pos, pxQuat });
-			PxRigidStatic* staticRigidbody = myPhysics->createRigidStatic(/*{ 0.f, 0.f, 0.f }*/{ pos, pxQuat });
+			PxRigidStatic* staticRigidbody = myPhysics->createRigidStatic({ pos, pxQuat });
 			staticRigidbody->userData = (void*)aTransform;
 			PxShape* instancedShape = myPhysics->createShape(pMeshGeometry, *aMaterial, true);
 
@@ -488,7 +483,6 @@ std::vector<PxRigidStatic*> CPhysXWrapper::CookShapes(const CModel* aModel, cons
 			statics.push_back(staticRigidbody);
 		}
 	}
-	timer.End();
 	return std::move(statics);
 }
 

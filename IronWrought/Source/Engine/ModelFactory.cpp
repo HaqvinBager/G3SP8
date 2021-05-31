@@ -393,21 +393,6 @@ CModel* CModelFactory::CreateInstancedModels(const std::string& aFilePath, int a
 
 	CLoaderMesh* mesh = loaderModel->myMeshes[0];
 
-	//unsigned int vertexSize = mesh->myVertexBufferSize;
-	//unsigned int vertexCount = mesh->myVertexCount;
-	//
-	//std::vector<Vector3> vertexPositions;
-	//vertexPositions.reserve(vertexCount);
-	//for (unsigned i = 0; i < vertexCount * vertexSize; i += vertexSize) {
-	//	Vector3 vertexPosition = {};
-	//	memcpy(&vertexPosition, &mesh->myVerticies[i], sizeof(Vector3));
-	//	vertexPositions.emplace_back(vertexPosition);
-	//}
-	//
-	//SMeshFilter meshFilter;
-	//meshFilter.myIndexes = mesh->myIndexes;
-	//meshFilter.myVertecies = vertexPositions;
-
 	std::vector<SMeshFilter> meshFilters = {};
 	meshFilters.resize(numberOfMeshes);
 	for (unsigned int i = 0; i < numberOfMeshes; ++i)
@@ -463,8 +448,6 @@ CModel* CModelFactory::CreateInstancedModels(const std::string& aFilePath, int a
 			memcpy(&vertexPosition, &mesh->myVerticies[v], sizeof(Vector3));
 			meshFilters[i].myVertecies.push_back(vertexPosition);
 		}
-		//meshFilters[i].myVertecies.resize(mesh->myVertexCount);
-		//memcpy(&meshFilters[i].myVertecies.data()[0], loaderModel->myMeshes[i]->myVerticies, sizeof(Vector3) * loaderModel->myMeshes[i]->myVertexCount);
 	}
 
 	//Model
@@ -574,7 +557,6 @@ CModel* CModelFactory::CreateInstancedModels(const std::string& aFilePath, int a
 	CModel::SModelInstanceData modelInstanceData;
 	modelInstanceData.myMeshes = meshData;
 	modelInstanceData.myMeshFilters = meshFilters;
-	//modelInstanceData.myMeshFilter = meshFilter;
 	modelInstanceData.myInstanceBuffer = instanceBuffer;
 	modelInstanceData.myVertexShader = vertexShader;
 	modelInstanceData.myPixelShader = pixelShader;
