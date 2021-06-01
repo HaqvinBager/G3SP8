@@ -46,4 +46,8 @@ void CToggleResponse::OnRespond()
 	{
 		myTarget->Enabled(mySettings.myEnableOnNotify);
 	}
+
+	/*
+		CMainSingleton::PostMaster().SendLate({ EMessageType::WhateverMessageThatMakesSense, myAudioIndex });
+	*/
 }

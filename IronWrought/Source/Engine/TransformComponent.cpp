@@ -107,7 +107,8 @@ DirectX::SimpleMath::Quaternion CTransformComponent::Rotation() const
 	DirectX::SimpleMath::Vector3 translation;
 	DirectX::SimpleMath::Vector3 scale;
 	DirectX::SimpleMath::Quaternion quat;
-	GetLocalMatrix().Decompose(scale, quat, translation);
+	Matrix localMatrix = GetLocalMatrix();
+	localMatrix.Decompose(scale, quat, translation);
 	return quat;
 }
 
@@ -202,12 +203,12 @@ void CTransformComponent::Rotate(const DirectX::SimpleMath::Quaternion& aQuatern
 	myLocalTransform.Translation(tempTranslation);
 }
 
-DirectX::SimpleMath::Matrix CTransformComponent::GetWorldMatrix() const
+const DirectX::SimpleMath::Matrix& CTransformComponent::GetWorldMatrix() const
 {
 	return myWorldTransform;
 }
 
-DirectX::SimpleMath::Matrix CTransformComponent::GetLocalMatrix() const
+const DirectX::SimpleMath::Matrix& CTransformComponent::GetLocalMatrix() const
 {
 	return myLocalTransform;
 }
@@ -230,7 +231,8 @@ void CTransformComponent::RemoveParent()
 {
 	myLocalTransform = DirectX::XMMatrixMultiply(myLocalTransform, myParent->myWorldTransform);
 	Vector3 translation; Vector3 scale;  Quaternion quat;
-	GetLocalMatrix().Decompose(scale, quat, translation);
+	Matrix localMatrix = GetLocalMatrix();
+	localMatrix.Decompose(scale, quat, translation);
 	
 	//NEEDS TO BE VERIFIED //AXel Savage 2021/03/09
 	myParent->RemoveChild(this);

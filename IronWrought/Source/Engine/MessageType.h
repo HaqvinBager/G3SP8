@@ -99,6 +99,7 @@ enum class EMessageType
 	AddStaticAudioSource,
 	ClearStaticAudioSources,
 	SetDynamicAudioSource,
+	PlayDynamicAudioSource,
 
 	CanvasButtonIndex,
 	PauseMenu,

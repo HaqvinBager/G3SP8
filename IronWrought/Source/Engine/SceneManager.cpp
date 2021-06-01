@@ -879,7 +879,7 @@ void CSceneManager::AddAudioSources(CScene& aScene, RapidArray someData)
 
 		if (m["is3D"].GetBool())
 		{
-			PostMaster::SStaticAudioSourceInitData data =
+			PostMaster::SAudioSourceInitData data =
 			{
 				  gameObject->myTransform->Position()
 				, { m["coneDirection"]["x"].GetFloat(), m["coneDirection"]["y"].GetFloat(), m["coneDirection"]["z"].GetFloat() }
