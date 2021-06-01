@@ -332,7 +332,7 @@ inline bool CMaterialHandler::MaterialIsAlpha(const std::array<std::string, 3>& 
 CMaterialHandler::CMaterialHandler()
 	: myDevice(nullptr)
 	, myMaterialPath(ASSETPATH("Assets/IronWrought/Texture/"))
-	, myDecalPath(ASSETPATH("Assets/Graphics/Textures/Decals/"))
+	, myDecalPath(ASSETPATH("Assets/IronWrought/Texture/Decal_texture/"))
 	, myVertexLinksPath(ASSETPATH("Assets/Generated/"))
 {
 }

@@ -33,10 +33,15 @@ class CForwardRenderer;
 class CVFXMeshFactory;
 class CLineFactory;
 class CAudioManager;
+class CAudioChannel;
 class CPhysXWrapper;
 class CSceneFactory;
 class CGraphManager;
 class CGameObject;
+
+namespace PostMaster {
+	struct SAudioSourceInitData;
+}
 
 class CEngine
 {
@@ -72,6 +77,7 @@ public:
 	inline const bool IsActiveScene(const CStateStack::EState& aState);
 	void UpdateScene(const CStateStack::EState& aState);
 	CPhysXWrapper& GetPhysx() { return *myPhysxWrapper; }
+	CAudioChannel* RequestAudioSource(const PostMaster::SAudioSourceInitData& aData);
 
 	const bool IsInGameScene() const;
 
