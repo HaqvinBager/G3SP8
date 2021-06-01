@@ -675,6 +675,7 @@ void CSceneManager::AddPuzzleResponseMove(CScene& aScene, RapidArray someData)
 
 		CMoveResponse::SSettings settings = {};
 		settings.myDuration = response["duration"].GetFloat();
+		settings.myDelay = response["delay"].GetFloat();
 
 		settings.myStartPosition = { response["start"]["x"].GetFloat(),
 									 response["start"]["y"].GetFloat(),
@@ -698,6 +699,7 @@ void CSceneManager::AddPuzzleResponseRotate(CScene& aScene, RapidArray someData)
 
 		CRotateResponse::SSettings settings = {};
 		settings.myDuration = response["duration"].GetFloat();
+		settings.myDelay = response["delay"].GetFloat();
 
 		settings.myStartRotation = { response["start"]["x"].GetFloat(),
 									 response["start"]["y"].GetFloat(),
