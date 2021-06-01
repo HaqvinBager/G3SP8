@@ -123,7 +123,7 @@ void CBoxColliderComponent::CreateBoxCollider()
 
 void CBoxColliderComponent::OnTriggerEnter(CTransformComponent* aOther)
 {
-	if (GameObject().Active() == false && myCanBeDeactivated)
+	if (Enabled() == false && myCanBeDeactivated)
 		return;
 
 	if (IRONWROUGHT->GetActiveScene().CurrentSection() == mySceneSection && PostMaster::CompareStringMessage(PostMaster::SMSG_SECTION, myEventMessage.c_str()))
@@ -171,14 +171,14 @@ void CBoxColliderComponent::OnTriggerEnter(CTransformComponent* aOther)
 		myHasTriggered = true;
 	}
 
-		if (myTriggerOnce)
-			if (myHasTriggered)
-				GameObject().Active(false);
+	if (myTriggerOnce)
+		if (myHasTriggered)
+			Enabled(false);
 }
 
 void CBoxColliderComponent::OnTriggerExit(CTransformComponent* aOther)
 {
-	if (GameObject().Active() == false && myCanBeDeactivated)
+	if (Enabled() == false && myCanBeDeactivated)
 		return;
 
 	if (IRONWROUGHT->GetActiveScene().CurrentSection() == mySceneSection && PostMaster::CompareStringMessage(PostMaster::SMSG_SECTION, myEventMessage.c_str()))
@@ -228,7 +228,7 @@ void CBoxColliderComponent::OnTriggerExit(CTransformComponent* aOther)
 
 	if (myTriggerOnce)
 		if (myHasTriggered)
-			GameObject().Active(false);
+			Enabled(false);
 }
 
 void CBoxColliderComponent::RegisterEventTriggerMessage(const std::string& aMessage)
@@ -265,6 +265,11 @@ void CBoxColliderComponent::RegisterEventTriggerOnce(const bool& aTriggerOnce)
 void CBoxColliderComponent::RegisterSceneSection(const int aSceneSection)
 {
 	mySceneSection = aSceneSection;
+}
+
+void CBoxColliderComponent::CanBeDeactivated(const bool aCanBeDeactivated)
+{
+	myCanBeDeactivated = aCanBeDeactivated;
 }
 
 void CBoxColliderComponent::OnEnable()

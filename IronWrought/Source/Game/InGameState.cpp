@@ -39,7 +39,12 @@
 #endif
 
 // This is a temporary define. Its current use is so that we don't have to deal with the WIP menu. // Aki 2021 05 25
+#ifdef NDEBUG
+#define INGAME_USE_MENU
+#else
 //#define INGAME_USE_MENU
+#endif // NDEBUG
+
 
 #pragma warning( disable : 26812 )
 
@@ -94,10 +99,10 @@ void CInGameState::Start()
 {
 #ifdef INGAME_USE_MENU
 	//CScene* scene = CSceneManager::CreateScene("Level_Cottage");
-	std::vector<std::string> levels(3);
+	std::vector<std::string> levels(2);
 	levels[0] = "Level_Cottage";
 	levels[1] = "Level_Basement1";
-	levels[2] = "Level_Basement2";
+	//levels[2] = "Level_Basement2";
 	CScene* scene = CSceneManager::CreateSceneFromSeveral(levels);
 	Vector3 playerPos = scene->Player()->myTransform->Position();
 	Vector3 firstPos = playerPos + scene->Player()->myTransform->FetchChildren()[0]->GameObject().GetComponent<CCameraComponent>()->GameObject().myTransform->Position();
@@ -196,7 +201,7 @@ void CInGameState::Update()
 	case EExitTo::AnotherLevel:
 	{
 		myExitTo = EExitTo::None;
-		myStateStack.PopTopAndPush(CStateStack::EState::LoadLevel);
+		//myStateStack.PopTopAndPush(CStateStack::EState::LoadLevel);
 	}break;
 
 	case EExitTo::MainMenu:
@@ -225,6 +230,8 @@ void CInGameState::Receive(const SStringMessage& aMessage)
 			IRONWROUGHT->GetActiveScene().ToggleSections(data->mySceneSection);
 		else
 			IRONWROUGHT->GetActiveScene().DisableSection(data->mySceneSection);
+
+		std::cout << __FUNCTION__ << (data->myState == true ? "ToggledSections: " : "DisableSection: ") << data->mySceneSection << std::endl;
 	}
 
 	if (PostMaster::LevelCheck(aMessage.myMessageType))

@@ -45,6 +45,7 @@ public:
 	void RegisterEventTriggerAudioIndex(const int& anIndex);
 	void RegisterEventTriggerOnce(const bool& aTriggerOnce);
 	void RegisterSceneSection(const int aLevelIndex);
+	void CanBeDeactivated(const bool aCanBeDeactivated);
 	//const SStringMessage& EventTriggerMessage() { return myTriggerMessage; }
 
 	void OnEnable() override;
