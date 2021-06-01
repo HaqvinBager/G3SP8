@@ -4,6 +4,7 @@
 #include "RigidBodyComponent.h"
 #include <PlayerControllerComponent.h>
 #include <HealthPickupComponent.h>
+#include <OnTriggerLock.h>
 #include <PlayerComponent.h>
 #include "RigidDynamicBody.h"
 #include <EnemyComponent.h>
@@ -38,6 +39,10 @@ void CPlayerReportCallback::onShapeHit(const physx::PxControllerShapeHit& hit)
 							
 								CMainSingleton::PostMaster().SendLate({ EMessageType::PlayerHealthPickup, nullptr }); // For AudioManager
 							}
+						}
+						if (objectTransform->GetComponent<COnTriggerLock>())
+						{
+							objectTransform->GetComponent<COnTriggerLock>()->RunEvent();
 						}
 
 						Vector3 v = player->GetLinearVelocity();
