@@ -1,17 +1,16 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
 
-[System.Serializable]
-public class Rotate : MonoBehaviour, IListener
+
+public class Toggle : MonoBehaviour, IListener
 {
-    [HideInInspector]
-    public Vector3 start, end;
-    public float duration;
-    public float delay;
+    public bool enable = false;
+    public Component aTarget = null;
 
     public void Remove()
     {
@@ -20,4 +19,3 @@ public class Rotate : MonoBehaviour, IListener
 #endif
     }
 }
-

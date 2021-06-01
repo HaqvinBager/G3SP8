@@ -11,6 +11,7 @@ public enum ListenerType
     None,
     Rotate,
     Move,
+    Toggle,
     Print,
 }
 
@@ -42,6 +43,9 @@ public class Listener : MonoBehaviour
                     break;
                 case ListenerType.Print:
                     AddType<Print>(gameObject);
+                    break;
+                case ListenerType.Toggle:
+                    AddType<Toggle>(gameObject);
                     break;
                 default:
                     {
