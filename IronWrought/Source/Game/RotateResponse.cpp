@@ -18,8 +18,6 @@ CRotateResponse::CRotateResponse(CGameObject& aParent, const SSettings& someSett
 	mySettings.myEndRotation.z = (-mySettings.myEndRotation.z) - 360.0f;
 	mySettings.myEndRotation *= (PI / 180.0f);
 
-	myStartRotation = GameObject().myTransform->Rotation();
-
 	Enabled(false);
 }
 

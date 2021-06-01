@@ -11,7 +11,5 @@ CLeftClickDownLock::~CLeftClickDownLock()
 
 void CLeftClickDownLock::ActivateEvent()
 {
-	//do some check
-	//then
 	RunEvent();
 }
