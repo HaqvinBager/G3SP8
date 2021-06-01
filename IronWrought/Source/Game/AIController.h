@@ -91,3 +91,15 @@ private:
 	Vector3 myResetPosition;
 	SNavMesh* myNavMesh;
 };
+
+class CIdle : public CAIController
+{
+public:
+	CIdle();
+	~CIdle() override {}
+	void Enter(const Vector3& aPosition) override;
+	Vector3 Update(const Vector3& aPosition) override;
+	void ClearPath() override;
+private:
+
+};

@@ -113,6 +113,7 @@ CAudioManager::CAudioManager()
 
 	myDynamicSource = myWrapper.RequestAudioSource("Enemy");
 	myDynamicSource->Set3DMinMaxDistance(10.0f, 1000.0f);
+	//myDynamicSource->SetVolume(0.2f);
 
 	//SetDynamicTrack(EAmbience::DynamicTestDrums, EAmbience::DynamicTestGlitches, EAmbience::DynamicTestScreamer);
 
@@ -392,6 +393,12 @@ void CAudioManager::Receive(const SMessage& aMessage) {
 		myWrapper.Play(myEnemyVoiceSounds[CAST(EEnemyVoiceLine::EnemyHeardNoise)], myDynamicSource);
 	}break;
 
+	case EMessageType::EnemyIdleState:
+	{
+		myDynamicSource->Stop();
+		myWrapper.Play(myEnemyVoiceSounds[CAST(EEnemyVoiceLine::EnemyLostPlayer)], myDynamicSource);
+	}break;
+
 	case EMessageType::EnemyFoundPlayer:
 	{
 		myDynamicSource->Stop();
@@ -580,6 +587,7 @@ void CAudioManager::Update()
 			it->myTimer -= dt;
 			if (it->myTimer <= 0.0f)
 			{
+				it->myChannel->Stop();
 				myWrapper.Play(it->myAudio, it->myChannel);
 				it = myDelayedAudio.erase(it);
 				continue;
@@ -659,6 +667,7 @@ void CAudioManager::SubscribeToMessages()
 	CMainSingleton::PostMaster().Subscribe(EMessageType::EnemySeekState, this);
 	CMainSingleton::PostMaster().Subscribe(EMessageType::EnemyAttackState, this);
 	CMainSingleton::PostMaster().Subscribe(EMessageType::EnemyAlertedState, this);
+	CMainSingleton::PostMaster().Subscribe(EMessageType::EnemyIdleState, this);
 	CMainSingleton::PostMaster().Subscribe(EMessageType::EnemyAttack, this);
 	CMainSingleton::PostMaster().Subscribe(EMessageType::EnemyTakeDamage, this);
 	CMainSingleton::PostMaster().Subscribe(EMessageType::EnemyFoundPlayer, this);
@@ -716,6 +725,7 @@ void CAudioManager::UnsubscribeToMessages()
 	CMainSingleton::PostMaster().Unsubscribe(EMessageType::EnemySeekState, this);
 	CMainSingleton::PostMaster().Unsubscribe(EMessageType::EnemyAttackState, this);
 	CMainSingleton::PostMaster().Unsubscribe(EMessageType::EnemyAlertedState, this);
+	CMainSingleton::PostMaster().Unsubscribe(EMessageType::EnemyIdleState, this);
 	CMainSingleton::PostMaster().Unsubscribe(EMessageType::EnemyAttack, this);
 	CMainSingleton::PostMaster().Unsubscribe(EMessageType::EnemyTakeDamage, this);
 	CMainSingleton::PostMaster().Unsubscribe(EMessageType::EnemyFoundPlayer, this);

@@ -333,3 +333,20 @@ void CAlerted::SetPath(std::vector<Vector3> aPath, Vector3 aFinalPosition)
 		myPath.push_back(aPath[i]);
 	}
 }
+
+CIdle::CIdle()
+{
+}
+
+void CIdle::Enter(const Vector3& /*aPosition*/)
+{
+}
+
+Vector3 CIdle::Update(const Vector3& /*aPosition*/)
+{
+	return Vector3::Zero;
+}
+
+void CIdle::ClearPath()
+{
+}

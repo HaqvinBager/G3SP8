@@ -26,10 +26,11 @@
 CEnemyComponent::CEnemyComponent(CGameObject& aParent, const SEnemySetting& someSettings)
 	: CComponent(aParent)
 	, myPlayer(nullptr)
-	, myCurrentState(EBehaviour::Count)
+	, myCurrentState(EBehaviour::Patrol)
 	, myRigidBodyComponent(nullptr)
 	, myMovementLocked(false)
 	, myWakeUpTimer(0.f)
+	, myIdlingTimer(0.0f)
 	, myHasFoundPlayer(false)
 	, myHasReachedTarget(true)
 	, myHasReachedLastPlayerPosition(true)
@@ -95,13 +96,14 @@ void CEnemyComponent::Start()
 	}
 
 	myBehaviours.push_back(new CAlerted(myNavMesh));
+	myBehaviours.push_back(new CIdle());
 
 	//CAttack* attack = new CAttack(this, myPatrolPositions[0]);
 	/*if(myPlayer != nullptr)
 		attack->SetTarget(myPlayer->myTransform);
 	myBehaviours.push_back(attack);*/
 
-	mySettings.mySpeed = mySettings.mySpeed < 5.0f ? 5.0f : mySettings.mySpeed;
+	//mySettings.mySpeed = mySettings.mySpeed < 5.0f ? 5.0f : mySettings.mySpeed;
 
 	if (GameObject().GetComponent<CRigidBodyComponent>()) {
 		myRigidBodyComponent = GameObject().GetComponent<CRigidBodyComponent>();
@@ -153,6 +155,7 @@ void CEnemyComponent::Update()//får bestämma vilket behaviour vi vill köra i 
 		else if (myHasFoundPlayer)
 		{
 			myHasFoundPlayer = false;
+			myIdlingTimer = 0.0f;
 			CMainSingleton::PostMaster().Send({ EMessageType::EnemyLostPlayer });
 		}
 
@@ -167,8 +170,13 @@ void CEnemyComponent::Update()//får bestämma vilket behaviour vi vill köra i 
 		}
 		else if(myHasReachedTarget && myHasReachedLastPlayerPosition) {
 			//std::cout << __FUNCTION__ << " PATROL" << std::endl;
-			//std::cout << "PATROL" << std::endl;
-			SetState(EBehaviour::Patrol);
+			//myIdlingTimer += CTimer::Dt();
+			//SetState(EBehaviour::Idle);
+			//if (myIdlingTimer > 2.0f)
+			//{
+				//std::cout << "PATROL" << std::endl;
+				SetState(EBehaviour::Patrol);
+			//}
 		}
 
 		//if (mySettings.myRadius * mySettings.myRadius >= distanceToPlayer) {
@@ -242,6 +250,11 @@ void CEnemyComponent::SetState(EBehaviour aState)
 		case EBehaviour::Alerted: 
 		{
 			msgType = EMessageType::EnemyAlertedState;
+		}break;
+
+		case EBehaviour::Idle:
+		{
+			msgType = EMessageType::EnemyIdleState;
 		}break;
 
 		default:
