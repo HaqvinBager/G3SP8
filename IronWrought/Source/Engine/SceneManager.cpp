@@ -51,6 +51,7 @@
 #include <MoveResponse.h>
 #include <RotateResponse.h>
 #include <PrintResponse.h>
+#include <ToggleResponse.h>
 
 CScene* CSceneManager::ourLastInstantiatedScene = nullptr;
 CSceneManager::CSceneManager()
@@ -221,6 +222,8 @@ bool CSceneManager::AddToScene(CScene& aScene, Binary::SLevelData& aBinLevelData
 				AddPuzzleResponseRotate(aScene, sceneData["rotates"].GetArray());
 			if (sceneData.HasMember("prints"))
 				AddPuzzleResponsePrint(aScene, sceneData["prints"].GetArray());
+			if (sceneData.HasMember("toggles"))
+				AddPuzzleToggle(aScene, sceneData["toggles"].GetArray());
 
 			AddDirectionalLights(aScene, sceneData["directionalLights"].GetArray());
 			SetVertexPaintedColors(aScene, sceneData["vertexColors"].GetArray(), vertexPaintData);
@@ -745,6 +748,24 @@ void CSceneManager::AddPuzzleResponsePrint(CScene& aScene, RapidArray someData)
 		settings.myData = response["data"].GetString();
 
 		gameObject->AddComponent<CPrintResponse>(*gameObject, settings);
+	}
+}
+
+void CSceneManager::AddPuzzleToggle(CScene& aScene, RapidArray someData)
+{
+	for (const auto& response : someData)
+	{
+		CGameObject* gameObject = aScene.FindObjectWithID(response["instanceID"].GetInt());
+		if (!gameObject)
+			continue;
+
+		CToggleResponse::SSettings settings = {};
+		settings.myType = response["type"].GetString();
+		settings.myEnableOnStart = response["enableOnStartup"].GetInt() ? 1 : 0;
+		settings.myEnableOnNotify = response["enableOnNotify"].GetInt() ? 1 : 0;
+		settings.myTargetInstanceID = response["target"].GetInt();
+
+		gameObject->AddComponent<CToggleResponse>(*gameObject, settings);
 	}
 }
 

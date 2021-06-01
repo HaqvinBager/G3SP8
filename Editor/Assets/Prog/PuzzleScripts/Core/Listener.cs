@@ -8,14 +8,15 @@ using UnityEditor;
 
 public enum ListenerType
 {
-    None,
+    Clear,
+    Select,
     Rotate,
     Move,
     Toggle,
     Print,
 }
 
-interface IListener
+public interface IListener
 {
     void Remove();
 }
@@ -26,12 +27,11 @@ public class Listener : MonoBehaviour
 {
     public Lock myLock;
     public ListenerType responseType;
-    private ListenerType old;
 
     [ExecuteAlways]
     private void Update()
     {
-        if (old != responseType)
+        if (responseType != ListenerType.Select)
         {
             switch (responseType)
             {
@@ -47,7 +47,7 @@ public class Listener : MonoBehaviour
                 case ListenerType.Toggle:
                     AddType<Toggle>(gameObject);
                     break;
-                default:
+                case ListenerType.Clear:
                     {
                         IListener[] others = GetComponents<IListener>();
                         foreach (IListener other in others)
@@ -55,8 +55,8 @@ public class Listener : MonoBehaviour
                     }
                     break;
             }
-        }
-        old = responseType;
+        }      
+        responseType = ListenerType.Select;
     }
 
     void AddType<T>(GameObject gameObject) where T : IListener
