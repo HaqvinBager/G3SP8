@@ -1,6 +1,7 @@
 #pragma once
 
 class CTransformComponent;
+class CAudioChannel;
 namespace PostMaster
 {
 	struct SCrossHairData
@@ -33,7 +34,7 @@ namespace PostMaster
 		CTransformComponent* myOthersTransform = nullptr;
 	};
 
-	struct SStaticAudioSourceInitData
+	struct SAudioSourceInitData
 	{
 		Vector3 myPosition;
 		Vector3 myForward;
@@ -48,6 +49,11 @@ namespace PostMaster
 	{
 		int myGroundMaterial;
 		bool myIsSprint;
+	};
+
+	struct SPlayDynamicAudioData {
+		int mySoundIndex;
+		CAudioChannel* myChannel;
 	};
 
 	// SP7: Checks if the string is equivalent to any of our levels

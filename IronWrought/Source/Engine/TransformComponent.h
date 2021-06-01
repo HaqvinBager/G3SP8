@@ -30,8 +30,8 @@ public:
 	DirectX::SimpleMath::Vector3 Scale() const;
 
 	DirectX::SimpleMath::Matrix& Transform();
-	DirectX::SimpleMath::Matrix GetWorldMatrix() const;
-	DirectX::SimpleMath::Matrix GetLocalMatrix() const;
+	const DirectX::SimpleMath::Matrix& GetWorldMatrix() const;
+	const DirectX::SimpleMath::Matrix& GetLocalMatrix() const;
 	void SetToOtherTransform(const DirectX::SimpleMath::Matrix& otherTransform);
 
 	void Transform(const DirectX::SimpleMath::Vector3& aPosition, const DirectX::SimpleMath::Vector3& aRotation);
