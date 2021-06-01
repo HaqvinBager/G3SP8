@@ -74,10 +74,6 @@ void CEnemyComponent::Start()
 			float points = mySettings.myPatrolIntrestValue[i];
 			patrolGameObject->AddComponent<CPatrolPointComponent>(*patrolGameObject, points);
 			scene.AddInstance(patrolGameObject->GetComponent<CPatrolPointComponent>());
-
-			//CLineInstance* myLine2 = new CLineInstance();
-			//myLine2->Init(CLineFactory::GetInstance()->CreateLine(GameObject().myTransform->Position(), patrolGameObject->myTransform->Position(), { 0,255,0,255 }));
-			//CEngine::GetInstance()->GetActiveScene().AddInstance(myLine2);
 		}
 	}
 
@@ -102,8 +98,6 @@ void CEnemyComponent::Start()
 	/*if(myPlayer != nullptr)
 		attack->SetTarget(myPlayer->myTransform);
 	myBehaviours.push_back(attack);*/
-
-	//mySettings.mySpeed = mySettings.mySpeed < 5.0f ? 5.0f : mySettings.mySpeed;
 
 	if (GameObject().GetComponent<CRigidBodyComponent>()) {
 		myRigidBodyComponent = GameObject().GetComponent<CRigidBodyComponent>();
@@ -131,10 +125,7 @@ void CEnemyComponent::Update()//får bestämma vilket behaviour vi vill köra i 
 		float lengthSquaredEnemy = furthestLookingPointToEnemy.LengthSquared();
 		float lengthSquaredPlayer = playerToEnemy.LengthSquared();
 		float degrees = std::acos(dot / sqrt(lengthSquaredEnemy * lengthSquaredPlayer)) * 180.f / PI;
-		//std::cout << "Degrees: " << degrees << std::endl;
 		float viewAngle = 60.f;
-		//myHasFoundPlayer = false;
-		//CMainSingleton::PostMaster().Send({ EMessageType::EnemyLostPlayer });
 
 		if (degrees <= viewAngle) {
 			Vector3 direction = playerPos - enemyPos;
@@ -142,21 +133,20 @@ void CEnemyComponent::Update()//får bestämma vilket behaviour vi vill köra i 
 			if (hit.getNbAnyHits() > 0) {
 				CTransformComponent* transform = (CTransformComponent*)hit.getAnyHit(0).actor->userData;
 				if (!transform && !myHasFoundPlayer) {
-					SMessage msg;
-					msg.data = static_cast<void*>(&playerPos);
-					msg.myMessageType = EMessageType::EnemyFoundPlayer;
-					CMainSingleton::PostMaster().Send(msg);
-					
 					myHasFoundPlayer = true;
 					myHasReachedLastPlayerPosition = false;
+					CMainSingleton::PostMaster().Send({ EMessageType::EnemyFoundPlayer });
 				}
 			}
 		}
 		else if (myHasFoundPlayer)
 		{
 			myHasFoundPlayer = false;
+			SMessage msg;
+			msg.data = static_cast<void*>(&playerPos);
+			msg.myMessageType = EMessageType::EnemyLostPlayer;
+			CMainSingleton::PostMaster().Send(msg);
 			myIdlingTimer = 0.0f;
-			CMainSingleton::PostMaster().Send({ EMessageType::EnemyLostPlayer });
 		}
 
 		if (!myHasFoundPlayer && !myHasReachedLastPlayerPosition) {
@@ -168,43 +158,25 @@ void CEnemyComponent::Update()//får bestämma vilket behaviour vi vill köra i 
 			//std::cout << "SEEK" << std::endl;
 			SetState(EBehaviour::Seek);
 		}
-		else if(myHasReachedTarget && myHasReachedLastPlayerPosition) {
-			//std::cout << __FUNCTION__ << " PATROL" << std::endl;
-			//myIdlingTimer += CTimer::Dt();
-			//SetState(EBehaviour::Idle);
-			//if (myIdlingTimer > 2.0f)
-			//{
+		else if (myHasReachedTarget && myHasReachedLastPlayerPosition) {
+			
+			myIdlingTimer += CTimer::Dt();
+			SetState(EBehaviour::Idle);
+			if (myIdlingTimer > 2.0f)
+			{
+				myIdlingTimer = 0.0f;
 				//std::cout << "PATROL" << std::endl;
+				myHasReachedTarget = false;
 				SetState(EBehaviour::Patrol);
-			//}
+			}
 		}
 
-		//if (mySettings.myRadius * mySettings.myRadius >= distanceToPlayer) {
-		//	/*if (distanceToPlayer <= mySettings.myAttackDistance * mySettings.myAttackDistance)
-		//	{
-		//		std::cout << "ATTACK" << std::endl;
-		//		SetState(EBehaviour::Attack);
-		//	}
-		//	else
-		//	{*/
-		//		//std::cout << "SEEK" << std::endl;
-		//		//SetState(EBehaviour::Seek);
-		//	//}
-		//}
-		//else {
-		//	//std::cout << "PATROL" << std::endl;
-		//	SetState(EBehaviour::Patrol);
-		//}
-
-		//if (myRigidBodyComponent) {
-			Vector3 targetDirection = myBehaviours[static_cast<int>(myCurrentState)]->Update(GameObject().myTransform->Position());
-
-			targetDirection.y = 0;
-			GameObject().myTransform->Move(targetDirection * mySettings.mySpeed * CTimer::Dt());
-			float targetOrientation = WrapAngle(atan2f(targetDirection.x, targetDirection.z));
-			myCurrentOrientation = Lerp(myCurrentOrientation, targetOrientation,10.0f * CTimer::Dt());
-			GameObject().myTransform->Rotation({ 0, DirectX::XMConvertToDegrees(myCurrentOrientation) + 180.f, 0 });
-		//}
+		Vector3 targetDirection = myBehaviours[static_cast<int>(myCurrentState)]->Update(GameObject().myTransform->Position());
+		targetDirection.y = 0;
+		GameObject().myTransform->Move(targetDirection * mySettings.mySpeed * CTimer::Dt());
+		float targetOrientation = WrapAngle(atan2f(targetDirection.x, targetDirection.z));
+		myCurrentOrientation = Lerp(myCurrentOrientation, targetOrientation, 10.0f * CTimer::Dt());
+		GameObject().myTransform->Rotation({ 0, DirectX::XMConvertToDegrees(myCurrentOrientation) + 180.f, 0 });
 	}
 	else {
 		myWakeUpTimer += CTimer::Dt();
@@ -220,44 +192,42 @@ void CEnemyComponent::FixedUpdate()
 	//myController->Move({ 0.0f, -0.098f, 0.0f }, 1.f);
 }
 
-
-
 void CEnemyComponent::SetState(EBehaviour aState)
 {
 	if (myCurrentState == aState)
 		return;
 
 	myCurrentState = aState;
-	myBehaviours[static_cast<int>(myCurrentState)]->Enter(GameObject().myTransform->Position());//krash
+	myBehaviours[static_cast<int>(myCurrentState)]->Enter(GameObject().myTransform->Position());
 	EMessageType msgType = EMessageType::Count;
 	switch (myCurrentState)
 	{
-		case EBehaviour::Patrol:
-		{
-			msgType = EMessageType::EnemyPatrolState;
-		}break;
+	case EBehaviour::Patrol:
+	{
+		msgType = EMessageType::EnemyPatrolState;
+	}break;
 
-		case EBehaviour::Seek:
-		{
-			msgType = EMessageType::EnemySeekState;
-		}break;
+	case EBehaviour::Seek:
+	{
+		msgType = EMessageType::EnemySeekState;
+	}break;
 
-		case EBehaviour::Attack:
-		{
-			msgType = EMessageType::EnemyAttackState;
-		}break;
+	case EBehaviour::Attack:
+	{
+		msgType = EMessageType::EnemyAttackState;
+	}break;
 
-		case EBehaviour::Alerted: 
-		{
-			msgType = EMessageType::EnemyAlertedState;
-		}break;
+	case EBehaviour::Alerted:
+	{
+		msgType = EMessageType::EnemyAlertedState;
+	}break;
 
-		case EBehaviour::Idle:
-		{
-			msgType = EMessageType::EnemyIdleState;
-		}break;
+	case EBehaviour::Idle:
+	{
+		msgType = EMessageType::EnemyIdleState;
+	}break;
 
-		default:
+	default:
 		break;
 	}
 	if (msgType == EMessageType::Count)
@@ -281,11 +251,11 @@ void CEnemyComponent::Receive(const SMessage& aMsg)
 	{
 		myMovementLocked = true;
 	}
-	
+
 	if (aMsg.myMessageType == EMessageType::PropCollided) {
 		CGameObject* gameobject = reinterpret_cast<CGameObject*>(aMsg.data);
 		if (gameobject) {
- 			std::vector<Vector3> path = myNavMesh->CalculatePath(GameObject().myTransform->Position(), gameobject->myTransform->Position(), myNavMesh);
+			std::vector<Vector3> path = myNavMesh->CalculatePath(GameObject().myTransform->Position(), gameobject->myTransform->Position(), myNavMesh);
 			if (myNavMesh->PathLength(path, GameObject().myTransform->Position()) <= 20.f) {
 				SetState(EBehaviour::Alerted);
 				CAlerted* alertedBehaviour = static_cast<CAlerted*>(myBehaviours[static_cast<int>(myCurrentState)]);
@@ -297,36 +267,11 @@ void CEnemyComponent::Receive(const SMessage& aMsg)
 		}
 	}
 	if (aMsg.myMessageType == EMessageType::EnemyReachedLastPlayerPosition) {
+		std::cout << " REACHED " << std::endl;
 		myHasReachedLastPlayerPosition = true;
 	}
-	
+
 	if (aMsg.myMessageType == EMessageType::EnemyReachedTarget) {
 		myHasReachedTarget = true;
 	}
 }
-
-//CPatrolPointComponent* CEnemyComponent::FindBestPatrolPoint()
-//{
-//	const std::vector<CPatrolPointComponent*>& patrolPoints = CEngine::GetInstance()->GetActiveScene().PatrolPoints();
-//	std::vector<float> intrestValues;
-//	if (patrolPoints.size() > 0) {
-//		for (int i = 0; i < patrolPoints.size(); ++i) {
-//			Vector3 patrolPositions = patrolPoints[i]->GameObject().myTransform->Position();
-//			Vector3 dist = patrolPositions - GameObject().myTransform->Position();
-//			float length = dist.LengthSquared() / 10.f;
-//			patrolPoints[i]->AddValue(length);
-//			intrestValues.emplace_back(patrolPoints[i]->GetIntrestValue());
-//			//std::cout << "[" << i << "] " << "Length Value: " << patrolPoints[i]->GetIntrestValue() << std::endl;
-//		}
-//
-//		float min = *std::min_element(intrestValues.begin(), intrestValues.end());
-//		//std::cout << "Length Value: " << min << std::endl;
-//
-//		for (int i = 0; i < patrolPoints.size(); ++i) {
-//			if (patrolPoints[i]->GetIntrestValue() == min) {
-//				return patrolPoints[i];
-//			}
-//		}
-//	}
-//	return nullptr;
-//}
