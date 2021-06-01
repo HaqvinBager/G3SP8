@@ -484,7 +484,7 @@ void CAudioManager::Receive(const SMessage& aMessage) {
 
 	case EMessageType::AddStaticAudioSource:
 	{
-		PostMaster::SStaticAudioSourceInitData data = *reinterpret_cast<PostMaster::SStaticAudioSourceInitData*>(aMessage.data);
+		PostMaster::SAudioSourceInitData data = *reinterpret_cast<PostMaster::SAudioSourceInitData*>(aMessage.data);
 
 		if (data.mySoundIndex < 0 || data.mySoundIndex >= static_cast<int>(EPropAmbience::Count))
 			return;
@@ -496,6 +496,7 @@ void CAudioManager::Receive(const SMessage& aMessage) {
 	{
 		CGameObject* data = reinterpret_cast<CGameObject*>(aMessage.data);
 		myDynamicObject = data;
+		myDynamicObjects.push_back(data);
 	}break;
 
 	case EMessageType::PhysicsPropCollision:
@@ -617,6 +618,12 @@ void CAudioManager::Update()
 void CAudioManager::SetListener(CGameObject* aGameObject)
 {
 	myListener = aGameObject;
+}
+
+CAudioChannel* CAudioManager::AddSource(const PostMaster::SAudioSourceInitData& aData) 
+{
+	myDynamicSources.push_back(myWrapper.RequestAudioSource(std::to_string(aData.myGameObjectID)));
+	return myDynamicSources.back();
 }
 
 void CAudioManager::AddSource(const int anIdentifier, const unsigned int aSoundIndex, const Vector3& aPosition, const Vector3& aDirection, float aStartAttenuationAngle, float aMaxAttenuationAngle, float aMinimumVolume)

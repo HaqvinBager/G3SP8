@@ -51,6 +51,7 @@
 #include <MoveResponse.h>
 #include <RotateResponse.h>
 #include <PrintResponse.h>
+#include <ToggleResponse.h>
 
 CScene* CSceneManager::ourLastInstantiatedScene = nullptr;
 CSceneManager::CSceneManager()
@@ -132,7 +133,7 @@ CScene* CSceneManager::CreateSceneFromSeveral(const std::vector<std::string>& so
 		AddToScene(*scene, binLevelData, doc, i);
 		scene->NextSection();
 	}
-	scene->SetCurrentSection(0);
+	scene->ToggleSections(0);
 
 	return scene;
 }
@@ -221,6 +222,8 @@ bool CSceneManager::AddToScene(CScene& aScene, Binary::SLevelData& aBinLevelData
 				AddPuzzleResponseRotate(aScene, sceneData["rotates"].GetArray());
 			if (sceneData.HasMember("prints"))
 				AddPuzzleResponsePrint(aScene, sceneData["prints"].GetArray());
+			if (sceneData.HasMember("toggles"))
+				AddPuzzleToggle(aScene, sceneData["toggles"].GetArray());
 
 			AddDirectionalLights(aScene, sceneData["directionalLights"].GetArray());
 			SetVertexPaintedColors(aScene, sceneData["vertexColors"].GetArray(), vertexPaintData);
@@ -619,7 +622,44 @@ void CSceneManager::AddPuzzleKey(CScene& aScene, RapidArray someData)
 		break;
 		case EKeyInteractionTypes::Animate:
 		{
-			gameObject->AddComponent<CAnimateKey>(*gameObject, settings);
+			CAnimateKey::SAnimateKeySettings animateKeySettings =
+			{
+				{
+					0.0f, 0.0f, 0.0f
+				},
+				{
+					0.0f, 0.0f, 0.0f
+				},
+				{
+					0.0f, 0.0f, 135.0f
+				},
+				{
+					0.0f, 0.0f, 45.0f
+				},
+				0.5f
+				//{	
+				//	key["startPosition"]["x"].GetFloat(),
+				//	key["startPosition"]["y"].GetFloat(),
+				//	key["startPosition"]["z"].GetFloat() 
+				//},
+				//{	
+				//	key["endPosition"]["x"].GetFloat(),
+				//	key["endPosition"]["y"].GetFloat(),
+				//	key["endPosition"]["z"].GetFloat() 
+				//},
+				//{	
+				//	key["startRotation"]["x"].GetFloat(),
+				//	key["startRotation"]["y"].GetFloat(),
+				//	key["startRotation"]["z"].GetFloat() 
+				//},
+				//{	
+				//	key["endRotation"]["x"].GetFloat(),
+				//	key["endRotation"]["y"].GetFloat(),
+				//	key["endRotation"]["z"].GetFloat() 
+				//},
+				//key["duration"].GetFloat()
+			};
+			gameObject->AddComponent<CAnimateKey>(*gameObject, settings, animateKeySettings);
 		}
 		break;
 		default:
@@ -725,6 +765,24 @@ void CSceneManager::AddPuzzleResponsePrint(CScene& aScene, RapidArray someData)
 		settings.myData = response["data"].GetString();
 
 		gameObject->AddComponent<CPrintResponse>(*gameObject, settings);
+	}
+}
+
+void CSceneManager::AddPuzzleToggle(CScene& aScene, RapidArray someData)
+{
+	for (const auto& response : someData)
+	{
+		CGameObject* gameObject = aScene.FindObjectWithID(response["instanceID"].GetInt());
+		if (!gameObject)
+			continue;
+
+		CToggleResponse::SSettings settings = {};
+		settings.myType = response["type"].GetString();
+		settings.myEnableOnStart = response["enableOnStartup"].GetInt() ? 1 : 0;
+		settings.myEnableOnNotify = response["enableOnNotify"].GetInt() ? 1 : 0;
+		settings.myTargetInstanceID = response["target"].GetInt();
+
+		gameObject->AddComponent<CToggleResponse>(*gameObject, settings);
 	}
 }
 
@@ -838,7 +896,7 @@ void CSceneManager::AddAudioSources(CScene& aScene, RapidArray someData)
 
 		if (m["is3D"].GetBool())
 		{
-			PostMaster::SStaticAudioSourceInitData data =
+			PostMaster::SAudioSourceInitData data =
 			{
 				  gameObject->myTransform->Position()
 				, { m["coneDirection"]["x"].GetFloat(), m["coneDirection"]["y"].GetFloat(), m["coneDirection"]["z"].GetFloat() }
@@ -1025,6 +1083,8 @@ void CSceneManager::AddTeleporters(CScene& aScene, const RapidArray& someData)
 			triggerVolume->RegisterEventTriggerFilter(static_cast<int>(CBoxColliderComponent::EEventFilter::PlayerOnly));
 			triggerVolume->RegisterEventTriggerAudioIndex(-1);
 			triggerVolume->RegisterEventTriggerOnce(false);
+			triggerVolume->RegisterEventTriggerOnce(false);
+			triggerVolume->CanBeDeactivated(false);
 
 			CTeleporterComponent::ELevelName teleportersName = static_cast<CTeleporterComponent::ELevelName>(teleporter["myTeleporterName"].GetInt());
 			CTeleporterComponent::ELevelName teleportTo = static_cast<CTeleporterComponent::ELevelName>(teleporter["teleportTo"].GetInt());

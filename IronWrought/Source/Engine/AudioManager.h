@@ -35,6 +35,7 @@ public:
 
 	void SetListener(CGameObject* aGameObject);
 
+	CAudioChannel* AddSource(const PostMaster::SAudioSourceInitData& aData);
 private:
 	void AddSource(const int anIdentifier, const unsigned int aSoundIndex, const Vector3& aPosition, const Vector3& aDirection, float aStartAttenuationAngle, float aMaxAttenuationAngle, float aMinimumVolume);
 	void RemoveSource(const int anIdentifier);
@@ -127,8 +128,12 @@ private:
 	std::vector<CAudioChannel*> myChannels;
 
 	CGameObject* myListener;
+
 	CGameObject* myDynamicObject;
+	std::vector<CGameObject*> myDynamicObjects;
+
 	CAudioChannel* myDynamicSource;
+	std::vector<CAudioChannel*> myDynamicSources;
 
 	float myDynamicChannel1;
 	float myDynamicChannel2;

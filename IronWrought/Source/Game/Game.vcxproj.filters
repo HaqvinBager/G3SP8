@@ -16,6 +16,36 @@
     <Filter Include="State Stack">
       <UniqueIdentifier>{510374fd-c6aa-4add-89ef-8290a69babef}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Puzzle">
+      <UniqueIdentifier>{b2a0089c-942d-4d5c-a754-fe0b1a44603f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Puzzle\Key">
+      <UniqueIdentifier>{0cd14dba-e039-411c-966f-1a91427ad00a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Puzzle\Listener/Response">
+      <UniqueIdentifier>{240f5373-320f-42a4-b7e9-feeeb4cc43a8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Puzzle\Lock">
+      <UniqueIdentifier>{215cfced-2ec7-4609-9fff-058466a1575e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Puzzle\Key\Base">
+      <UniqueIdentifier>{aaa9375b-d29e-4f39-91fb-37ba31db41b8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Puzzle\Listener/Response\Base">
+      <UniqueIdentifier>{3fc611f3-d66b-432a-8d16-4920927afe4b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Puzzle\Lock\Base">
+      <UniqueIdentifier>{ad59f71f-2e20-49fa-8faf-e4e3de174a28}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Puzzle\Listener/Response\Components">
+      <UniqueIdentifier>{91ce889c-dd9a-47bf-8360-38a690a39507}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Puzzle\Key\Components">
+      <UniqueIdentifier>{51c1c2df-fea0-4e28-ab52-b88c270290b0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Puzzle\Lock\Components">
+      <UniqueIdentifier>{e9cb21c6-89b7-4448-a3b1-a5a3e1ecaad3}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game.h">
@@ -96,43 +126,55 @@
     <ClInclude Include="PatrolPointComponent.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="ListenerComponent.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="MoveResponse.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="ResponseBehavior.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="KeyBehavior.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="DestroyKey.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="AnimateKey.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="LockBehavior.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="OnTriggerLock.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="LeftClickDownLock.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="RotateResponse.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="PrintResponse.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="InteractionBehavior.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="OnTriggerLock.h">
+      <Filter>Puzzle\Lock\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="OnLookLock.h">
+      <Filter>Puzzle\Lock\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="LeftClickDownLock.h">
+      <Filter>Puzzle\Lock\Components</Filter>
+    </ClInclude>
     <ClInclude Include="InstantActivationLock.h">
+      <Filter>Puzzle\Lock\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="LockBehavior.h">
+      <Filter>Puzzle\Lock\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="RotateResponse.h">
+      <Filter>Puzzle\Listener/Response\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="PrintResponse.h">
+      <Filter>Puzzle\Listener/Response\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="MoveResponse.h">
+      <Filter>Puzzle\Listener/Response\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="ListenerComponent.h">
+      <Filter>Puzzle\Listener/Response\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="ToggleResponse.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="InstantActivationLock.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ResponseBehavior.h">
+      <Filter>Puzzle\Listener/Response\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="AnimateKey.h">
+      <Filter>Puzzle\Key\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="DestroyKey.h">
+      <Filter>Puzzle\Key\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="KeyBehavior.h">
+      <Filter>Puzzle\Key\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="AudioResponse.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -209,43 +251,55 @@
     <ClCompile Include="PatrolPointComponent.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="ListenerComponent.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="InteractionBehavior.cpp">
+      <Filter>Puzzle</Filter>
     </ClCompile>
-    <ClCompile Include="MoveResponse.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="ResponseBehavior.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="KeyBehavior.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="DestroyKey.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="AnimateKey.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="LockBehavior.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="OnLookLock.cpp">
+      <Filter>Puzzle\Lock\Components</Filter>
     </ClCompile>
     <ClCompile Include="OnTriggerLock.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Puzzle\Lock\Components</Filter>
     </ClCompile>
     <ClCompile Include="LeftClickDownLock.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Puzzle\Lock\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="InstantActivationLock.cpp">
+      <Filter>Puzzle\Lock\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="LockBehavior.cpp">
+      <Filter>Puzzle\Lock\Base</Filter>
     </ClCompile>
     <ClCompile Include="RotateResponse.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Puzzle\Listener/Response\Components</Filter>
     </ClCompile>
     <ClCompile Include="PrintResponse.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Puzzle\Listener/Response\Components</Filter>
     </ClCompile>
-    <ClCompile Include="InteractionBehavior.cpp">
+    <ClCompile Include="MoveResponse.cpp">
+      <Filter>Puzzle\Listener/Response\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="ListenerComponent.cpp">
+      <Filter>Puzzle\Listener/Response\Base</Filter>
+    </ClCompile>
+    <ClCompile Include="ToggleResponse.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="InstantActivationLock.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ResponseBehavior.cpp">
+      <Filter>Puzzle\Listener/Response\Base</Filter>
+    </ClCompile>
+    <ClCompile Include="AnimateKey.cpp">
+      <Filter>Puzzle\Key\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="DestroyKey.cpp">
+      <Filter>Puzzle\Key\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="KeyBehavior.cpp">
+      <Filter>Puzzle\Key\Base</Filter>
+    </ClCompile>
+    <ClCompile Include="AudioResponse.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

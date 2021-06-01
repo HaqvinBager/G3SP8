@@ -14,7 +14,7 @@ CTeleporterComponent::CTeleporterComponent(CGameObject& aParent
 ,	myTeleportTo(aNameOfTeleportTo)
 ,	myOnTeleportToMe(aPosOnTeleportTo)
 ,	myTeleportTimer(0.0f)
-,	myTimeUntilTeleport(0.5f)
+,	myTimeUntilTeleport(0.1f)
 ,	myTeleportInProgress(false)
 ,	myTeleportTarget(nullptr)
 {
@@ -60,6 +60,8 @@ void CTeleporterComponent::Receive(const SMessage& aMessage)
 			if (!teleportData.myTransformToTeleport)
 				return;
 
+			GameObject().Active(true);
+
 			myTeleportInProgress = teleportData.myStartTeleport;
 			myTeleportTarget = teleportData.myTransformToTeleport;
 			myTeleportTimer = myTimeUntilTeleport;
@@ -71,6 +73,8 @@ void CTeleporterComponent::Receive(const SMessage& aMessage)
 
 		if (teleportData.myStartTeleport == false)
 		{
+			GameObject().Active(false);
+
 			myTeleportInProgress = false;
 			myTeleportTarget = nullptr;
 			return;
@@ -96,9 +100,14 @@ void CTeleporterComponent::HandleTeleport()
 	//std::cout << static_cast<int>(myName) << std::endl;
 	//std::cout << "----" << std::endl;
 
- 
+	if (!myTeleportTarget)
+		return;
+
 	myTeleportTarget->CopyRotation(GameObject().myTransform->Transform());
 	// Currently only affects player.
 	myTeleportTarget->GameObject().GetComponent<CPlayerControllerComponent>()->SetControllerPosition(myOnTeleportToMe);
+	myTeleportTarget->GameObject().GetComponent<CPlayerControllerComponent>()->SetRespawnPosition();
+
+	myTeleportTarget = nullptr;
 	myTeleportInProgress = false;
 }

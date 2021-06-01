@@ -36,7 +36,10 @@ private:
 	};
 
 	void DEBUGFunctionality();
+
 	void ToggleCanvas(EInGameCanvases anEInGameCanvases);
+
+	void CreateMenuCamera(CScene& aScene);
 
 private:
 	enum class EExitTo

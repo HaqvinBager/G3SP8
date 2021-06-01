@@ -7,7 +7,7 @@ public:
 
 	CBehavior(CGameObject& aParent) : CComponent(aParent), myEnabled(true) {}
 
-	virtual ~CBehavior() {}
+	virtual ~CBehavior() override {}
 
 	virtual void OnEnable() = 0;
 	virtual void OnDisable() = 0;

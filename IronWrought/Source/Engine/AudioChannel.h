@@ -18,9 +18,11 @@ public:
 	void SetPaused(bool aDoPause);
 	void SetPitch(float aPitch);
 
-	void Set3DAttributes(const Vector3& aPosition, const Vector3& aVelocity);
+	//Update
+	void Set3DAttributes(const Vector3& aPosition, const Vector3& aVelocity = { 0.0f, 0.0f, 0.0f });
 	void Set3DConeAttributes(const Vector3& aDirection, float anUnattenuatedAngleSpread, float anAttenuatedAngleSpread, float anAttenuatedVolume);
 	void Set3DMinMaxDistance(float aMinDistance, float aMaxDistance);
+
 
 public:
 	~CAudioChannel();// 2020 12 04  - Destruction of CAudioChannel is not taken care of by FMOD

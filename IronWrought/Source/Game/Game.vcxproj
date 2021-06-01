@@ -161,10 +161,12 @@
     <ClInclude Include="AIBehaviorComponent.h" />
     <ClInclude Include="AIController.h" />
     <ClInclude Include="AnimateKey.h" />
+    <ClInclude Include="AudioResponse.h" />
     <ClInclude Include="BootUpState.h" />
     <ClInclude Include="CameraControllerComponent.h" />
     <ClInclude Include="CharacterControllerComponent.h" />
     <ClInclude Include="CollisionEventComponent.h" />
+    <ClInclude Include="ToggleResponse.h" />
     <ClInclude Include="DestroyKey.h" />
     <ClInclude Include="DialogueSystem.h" />
     <ClInclude Include="EnemyAnimationController.h" />
@@ -181,6 +183,7 @@
     <ClInclude Include="MainMenuState.h" />
     <ClInclude Include="MoveResponse.h" />
     <ClInclude Include="NavMeshComponent.h" />
+    <ClInclude Include="OnLookLock.h" />
     <ClInclude Include="OnTriggerLock.h" />
     <ClInclude Include="PatrolPointComponent.h" />
     <ClInclude Include="PauseMenuState.h" />
@@ -200,10 +203,12 @@
   <ItemGroup>
     <ClCompile Include="AIController.cpp" />
     <ClCompile Include="AnimateKey.cpp" />
+    <ClCompile Include="AudioResponse.cpp" />
     <ClCompile Include="BootUpState.cpp" />
     <ClCompile Include="CameraControllerComponent.cpp" />
     <ClCompile Include="CharacterControllerComponent.cpp" />
     <ClCompile Include="CollisionEventComponent.cpp" />
+    <ClCompile Include="ToggleResponse.cpp" />
     <ClCompile Include="DestroyKey.cpp" />
     <ClCompile Include="DialogueSystem.cpp" />
     <ClCompile Include="EnemyAnimationController.cpp" />
@@ -220,6 +225,7 @@
     <ClCompile Include="MainMenuState.cpp" />
     <ClCompile Include="MoveResponse.cpp" />
     <ClCompile Include="NavMeshComponent.cpp" />
+    <ClCompile Include="OnLookLock.cpp" />
     <ClCompile Include="OnTriggerLock.cpp" />
     <ClCompile Include="PatrolPointComponent.cpp" />
     <ClCompile Include="PauseMenuState.cpp" />

@@ -9,8 +9,10 @@ using UnityEditor;
 
 public class Toggle : MonoBehaviour, IListener
 {
-    public bool enable = false;
-    public Component aTarget = null;
+    public bool enabledOnStart = true;
+    public bool enableOnNotify = false;
+    public Transform aTarget = null;
+    public Component aTargetType = null;
 
     public void Remove()
     {

@@ -9,8 +9,11 @@ class CSpriteInstance;
 class CCameraComponent : public CComponent
 {
 public:
+	static constexpr float SP8_FOV = 59.5f;
+
 	CCameraComponent(CGameObject& aParent, const float aFoV = 70.0f/*, float aNearPlane = 0.3f, float aFarPlane = 10000.0f, DirectX::SimpleMath::Vector2 aResolution = {1600.f, 900.f}*/);
 	~CCameraComponent();
+
 
 	void Awake() override;
 	void Start() override;
@@ -77,6 +80,5 @@ private:
 	bool myFadePermanent;
 
 	float myFoV; 
-
 };
 

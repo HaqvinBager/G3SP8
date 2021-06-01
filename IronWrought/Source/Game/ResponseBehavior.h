@@ -6,9 +6,10 @@ class IResponseBehavior : public CBehavior
 {
 public:
 	IResponseBehavior(CGameObject& aParent);
-	virtual ~IResponseBehavior();
+	virtual ~IResponseBehavior() override;
 	void Awake() override {}
 	void Start() override {}
+	virtual void Update() override {}
 	void OnEnable() override;
 	void OnDisable() override; 
 	virtual void OnRespond() = 0;
