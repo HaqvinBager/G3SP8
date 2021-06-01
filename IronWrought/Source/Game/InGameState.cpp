@@ -98,34 +98,23 @@ void CInGameState::Awake()
 void CInGameState::Start()
 {
 #ifdef INGAME_USE_MENU
-	//CScene* scene = CSceneManager::CreateScene("Level_Cottage");
 	std::vector<std::string> levels(2);
 	levels[0] = "Level_Cottage";
 	levels[1] = "Level_Basement1";
 	//levels[2] = "Level_Basement2";
+	//levels[3] = "Level_Basement1_2";
+	//levels[4] = "Level_Cottage2";
+	//levels[5] = "Level_Basement1_3";
 	CScene* scene = CSceneManager::CreateSceneFromSeveral(levels);
-	Vector3 playerPos = scene->Player()->myTransform->Position();
-	Vector3 firstPos = playerPos + scene->Player()->myTransform->FetchChildren()[0]->GameObject().GetComponent<CCameraComponent>()->GameObject().myTransform->Position();
-	//Quaternion playerRot = scene->Player()->myTransform->Rotation();
-	Quaternion playerRot = scene->Player()->myTransform->FetchChildren()[0]->GameObject().GetComponent<CCameraComponent>()->GameObject().myTransform->Rotation();
-	myMenuCamera = new CGameObject(0);
-	CCameraComponent* camComp = myMenuCamera->AddComponent<CCameraComponent>(*myMenuCamera, 59.5f);//Default Fov is 70.0f
-	myMenuCamera->AddComponent<CCameraControllerComponent>(*myMenuCamera, 1.0f, CCameraControllerComponent::ECameraMode::MenuCam); //Default speed is 2.0f
-	myMenuCamera->myTransform->Position(firstPos);
-	myMenuCamera->myTransform->Rotation(playerRot);
-	myMenuCameraPositions[0] = firstPos;
-	myMenuCameraTargetPosition = firstPos;
-	myMenuCameraTargetRotation = playerRot;
-	scene->AddInstance(myMenuCamera);
-	scene->AddCamera(camComp, ESceneCamera::MenuCam);
-	scene->MainCamera(ESceneCamera::MenuCam);
+
+	CreateMenuCamera(*scene);
+	
+	myCurrentCanvas = EInGameCanvases_MainMenu;
+	scene->SetCanvas(myCanvases[EInGameCanvases_MainMenu]);
+	scene->UpdateOnlyCanvas(false);
+	scene->ToggleSections(0);
 
 	CEngine::GetInstance()->AddScene(myState, scene);
-	scene->SetCanvas(myCanvases[EInGameCanvases_MainMenu]);
-	myCurrentCanvas = EInGameCanvases_MainMenu;
-	scene->UpdateOnlyCanvas(false);
-
-	scene->ToggleSections(0);
 
 	CMainSingleton::PostMaster().Subscribe(EMessageType::StartGame, this);
 	CMainSingleton::PostMaster().Subscribe(EMessageType::Credits, this);
@@ -189,9 +178,11 @@ void CInGameState::Update()
 			CMainSingleton::PostMaster().SendLate({ EMessageType::PauseMenu, nullptr });
 		}
 	}
-
-	myMenuCamera->myTransform->Position(Vector3::Lerp(myMenuCamera->myTransform->Position(), myMenuCameraTargetPosition, myMenuCameraSpeed * CTimer::Dt()));
-	myMenuCamera->myTransform->Rotation(Quaternion::Slerp(myMenuCamera->myTransform->Rotation(), myMenuCameraTargetRotation, myMenuCameraSpeed * CTimer::Dt()));
+	if (myMenuCamera)
+	{
+		myMenuCamera->myTransform->Position(Vector3::Lerp(myMenuCamera->myTransform->Position(), myMenuCameraTargetPosition, myMenuCameraSpeed * CTimer::Dt()));
+		myMenuCamera->myTransform->Rotation(Quaternion::Slerp(myMenuCamera->myTransform->Rotation(), myMenuCameraTargetRotation, myMenuCameraSpeed * CTimer::Dt()));
+	}
 #endif
 
 	DEBUGFunctionality();
@@ -299,9 +290,6 @@ void CInGameState::Receive(const SMessage& aMessage)
 		if (index < 0 || index > myMenuCameraPositions.size() - 1)
 			break;
 
-		//myMenuCamera->myTransform->Position(myMenuCameraPositions[index]);
-		//myMenuCamera->myTransform->Transform(myMenuCameraPositions[index], myMenuCameraRotations[index]);
-
 		myMenuCameraTargetPosition = myMenuCameraPositions[index];
 		myMenuCameraTargetRotation = Quaternion::CreateFromYawPitchRoll
 		(
@@ -382,6 +370,26 @@ void CInGameState::ToggleCanvas(EInGameCanvases anEInGameCanvases)
 		IRONWROUGHT->HideCursor();
 	}
 #endif
+}
+
+void CInGameState::CreateMenuCamera(CScene& aScene)
+{
+	Vector3 playerPos = aScene.Player()->myTransform->Position();
+	myMenuCameraPositions[0] = playerPos +  aScene.Player()->myTransform->FetchChildren()[0]->GameObject().GetComponent<CCameraComponent>()->GameObject().myTransform->Position();
+	Quaternion playerRot = aScene.Player()->myTransform->FetchChildren()[0]->GameObject().GetComponent<CCameraComponent>()->GameObject().myTransform->Rotation();
+
+	myMenuCamera = new CGameObject(0);
+	myMenuCamera->AddComponent<CCameraControllerComponent>(*myMenuCamera, 1.0f, CCameraControllerComponent::ECameraMode::MenuCam);
+	myMenuCamera->myTransform->Position(myMenuCameraPositions[0]);
+	myMenuCamera->myTransform->Rotation(playerRot);
+
+	myMenuCameraTargetPosition = myMenuCameraPositions[0];
+	myMenuCameraTargetRotation = playerRot;
+
+	aScene.AddInstance(myMenuCamera);
+	CCameraComponent* camComp = myMenuCamera->AddComponent<CCameraComponent>(*myMenuCamera, CCameraComponent::SP8_FOV);
+	aScene.AddCamera(camComp, ESceneCamera::MenuCam);
+	aScene.MainCamera(ESceneCamera::MenuCam);
 }
 
 #ifndef NDEBUG

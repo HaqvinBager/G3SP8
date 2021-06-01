@@ -133,7 +133,7 @@ CScene* CSceneManager::CreateSceneFromSeveral(const std::vector<std::string>& so
 		AddToScene(*scene, binLevelData, doc, i);
 		scene->NextSection();
 	}
-	scene->SetCurrentSection(0);
+	scene->ToggleSections(0);
 
 	return scene;
 }
