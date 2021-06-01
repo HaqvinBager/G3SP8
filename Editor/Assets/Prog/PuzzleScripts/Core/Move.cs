@@ -11,6 +11,7 @@ public class Move : MonoBehaviour, IListener
     [HideInInspector]
     public Vector3 start, end;
     public float duration;
+    public float delay;
 
     public void Remove()
     {
