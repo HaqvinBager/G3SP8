@@ -1,6 +1,8 @@
 #include "stdafx.h"
 #include "AnimateKey.h"
 #include "TransformComponent.h"
+#include "GameObject.h"
+
 #define PI 3.141592f
 
 CAnimateKey::CAnimateKey(CGameObject& aParent, const SSettings& someSettings, const SAnimateKeySettings& someAnimateKeySettings) 
@@ -9,6 +11,9 @@ CAnimateKey::CAnimateKey(CGameObject& aParent, const SSettings& someSettings, co
 	, myIsInteracted(false)
 	, myTime(0.0f)
 {
+	myAnimateKeySettings.myStartPosition = GameObject().myTransform->Position() + myAnimateKeySettings.myStartPosition;
+	myAnimateKeySettings.myEndPosition = GameObject().myTransform->Position() + myAnimateKeySettings.myEndPosition;
+
 	myAnimateKeySettings.myStartRotation.x = (-myAnimateKeySettings.myStartRotation.x) - 360.0f;
 	myAnimateKeySettings.myStartRotation.y += 180.0f;
 	myAnimateKeySettings.myStartRotation.z = (-myAnimateKeySettings.myStartRotation.z) - 360.0f;
@@ -39,8 +44,10 @@ void CAnimateKey::Update()
 		myTime += CTimer::Dt();
 
 		Quaternion rotation;
-		Quaternion startRotation = Quaternion::CreateFromYawPitchRoll(myAnimateKeySettings.myStartRotation.y, myAnimateKeySettings.myStartRotation.x, myAnimateKeySettings.myStartRotation.z);
-		Quaternion endRotation = Quaternion::CreateFromYawPitchRoll(myAnimateKeySettings.myEndRotation.y, myAnimateKeySettings.myEndRotation.x, myAnimateKeySettings.myEndRotation.z);
+		static Quaternion startRotation = Quaternion::CreateFromYawPitchRoll(myAnimateKeySettings.myStartRotation.y, myAnimateKeySettings.myStartRotation.x, myAnimateKeySettings.myStartRotation.z);
+		//startRotation *= GameObject().myTransform->Rotation();
+		static Quaternion endRotation = Quaternion::CreateFromYawPitchRoll(myAnimateKeySettings.myEndRotation.y, myAnimateKeySettings.myEndRotation.x, myAnimateKeySettings.myEndRotation.z);
+		//endRotation *= GameObject().myTransform->Rotation();
 
 		Vector3 position;
 

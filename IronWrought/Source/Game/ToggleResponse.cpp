@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "ToggleResponse.h"
 #include <PointLightComponent.h>
+#include <BoxColliderComponent.h>
 
 CToggleResponse::CToggleResponse(CGameObject& aParent, const SSettings& someSettings)
 	: IResponseBehavior(aParent)
@@ -19,7 +20,13 @@ void CToggleResponse::Awake()
 	if (type.find("Light") != std::string::npos)
 	{
 		SetTarget<CPointLightComponent>();
-	} 
+	}
+	else if (type.find("BoxColllider") != std::string::npos)
+	{
+		SetTarget<CBoxColliderComponent>();
+	}
+
+
 	/* 
 	//Example of how adding additional types could look like
 	else if(type.find("BoxCollider") != std::string::npos)
