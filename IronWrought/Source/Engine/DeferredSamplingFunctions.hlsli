@@ -3,7 +3,7 @@
 #include "DetailNormalHelpers.hlsli"
 #include "ShadowSampling.hlsli"
 
-static float emissiveStrength = 20.0f;
+//static float emissiveStrength = 20.0f;
 
 float4 PixelShader_WorldPosition(float2 uv)
 {   
@@ -237,7 +237,7 @@ float GBuffer_PerceptualRoughness(float2 uv)
 float GBuffer_Emissive(float2 uv)
 {   
     float emissive = materialTextureGBuffer.Sample(defaultSampler, uv).b;
-    return emissive * emissiveStrength;
+    return emissive * myEmissiveStrength;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////

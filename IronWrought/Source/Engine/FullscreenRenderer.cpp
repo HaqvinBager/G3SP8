@@ -226,6 +226,8 @@ bool CFullscreenRenderer::Init(CDirectXFramework* aFramework) {
 	myPostProcessingBufferData.mySSAOMagnitude = 1.4f;
 	myPostProcessingBufferData.mySSAOContrast = 0.6f;
 
+	myPostProcessingBufferData.myEmissiveStrength = 2.1f;
+
 #pragma endregion
 	return true;
 }

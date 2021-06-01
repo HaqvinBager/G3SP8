@@ -28,12 +28,12 @@ struct SInterestPoints {
 
 class CEnemyComponent : public CComponent, public IObserver, public IStringObserver
 {
-	friend class CEnemyAudioComponent;
 public:
 	enum class EBehaviour {
 		Patrol,
 		Seek,
 		Alerted,
+		Idle,
 		Attack,
 		Count
 	};
@@ -83,5 +83,6 @@ private:
 	bool myMovementLocked;
 	bool myHasReachedTarget;
 	float myWakeUpTimer;
+	float myIdlingTimer;
 	SNavMesh* myNavMesh;
 };

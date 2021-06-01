@@ -72,6 +72,7 @@ enum class EMessageType
 	EnemySeekState,
 	EnemyAttackState,
 	EnemyAlertedState,
+	EnemyIdleState,
 	EnemyAttack,
 	EnemyTargetLost,
 	EnemyTakeDamage,
