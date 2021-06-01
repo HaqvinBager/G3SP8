@@ -26,7 +26,7 @@ public:
 public:
 	void Awake() override;
 	void Start() override;
-	void Update() override;
+	virtual void Update() override;
 
 	void OnEnable() override;
 	void OnDisable() override;
@@ -34,6 +34,9 @@ public:
 	void RunEvent();
 	void RunEventEditor();
 	virtual void ActivateEvent() = 0;
+
+	const int MaxAmountOfKeys() const { return myMaxAmountOfKeys; }
+	const int AmountOfKeys() const { return myAmountOfKeys; }
 
 private:
 	void Receive(const SStringMessage& aMessage) override;

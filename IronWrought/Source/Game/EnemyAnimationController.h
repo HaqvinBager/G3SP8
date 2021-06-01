@@ -28,6 +28,7 @@ private:
 	void OnPatrol(CEnemyComponent* anEnemy);
 	void OnSeek(CEnemyComponent* anEnemy);
 	void OnAttack(CEnemyComponent* anEnemy);
+	void OnIdle(CEnemyComponent* anEnemy);
 	void OnTakeDamage(CEnemyComponent* anEnemy);
 	void OnDeath(CEnemyComponent* anEnemy);
 	void OnDisabled(CEnemyComponent* anEnemy);

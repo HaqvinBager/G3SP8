@@ -14,7 +14,10 @@ public:
 	void OnDisable() override; 
 	virtual void OnRespond() = 0;
 	const std::string ResponseNotify() { return myResponseNotify; }
+	const bool HasBeenDelayed() const { return myHasBeenDelayed; }
+	void ToggleHasBeenDelayed() { myHasBeenDelayed = !myHasBeenDelayed; }
 private:
 	std::string myResponseNotify;
+	bool myHasBeenDelayed;
 };
 

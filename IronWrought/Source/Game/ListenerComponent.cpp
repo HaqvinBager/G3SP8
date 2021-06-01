@@ -40,7 +40,7 @@ void CListenerComponent::Register(IResponseBehavior* aBehaviour)
 
 void CListenerComponent::TriggerResponses()
 {
-	std::cout << "Event Triggered: " << myReceiveMessage << "\n";
+	std::cout << __FUNCTION__ << "Event Triggered: " << myReceiveMessage << "\n";
 	for (auto& response : myResponses)
 	{
 		response->OnRespond();

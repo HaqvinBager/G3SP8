@@ -32,6 +32,8 @@ namespace ImGui {
 		float mySSAOMagnitude;
 		float mySSAOContrast;
 		float mySSAOConstantBias;
+
+		float myEmissiveStrength;
 	};
 
 }

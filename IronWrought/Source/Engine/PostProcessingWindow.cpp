@@ -26,6 +26,21 @@ ImGui::CPostProcessingWindow::~CPostProcessingWindow()
 
 void ImGui::CPostProcessingWindow::OnEnable()
 {
+	CFullscreenRenderer::SPostProcessingBufferData bufferData = IRONWROUGHT->GetPostProcessingBufferData();
+	myWhitePointColor = bufferData.myWhitePointColor;
+	myWhitePointIntensity = bufferData.myWhitePointIntensity;
+	myExposure = bufferData.myExposure;
+	myIsReinhard = bufferData.myIsReinhard;
+	myIsUncharted = bufferData.myIsUncharted;
+	myIsACES = bufferData.myIsACES;
+	
+	mySSAORadius = bufferData.mySSAORadius;
+	mySSAOSampleBias = bufferData.mySSAOSampleBias;
+	mySSAOMagnitude = bufferData.mySSAOMagnitude;
+	mySSAOContrast = bufferData.mySSAOContrast;
+	mySSAOConstantBias = 0.2f;
+
+	myEmissiveStrength = bufferData.myEmissiveStrength;
 }
 
 void ImGui::CPostProcessingWindow::OnInspectorGUI()
@@ -78,6 +93,16 @@ void ImGui::CPostProcessingWindow::OnInspectorGUI()
 	if (ImGui::SliderFloat("Exposure", &myExposure, -5.0f, 10.0f, "%.1f"))
 	{
 		bufferData.myExposure = myExposure;
+	}
+
+	ImGui::Dummy({ 0.0f, 10.0f });
+
+	ImVec4 bloomColor = { 0.0f, 1.0f, 1.0f, 1.0f };
+	ImGui::TextColored(bloomColor, "Bloom");
+
+	if (ImGui::SliderFloat("Emissive Strength", &myEmissiveStrength, 0.0f, 40.0f, "%.1f"))
+	{
+		bufferData.myEmissiveStrength = myEmissiveStrength;
 	}
 
 	ImGui::Dummy({ 0.0f, 10.0f });
