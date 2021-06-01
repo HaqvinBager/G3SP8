@@ -571,12 +571,6 @@ void CAudioManager::Update()
 		myWrapper.SetListenerAttributes(0, myListener->myTransform->WorldPosition(), { 0.0f, 0.0f, 0.0f }, myListener->myTransform->GetWorldMatrix().Forward(), myListener->myTransform->GetWorldMatrix().Up());
 	}
 
-	for (const auto& gameObject : myDynamicObjects)
-	{
-		myDynamicSource->Set3DAttributes(gameObject->myTransform->WorldPosition(), { 0.0f, 0.0f, 0.0f });
-		myDynamicSource->Set3DConeAttributes(gameObject->myTransform->Transform().Forward(), 90.0f, 300.0f, 0.3f);
-	}
-
 	if (myDynamicObject)
 	{
 		myDynamicSource->Set3DAttributes(myDynamicObject->myTransform->WorldPosition(), { 0.0f, 0.0f, 0.0f });
