@@ -17,6 +17,7 @@ void CMoveResponse::Update()
 
 	if (!HasBeenDelayed())
 	{
+		std::cout << myTime << std::endl;
 		if (mySettings.myDelay >= myTime)
 			return;
 

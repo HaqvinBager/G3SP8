@@ -39,7 +39,10 @@ void CRotateResponse::Update()
 	Quaternion rotation;
 	Quaternion startRotation = Quaternion::CreateFromYawPitchRoll(mySettings.myStartRotation.y, mySettings.myStartRotation.x, mySettings.myStartRotation.z);
 	Quaternion endRotation = Quaternion::CreateFromYawPitchRoll(mySettings.myEndRotation.y, mySettings.myEndRotation.x, mySettings.myEndRotation.z);
-	rotation = Quaternion::Slerp(startRotation, endRotation, myTime / mySettings.myDuration);
+	if (mySettings.myDuration >= 0.0001f)
+		rotation = Quaternion::Slerp(startRotation, endRotation, myTime / mySettings.myDuration);
+	else
+		rotation = endRotation;
 
 	GameObject().myTransform->Rotation(rotation);
 
