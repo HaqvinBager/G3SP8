@@ -515,12 +515,6 @@ void CAudioManager::Receive(const SMessage& aMessage) {
 		Resume();
 	}break;
 
-	case EMessageType::EnemyStateChange:
-	{
-		unsigned int state = *reinterpret_cast<unsigned int*>(aMessage.data);
-		std::cout << "Enemy State: " << state << std::endl;
-	}break;
-
 	default: break;
 	}
 }
