@@ -15,6 +15,15 @@ void CMoveResponse::Update()
 	Vector3 position;
 	myTime += CTimer::Dt();
 
+	if (!HasBeenDelayed())
+	{
+		if (mySettings.myDelay >= myTime)
+			return;
+
+		ToggleHasBeenDelayed();
+		myTime = 0.0f;
+	}
+
 	position = Vector3::Lerp(mySettings.myStartPosition, mySettings.myEndPosition, myTime / mySettings.myDuration);
 
 	GameObject().myTransform->Position(position);

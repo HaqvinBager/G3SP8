@@ -27,6 +27,15 @@ void CRotateResponse::Update()
 {
 	myTime += CTimer::Dt();
 
+	if (!HasBeenDelayed())
+	{
+		if (mySettings.myDelay >= myTime)
+			return;
+
+		ToggleHasBeenDelayed();
+		myTime = 0.0f;
+	}
+
 	Quaternion rotation;
 	Quaternion startRotation = Quaternion::CreateFromYawPitchRoll(mySettings.myStartRotation.y, mySettings.myStartRotation.x, mySettings.myStartRotation.z);
 	Quaternion endRotation = Quaternion::CreateFromYawPitchRoll(mySettings.myEndRotation.y, mySettings.myEndRotation.x, mySettings.myEndRotation.z);
