@@ -8,8 +8,8 @@ using UnityEditor;
 [System.Serializable]
 public class Move : MonoBehaviour, IListener
 {
-    public Vector3 start;
-    public Vector3 end;
+    [HideInInspector]
+    public Vector3 start, end;
     public float duration;
 
     public void Remove()

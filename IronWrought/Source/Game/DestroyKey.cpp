@@ -15,7 +15,7 @@ CDestroyKey::~CDestroyKey()
 
 void CDestroyKey::OnInteract()
 {
-	std::cout << "Interacted With: " << GameObject().Name() << " Notifying: " << mySettings.myInteractNotify << std::endl;
+	std::cout << "----> \tKey: " << GameObject().Name() << " Code: " << mySettings.myInteractNotify << std::endl;
 
 	CMainSingleton::PostMaster().Send({ mySettings.myInteractNotify.c_str(), mySettings.myData });
 	GameObject().GetComponent<CRigidBodyComponent>()->Destroy();
