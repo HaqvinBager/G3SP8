@@ -29,6 +29,12 @@ public class Listener : MonoBehaviour
     public ListenerType responseType;
 
     [ExecuteAlways]
+    void Awake()
+    {
+        responseType = ListenerType.Select;
+    }
+
+    [ExecuteAlways]
     private void Update()
     {
         if (responseType != ListenerType.Select)
