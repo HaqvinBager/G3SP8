@@ -217,7 +217,8 @@ void CVFXSystemComponent::LateUpdate()
 	Vector3		scale;
 	Quaternion	quat;
 	Vector3		translation;
-	GameObject().myTransform->GetWorldMatrix().Decompose(scale, quat, translation);
+	Matrix worldMatrix = GameObject().myTransform->GetWorldMatrix();
+	worldMatrix.Decompose(scale, quat, translation);
 
 	Matrix goTransform = GameObject().myTransform->Transform();
 	Vector3 goPos = GameObject().myTransform->WorldPosition();

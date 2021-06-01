@@ -357,6 +357,11 @@ void CEngine::UpdateScene(const CStateStack::EState& aState)
 	scene.Update();
 }
 
+CAudioChannel* CEngine::RequestAudioSource(const PostMaster::SAudioSourceInitData& aData)
+{
+	return myAudioManager->AddSource(aData);
+}
+
 const bool CEngine::IsInGameScene() const
 {
 	return myActiveState == CStateStack::EState::InGame;
