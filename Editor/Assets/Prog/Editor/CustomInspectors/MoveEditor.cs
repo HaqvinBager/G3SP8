@@ -6,29 +6,30 @@ using UnityEditor;
 [CustomEditor(typeof(Move))]
 public class MoveEditor : Editor
 {
-
-    SerializedProperty startProp;
-    SerializedProperty endProp;
-    SerializedProperty durationProp;
-
-    void OnEnable()
-    {
-        startProp = serializedObject.FindProperty("start");
-        endProp = serializedObject.FindProperty("end");
-        durationProp = serializedObject.FindProperty("duration");
-    }
-
     public override void OnInspectorGUI()
     {
         serializedObject.Update();
         base.OnInspectorGUI();
         
-        this.Vector3SetPosition<Move>("start", "Save Start");
-        this.Vector3SetPosition<Move>("end", "Save End");
+        this.ShowValueAndButton<Move>("start", "Save Start", SavePosition);
+        this.ShowValueAndButton<Move>("end", "Save End", SavePosition);
         GUI.backgroundColor = Color.green;
-        this.SetPositionToVector3<Move>("start", "Move To Start");
+        this.SetValueButtonCallback<Move>("start", "Move To Start", SetPosition);
         GUI.backgroundColor = Color.cyan;
-        this.SetPositionToVector3<Move>("end", "Move To End");
+        this.SetValueButtonCallback<Move>("end", "Move To End", SetPosition);
         serializedObject.ApplyModifiedProperties();
     }
+
+    void SetPosition(Vector3 aValue)
+    {
+        var move = (Move)target;
+        move.transform.position = aValue;
+    }
+
+
+    void SavePosition(SerializedProperty aProperty, Vector3 aValue)
+    {
+        aProperty.vector3Value = aValue;
+    }
+
 }
