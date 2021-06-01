@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 3906651569399797673}
   - component: {fileID: 2442863163747408466}
   m_Layer: 0
-  m_Name: Lock 1
+  m_Name: FrontDoor_Lock
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -44,9 +44,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 237cfffbe2748d74cb3f937f17147ce5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  onKeyCreateNotify: {fileID: 11400000, guid: 793d82767443f764f9139d0bf3a7e3c6, type: 2}
-  onKeyInteractNotify: {fileID: 11400000, guid: 9b5a4afcbbab9304a939473cbea7df6c, type: 2}
-  onLockNotify: {fileID: 11400000, guid: 3a6fbe786a19b6941a46d9ee9c1e4c1d, type: 2}
+  onKeyCreateNotify: {fileID: 11400000, guid: 225852c8e264f5849a7c79e317c5157b, type: 2}
+  onKeyInteractNotify: {fileID: 11400000, guid: f3ff610655e3e22479b7ebc734abc28a, type: 2}
+  onLockNotify: {fileID: 11400000, guid: b84a985fa1a91854bb83432450d76329, type: 2}
   interactionType: 0
 --- !u!114 &2442863163747408466
 MonoBehaviour:
