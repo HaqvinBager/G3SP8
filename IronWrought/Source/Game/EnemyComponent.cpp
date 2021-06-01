@@ -101,7 +101,7 @@ void CEnemyComponent::Start()
 		attack->SetTarget(myPlayer->myTransform);
 	myBehaviours.push_back(attack);*/
 
-	mySettings.mySpeed = mySettings.mySpeed < 5.0f ? 5.0f : mySettings.mySpeed;
+	//mySettings.mySpeed = mySettings.mySpeed < 5.0f ? 5.0f : mySettings.mySpeed;
 
 	if (GameObject().GetComponent<CRigidBodyComponent>()) {
 		myRigidBodyComponent = GameObject().GetComponent<CRigidBodyComponent>();
