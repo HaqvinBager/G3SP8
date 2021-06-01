@@ -72,7 +72,6 @@ Vector3 CPatrol::Update(const Vector3& aPosition)
 
 	size_t pathSize = myPath.size();
 	if (pathSize > 0) {
-
 		Vector3 newPos;
 		Vector3 dir;
 
@@ -131,7 +130,17 @@ CPatrolPointComponent* CPatrol::FindBestPatrolPoint(const Vector3& aPosition)
 	return nullptr;
 }
 
-CSeek::CSeek(SNavMesh* aNavMesh) : myNavMesh(aNavMesh), myTarget(nullptr) {}
+CSeek::CSeek(SNavMesh* aNavMesh) : myNavMesh(aNavMesh), myTarget(nullptr) {
+	CMainSingleton::PostMaster().Subscribe(EMessageType::EnemyFoundPlayer, this);
+	CMainSingleton::PostMaster().Subscribe(EMessageType::EnemyLostPlayer, this);
+}
+
+CSeek::~CSeek()
+{
+	 myTarget = nullptr; 
+	 CMainSingleton::PostMaster().Unsubscribe(EMessageType::EnemyFoundPlayer, this);
+	 CMainSingleton::PostMaster().Unsubscribe(EMessageType::EnemyLostPlayer, this);
+}
 
 void CSeek::Enter(const Vector3& aPosition)
 {
@@ -142,40 +151,29 @@ void CSeek::Enter(const Vector3& aPosition)
 
 Vector3 CSeek::Update(const Vector3& aPosition)//aPostion == EnemyRobot Position
 {
-
 	if (!myTarget)
 		return Vector3();
 
 	myPathTarget = 0;
-	SetPath(myNavMesh->CalculatePath(aPosition, myTarget->Position(), myNavMesh), myTarget->Position());
-
-	//myPath = CAStar::GetInstance()->GetPath(aPosition, myTarget->Position(), myNavMesh);
-
-	//if (!myPath.empty()) {//change path point
-	//	if (myPathTarget < myPath.size()) {
-	//		if (CheckIfOverlap(aPosition, myPath[myPathTarget])) {
-	//			myPathTarget++;
-	//		}
-	//	}
-	//}
-	//Vector3 target;
-	//if (myPathTarget < myPath.size()) {
-	//	target = myPath[myPathTarget];
-	//}
-
-	//Vector3 direction = target - aPosition;
-	//direction.Normalize();
-
-	//return std::move(direction);
-
-
+	float epsilon = 1.0f;
+	if (myFoundPlayer == true) {
+		SetPath(myNavMesh->CalculatePath(aPosition, myTarget->Position(), myNavMesh), myTarget->Position());
+	}
+	else {
+		float dist = DirectX::SimpleMath::Vector3::DistanceSquared(aPosition, myLastPlayerPosition);
+		SetPath(myNavMesh->CalculatePath(aPosition,myLastPlayerPosition, myNavMesh), myLastPlayerPosition);
+		if (dist < epsilon) {
+				CMainSingleton::PostMaster().Send({ EMessageType::EnemyReachedLastPlayerPosition });
+		}
+	}
+	
 	size_t pathSize = myPath.size();
 	if (pathSize > 0) {
 
 		Vector3 newPos;
 		Vector3 dir;
 
-		float epsilon = 0.05f;
+		/*float*/ epsilon = 0.05f;
 
 		dir = (myPath[pathSize - 1] - aPosition);
 		dir.Normalize();
@@ -207,6 +205,19 @@ void CSeek::SetPath(std::vector<Vector3> aPath, Vector3 aFinalPosition)
 
 void CSeek::SetTarget(CTransformComponent* aTarget) {
 	myTarget = aTarget;
+}
+
+void CSeek::Receive(const SMessage& aMsg)
+{
+	if (aMsg.myMessageType == EMessageType::EnemyFoundPlayer) {
+		myFoundPlayer = true;
+		myLastPlayerPosition = *static_cast<Vector3*>(aMsg.data);
+	}
+
+	if (aMsg.myMessageType == EMessageType::EnemyLostPlayer) {
+		myFoundPlayer = false;
+		
+	}
 }
 
 CAttack::CAttack(CEnemyComponent* aUser, Vector3 aResetPosition) : myDamage(1.0f), myTarget(nullptr), myAttackCooldown(1.f), myAttackTimer(0.f), myUser(aUser), myResetPosition(aResetPosition) {}
@@ -256,4 +267,69 @@ void CAttack::ClearPath() {
 void CAttack::SetTarget(CTransformComponent* aTarget)
 {
 	myTarget = aTarget;
+}
+
+CAlerted::CAlerted(SNavMesh* aNavMesh)
+{
+	myNavMesh = aNavMesh;
+}
+
+void CAlerted::Enter(const Vector3& aPosition)
+{
+	
+	myPath.clear();
+
+	aPosition;
+}
+
+Vector3 CAlerted::Update(const Vector3& aPosition)
+{
+
+	SetPath(myNavMesh->CalculatePath(aPosition, myAlertedPosition, myNavMesh), myAlertedPosition);
+
+	float dist = DirectX::SimpleMath::Vector3::DistanceSquared(aPosition, myAlertedPosition);
+	float epsilon = 0.3f;
+	if (dist < epsilon) {
+		CMainSingleton::PostMaster().Send({ EMessageType::EnemyReachedTarget });
+	}
+
+	size_t pathSize = myPath.size();
+	if (pathSize > 0) {
+
+		Vector3 newPos;
+		Vector3 dir;
+
+		/*float*/ epsilon = 0.05f;
+
+		dir = (myPath[pathSize - 1] - aPosition);
+		dir.Normalize();
+
+		if (DirectX::SimpleMath::Vector3::DistanceSquared(aPosition, myPath[pathSize - 1]) < epsilon) {
+			myPath.pop_back();
+		}
+		return dir;
+	}
+	return Vector3();
+}
+
+void CAlerted::ClearPath()
+{
+}
+
+void CAlerted::SetAlertedPosition(const Vector3& aAlertedPosition)
+{
+	myAlertedPosition = aAlertedPosition;
+}
+
+void CAlerted::SetPath(std::vector<Vector3> aPath, Vector3 aFinalPosition)
+{
+	if (aPath.empty()) {
+		return;
+	}
+
+	myPath.clear();
+	myPath.push_back(aFinalPosition);
+	for (unsigned int i = 0; i < aPath.size(); ++i) {
+		myPath.push_back(aPath[i]);
+	}
 }

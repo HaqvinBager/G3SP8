@@ -71,10 +71,15 @@ enum class EMessageType
 	EnemyPatrolState,
 	EnemySeekState,
 	EnemyAttackState,
+	EnemyAlertedState,
 	EnemyAttack,
 	EnemyTargetLost,
 	EnemyTakeDamage,
 	EnemyAttackedPlayer,
+	EnemyReachedTarget,
+	EnemyFoundPlayer,
+	EnemyLostPlayer,
+	EnemyReachedLastPlayerPosition,
 
 	FuseCreated,
 	FusePickedUp,
@@ -97,6 +102,7 @@ enum class EMessageType
 	CanvasButtonIndex,
 	PauseMenu,
 	PhysicsPropCollision,
+	PropCollided,
 
 	EnemyStateChange,
 

@@ -63,8 +63,7 @@ public class ExportCollider : MonoBehaviour
                 link.instanceID = collider.transform.GetInstanceID();
                 link.isStatic = collider.gameObject.isStatic;
                 link.isTrigger = collider.isTrigger;
-                link.layer = Mathf.Max(1, collider.gameObject.layer * 32);
-   
+                link.layer = 1 << collider.gameObject.layer;             
                 Rigidbody rigidbody = collider.GetComponent<Rigidbody>();
                 link.mass = rigidbody.mass;
                 link.localMassPosition = rigidbody.centerOfMass;

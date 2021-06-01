@@ -57,7 +57,7 @@ void CContactReportCallback::onTrigger(physx::PxTriggerPair* pairs, physx::PxU32
 		else if (pairs[i].status == physx::PxPairFlag::eNOTIFY_TOUCH_LOST) {
 			onTriggerExit(pairs[i].triggerActor, pairs[i].otherActor);
 		}
-		
+
 		// ignore pairs when shapes have been deleted
 		if (pairs[i].flags & (physx::PxTriggerPairFlag::eREMOVED_SHAPE_TRIGGER |
 			physx::PxTriggerPairFlag::eREMOVED_SHAPE_OTHER))

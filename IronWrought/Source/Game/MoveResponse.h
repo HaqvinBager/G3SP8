@@ -9,6 +9,7 @@ public:
 		Vector3 myStartPosition;
 		Vector3 myEndPosition;
 		float myDuration;
+		float myDelay;
 	};
 	
 	CMoveResponse(CGameObject& aParent, const SSettings& someSettings);

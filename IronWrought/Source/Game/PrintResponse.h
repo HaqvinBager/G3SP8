@@ -7,6 +7,7 @@ public:
 	struct SSettings
 	{
 		std::string myData;
+		float myDelay;
 	};
 	CPrintResponse(CGameObject& aParent, const SSettings& someSettings);
 	~CPrintResponse() override { }

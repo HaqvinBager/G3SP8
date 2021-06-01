@@ -11,6 +11,7 @@ public enum ListenerType
     None,
     Rotate,
     Move,
+    Toggle,
     Print,
 }
 
@@ -36,34 +37,15 @@ public class Listener : MonoBehaviour
             {
                 case ListenerType.Rotate:
                     AddType<Rotate>(gameObject);
-//                    if (GetComponent<Rotate>() == null)
-//                    {
-//#if UNITY_EDITOR
-//                        Undo.AddComponent(gameObject, typeof(Rotate));
-//#endif
-//                        break;
-//                    }
                     break;
-
                 case ListenerType.Move:
                     AddType<Move>(gameObject);
-                    //                    if (GetComponent<Move>() == null)
-                    //                    {
-                    //#if UNITY_EDITOR
-                    //                        Undo.AddComponent(gameObject, typeof(Move));
-                    //#endif
-                    //                        break;
-                    //                    }
                     break;
                 case ListenerType.Print:
                     AddType<Print>(gameObject);
-//                    if (GetComponent<Print>() == null)
-//                    {
-//#if UNITY_EDITOR
-//                        Undo.AddComponent(gameObject, typeof(Print));
-//#endif
-//                        break;
-//                    }
+                    break;
+                case ListenerType.Toggle:
+                    AddType<Toggle>(gameObject);
                     break;
                 default:
                     {
@@ -87,4 +69,3 @@ public class Listener : MonoBehaviour
         }
     }
 }
-

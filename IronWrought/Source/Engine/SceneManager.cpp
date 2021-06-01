@@ -19,11 +19,11 @@
 #include "ConvexMeshColliderComponent.h"
 #include "VFXSystemComponent.h"
 #include "PhysicsPropAudioComponent.h"
-#include "EnemyAudioComponent.h"
 #include <GravityGloveComponent.h>
 #include <EnemyComponent.h>
 #include <HealthPickupComponent.h>
 #include <PatrolPointComponent.h>
+#include <InteractionBehavior.h>
 
 #include "NavmeshLoader.h"
 #include <BinReader.h>
@@ -389,7 +389,7 @@ void CSceneManager::AddModelComponents(CScene& aScene, const std::vector<Binary:
 			continue;
 
 		gameObject->AddComponent<CModelComponent>(*gameObject, m);
-		AnimationLoader::AddAnimationsToGameObject(gameObject, CJsonReader::Get()->GetAssetPath(m.assetID));
+		AnimationLoader::AddAnimationsToGameObject(gameObject, ASSETPATH(CJsonReader::Get()->GetAssetPath(m.assetID)));
 		//if (AnimationLoader::AddAnimationsToGameObject(gameObject, CJsonReader::Get()->GetAssetPath(m.assetID)))
 		//{
 		//	std::cout << __FUNCTION__ << " Animation " << CJsonReader::Get()->GetAssetPath(m.assetID) << std::endl;
@@ -675,6 +675,7 @@ void CSceneManager::AddPuzzleResponseMove(CScene& aScene, RapidArray someData)
 
 		CMoveResponse::SSettings settings = {};
 		settings.myDuration = response["duration"].GetFloat();
+		settings.myDelay = response["delay"].GetFloat();
 
 		settings.myStartPosition = { response["start"]["x"].GetFloat(),
 									 response["start"]["y"].GetFloat(),
@@ -698,6 +699,7 @@ void CSceneManager::AddPuzzleResponseRotate(CScene& aScene, RapidArray someData)
 
 		CRotateResponse::SSettings settings = {};
 		settings.myDuration = response["duration"].GetFloat();
+		settings.myDelay = response["delay"].GetFloat();
 
 		settings.myStartRotation = { response["start"]["x"].GetFloat(),
 									 response["start"]["y"].GetFloat(),
@@ -746,6 +748,8 @@ void CSceneManager::AddPlayer(CScene& aScene, RapidObject someData)
 	Quaternion playerRot = player->myTransform->Rotation();
 
 	CGameObject* camera = CCameraControllerComponent::CreatePlayerFirstPersonCamera(player);//new CGameObject(1000);
+	camera->AddComponent<CInteractionBehavior>(*camera);
+
 	camera->myTransform->Rotation(playerRot);
 	//std::string modelPath = ASSETPATH("Assets/IronWrought/Mesh/Main_Character/CH_PL_SK.fbx");
 	//camera->AddComponent<CModelComponent>(*camera, modelPath);
@@ -785,7 +789,7 @@ void CSceneManager::AddEnemyComponents(CScene& aScene, RapidArray someData)
 		SEnemySetting settings;
 		settings.myRadius = m["radius"].GetFloat();
 		settings.mySpeed = m["speed"].GetFloat();
-		settings.myHealth = m["health"].GetFloat();
+		//settings.myHealth = m["health"].GetFloat();
 		settings.myAttackDistance = m["attackDistance"].GetFloat();
 		if (m.HasMember("interestPoints"))
 		{
@@ -800,7 +804,10 @@ void CSceneManager::AddEnemyComponents(CScene& aScene, RapidArray someData)
 			}
 		}
 		gameObject->AddComponent<CEnemyComponent>(*gameObject, settings);
-		gameObject->AddComponent<CEnemyAudioComponent>(*gameObject);
+		gameObject->GetComponent<CAnimationComponent>()->BlendLerpBetween(1, 2, 0.2f);
+		//gameObject->AddComponent<CModelComponent>(*gameObject, ASSETPATH("Assets/IronWrought/Mesh/Enemy/CH_Enemy_SK.fbx"));
+		//AnimationLoader::AddAnimationsToGameObject(gameObject, ASSETPATH("Assets/IronWrought/Mesh/Enemy/CH_Enemy_SK.fbx"));
+
 		//gameObject->AddComponent<CPatrolPointComponent>(*gameObject, )
 		//gameObject->AddComponent<CVFXSystemComponent>(*gameObject, ASSETPATH("Assets/Graphics/VFX/JSON/VFXSystem_Enemy.json"));
 	}
@@ -949,6 +956,7 @@ void CSceneManager::AddCollider(CScene& aScene, const std::vector<Binary::SColli
 		CGameObject* gameObject = aScene.FindObjectWithID(c.instanceID);
 		ColliderType colliderType = static_cast<ColliderType>(c.colliderType);
 		CRigidBodyComponent* rigidBody = gameObject->GetComponent<CRigidBodyComponent>();
+		
 		if (rigidBody == nullptr && c.isStatic == false)
 		{
 			gameObject->AddComponent<CRigidBodyComponent>(*gameObject, c.mass, c.localMassPosition, c.inertiaTensor, c.isKinematic);

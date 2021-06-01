@@ -122,6 +122,10 @@ public class ExportModel
                     ModelLink link = new ModelLink();
                     link.instanceID = renderer.transform.parent.parent.GetInstanceID();
 
+                    link.materialIDs = new List<int>();
+                    foreach (Material mat in renderer.sharedMaterials)
+                        link.materialIDs.Add(mat.GetInstanceID());
+
                     string rigPath = PrefabUtility.GetPrefabAssetPathOfNearestInstanceRoot(skinnedRenderer);
                     GameObject sourceAsset = AssetDatabase.LoadAssetAtPath<GameObject>(rigPath);
                     link.assetID = sourceAsset.transform.GetInstanceID();

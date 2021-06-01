@@ -66,6 +66,7 @@ public:
 	void SetCurrentFloorMaterial(const std::string& anObjectTag);
 
 private:
+	void RayCastWorld();
 	void LockMovementFor(const float& someSeconds);
 	void UpdateMovementLock();
 	void InitForceForward();
@@ -132,6 +133,8 @@ private:
 	const float myCameraPosYCrouching = 0.95f * 0.5f;
 	const float myCameraPosZ = 0.0f;//-0.22f;
 	const float myMaxFallSpeed = -0.36f;
+
+
 
 	/*
 		Standing:

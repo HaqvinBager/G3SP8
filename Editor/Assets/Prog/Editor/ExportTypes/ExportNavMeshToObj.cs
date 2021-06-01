@@ -11,7 +11,7 @@ public struct NavMeshData
 
 public class ExportNavMeshToObj
 {
-    [MenuItem("Custom/[Deprecated] Export NavMesh to mesh")]
+    //[MenuItem("Custom/[Deprecated] Export NavMesh to mesh")]
     public static NavMeshData Export(string levelCollectionName)
     {
         UnityEngine.AI.NavMeshTriangulation triangulatedNavMesh = UnityEngine.AI.NavMesh.CalculateTriangulation();
