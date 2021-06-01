@@ -108,6 +108,12 @@ private:
 		float myHenyeyGreensteinGValue;
 	} myVolumetricLightBufferData;
 
+	struct SEmissiveBufferData
+	{
+		float myEmissiveStrength;
+		float myPadding[3];
+	} myEmissiveBufferData;
+
 private:
 	ID3D11DeviceContext* myContext;
 
@@ -117,6 +123,7 @@ private:
 	ID3D11Buffer* mySpotLightBuffer;
 	ID3D11Buffer* myBoxLightBuffer;
 	ID3D11Buffer* myVolumetricLightBuffer;
+	ID3D11Buffer* myEmissiveBuffer;
 
 	ID3D11Buffer* myPointLightVertexBuffer;
 	ID3D11Buffer* myPointLightIndexBuffer;

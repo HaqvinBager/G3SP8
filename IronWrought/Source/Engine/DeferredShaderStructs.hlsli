@@ -95,6 +95,12 @@ cbuffer BoneBuffer : register(b4)
     matrix myBones[64];
 };
 
+cbuffer EmissiveBuffer : register(b5)
+{
+    float myEmissiveStrength;
+    float3 myPadding;
+}
+
 // Cubemap used for environment light shading
 TextureCube environmentTexture : register(t0);
 

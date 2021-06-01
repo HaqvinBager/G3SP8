@@ -2,7 +2,9 @@
 #include "LightRenderer.h"
 #include "DirectXFramework.h"
 #include "RenderManager.h"
+#include "Engine.h"
 #include "GraphicsHelpers.h"
+#include "FullscreenRenderer.h"
 
 #include "Camera.h"
 #include "EnvironmentLight.h"
@@ -21,6 +23,7 @@ CLightRenderer::CLightRenderer()
 	, mySpotLightBuffer(nullptr)
 	, myBoxLightBuffer(nullptr)
 	, myVolumetricLightBuffer(nullptr)
+	, myEmissiveBuffer(nullptr)
 	, myPointLightVertexBuffer(nullptr)
 	, myPointLightIndexBuffer(nullptr)
 	, mySpotLightVertexBuffer(nullptr)
@@ -83,6 +86,9 @@ bool CLightRenderer::Init(CDirectXFramework* aFramework)
 
 	bufferDescription.ByteWidth = sizeof(SVolumetricLightBufferData);
 	ENGINE_HR_MESSAGE(device->CreateBuffer(&bufferDescription, nullptr, &myVolumetricLightBuffer), "Volumetric Light Buffer could not be created.");
+
+	bufferDescription.ByteWidth = sizeof(SEmissiveBufferData);
+	ENGINE_HR_BOOL_MESSAGE(device->CreateBuffer(&bufferDescription, nullptr, &myEmissiveBuffer), "Emissive Buffer could not be created.");
 
 	//Vertex Setup
 	struct Vertex
@@ -316,6 +322,10 @@ void CLightRenderer::Render(CCameraComponent* aCamera, CEnvironmentLight* anEnvi
 	myDirectionalLightBufferData.myDirectionalLightShadowMapResolution = { 2048.0f * 4.0f, 2048.0f * 4.0f };
 	BindBuffer(myLightBuffer, myDirectionalLightBufferData, "Light Buffer");
 	myContext->PSSetConstantBuffers(2, 1, &myLightBuffer);
+
+	myEmissiveBufferData.myEmissiveStrength = IRONWROUGHT->GetPostProcessingBufferData().myEmissiveStrength;
+	BindBuffer(myEmissiveBuffer, myEmissiveBufferData, "Emissive Buffer");
+	myContext->PSSetConstantBuffers(5, 1, &myEmissiveBuffer);
 
 	myContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY::D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	myContext->IASetInputLayout(nullptr);

@@ -36,7 +36,8 @@ public:
 		int myIsUncharted;
 		int myIsACES;
 
-		float myPadding[3];
+		float myEmissiveStrength;
+		float myPadding[2];
 	};
 
 static_assert((sizeof(SPostProcessingBufferData) % 16) == 0, "CB size not padded correctly");
