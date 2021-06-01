@@ -1066,6 +1066,8 @@ void CSceneManager::AddTeleporters(CScene& aScene, const RapidArray& someData)
 			triggerVolume->RegisterEventTriggerFilter(static_cast<int>(CBoxColliderComponent::EEventFilter::PlayerOnly));
 			triggerVolume->RegisterEventTriggerAudioIndex(-1);
 			triggerVolume->RegisterEventTriggerOnce(false);
+			triggerVolume->RegisterEventTriggerOnce(false);
+			triggerVolume->CanBeDeactivated(false);
 
 			CTeleporterComponent::ELevelName teleportersName = static_cast<CTeleporterComponent::ELevelName>(teleporter["myTeleporterName"].GetInt());
 			CTeleporterComponent::ELevelName teleportTo = static_cast<CTeleporterComponent::ELevelName>(teleporter["teleportTo"].GetInt());
