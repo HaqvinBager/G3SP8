@@ -206,7 +206,7 @@ bool CFullscreenRenderer::Init(CDirectXFramework* aFramework) {
 	ENGINE_HR_MESSAGE(device->CreateShaderResourceView(noiseTextureBuffer, &noiseSRVDesc, &myNoiseTexture), "Noise Shader Resource View could not be created.");
 	
 	//Level 1-1 & 1-2
-	myPostProcessingBufferData.myWhitePointColor = { 130.0f/255.0f, 167.0f/255.0f, 255.0f/255.0f, 1.0f };
+	myPostProcessingBufferData.myWhitePointColor = { 255.0f/255.0f, 255.0f/255.0f, 255.0f/255.0f, 1.0f };
 	myPostProcessingBufferData.myWhitePointIntensity = 1.0f;
 	myPostProcessingBufferData.myExposure = 1.1f;
 	myPostProcessingBufferData.myIsReinhard = false;
