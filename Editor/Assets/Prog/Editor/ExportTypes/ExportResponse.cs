@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEditor;
 
 [System.Serializable]
 public struct ListenerData
@@ -39,9 +40,10 @@ public struct PrintData
 [System.Serializable]
 public struct ToggleData
 {
-    public bool data;
-    public string aType;
-    public int targetInstanceID;
+    public string type;
+    public int enableOnStartup;
+    public int enableOnNotify;
+    public int target;
     public int instanceID;
 }
 
@@ -52,6 +54,7 @@ public struct ListenerCollection
     public List<MoveData> moves;
     public List<RotateData> rotates;
     public List<PrintData> prints;
+    public List<ToggleData> toggles;
 }
 
 public class ExportResponse 
@@ -62,6 +65,7 @@ public class ExportResponse
         collection.listeners = new List<ListenerData>();
         collection.moves = new List<MoveData>();
         collection.rotates = new List<RotateData>();
+        collection.toggles = new List<ToggleData>();
         collection.prints = new List<PrintData>();
 
         Listener[] listeners = GameObject.FindObjectsOfType<Listener>();
@@ -74,9 +78,26 @@ public class ExportResponse
 
             ExportRotateResponses(ref collection.rotates, listener);
             ExportMoveResponses(ref collection.moves, listener);
+            ExportToggleResponses(ref collection.toggles, listener);
             ExportPrintResponses(ref collection.prints, listener);
         }
         return collection;
+    }
+
+    private static void ExportToggleResponses(ref List<ToggleData> toggles, Listener listener)
+    {
+        if (listener.TryGetComponent(out Toggle obj))
+        {
+            ToggleData data = new ToggleData();
+            data.instanceID = obj.transform.GetInstanceID();
+            data.type = obj.aTargetType.GetType().Name;
+            if (obj.aTarget == null)
+                Debug.Log("Missing Reference", obj);
+            data.target = obj.aTarget.transform.GetInstanceID();
+            data.enableOnStartup = obj.enabledOnStart ? 1 : 0;
+            data.enableOnNotify = obj.enableOnNotify ? 1 : 0;
+            toggles.Add(data);
+        }
     }
 
     private static void ExportPrintResponses(ref List<PrintData> prints, Listener listener)
