@@ -10,7 +10,7 @@ CPrintResponse::CPrintResponse(CGameObject& aParent, const SSettings& someSettin
 
 void CPrintResponse::Update()
 {
-	std::cout << mySettings.myData << "\n";
+	std::cout << __FUNCTION__ << mySettings.myData << "\n";
 	Enabled(false);
 }
 

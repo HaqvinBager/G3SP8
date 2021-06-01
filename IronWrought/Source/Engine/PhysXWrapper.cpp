@@ -222,7 +222,7 @@ PxRaycastBuffer CPhysXWrapper::Raycast(Vector3 aOrigin, Vector3 aDirection, floa
 	PxReal maxDistance = aDistance;
 	PxRaycastBuffer hit;
 	PxQueryFilterData filterData = PxQueryFilterData();
-	filterData.data.word0 = aLayerMask;
+	filterData.data.word0 = static_cast<PxU32>(aLayerMask);
 	scene->raycast(origin, unitDir, maxDistance, hit, PxHitFlag::eDEFAULT, filterData);
 	return hit;
 }
@@ -475,7 +475,7 @@ std::vector<PxRigidStatic*> CPhysXWrapper::CookShapes(const CModel* aModel, cons
 			PxShape* instancedShape = myPhysics->createShape(pMeshGeometry, *aMaterial, true);
 
 			PxFilterData filterData;
-			filterData.word0 = CPhysXWrapper::ELayerMask::STATIC_ENVIRONMENT;
+			filterData.word0 = static_cast<PxU32>(CPhysXWrapper::ELayerMask::STATIC_ENVIRONMENT);
 			instancedShape->setQueryFilterData(filterData);
 			staticRigidbody->attachShape(*instancedShape);
 

@@ -102,10 +102,10 @@ inline T* CGameObject::GetComponent() const
 {
 	const std::type_info& type = typeid(T);
 	for (size_t i = 0; i < myComponents.size(); ++i)
-	{
+	{		
 		if (type == typeid(*myComponents[i]))
 		{
-			return dynamic_cast<T*>(myComponents[i].get());
+			return static_cast<T*>(myComponents[i].get());
 		}
 	}
 	//throw std::exception("Component is missing.");
@@ -122,7 +122,7 @@ inline std::vector<T*> CGameObject::GetComponents() const
 		const std::type_info& componentType = typeid(*myComponents[i]);
 		if (type == componentType)
 		{
-			components.push_back(dynamic_cast<T*>(myComponents[i].get()));
+			components.push_back(static_cast<T*>(myComponents[i].get()));
 		}
 	}
 	return components;

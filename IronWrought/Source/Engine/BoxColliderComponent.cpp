@@ -79,7 +79,8 @@ void CBoxColliderComponent::CreateBoxCollider()
 
 	myShape->setLocalPose({ -colliderPos.x, colliderPos.y, -colliderPos.z });
 	PxFilterData filterData;
-	filterData.word0 = static_cast<CPhysXWrapper::ELayerMask>(myLayerValue);// ::GROUP1;
+	CPhysXWrapper::ELayerMask layer = static_cast<CPhysXWrapper::ELayerMask>(myLayerValue);
+	filterData.word0 = static_cast<PxU32>(layer);// static_cast<CPhysXWrapper::ELayerMask>(myLayerValue);// ::GROUP1;
 	myShape->setQueryFilterData(filterData);
 	//myShape->setFlag(PxShapeFlag::eSCENE_QUERY_SHAPE, true);
 

@@ -9,6 +9,7 @@ public:
 		Vector3 myStartRotation;
 		Vector3 myEndRotation;
 		float myDuration;
+		float myDelay;
 	};
 
 	CRotateResponse(CGameObject& aParent, const SSettings& someSettings);

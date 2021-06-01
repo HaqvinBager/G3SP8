@@ -15,6 +15,7 @@ public struct MoveData
     public Vector3 start;
     public Vector3 end;
     public float duration;
+    public float delay;
     public int instanceID;
 }
 
@@ -24,6 +25,7 @@ public struct RotateData
     public Vector3 start;
     public Vector3 end;
     public float duration;
+    public float delay;
     public int instanceID;
 }
 
@@ -31,6 +33,15 @@ public struct RotateData
 public struct PrintData
 {
     public string data;
+    public int instanceID;
+}
+
+[System.Serializable]
+public struct ToggleData
+{
+    public bool data;
+    public string aType;
+    public int targetInstanceID;
     public int instanceID;
 }
 
@@ -87,6 +98,7 @@ public class ExportResponse
             moveData.start = move.start;
             moveData.end = move.end;
             moveData.duration = move.duration;
+            moveData.delay = move.delay;
             moveData.instanceID = move.transform.GetInstanceID();
             moves.Add(moveData);
         }
@@ -100,6 +112,7 @@ public class ExportResponse
             rotateData.start = rotate.start;
             rotateData.end = rotate.end;
             rotateData.duration = rotate.duration;
+            rotateData.delay = rotate.delay;
             rotateData.instanceID = rotate.transform.GetInstanceID();
             collection.Add(rotateData);
         }

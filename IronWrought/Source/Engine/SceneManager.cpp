@@ -23,6 +23,7 @@
 #include <EnemyComponent.h>
 #include <HealthPickupComponent.h>
 #include <PatrolPointComponent.h>
+#include <InteractionBehavior.h>
 
 #include "NavmeshLoader.h"
 #include <BinReader.h>
@@ -674,6 +675,7 @@ void CSceneManager::AddPuzzleResponseMove(CScene& aScene, RapidArray someData)
 
 		CMoveResponse::SSettings settings = {};
 		settings.myDuration = response["duration"].GetFloat();
+		settings.myDelay = response["delay"].GetFloat();
 
 		settings.myStartPosition = { response["start"]["x"].GetFloat(),
 									 response["start"]["y"].GetFloat(),
@@ -697,6 +699,7 @@ void CSceneManager::AddPuzzleResponseRotate(CScene& aScene, RapidArray someData)
 
 		CRotateResponse::SSettings settings = {};
 		settings.myDuration = response["duration"].GetFloat();
+		settings.myDelay = response["delay"].GetFloat();
 
 		settings.myStartRotation = { response["start"]["x"].GetFloat(),
 									 response["start"]["y"].GetFloat(),
@@ -745,6 +748,8 @@ void CSceneManager::AddPlayer(CScene& aScene, RapidObject someData)
 	Quaternion playerRot = player->myTransform->Rotation();
 
 	CGameObject* camera = CCameraControllerComponent::CreatePlayerFirstPersonCamera(player);//new CGameObject(1000);
+	camera->AddComponent<CInteractionBehavior>(*camera);
+
 	camera->myTransform->Rotation(playerRot);
 	//std::string modelPath = ASSETPATH("Assets/IronWrought/Mesh/Main_Character/CH_PL_SK.fbx");
 	//camera->AddComponent<CModelComponent>(*camera, modelPath);
@@ -951,6 +956,7 @@ void CSceneManager::AddCollider(CScene& aScene, const std::vector<Binary::SColli
 		CGameObject* gameObject = aScene.FindObjectWithID(c.instanceID);
 		ColliderType colliderType = static_cast<ColliderType>(c.colliderType);
 		CRigidBodyComponent* rigidBody = gameObject->GetComponent<CRigidBodyComponent>();
+		
 		if (rigidBody == nullptr && c.isStatic == false)
 		{
 			gameObject->AddComponent<CRigidBodyComponent>(*gameObject, c.mass, c.localMassPosition, c.inertiaTensor, c.isKinematic);

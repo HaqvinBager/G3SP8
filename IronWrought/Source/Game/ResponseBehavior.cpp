@@ -3,7 +3,7 @@
 #include "ListenerComponent.h"
 
 IResponseBehavior::IResponseBehavior(CGameObject& aParent)
-	: CBehavior(aParent)
+	: CBehavior(aParent), myHasBeenDelayed(false)
 {
 	GetComponent<CListenerComponent>()->Register(this);
 }

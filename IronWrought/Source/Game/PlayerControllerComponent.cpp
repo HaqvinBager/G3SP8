@@ -33,7 +33,7 @@ CPlayerControllerComponent::CPlayerControllerComponent(CGameObject& gameObject, 
 	, myIsJumping(false)
 	, myJumpHeight(0.07f)// these values don't make sense. //Supposed to be 40cm => ~0.4f
 	, myFallSpeed(0.982f * 1.0f)
-	, myMovement( Vector3(0.0f, 0.0f, 0.0f ))
+	, myMovement(Vector3(0.0f, 0.0f, 0.0f))
 	, myAirborneTimer(0.0f)
 	, myLadderHasTriggered(false)
 	, myAnimationComponentController(nullptr)
@@ -58,9 +58,9 @@ CPlayerControllerComponent::CPlayerControllerComponent(CGameObject& gameObject, 
 	physx::PxShape* shape = nullptr;
 	myController->GetController().getActor()->getShapes(&shape, 1);
 	shape->setFlag(PxShapeFlag::Enum::eSCENE_QUERY_SHAPE, true);
-	
+
 	PxFilterData filterData;
-	filterData.word0 = CPhysXWrapper::ELayerMask::PLAYER;
+	filterData.word0 = static_cast<PxU32>(CPhysXWrapper::ELayerMask::PLAYER);
 	shape->setQueryFilterData(filterData);
 
 	GameObject().myTransform->Position(myController->GetPosition());// This is a test / Aki 2021 03 12
@@ -95,7 +95,8 @@ CPlayerControllerComponent::~CPlayerControllerComponent()
 }
 
 void CPlayerControllerComponent::Awake()
-{}
+{
+}
 
 void CPlayerControllerComponent::Start()
 {
@@ -107,9 +108,9 @@ void CPlayerControllerComponent::Update()
 #ifdef _DEBUG
 	if (myCamera->IsFreeCamMode() || myCamera->IsCursorUnlocked())
 	{
-	/*	CGameObject* playerGameObject = CEngine::GetInstance()->GetActiveScene().FindObjectWithID(-28554);
-		if(myController != nullptr && playerGameObject != nullptr)
-			myController->SetPosition(playerGameObject->myTransform->WorldPosition());*/
+		/*	CGameObject* playerGameObject = CEngine::GetInstance()->GetActiveScene().FindObjectWithID(-28554);
+			if(myController != nullptr && playerGameObject != nullptr)
+				myController->SetPosition(playerGameObject->myTransform->WorldPosition());*/
 
 		return;
 	}
@@ -119,22 +120,22 @@ void CPlayerControllerComponent::Update()
 
 	switch (myPlayerMovementLock)
 	{
-		case EPlayerMovementLock::None:
+	case EPlayerMovementLock::None:
 		{
 			ControllerUpdate();
 		}break;
 
-		case EPlayerMovementLock::ForceFoward:
+	case EPlayerMovementLock::ForceFoward:
 		{
 			UpdateForceForward();
 		}break;
 
-		case EPlayerMovementLock::ForceStandStill:
+	case EPlayerMovementLock::ForceStandStill:
 		{
 			UpdateStandStill();
 		}break;
 
-		default:break;
+	default:break;
 	}
 
 	UpdateMovementLock();
@@ -165,8 +166,9 @@ void CPlayerControllerComponent::FixedUpdate()
 			CMainSingleton::PostMaster().SendLate({ EMessageType::PlayJumpSound, nullptr });
 		}
 
-		myMovement.y -= myFallSpeed * myFallSpeed * CTimer::FixedDt() * myAirborneTimer ;
-		if (!myIsGrounded) {
+		myMovement.y -= myFallSpeed * myFallSpeed * CTimer::FixedDt() * myAirborneTimer;
+		if (!myIsGrounded)
+		{
 			myAirborneTimer += CTimer::FixedDt();
 		}
 
@@ -182,21 +184,21 @@ void CPlayerControllerComponent::ReceiveEvent(const EInputEvent aEvent)
 {
 	switch (myPlayerMovementLock)
 	{
-		case EPlayerMovementLock::None:
+	case EPlayerMovementLock::None:
 		{}break;
 
-		case EPlayerMovementLock::ForceFoward:
+	case EPlayerMovementLock::ForceFoward:
 		{
 			InitForceForward();
 			return;
 		}break;
 
-		case EPlayerMovementLock::ForceStandStill:
+	case EPlayerMovementLock::ForceStandStill:
 		{
 			return;
 		}break;
 
-		default:break;
+	default:break;
 	}
 
 #ifdef _DEBUG
@@ -210,19 +212,19 @@ void CPlayerControllerComponent::ReceiveEvent(const EInputEvent aEvent)
 #endif
 	switch (aEvent)
 	{
-		case EInputEvent::Jump:
-			if (myIsGrounded == true)
-			{
-				myHasJumped = true;
-				myIsJumping = true;
-				myIsGrounded = false;
-			}
-			break;
-		case EInputEvent::Crouch:
-			OnCrouch();
-			break;
+	case EInputEvent::Jump:
+		if (myIsGrounded == true)
+		{
+			myHasJumped = true;
+			myIsJumping = true;
+			myIsGrounded = false;
+		}
+		break;
+	case EInputEvent::Crouch:
+		OnCrouch();
+		break;
 
-		case EInputEvent::StartSprint:
+	case EInputEvent::StartSprint:
 		{
 			if (myIsCrouching)
 				return;
@@ -231,7 +233,7 @@ void CPlayerControllerComponent::ReceiveEvent(const EInputEvent aEvent)
 
 		}break;
 
-		case EInputEvent::EndSprint:
+	case EInputEvent::EndSprint:
 		{
 			if (myIsCrouching)
 				return;
@@ -240,16 +242,15 @@ void CPlayerControllerComponent::ReceiveEvent(const EInputEvent aEvent)
 
 		}break;
 
-		case EInputEvent::ResetEntities:
-			myController->SetPosition(myRespawnPosition);
-			GameObject().myTransform->Position(myController->GetPosition());
-			break;
+	case EInputEvent::ResetEntities:
+		myController->SetPosition(myRespawnPosition);
+		GameObject().myTransform->Position(myController->GetPosition());
+		break;
 
-		case EInputEvent::SetResetPointEntities:
-			myRespawnPosition = myController->GetPosition();
-			break;
-
-		default:break;
+	case EInputEvent::SetResetPointEntities:
+		myRespawnPosition = myController->GetPosition();
+		break;
+	default:break;
 	}
 }
 
@@ -269,7 +270,7 @@ void CPlayerControllerComponent::ControllerUpdate()
 	const float horizontalInput = Input::GetInstance()->GetAxis(Input::EAxis::Horizontal);
 	const float verticalInput = Input::GetInstance()->GetAxis(Input::EAxis::Vertical);
 	Vector3 horizontal = -GameObject().myTransform->GetLocalMatrix().Right() * horizontalInput;
-	Vector3 vertical =	-GameObject().myTransform->GetLocalMatrix().Forward() * verticalInput;
+	Vector3 vertical = -GameObject().myTransform->GetLocalMatrix().Forward() * verticalInput;
 	float y = myMovement.y;
 	myMovement = (horizontal + vertical) * mySpeed;
 	myMovement.y = y;
@@ -282,16 +283,16 @@ void CPlayerControllerComponent::ControllerUpdate()
 
 void CPlayerControllerComponent::Move(Vector3 aDir)
 {
-	physx::PxControllerCollisionFlags collisionflag = myController->GetController().move({ aDir.x, aDir.y, aDir.z}, 0, CTimer::FixedDt(), 0);
-	
-	if (!myIsGrounded && (collisionflag & physx::PxControllerCollisionFlag::eCOLLISION_DOWN)) 
+	physx::PxControllerCollisionFlags collisionflag = myController->GetController().move({ aDir.x, aDir.y, aDir.z }, 0, CTimer::FixedDt(), 0);
+
+	if (!myIsGrounded && (collisionflag & physx::PxControllerCollisionFlag::eCOLLISION_DOWN))
 	{
 		PostMaster::SStepSoundData stepData;
 		stepData.myIsSprint = false;
 		stepData.myGroundMaterial = static_cast<int>(myCurrentFloorMaterial);
 		CMainSingleton::PostMaster().Send({ EMessageType::PlayStepSound, &stepData }); // Landing
 	}
-	
+
 	myIsGrounded = (collisionflag & physx::PxControllerCollisionFlag::eCOLLISION_DOWN);
 	if (myIsGrounded)
 	{
@@ -301,10 +302,10 @@ void CPlayerControllerComponent::Move(Vector3 aDir)
 		if (horizontalDir.LengthSquared() > 0.0f)
 		{
 			myStepTimer -= CTimer::FixedDt();
-			if (myStepTimer <= 0.0f && !myIsCrouching) 
+			if (myStepTimer <= 0.0f && !myIsCrouching)
 			{
 				myStepTimer = myStepTime * (myWalkSpeed / mySpeed);// If mySpeed == myWalkSpeed => myStepTime * 1.0f. 
-				
+
 				PostMaster::SStepSoundData stepData;
 				stepData.myIsSprint = (myStepTimer < myStepTime);
 				stepData.myGroundMaterial = static_cast<int>(myCurrentFloorMaterial);
@@ -353,7 +354,7 @@ void CPlayerControllerComponent::CrouchUpdate(const float& dt)
 		return;
 	}
 
-	if(myIsCrouching && myCanStand)
+	if (myIsCrouching && myCanStand)
 		myCrouchingLerp += dt * 2.0f;
 	else
 		myCrouchingLerp -= dt * 2.0f;
@@ -361,7 +362,7 @@ void CPlayerControllerComponent::CrouchUpdate(const float& dt)
 
 void CPlayerControllerComponent::OnCrouch()
 {
-	if (myCanStand) 
+	if (myCanStand)
 	{
 		myIsCrouching = !myIsCrouching;
 	}
@@ -379,13 +380,15 @@ void CPlayerControllerComponent::OnCrouch()
 		Vector3 dir = GameObject().myTransform->GetWorldMatrix().Up();
 		//checks if we can stand up 
 		PxRaycastBuffer hit = CEngine::GetInstance()->GetPhysx().Raycast(start, dir, (myColliderHeightStanding), CPhysXWrapper::ELayerMask::STATIC_ENVIRONMENT);
-		if (hit.getNbAnyHits() <= 0) {
+		if (hit.getNbAnyHits() <= 0)
+		{
 			myCanStand = true;
 			myController->GetController().resize(myColliderHeightStanding);
 			mySpeed = myWalkSpeed;
 			myCrouchingLerp = 1.0f;
 		}
-		else {
+		else
+		{
 			myCanStand = false;
 		}
 	}
@@ -404,7 +407,7 @@ CCharacterController* CPlayerControllerComponent::GetCharacterController()
 const Vector3 CPlayerControllerComponent::GetLinearVelocity()
 {
 	const PxVec3 pxVec3 = myController->GetController().getActor()->getLinearVelocity();
-	return {pxVec3.x, pxVec3.y, pxVec3.z};
+	return { pxVec3.x, pxVec3.y, pxVec3.z };
 }
 
 void CPlayerControllerComponent::LadderEnter()
@@ -434,6 +437,11 @@ void CPlayerControllerComponent::SetCurrentFloorMaterial(const std::string& anOb
 		myCurrentFloorMaterial = EFloorMaterial::Default;
 }
 
+void CPlayerControllerComponent::RayCastWorld()
+{
+
+}
+
 void CPlayerControllerComponent::LockMovementFor(const float& someSeconds)
 {
 	myMovementLockTimer = someSeconds;
@@ -451,9 +459,9 @@ void CPlayerControllerComponent::UpdateMovementLock()
 
 void CPlayerControllerComponent::InitForceForward()
 {
-	Vector3 vertical =	-GameObject().myTransform->GetLocalMatrix().Forward();
+	Vector3 vertical = -GameObject().myTransform->GetLocalMatrix().Forward();
 	float y = myMovement.y;
-	myMovement = (vertical) * mySpeed;
+	myMovement = (vertical)*mySpeed;
 	myMovement.y = y;
 }
 
@@ -464,16 +472,16 @@ void CPlayerControllerComponent::UpdateForceForward()
 
 	if (horizontalInput != 0.0f || verticalInput != 0.0f)
 	{
-		Vector3 vertical =	-GameObject().myTransform->GetLocalMatrix().Forward();
+		Vector3 vertical = -GameObject().myTransform->GetLocalMatrix().Forward();
 		float y = myMovement.y;
-		myMovement = (vertical) * mySpeed;
+		myMovement = (vertical)*mySpeed;
 		myMovement.y = y;
 	}
 	else
 	{
-		Vector3 vertical =	-GameObject().myTransform->GetLocalMatrix().Forward();
+		Vector3 vertical = -GameObject().myTransform->GetLocalMatrix().Forward();
 		float y = myMovement.y;
-		myMovement = (vertical) * mySpeed; //* 0.5f;
+		myMovement = (vertical)*mySpeed; //* 0.5f;
 		myMovement.y = y;
 	}
 }

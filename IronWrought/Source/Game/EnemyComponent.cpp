@@ -119,7 +119,7 @@ void CEnemyComponent::Update()//får bestämma vilket behaviour vi vill köra i 
 	if (!myMovementLocked) {
 		//float distanceToPlayer = Vector3::DistanceSquared(myPlayer->myTransform->Position(), GameObject().myTransform->Position());
 
-		float range = 10.f;
+		float range = 6.0f;
 		Vector3 dir = GameObject().myTransform->Transform().Forward();
 		//måste offseta mot origo då angle för två vectorers kollas mot origo i världen
 		Vector3 enemyPos = GameObject().myTransform->Position();

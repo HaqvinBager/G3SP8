@@ -29,13 +29,12 @@ public:
 
 	enum ELayerMask : physx::PxU32
 	{
-		STATIC_ENVIRONMENT = (1 << 0),
-		DYNAMIC_OBJECTS = (1 << 1),
+		STATIC_ENVIRONMENT = (1 << 6),
+		DYNAMIC_OBJECTS = (1 << 7),
 		WORLD = STATIC_ENVIRONMENT | DYNAMIC_OBJECTS,	
 
-		PLAYER = (1 << 8),
-		ENEMY = (1 << 9),
-
+		ENEMY = (1 << 8),
+		PLAYER = (1 << 9),
 		//Om man l�gger tilll ELayerMask Layers vill man addera dom nedan s� att "all" alltid representerar alla layers //Axel Savage 2021-05-07
 		ALL = STATIC_ENVIRONMENT | DYNAMIC_OBJECTS | PLAYER | ENEMY /* | NyttLayer  */ //Axel Savage 2021-05-07
 	};

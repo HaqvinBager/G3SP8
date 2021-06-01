@@ -316,30 +316,33 @@ void CGravityGloveComponent::InteractionLogicContinuous()
 	if (hit.getNbAnyHits() > 0)
 	{
 		CTransformComponent* transform = static_cast<CTransformComponent*>(hit.getAnyHit(0).actor->userData);
-		CRigidBodyComponent* rigidbody = nullptr;
-		if (transform->GameObject().TryGetComponent<CRigidBodyComponent>(&rigidbody))
+		if (transform != nullptr)
 		{
-			if (Input::GetInstance()->IsMousePressed(Input::EMouseButton::Right))
+			CRigidBodyComponent* rigidbody = nullptr;
+			if (transform->GameObject().TryGetComponent<CRigidBodyComponent>(&rigidbody))
 			{
-				// Wind down
-				//data.myIndex = 0;
-				//data.myShouldBeReversed = true;
-				Push(transform, rigidbody);
-			}
-			if (Input::GetInstance()->IsMousePressed(Input::EMouseButton::Left))
-			{
-				Pull(transform, rigidbody);
-			}
-			else if (Input::GetInstance()->IsMouseReleased(Input::EMouseButton::Left))
-			{
-				Release();
-			}
+				if (Input::GetInstance()->IsMousePressed(Input::EMouseButton::Right))
+				{
+					// Wind down
+					//data.myIndex = 0;
+					//data.myShouldBeReversed = true;
+					Push(transform, rigidbody);
+				}
+				if (Input::GetInstance()->IsMousePressed(Input::EMouseButton::Left))
+				{
+					Pull(transform, rigidbody);
+				}
+				else if (Input::GetInstance()->IsMouseReleased(Input::EMouseButton::Left))
+				{
+					Release();
+				}
 
-			if(myCurrentTarget.myRigidBodyPtr)
-				myCrosshairData.myTargetStatus = PostMaster::SCrossHairData::ETargetStatus::Holding;
-			else
-				myCrosshairData.myTargetStatus = PostMaster::SCrossHairData::ETargetStatus::Targeted;
-		}
+				if (myCurrentTarget.myRigidBodyPtr)
+					myCrosshairData.myTargetStatus = PostMaster::SCrossHairData::ETargetStatus::Holding;
+				else
+					myCrosshairData.myTargetStatus = PostMaster::SCrossHairData::ETargetStatus::Targeted;
+			}
+		}	
 		else
 		{
 			myCrosshairData.myTargetStatus = PostMaster::SCrossHairData::ETargetStatus::None;
