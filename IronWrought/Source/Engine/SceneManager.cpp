@@ -619,7 +619,27 @@ void CSceneManager::AddPuzzleKey(CScene& aScene, RapidArray someData)
 		break;
 		case EKeyInteractionTypes::Animate:
 		{
-			gameObject->AddComponent<CAnimateKey>(*gameObject, settings);
+			CAnimateKey::SAnimateKeySettings animateKeySettings =
+			{
+				{	key["startPosition"]["x"].GetFloat(),
+					key["startPosition"]["y"].GetFloat(),
+					key["startPosition"]["z"].GetFloat() 
+				},
+				{	key["endPosition"]["x"].GetFloat(),
+					key["endPosition"]["y"].GetFloat(),
+					key["endPosition"]["z"].GetFloat() 
+				},
+				{	key["startRotation"]["x"].GetFloat(),
+					key["startRotation"]["y"].GetFloat(),
+					key["startRotation"]["z"].GetFloat() 
+				},
+				{	key["endRotation"]["x"].GetFloat(),
+					key["endRotation"]["y"].GetFloat(),
+					key["endRotation"]["z"].GetFloat() 
+				},
+				key["duration"].GetFloat()
+			};
+			gameObject->AddComponent<CAnimateKey>(*gameObject, settings, animateKeySettings);
 		}
 		break;
 		default:
