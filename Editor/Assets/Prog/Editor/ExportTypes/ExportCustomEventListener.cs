@@ -26,11 +26,11 @@ public class ExportCustomEventListener
 
         foreach (CustomEventListener listener in listeners)
         {
-            int eventCount = listener.onResponse.GetPersistentEventCount();
+            int eventCount = listener.onActivation.GetPersistentEventCount();
             for (int i = 0; i < eventCount; ++i)
             {
-                Object target = listener.onResponse.GetPersistentTarget(i);
-                string methodName = listener.onResponse.GetPersistentMethodName(i);
+                Object target = listener.onActivation.GetPersistentTarget(i);
+                string methodName = listener.onActivation.GetPersistentMethodName(i);
 
                 SerializedObject serObj = new SerializedObject(target);
                 var it = serObj.GetIterator();
@@ -67,7 +67,7 @@ public class ExportCustomEventListener
                 //MethodInfo methodInfo = UnityEvent.GetValidMethodInfo(target, methodName, types);
                 //methodInfo.
 
-                Debug.Log("Target:  " + target.name + " Method:  " + listener.onResponse.GetPersistentMethodName(i), target);
+                Debug.Log("Target:  " + target.name + " Method:  " + listener.onActivation.GetPersistentMethodName(i), target);
             }
         }
     }

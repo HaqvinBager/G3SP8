@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Print : MonoBehaviour, IListener
+public class ResponsePrint : MonoBehaviour, IListener
 {
     public string message = string.Empty;
 

@@ -2,14 +2,81 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum KeyInteractionType
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
+
+public enum KeyType
 {
-    Destroy,
-    Animate,
+    Clear,
+    Select,
+    Rotate,
+    Move,
+    Destroy
 }
 
+public interface IKey
+{
+    void Remove();
+}
+
+[System.Serializable]
+[ExecuteAlways]
 public class Key : MonoBehaviour
 {
     public Lock myLock;
-    public KeyInteractionType interactionType;
+    public KeyType activationType;
+
+    [ExecuteAlways]
+    void Awake()
+    {
+        activationType = KeyType.Select;
+    }
+
+    [ExecuteAlways]
+    private void Update()
+    {
+        if (activationType != KeyType.Select)
+        {
+            switch (activationType)
+            {
+                case KeyType.Rotate:
+                    AddType<ActivationRotate>(gameObject);
+                    break;
+                case KeyType.Move:
+                    AddType<ActivationMove>(gameObject);
+                    break;
+                case KeyType.Clear:
+                    {
+                        IKey[] others = GetComponents<IKey>();
+                        foreach (IKey other in others)
+                            other.Remove();
+                    }
+                    break;
+            }
+        }
+        activationType = KeyType.Select;
+    }
+
+    void AddType<T>(GameObject gameObject) where T : IKey
+    {
+        if (GetComponent<T>() == null)
+        {
+#if UNITY_EDITOR
+            Undo.AddComponent(gameObject, typeof(T));
+#endif
+        }
+    }
 }
+
+//public enum KeyInteractionType
+//{
+//    Destroy,
+//    Animate,
+//}
+
+//public class Key : MonoBehaviour
+//{
+//    public Lock myLock;
+//    public KeyInteractionType interactionType;
+//}
