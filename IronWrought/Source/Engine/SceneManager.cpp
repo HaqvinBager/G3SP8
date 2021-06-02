@@ -45,9 +45,9 @@
 #include <OnTriggerLock.h>
 #include <LeftClickDownLock.h>
 #include <KeyBehavior.h>
-#include <DestroyKey.h>
-#include <AnimateKey.h>
-#include <ListenerComponent.h>
+#include <DestroyActivation.h>
+#include <AnimateActivation.h>
+#include <ListenerBehavior.h>
 #include <MoveResponse.h>
 #include <RotateResponse.h>
 #include <PrintResponse.h>
@@ -617,12 +617,12 @@ void CSceneManager::AddPuzzleKey(CScene& aScene, RapidArray someData)
 		{
 		case EKeyInteractionTypes::Destroy:
 		{
-			gameObject->AddComponent<CDestroyKey>(*gameObject, settings);
+			gameObject->AddComponent<CDestroyActivation>(*gameObject);
 		}
 		break;
 		case EKeyInteractionTypes::Animate:
 		{
-			CAnimateKey::SAnimateKeySettings animateKeySettings =
+			CAnimateActivation::SSettings activationSettings =
 			{
 				{
 					0.0f, 0.0f, 0.0f
@@ -659,7 +659,7 @@ void CSceneManager::AddPuzzleKey(CScene& aScene, RapidArray someData)
 				//},
 				//key["duration"].GetFloat()
 			};
-			gameObject->AddComponent<CAnimateKey>(*gameObject, settings, animateKeySettings);
+			gameObject->AddComponent<CAnimateActivation>(*gameObject, activationSettings);
 		}
 		break;
 		default:
@@ -701,7 +701,7 @@ void CSceneManager::AddPuzzleListener(CScene& aScene, RapidArray someData)
 		std::string onResponseNotify = listener["onResponseNotify"].GetString();
 		CGameObject* gameObject = aScene.FindObjectWithID(listener["instanceID"].GetInt());
 
-		gameObject->AddComponent<CListenerComponent>(*gameObject, onResponseNotify);
+		gameObject->AddComponent<CListenerBehavior>(*gameObject, onResponseNotify);
 	}
 }
 
