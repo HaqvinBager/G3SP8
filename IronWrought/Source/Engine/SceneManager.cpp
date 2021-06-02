@@ -232,7 +232,7 @@ bool CSceneManager::AddToScene(CScene& aScene, Binary::SLevelData& aBinLevelData
 			if (sceneData.HasMember("responsePrints"))
 				AddPuzzleResponsePrint(aScene, sceneData["responsePrints"].GetArray());
 			if (sceneData.HasMember("responseToggles"))
-				AddPuzzleToggle(aScene, sceneData["toggles"].GetArray());
+				AddPuzzleToggle(aScene, sceneData["responseToggles"].GetArray());
 
 			AddDirectionalLights(aScene, sceneData["directionalLights"].GetArray());
 			SetVertexPaintedColors(aScene, sceneData["vertexColors"].GetArray(), vertexPaintData);
@@ -619,7 +619,7 @@ void CSceneManager::AddPuzzleKey(CScene& aScene, RapidArray someData)
 	for (const auto& key : someData)
 	{
 		CGameObject* gameObject = aScene.FindObjectWithID(key["instanceID"].GetInt());
-		CKeyBehavior::SSettings settings = { key["onCreateNotify"].GetString(), key["onInteractNotify"].GetString(), nullptr };
+		CKeyBehavior::SSettings settings = { key["onKeyCreateNotify"].GetString(), key["onKeyInteractNotify"].GetString(), nullptr };
 
 		gameObject->AddComponent<CKeyBehavior>(*gameObject, settings);
 	}
