@@ -6,8 +6,8 @@
 #include "MainSingleton.h"
 
 CTeleporterComponent::CTeleporterComponent(CGameObject& aParent
-										   , const ELevelName aNameOfTeleporter
-										   , const ELevelName aNameOfTeleportTo
+										   , const PostMaster::ELevelName aNameOfTeleporter
+										   , const PostMaster::ELevelName aNameOfTeleportTo
 										   , const Vector3& aPosOnTeleportTo
 ) : CBehavior(aParent)
 , 	myName(aNameOfTeleporter)
@@ -52,6 +52,7 @@ void CTeleporterComponent::OnDisable()
 
 void CTeleporterComponent::Receive(const SMessage& aMessage)
 {
+	using namespace PostMaster;
 	if (aMessage.myMessageType == EMessageType::Teleport)
 	{
 		STeleportData& teleportData = *static_cast<STeleportData*>(aMessage.data);
@@ -84,7 +85,7 @@ void CTeleporterComponent::Receive(const SMessage& aMessage)
 
 void CTeleporterComponent::TriggerTeleport(const bool aEnterCollider, CTransformComponent* aTarget)
 {
-	STeleportData teleportData = { aTarget, myTeleportTo, aEnterCollider };
+	PostMaster::STeleportData teleportData = { aTarget, myTeleportTo, aEnterCollider };
 	CMainSingleton::PostMaster().Send({ EMessageType::Teleport, &teleportData });
 }
 

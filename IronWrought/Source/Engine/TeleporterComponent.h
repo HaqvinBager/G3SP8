@@ -2,41 +2,42 @@
 #include "BoxColliderComponent.h"
 #include "Behavior.h"
 #include "Observer.h"
+#include "PostMasterStructs.h"
 
 class CTeleporterComponent : public CBehavior, public IObserver
 {
-public:
-	enum class ELevelName
-	{
-		Cottage_1,
-		Cottage_2,
-		Basement_1_1_A,
-		Basement_1_1_B,
-		Basement_1_2_A,
-		Basement_1_2_B,
-		Basement_1_3,
-		Basement_2,
-		None
-	};
-
-	struct STeleportData
-	{
-		CTransformComponent* myTransformToTeleport = nullptr;
-		ELevelName myTarget = ELevelName::None;
-		bool myStartTeleport = false;
-
-		void Reset()
-		{
-			myTransformToTeleport = nullptr;
-			myTarget = ELevelName::None;
-			myStartTeleport = false;
-		}
-	};
+//public:
+//	enum class ELevelName
+//	{
+//		Cottage_1,
+//		Cottage_2,
+//		Basement_1_1_A,
+//		Basement_1_1_B,
+//		Basement_1_2_A,
+//		Basement_1_2_B,
+//		Basement_1_3,
+//		Basement_2,
+//		None
+//	};
+//
+//	struct STeleportData
+//	{
+//		CTransformComponent* myTransformToTeleport = nullptr;
+//		ELevelName myTarget = ELevelName::None;
+//		bool myStartTeleport = false;
+//
+//		void Reset()
+//		{
+//			myTransformToTeleport = nullptr;
+//			myTarget = ELevelName::None;
+//			myStartTeleport = false;
+//		}
+//	};
 
 public:
 	CTeleporterComponent(CGameObject& aParent
-						 , const ELevelName aNameOfTeleporter
-						 , const ELevelName aNameOfTeleportTo
+						 , const PostMaster::ELevelName aNameOfTeleporter
+						 , const PostMaster::ELevelName aNameOfTeleportTo
 						 , const Vector3& aPosOnTeleportTo
 	);
 	~CTeleporterComponent();
@@ -56,8 +57,8 @@ private:
 	void HandleTeleport();
 
 private:
-	ELevelName myName;
-	ELevelName myTeleportTo;
+	PostMaster::ELevelName myName;
+	PostMaster::ELevelName myTeleportTo;
 	Vector3 myOnTeleportToMe;
 
 	float myTeleportTimer;
