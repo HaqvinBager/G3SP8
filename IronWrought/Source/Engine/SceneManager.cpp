@@ -1099,8 +1099,8 @@ void CSceneManager::AddTeleporters(CScene& aScene, const RapidArray& someData)
 			triggerVolume->RegisterEventTriggerOnce(false);
 			triggerVolume->CanBeDeactivated(false);
 
-			CTeleporterComponent::ELevelName teleportersName = static_cast<CTeleporterComponent::ELevelName>(teleporter["myTeleporterName"].GetInt());
-			CTeleporterComponent::ELevelName teleportTo = static_cast<CTeleporterComponent::ELevelName>(teleporter["teleportTo"].GetInt());
+			PostMaster::ELevelName teleportersName = static_cast<PostMaster::ELevelName>(teleporter["myTeleporterName"].GetInt());
+			PostMaster::ELevelName teleportTo = static_cast<PostMaster::ELevelName>(teleporter["teleportTo"].GetInt());
 			Vector3 position = { teleporter["teleportObjectToX"].GetFloat(), teleporter["teleportObjectToY"].GetFloat(), teleporter["teleportObjectToZ"].GetFloat() };
 			gameObject->AddComponent<CTeleporterComponent>(*gameObject, teleportersName, teleportTo, position);
 		}
