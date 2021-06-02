@@ -27,7 +27,6 @@ void CKeyBehavior::Register(IActivationBehavior* aBehaviour)
 {
 	std::cout << __FUNCTION__ << "----< \tActivation type registered \t" << aBehaviour->GameObject().Name() << std::endl;
 	myActivations.push_back(aBehaviour);
-	CMainSingleton::PostMaster().Send({mySettings.myOnCreateNotify.c_str(), mySettings.myData});
 }
 
 void CKeyBehavior::TriggerActivations()
@@ -36,8 +35,9 @@ void CKeyBehavior::TriggerActivations()
 	{
 		std::cout << __FUNCTION__ << "----< \tActivation type triggered \t" << activation->GameObject().Name() << std::endl;
 		activation->OnActivation();
-		CMainSingleton::PostMaster().Send({mySettings.myInteractNotify.c_str(), mySettings.myData});
 	}
+	CMainSingleton::PostMaster().Send({mySettings.myInteractNotify.c_str(), mySettings.myData});
+	Enabled(false);
 }
 
 void CKeyBehavior::OnEnable()

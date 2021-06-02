@@ -174,14 +174,14 @@
     <ClInclude Include="ActivationBehavior.h">
       <Filter>Puzzle\Key\Base</Filter>
     </ClInclude>
-    <ClInclude Include="AnimateActivation.h">
-      <Filter>Puzzle\Key\Components</Filter>
-    </ClInclude>
     <ClInclude Include="DestroyActivation.h">
       <Filter>Puzzle\Key\Components</Filter>
     </ClInclude>
     <ClInclude Include="MoveActivation.h">
-      <Filter>Header Files</Filter>
+      <Filter>Puzzle\Key\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="RotateActivation.h">
+      <Filter>Puzzle\Key\Components</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -305,14 +305,14 @@
     <ClCompile Include="ActivationBehavior.cpp">
       <Filter>Puzzle\Key\Base</Filter>
     </ClCompile>
-    <ClCompile Include="AnimateActivation.cpp">
-      <Filter>Puzzle\Key\Components</Filter>
-    </ClCompile>
     <ClCompile Include="DestroyActivation.cpp">
       <Filter>Puzzle\Key\Components</Filter>
     </ClCompile>
     <ClCompile Include="MoveActivation.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Puzzle\Key\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="RotateActivation.cpp">
+      <Filter>Puzzle\Key\Components</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
