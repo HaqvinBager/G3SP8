@@ -53,6 +53,9 @@ private:
 	static void AddSpotLights(CScene& aScene, const std::vector<Binary::SSpotLight>& someData);
 
 	static void AddPuzzleKey(CScene& aScene, RapidArray someData);
+	static void AddPuzzleActivationMove(CScene& aScene, RapidArray someData);
+	static void AddPuzzleActivationRotate(CScene& aScene, RapidArray someData);
+	static void AddPuzzleActivationDestroy(CScene& aScene, RapidArray someData);
 	static void AddPuzzleLock(CScene& aScene, RapidArray someData);
 	static void AddPuzzleListener(CScene& aScene, RapidArray someData);
 	static void AddPuzzleResponseMove(CScene& aScene, RapidArray someData);
@@ -99,6 +102,7 @@ public:
 	static CSceneFactory* Get();
 	void LoadScene(const std::string& aSceneName, const CStateStack::EState aState, std::function<void(std::string)> onComplete = nullptr);
 	void LoadSceneAsync(const std::string& aSceneName, const CStateStack::EState aState, std::function<void(std::string)> onComplete);
+	void LoadSeveralScenesAsync(const std::string& aSceneName, const std::vector<std::string>& someSceneNames, const CStateStack::EState aState, std::function<void(std::string)> onComplete);
 
 	void LoadSceneBin(const std::string& aSceneName, const CStateStack::EState aState, std::function<void(std::string)> onComplete = nullptr);
 	void LoadSceneAsyncBin(const std::string& aSceneName, const CStateStack::EState aState, std::function<void(std::string)> onComplete);

@@ -5,7 +5,6 @@
 #include "Observer.h"
 #endif // DEBUG
 
-class CGraphManager;
 struct ImFontAtlas;
 
 namespace ImGui {
@@ -20,7 +19,6 @@ class CImguiManager
 public:
 	CImguiManager();
 	~CImguiManager();
-	void Init(CGraphManager* aGraphManager);
 	void Update();
 	void DebugWindow();
 
@@ -34,11 +32,8 @@ private:
 	std::vector<std::unique_ptr<ImGui::CWindow>> myWindows;
 #endif
 
-	CGraphManager* myGraphManager;
 	const std::string GetSystemMemory();
 	const std::string GetDrawCalls();
 
-	bool myGraphManagerIsFullscreen;
 	bool myIsEnabled;
-	std::string myScriptsStatus;
 };

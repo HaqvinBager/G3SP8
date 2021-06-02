@@ -50,7 +50,6 @@
 #include "PhysXWrapper.h"
 #include "SceneManager.h"
 
-#include "GraphManager.h"
 
 #include "GameObject.h"
 
@@ -87,7 +86,6 @@ CEngine::CEngine(): myRenderSceneActive(true)
 	myPhysxWrapper = new CPhysXWrapper();
 	mySceneFactory = new CSceneFactory();
 	//myDialogueSystem = new CDialogueSystem();
-	myGraphManager = new CGraphManager();
 }
 
 CEngine::~CEngine()
@@ -154,9 +152,6 @@ CEngine::~CEngine()
 	delete mySceneFactory;
 	mySceneFactory = nullptr;
 
-	delete myGraphManager;
-	myGraphManager = nullptr;
-
 	ourInstance = nullptr;
 }
 
@@ -187,7 +182,6 @@ bool CEngine::Init(CWindowHandler::SWindowData& someWindowData)
 	ENGINE_ERROR_BOOL_MESSAGE(CMainSingleton::DialogueSystem().Init(), "Dialogue System could not be initialized.");
 	ENGINE_ERROR_BOOL_MESSAGE(myPhysxWrapper->Init(), "PhysX could not be initialized.");
 	InitWindowsImaging();
-	CMainSingleton::ImguiManager().Init(myGraphManager);
 
 	return true;
 }
@@ -300,7 +294,6 @@ CEngine* CEngine::GetInstance()
 
 const CStateStack::EState CEngine::AddScene(const CStateStack::EState aState, CScene* aScene)
 {
-	myGraphManager->Clear();
 
 	auto it = mySceneMap.find(aState);
 	if (it != mySceneMap.end())
@@ -396,12 +389,6 @@ void CEngine::ShowCursor(const bool& anIsInEditorMode)
 void CEngine::HideCursor(const bool& anIsInEditorMode)
 {
 	myWindowHandler->HideAndLockCursor(anIsInEditorMode);
-}
-
-void CEngine::LoadGraph(const std::string& aSceneName)
-{
-	myGraphManager->Clear();
-	myGraphManager->Load(aSceneName);
 }
 
 void CEngine::CheckIfMenuState(const CStateStack::EState& aState)
