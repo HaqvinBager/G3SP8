@@ -1,18 +1,17 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
 
-
-public class Toggle : MonoBehaviour, IListener
+[System.Serializable]
+public class ResponseMove : MonoBehaviour, IListener
 {
-    public bool enabledOnStart = true;
-    public bool enableOnNotify = false;
-    public Transform aTarget = null;
-    public Component aTargetType = null;
+    [HideInInspector]
+    public Vector3 start, end;
+    public float duration;
+    public float delay;
 
     public void Remove()
     {

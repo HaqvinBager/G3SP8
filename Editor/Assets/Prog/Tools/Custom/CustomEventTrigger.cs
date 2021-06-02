@@ -9,7 +9,7 @@ public class CustomEventTrigger : MonoBehaviour
     public CustomEvent triggerEvent = null;
 
     [Space(50)]
-    public UnityEvent onTriggerResponse = new UnityEvent();
+    public UnityEvent onTriggerActivation = new UnityEvent();
 
     public void OnValidate()
     {
@@ -22,7 +22,7 @@ public class CustomEventTrigger : MonoBehaviour
         if(triggerEvent != null)
             triggerEvent.OnRaiseEvent();
 
-        onTriggerResponse?.Invoke();
+        onTriggerActivation?.Invoke();
         Debug.DrawLine(other.transform.position, transform.position, Color.green * 0.75f, 5.5f);
     }
 }

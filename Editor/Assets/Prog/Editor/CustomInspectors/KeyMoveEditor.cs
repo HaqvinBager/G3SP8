@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEditor;
 
 [CustomEditor(typeof(ActivationMove))]
-public class MoveEditor : Editor
+public class KeyMoveEditor : Editor
 {
     public override void OnInspectorGUI()
     {
