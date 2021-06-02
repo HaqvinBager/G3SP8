@@ -114,7 +114,7 @@ void CInGameState::Start()
 	CMainSingleton::PostMaster().Subscribe(EMessageType::MainMenu, this);
 	CMainSingleton::PostMaster().Subscribe(EMessageType::Resume, this);
 
-	std::vector<std::string> levels(2);
+	std::vector<std::string> levels(3);
 	levels[0] = "Level_Cottage";
 	levels[1] = "Level_Basement1";
 	levels[2] = "Level_Basement2";
