@@ -86,6 +86,7 @@ void CInGameState::Awake()
 	myCanvases[EInGameCanvases_MainMenu]->Init(ASSETPATH("Assets/IronWrought/UI/JSON/UI_MainMenu.json"));
 	myCanvases[EInGameCanvases_HUD]->Init(ASSETPATH("Assets/IronWrought/UI/JSON/UI_HUD.json"));
 	myCanvases[EInGameCanvases_PauseMenu]->Init(ASSETPATH("Assets/IronWrought/UI/JSON/UI_PauseMenu.json"));
+	myCanvases[EInGameCanvases_LoadingScreen]->Init(ASSETPATH("Assets/IronWrought/UI/JSON/UI_LoadingScreen.json"));
 #else
 	CScene* scene = CSceneManager::CreateEmpty();
 	CEngine::GetInstance()->AddScene(myState, scene);
@@ -98,23 +99,13 @@ void CInGameState::Awake()
 void CInGameState::Start()
 {
 #ifdef INGAME_USE_MENU
-	std::vector<std::string> levels(2);
-	levels[0] = "Level_Cottage";
-	levels[1] = "Level_Basement1";
-	//levels[2] = "Level_Basement2";
-	//levels[3] = "Level_Basement1_2";
-	//levels[4] = "Level_Cottage2";
-	//levels[5] = "Level_Basement1_3";
-	CScene* scene = CSceneManager::CreateSceneFromSeveral(levels);
-
-	CreateMenuCamera(*scene);
-	
-	myCurrentCanvas = EInGameCanvases_MainMenu;
-	scene->SetCanvas(myCanvases[EInGameCanvases_MainMenu]);
-	scene->UpdateOnlyCanvas(false);
-	scene->ToggleSections(0);
-
+	CScene* scene = CSceneManager::CreateEmpty();
+	myCurrentCanvas = EInGameCanvases_LoadingScreen;
+	scene->SetCanvas(myCanvases[myCurrentCanvas]);
+	scene->UpdateOnlyCanvas(true);
 	CEngine::GetInstance()->AddScene(myState, scene);
+	CEngine::GetInstance()->SetActiveScene(myState);
+	IRONWROUGHT->ShowCursor(false);
 
 	CMainSingleton::PostMaster().Subscribe(EMessageType::StartGame, this);
 	CMainSingleton::PostMaster().Subscribe(EMessageType::Credits, this);
@@ -123,8 +114,22 @@ void CInGameState::Start()
 	CMainSingleton::PostMaster().Subscribe(EMessageType::MainMenu, this);
 	CMainSingleton::PostMaster().Subscribe(EMessageType::Resume, this);
 
-#endif
+	std::vector<std::string> levels(2);
+	levels[0] = "Level_Cottage";
+	levels[1] = "Level_Basement1";
+	levels[2] = "Level_Basement2";
+	//levels[3] = "Level_Basement1_2";
+	//levels[4] = "Level_Cottage2";
+	//levels[5] = "Level_Basement1_3";
+	CSceneFactory::Get()->LoadSeveralScenesAsync("All", levels, myState, [this](std::string aMsg) { CInGameState::OnSceneLoadComplete(aMsg); });
 
+	myExitTo = EExitTo::None;
+
+	CMainSingleton::PostMaster().Subscribe(PostMaster::SMSG_DISABLE_CANVAS, this);
+	CMainSingleton::PostMaster().Subscribe(PostMaster::SMSG_ENABLE_CANVAS, this);
+	CMainSingleton::PostMaster().Subscribe(PostMaster::SMSG_TO_MAIN_MENU, this);
+	CMainSingleton::PostMaster().Subscribe(PostMaster::SMSG_SECTION, this);
+#else
 	IRONWROUGHT->ShowCursor(true);
 	myEnemyAnimationController->Activate();
 	CEngine::GetInstance()->SetActiveScene(myState);
@@ -135,6 +140,7 @@ void CInGameState::Start()
 	CMainSingleton::PostMaster().Subscribe(PostMaster::SMSG_ENABLE_CANVAS, this);
 	CMainSingleton::PostMaster().Subscribe(PostMaster::SMSG_TO_MAIN_MENU, this);
 	CMainSingleton::PostMaster().Subscribe(PostMaster::SMSG_SECTION, this);
+#endif
 }
 
 void CInGameState::Stop()
@@ -155,6 +161,8 @@ void CInGameState::Stop()
 	CMainSingleton::PostMaster().Unsubscribe(EMessageType::MainMenu, this);
 	CMainSingleton::PostMaster().Unsubscribe(EMessageType::Resume, this);
 #endif
+
+	myMenuCamera = nullptr; // Has been deleted by Scene when IRONWROUGHT->RemoveScene(..) was called, as it is added as a gameobject.
 }
 
 void CInGameState::Update()
@@ -309,6 +317,24 @@ void CInGameState::Receive(const SMessage& aMessage)
 	}
 }
 
+void CInGameState::OnSceneLoadComplete(std::string /*aMsg*/)
+{
+	std::cout << __FUNCTION__ << " All Scenes Loaded Succesfully." << std::endl;
+	CScene& scene = IRONWROUGHT->GetActiveScene();
+	CreateMenuCamera(scene);
+
+	myCurrentCanvas = EInGameCanvases_MainMenu;
+	scene.SetCanvas(myCanvases[myCurrentCanvas]);
+	scene.UpdateOnlyCanvas(false);
+	scene.ToggleSections(0);
+
+	IRONWROUGHT->ShowCursor(true);
+	myEnemyAnimationController->Activate();
+	CEngine::GetInstance()->SetActiveScene(myState);// Might be redundant.
+
+	myExitTo = EExitTo::None;
+}
+
 void CInGameState::DEBUGFunctionality()
 {
 #ifdef _DEBUG
@@ -374,12 +400,17 @@ void CInGameState::ToggleCanvas(EInGameCanvases anEInGameCanvases)
 
 void CInGameState::CreateMenuCamera(CScene& aScene)
 {
+	if (!myMenuCamera)
+	{
+		myMenuCamera = new CGameObject(0);
+		myMenuCamera->AddComponent<CCameraControllerComponent>(*myMenuCamera, 1.0f, CCameraControllerComponent::ECameraMode::MenuCam);
+		myMenuCamera->AddComponent<CCameraComponent>(*myMenuCamera, CCameraComponent::SP8_FOV);
+	}
+
 	Vector3 playerPos = aScene.Player()->myTransform->Position();
 	myMenuCameraPositions[0] = playerPos +  aScene.Player()->myTransform->FetchChildren()[0]->GameObject().GetComponent<CCameraComponent>()->GameObject().myTransform->Position();
 	Quaternion playerRot = aScene.Player()->myTransform->FetchChildren()[0]->GameObject().GetComponent<CCameraComponent>()->GameObject().myTransform->Rotation();
 
-	myMenuCamera = new CGameObject(0);
-	myMenuCamera->AddComponent<CCameraControllerComponent>(*myMenuCamera, 1.0f, CCameraControllerComponent::ECameraMode::MenuCam);
 	myMenuCamera->myTransform->Position(myMenuCameraPositions[0]);
 	myMenuCamera->myTransform->Rotation(playerRot);
 
@@ -387,7 +418,7 @@ void CInGameState::CreateMenuCamera(CScene& aScene)
 	myMenuCameraTargetRotation = playerRot;
 
 	aScene.AddInstance(myMenuCamera);
-	CCameraComponent* camComp = myMenuCamera->AddComponent<CCameraComponent>(*myMenuCamera, CCameraComponent::SP8_FOV);
+	CCameraComponent* camComp = myMenuCamera->GetComponent<CCameraComponent>();
 	aScene.AddCamera(camComp, ESceneCamera::MenuCam);
 	aScene.MainCamera(ESceneCamera::MenuCam);
 }

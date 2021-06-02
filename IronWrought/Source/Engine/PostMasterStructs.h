@@ -4,6 +4,33 @@ class CTransformComponent;
 class CAudioChannel;
 namespace PostMaster
 {
+	enum class ELevelName
+	{
+		Cottage_1,
+		Cottage_2,
+		Basement_1_1_A,
+		Basement_1_1_B,
+		Basement_1_2_A,
+		Basement_1_2_B,
+		Basement_1_3,
+		Basement_2,
+		None
+	};
+
+	struct STeleportData
+	{
+		CTransformComponent* myTransformToTeleport = nullptr;
+		ELevelName myTarget = ELevelName::None;
+		bool myStartTeleport = false;
+
+		void Reset()
+		{
+			myTransformToTeleport = nullptr;
+			myTarget = ELevelName::None;
+			myStartTeleport = false;
+		}
+	};
+
 	struct SCrossHairData
 	{
 		enum class ETargetStatus

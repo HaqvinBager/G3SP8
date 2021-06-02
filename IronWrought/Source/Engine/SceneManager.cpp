@@ -1099,8 +1099,8 @@ void CSceneManager::AddTeleporters(CScene& aScene, const RapidArray& someData)
 			triggerVolume->RegisterEventTriggerOnce(false);
 			triggerVolume->CanBeDeactivated(false);
 
-			CTeleporterComponent::ELevelName teleportersName = static_cast<CTeleporterComponent::ELevelName>(teleporter["myTeleporterName"].GetInt());
-			CTeleporterComponent::ELevelName teleportTo = static_cast<CTeleporterComponent::ELevelName>(teleporter["teleportTo"].GetInt());
+			PostMaster::ELevelName teleportersName = static_cast<PostMaster::ELevelName>(teleporter["myTeleporterName"].GetInt());
+			PostMaster::ELevelName teleportTo = static_cast<PostMaster::ELevelName>(teleporter["teleportTo"].GetInt());
 			Vector3 position = { teleporter["teleportObjectToX"].GetFloat(), teleporter["teleportObjectToY"].GetFloat(), teleporter["teleportObjectToZ"].GetFloat() };
 			gameObject->AddComponent<CTeleporterComponent>(*gameObject, teleportersName, teleportTo, position);
 		}
@@ -1157,6 +1157,14 @@ void CSceneFactory::LoadSceneAsync(const std::string& aSceneName, const CStateSt
 	myLastSceneName = aSceneName;
 	myLastLoadedState = aState;
 	myFuture = std::async(std::launch::async, &CSceneManager::CreateScene, aSceneName);
+}
+
+void CSceneFactory::LoadSeveralScenesAsync(const std::string& aSceneName, const std::vector<std::string>& someSceneNames, const CStateStack::EState aState, std::function<void(std::string)> onComplete)
+{
+	myOnComplete = onComplete;
+	myLastSceneName = aSceneName;
+	myLastLoadedState = aState;
+	myFuture = std::async(std::launch::async, &CSceneManager::CreateSceneFromSeveral, someSceneNames);
 }
 
 void CSceneFactory::LoadSceneBin(const std::string& aSceneName, const CStateStack::EState aState, std::function<void(std::string)> onComplete)

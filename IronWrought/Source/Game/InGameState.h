@@ -25,12 +25,15 @@ public:
 	void Receive(const SStringMessage& aMessage) override;
 	void Receive(const SMessage& aMessage) override;
 
+	void OnSceneLoadComplete(std::string aMsg);
+
 private:
 	enum EInGameCanvases
 	{
 		EInGameCanvases_MainMenu,
 		EInGameCanvases_HUD,
 		EInGameCanvases_PauseMenu,
+		EInGameCanvases_LoadingScreen,
 
 		EInGameCanvases_Count
 	};
