@@ -46,6 +46,18 @@ public struct ToggleData
     public int target;
     public int instanceID;
 }
+[System.Serializable]
+public struct PlayAudioData
+{
+    public int soundEffect;
+    public int myIs3D;
+    [Header("!Only Applicable for 3D sources!")]
+    public Vector3 myConeDirection;
+    public float myMinAttenuationAngle;
+    public float myMaxAttenuationAngle;
+    public float myMinimumVolume;
+    public int instanceID;
+}
 
 [System.Serializable]
 public struct ListenerCollection
@@ -55,10 +67,11 @@ public struct ListenerCollection
     public List<RotateData> rotates;
     public List<PrintData> prints;
     public List<ToggleData> toggles;
+    public List<PlayAudioData> audios;
 }
 
-public class ExportResponse 
-{  
+public class ExportResponse
+{
     public static ListenerCollection Export()
     {
         ListenerCollection collection = new ListenerCollection();
@@ -67,9 +80,10 @@ public class ExportResponse
         collection.rotates = new List<RotateData>();
         collection.toggles = new List<ToggleData>();
         collection.prints = new List<PrintData>();
+        collection.audios = new List<PlayAudioData>();
 
         Listener[] listeners = GameObject.FindObjectsOfType<Listener>();
-        foreach(Listener listener in listeners)
+        foreach (Listener listener in listeners)
         {
             ListenerData data = new ListenerData();
             data.onResponseNotify = listener.myLock?.onLockNotify?.name;
@@ -80,9 +94,12 @@ public class ExportResponse
             ExportMoveResponses(ref collection.moves, listener);
             ExportToggleResponses(ref collection.toggles, listener);
             ExportPrintResponses(ref collection.prints, listener);
+            ExportAudioResponses(ref collection.audios, listener);
         }
         return collection;
     }
+
+
 
     private static void ExportToggleResponses(ref List<ToggleData> toggles, Listener listener)
     {
@@ -125,9 +142,9 @@ public class ExportResponse
         }
     }
 
-    private static void ExportRotateResponses(ref List<RotateData> collection, Listener response)
+    private static void ExportRotateResponses(ref List<RotateData> collection, Listener listener)
     {
-        if (response.TryGetComponent(out Rotate rotate))
+        if (listener.TryGetComponent(out Rotate rotate))
         {
             RotateData rotateData = new RotateData();
             rotateData.start = rotate.start;
@@ -136,6 +153,22 @@ public class ExportResponse
             rotateData.delay = rotate.delay;
             rotateData.instanceID = rotate.transform.GetInstanceID();
             collection.Add(rotateData);
+        }
+    }
+
+    private static void ExportAudioResponses(ref List<PlayAudioData> collection, Listener listener)
+    {
+        if (listener.TryGetComponent(out PlayAudio playAudio))
+        {
+            PlayAudioData audioData = new PlayAudioData();
+            audioData.soundEffect = (int)playAudio.soundEffect;
+            audioData.myIs3D = playAudio.myIs3D ? 1 : 0;
+            audioData.myConeDirection = playAudio.myConeDirection;
+            audioData.myMinAttenuationAngle = playAudio.myMinAttenuationAngle;
+            audioData.myMaxAttenuationAngle = playAudio.myMaxAttenuationAngle;
+            audioData.myMinimumVolume = playAudio.myMinimumVolume;
+            audioData.instanceID = playAudio.transform.GetInstanceID();
+            collection.Add(audioData);
         }
     }
 }

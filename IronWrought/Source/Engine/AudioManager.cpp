@@ -505,7 +505,13 @@ void CAudioManager::Receive(const SMessage& aMessage) {
 		myChannels[CAST(EChannel::SFX)]->SetPitch(Random(0.95f, 1.05f));
 		myWrapper.Play(mySFXAudio[soundIndex], myChannels[CAST(EChannel::SFX)]);
 	}break;
-	
+
+	case EMessageType::PlayDynamicAudioSource:
+	{
+		PostMaster::SPlayDynamicAudioData data = *static_cast<PostMaster::SPlayDynamicAudioData*>(aMessage.data);
+		myWrapper.Play(mySFXAudio[data.mySoundIndex], data.myChannel);
+	}break;
+
 	case EMessageType::PauseMenu:
 	{
 		Pause();
@@ -699,6 +705,8 @@ void CAudioManager::SubscribeToMessages()
 	CMainSingleton::PostMaster().Subscribe(EMessageType::EnemyStateChange, this);
 
 	//Pussel
+	CMainSingleton::PostMaster().Subscribe(EMessageType::PlayDynamicAudioSource, this);
+
 }
 
 void CAudioManager::UnsubscribeToMessages()
@@ -755,6 +763,10 @@ void CAudioManager::UnsubscribeToMessages()
 	CMainSingleton::PostMaster().Unsubscribe(EMessageType::PhysicsPropCollision, this);
 
 	CMainSingleton::PostMaster().Unsubscribe(EMessageType::EnemyStateChange, this);
+
+	//Pussel
+	CMainSingleton::PostMaster().Unsubscribe(EMessageType::PlayDynamicAudioSource, this);
+
 }
 
 std::string CAudioManager::GetPath(EMusic type) const
@@ -907,6 +919,10 @@ std::string CAudioManager::TranslateEnum(ESFX enumerator) const {
 		return "EnemyAttack";
 	case ESFX::CardboardBox:
 		return "CardboardBox";
+	case ESFX::MovePainting:
+		return "MovePainting";
+	case ESFX::DoorOpen:
+		return "DoorOpen";
 	default:
 		return "";
 	}

@@ -31,5 +31,11 @@ void CAudioResponse::Update()
 
 void CAudioResponse::OnRespond()
 {
+	std::cout << __FUNCTION__ << "Play Audio" << std::endl;
 	CMainSingleton::PostMaster().SendLate({ EMessageType::PlayDynamicAudioSource, &myPlayMessage });
+}
+
+void CAudioResponse::OnDisable()
+{
+	
 }

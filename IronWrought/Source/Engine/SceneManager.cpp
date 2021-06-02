@@ -52,6 +52,7 @@
 #include <RotateResponse.h>
 #include <PrintResponse.h>
 #include <ToggleResponse.h>
+#include <AudioResponse.h>
 
 CScene* CSceneManager::ourLastInstantiatedScene = nullptr;
 CSceneManager::CSceneManager()
@@ -224,6 +225,8 @@ bool CSceneManager::AddToScene(CScene& aScene, Binary::SLevelData& aBinLevelData
 				AddPuzzleResponsePrint(aScene, sceneData["prints"].GetArray());
 			if (sceneData.HasMember("toggles"))
 				AddPuzzleToggle(aScene, sceneData["toggles"].GetArray());
+			if (sceneData.HasMember("audios"))
+				AddPuzzleAudio(aScene, sceneData["audios"].GetArray());
 
 			AddDirectionalLights(aScene, sceneData["directionalLights"].GetArray());
 			SetVertexPaintedColors(aScene, sceneData["vertexColors"].GetArray(), vertexPaintData);
@@ -784,6 +787,32 @@ void CSceneManager::AddPuzzleToggle(CScene& aScene, RapidArray someData)
 
 		gameObject->AddComponent<CToggleResponse>(*gameObject, settings);
 	}
+}
+
+void CSceneManager::AddPuzzleAudio(CScene& aScene, RapidArray someData)
+{
+	for (const auto& response : someData)
+	{
+		CGameObject* gameObject = aScene.FindObjectWithID(response["instanceID"].GetInt());
+		if (!gameObject)
+			continue;
+
+		PostMaster::SAudioSourceInitData settings = {};
+		settings.mySoundIndex = response["soundEffect"].GetInt();
+		//bool is3D = response["myIs3D"].GetInt() ? 1 : 0;
+		settings.myForward = Vector3
+		{
+			response["myConeDirection"]["x"].GetFloat(),
+			response["myConeDirection"]["y"].GetFloat(),
+			response["myConeDirection"]["z"].GetFloat(),
+		};
+		settings.myStartAttenuationAngle = response["myMinAttenuationAngle"].GetFloat();
+		settings.myMaxAttenuationAngle = response["myMaxAttenuationAngle"].GetFloat();
+		settings.myMinimumVolume = response["myMinimumVolume"].GetFloat();
+		gameObject->AddComponent<CAudioResponse>(*gameObject, settings);
+	}
+
+
 }
 
 void CSceneManager::AddDecalComponents(CScene& aScene, RapidArray someData)

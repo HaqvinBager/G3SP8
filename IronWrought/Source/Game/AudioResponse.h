@@ -16,6 +16,7 @@ public:
 	void Start() override;
 	void Update() override;
 	void OnRespond() override;
+	void OnDisable() override;
 
 private:
 	PostMaster::SAudioSourceInitData mySettings;
