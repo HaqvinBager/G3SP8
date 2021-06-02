@@ -4,7 +4,6 @@
 enum class EKeyInteractionTypes
 {
 	Destroy,
-	Animate,
 	Rotate,
 	Move
 };
