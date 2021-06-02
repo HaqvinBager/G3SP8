@@ -1146,6 +1146,14 @@ void CSceneFactory::LoadSceneAsync(const std::string& aSceneName, const CStateSt
 	myFuture = std::async(std::launch::async, &CSceneManager::CreateScene, aSceneName);
 }
 
+void CSceneFactory::LoadSeveralScenesAsync(const std::string& aSceneName, const std::vector<std::string>& someSceneNames, const CStateStack::EState aState, std::function<void(std::string)> onComplete)
+{
+	myOnComplete = onComplete;
+	myLastSceneName = aSceneName;
+	myLastLoadedState = aState;
+	myFuture = std::async(std::launch::async, &CSceneManager::CreateSceneFromSeveral, someSceneNames);
+}
+
 void CSceneFactory::LoadSceneBin(const std::string& aSceneName, const CStateStack::EState aState, std::function<void(std::string)> onComplete)
 {
 	aState;
