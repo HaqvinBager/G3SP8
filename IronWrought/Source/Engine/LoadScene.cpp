@@ -101,7 +101,6 @@ void ImGui::CLoadScene::OnComplete(std::string aSceneThatHasBeenSuccessfullyLoad
 	std::cout << "Scene Load Complete!" << aSceneThatHasBeenSuccessfullyLoaded << std::endl;
 	SetConsoleColor(CONSOLE_WHITE);
 
-	CEngine::GetInstance()->LoadGraph(aSceneThatHasBeenSuccessfullyLoaded);
 	CMainSingleton::PostMaster().Send({ "LoadScene", nullptr });
 	myScenes.clear();
 	OnEnable();

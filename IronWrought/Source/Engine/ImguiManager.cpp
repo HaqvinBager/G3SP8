@@ -3,7 +3,6 @@
 #ifdef _DEBUG
 #include <imgui.h>
 #endif // _DEBUG
-#include "GraphManager.h"
 #include <psapi.h>
 #ifdef _DEBUG
 #include "Engine.h"
@@ -49,7 +48,7 @@ static ImFont* ImGui_LoadFont(ImFontAtlas& atlas, const char* name, float size, 
 ImFontAtlas myFontAtlas;
 #endif // DEBUG
 
-CImguiManager::CImguiManager() : myGraphManagerIsFullscreen(false), myIsEnabled(false), myScriptsStatus("Scripts Off"), myGraphManager(nullptr)
+CImguiManager::CImguiManager() : myIsEnabled(false)
 {
 #ifdef _DEBUG
 	ImGui::DebugCheckVersionAndDataLayout("1.80 WIP", sizeof(ImGuiIO), sizeof(ImGuiStyle), sizeof(ImVec2), sizeof(ImVec4), sizeof(ImDrawVert), sizeof(unsigned int));
@@ -59,9 +58,6 @@ CImguiManager::CImguiManager() : myGraphManagerIsFullscreen(false), myIsEnabled(
 	myFontAtlas.Build();
 
 	ImGui::CreateContext(&myFontAtlas);
-
-	//myGraphManager = new CGraphManager();
-	//myGraphManager->Load("");
 
 	myWindows.emplace_back(std::make_unique <ImGui::CLoadScene>("Load Scene", true));
 	myWindows.emplace_back(std::make_unique <ImGui::CCameraSetting>("Camera Settings"));
@@ -81,17 +77,9 @@ CImguiManager::CImguiManager() : myGraphManagerIsFullscreen(false), myIsEnabled(
 
 CImguiManager::~CImguiManager()
 {
-	//delete myGraphManager;
-	//myGraphManager = nullptr;
-	myGraphManager = nullptr;
 #ifdef _DEBUG
 	ImGui::DestroyContext();
 #endif
-}
-
-void CImguiManager::Init(CGraphManager* aGraphManager)
-{
-	myGraphManager = aGraphManager;
 }
 
 void CImguiManager::Update()
@@ -100,15 +88,6 @@ void CImguiManager::Update()
 	if (myIsEnabled)
 	{
 		ImGui::BeginMainMenuBar();
-		if (ImGui::Button("Display Scripts"))
-			myGraphManager->ToggleShouldRenderGraph();
-		if (ImGui::Button(myScriptsStatus.c_str()))
-		{
-			if (myGraphManager->ToggleShouldRunScripts())
-				myScriptsStatus = "Scripts On ";
-			else
-				myScriptsStatus = "Scripts Off";
-		}
 
 		for (const auto& window : myWindows)
 			window->OnMainMenuGUI();
@@ -124,15 +103,6 @@ void CImguiManager::Update()
 	
 	DebugWindow();
 #endif
-
-	myGraphManager->Update();
-
-	//if (Input::GetInstance()->IsKeyPressed(VK_F1))
-	//{
-	//	myIsEnabled = !myIsEnabled;
-	//	if (myGraphManager->ShouldRenderGraph())
-	//		myGraphManager->ToggleShouldRenderGraph();
-	//}
 }
 
 void CImguiManager::DebugWindow()
@@ -154,14 +124,10 @@ void CImguiManager::Receive(const SMessage& aMessage)
 	if (aMessage.myMessageType == EMessageType::CursorHideAndLock)
 	{
 		myIsEnabled = false;
-		if (myGraphManager->ShouldRenderGraph())
-			myGraphManager->ToggleShouldRenderGraph();
 	}
 	else if (aMessage.myMessageType == EMessageType::CursorShowAndUnlock)
 	{
 		myIsEnabled = true;
-		if (myGraphManager->ShouldRenderGraph())
-			myGraphManager->ToggleShouldRenderGraph();
 	}
 }
 #endif // _DEBUG

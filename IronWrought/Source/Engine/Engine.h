@@ -36,7 +36,6 @@ class CAudioManager;
 class CAudioChannel;
 class CPhysXWrapper;
 class CSceneFactory;
-class CGraphManager;
 class CGameObject;
 
 namespace PostMaster {
@@ -93,7 +92,6 @@ public:
 
 	void ShowCursor(const bool& anIsInEditorMode = true);
 	void HideCursor(const bool& anIsInEditorMode = false);
-	void LoadGraph(const std::string& aSceneName);
 
 	void SetBrokenScreen(bool aShouldSetBrokenScreen);
 	const CFullscreenRenderer::SPostProcessingBufferData& GetPostProcessingBufferData() const;
@@ -136,7 +134,6 @@ private:
 	CMainSingleton* myMainSingleton;
 	CAudioManager* myAudioManager;
 	CSceneFactory* mySceneFactory;
-	CGraphManager* myGraphManager;
 
 	bool myRenderSceneActive = false;
 };

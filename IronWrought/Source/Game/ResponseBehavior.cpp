@@ -1,11 +1,11 @@
 #include "stdafx.h"
 #include "ResponseBehavior.h"
-#include "ListenerComponent.h"
+#include "ListenerBehavior.h"
 
 IResponseBehavior::IResponseBehavior(CGameObject& aParent)
 	: CBehavior(aParent), myHasBeenDelayed(false)
 {
-	GetComponent<CListenerComponent>()->Register(this);
+	GetComponent<CListenerBehavior>()->Register(this);
 }
 
 IResponseBehavior::~IResponseBehavior()

@@ -4,8 +4,11 @@
 enum class EKeyInteractionTypes
 {
 	Destroy,
-	Animate
+	Rotate,
+	Move
 };
+
+class IActivationBehavior;
 
 class CKeyBehavior : public CBehavior
 {
@@ -26,10 +29,14 @@ public:
 	void Start() override;
 	virtual void Update() override;
 
+	void Register(IActivationBehavior* aBehaviour);
+
+	void TriggerActivations();
+
 	void OnEnable() override;
 	void OnDisable() override;
-public:
-	virtual void OnInteract() = 0;
 
+private:
 	SSettings mySettings;
+	std::vector<IActivationBehavior*> myActivations;
 };
