@@ -40,7 +40,7 @@ void CPatrol::Enter(const Vector3& aPosition)
 	if (myPatrolPoints.empty())
 		return;
 
-	CPatrolPointComponent* patrolPoint = myPatrolPoints[0];
+	CPatrolPointComponent* patrolPoint = myPatrolPoints[myTarget];
 	if (patrolPoint != nullptr) {
 		SetPath(myNavMesh->CalculatePath(aPosition, patrolPoint->GameObject().myTransform->Position(), myNavMesh), patrolPoint->GameObject().myTransform->Position());
 	}
@@ -67,7 +67,7 @@ Vector3 CPatrol::Update(const Vector3& aPosition)
 			}
 		}
 		CMainSingleton::PostMaster().Send({EMessageType::EnemyReachedTarget});
-		SetPath(myNavMesh->CalculatePath(aPosition, patrolPointPosition, myNavMesh), patrolPointPosition);
+		//SetPath(myNavMesh->CalculatePath(aPosition, patrolPointPosition, myNavMesh), patrolPointPosition);
 	}
 
 	size_t pathSize = myPath.size();

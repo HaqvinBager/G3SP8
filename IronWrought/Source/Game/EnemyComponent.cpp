@@ -134,6 +134,7 @@ void CEnemyComponent::Update()//får bestämma vilket behaviour vi vill köra i 
 				CTransformComponent* transform = (CTransformComponent*)hit.getAnyHit(0).actor->userData;
 				if (!transform && !myHasFoundPlayer) {
 					myHasFoundPlayer = true;
+					myHasReachedTarget = true;
 					myHasReachedLastPlayerPosition = false;
 					CMainSingleton::PostMaster().Send({ EMessageType::EnemyFoundPlayer });
 				}
@@ -162,7 +163,7 @@ void CEnemyComponent::Update()//får bestämma vilket behaviour vi vill köra i 
 			
 			myIdlingTimer += CTimer::Dt();
 			SetState(EBehaviour::Idle);
-			if (myIdlingTimer > 2.0f)
+			if (myIdlingTimer > 0.5f)
 			{
 				myIdlingTimer = 0.0f;
 				//std::cout << "PATROL" << std::endl;
