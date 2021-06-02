@@ -110,175 +110,6 @@ inline void CCanvas::Pivot(const Vector2& aPivot)
 	UpdatePositions();
 }
 
-void CCanvas::Init(const std::string& aFilePath, const Vector2& aParentPivot, const Vector2& aParentPosition, const unsigned int& aSpriteRenderLayerOffset)
-{
-	Document document = CJsonReader::Get()->LoadDocument(aFilePath);
-
-	if (document.HasParseError())
-		return;
-
-	InitPivotAndPos(document.GetObjectW(), aParentPivot, aParentPosition);
-
-	myCurrentRenderLayer = aSpriteRenderLayerOffset;
-
-	if (document.HasMember("Buttons"))
-	{
-		auto buttonDataArray = document["Buttons"].GetArray();
-
-		int currentSize = (int)myButtons.size();
-		int newSize = (int)buttonDataArray.Size();
-		int difference = currentSize - newSize;
-
-		if (difference > 0)// There are fewer items than before.
-		{
-			for (int i = newSize; i < currentSize; ++i)
-			{
-				delete myButtons[i];
-				myButtons[i] = nullptr;
-				myButtons.pop_back();
-
-				delete myButtonTexts[i];
-				myButtonTexts[i] = nullptr;
-				myButtonTexts.pop_back();
-			}
-			currentSize = newSize;
-		}
-		else if (difference < 0)// There are more items than before.
-		{
-			for (int i = currentSize; i < newSize; ++i)
-			{
-				myButtonTexts.emplace_back(new CTextInstance());
-				myButtons.emplace_back(new CButton());
-				InitButton(buttonDataArray[i].GetObjectW(), i);
-				myButtons.back()->SetRenderLayer(static_cast<ERenderOrder>(2 + myCurrentRenderLayer));
-			}
-		}
-	}
-
-	if (document.HasMember("Texts"))
-	{
-		auto textDataArray = document["Texts"].GetArray();
-
-		int currentSize = (int)myTexts.size();
-		int newSize = (int)textDataArray.Size();
-		int difference = currentSize - newSize;
-
-		if (difference > 0)// There are fewer items than before.
-		{
-			for (int i = newSize; i < currentSize; ++i)
-			{
-				delete myTexts[i];
-				myTexts[i] = nullptr;
-				myTexts.pop_back();
-			}
-			currentSize = newSize;
-		}
-		else if (difference < 0)// There are more items than before.
-		{
-			for (int i = currentSize; i < newSize; ++i)
-			{
-				myTexts.emplace_back(new CTextInstance());
-				InitText(textDataArray[i].GetObjectW(), i);
-			}
-		}
-	}
-
-	if (document.HasMember("Animated UI Elements"))
-	{
-		auto animatedDataArray = document["Animated UI Elements"].GetArray();
-		int currentSize = (int)myAnimatedUIs.size();
-		int newSize = (int)animatedDataArray.Size();
-		int difference = currentSize - newSize;
-
-		if (difference > 0)// There are fewer items than before.
-		{
-			for (int i = newSize; i < currentSize; ++i)
-			{
-				delete myAnimatedUIs[i];
-				myAnimatedUIs[i] = nullptr;
-				myAnimatedUIs.pop_back();
-			}
-			currentSize = newSize;
-		}
-		else if (difference < 0)// There are more items than before.
-		{
-			for (int i = currentSize; i < newSize; ++i)
-			{
-				myAnimatedUIs.emplace_back(new CAnimatedUIElement());
-				InitAnimatedElement(animatedDataArray[i].GetObjectW(), i);
-				myAnimatedUIs.back()->SetRenderLayer(static_cast<ERenderOrder>(2 + myCurrentRenderLayer));
-			}
-		}
-	}
-
-	if (document.HasMember("Background"))
-	{
-		InitBackground(ASSETPATH(document["Background"]["Path"].GetString()));
-		myBackground->SetRenderOrder(static_cast<ERenderOrder>(0 + myCurrentRenderLayer));
-	}
-
-	if (document.HasMember("Sprites"))
-	{
-		auto spriteDataArray = document["Sprites"].GetArray();
-		int currentSize = (int)mySprites.size();
-		int newSize = (int)spriteDataArray.Size();
-		int difference = currentSize - newSize;
-
-		if (difference > 0)// There are fewer items than before.
-		{
-			for (int i = newSize; i < currentSize; ++i)
-			{
-				delete mySprites[i];
-				mySprites[i] = nullptr;
-				mySprites.pop_back();
-			}
-			currentSize = newSize;
-		}
-		else if (difference < 0)// There are more items than before.
-		{
-			for (int i = currentSize; i < newSize; ++i)
-			{
-				mySprites.emplace_back(new CSpriteInstance());
-				InitSprite(spriteDataArray[i].GetObjectW(), i);
-				mySprites.back()->SetRenderOrder(static_cast<ERenderOrder>(2 + myCurrentRenderLayer));
-			}
-		}
-	}
-
-	if (document.HasMember("PostmasterEvents"))
-	{
-		InitMessageTypes(document["PostmasterEvents"]["Events"].GetArray());
-	}
-
-	if (document.HasMember("Widgets"))
-	{
-		auto widgetsArray = document["Widgets"].GetArray();
-		int currentSize = (int)myWidgets.size();
-		int newSize = (int)widgetsArray.Size();
-		int difference = currentSize - newSize;
-
-		if (difference > 0)// There are fewer items than before.
-		{
-			for (int i = newSize; i < currentSize; ++i)
-			{
-				delete myWidgets[i];
-				myWidgets[i] = nullptr;
-				myWidgets.pop_back();
-			}
-			currentSize = newSize;
-		}
-		else if (difference < 0)// There are more items than before.
-		{
-			for (int i = currentSize; i < newSize; ++i)
-			{
-				myWidgets.push_back(new CCanvas());
-				myWidgets[i]->Init(ASSETPATH(widgetsArray[i]["Path"].GetString()), myPivot, myPosition, 3);
-				myWidgets[i]->SetEnabled(false);
-			}
-		}
-	}
-}
-
 void CCanvas::Init(const Vector2& aParentPivot, const Vector2& aParentPosition, const unsigned int& aSpriteRenderLayerOffset)
 {
 	myPivot += aParentPivot;
@@ -331,8 +162,6 @@ void CCanvas::Receive(const SMessage& aMessage)
 					mySprites[0]->SetShouldRender(false);
 					mySprites[1]->SetShouldRender(false);
 				}
-				//PostMaster::SCrossHairData* aData = reinterpret_cast<PostMaster::SCrossHairData*>(aMessage.data);
-				//mySprites[0]->PlayAnimationUsingInternalData(aData->myIndex, aData->myShouldBeReversed);
 				return;
 			}break;
 
@@ -696,7 +525,7 @@ bool CCanvas::InitAnimatedElement(const rapidjson::GenericObject<false, rapidjso
 	return true;
 }
 
-bool CCanvas::InitBackground(const std::string& aPath)
+bool CCanvas::InitBackground(const std::string& aPath, const Vector2& aSize)
 {
 	if (!myBackground)
 		myBackground = new CSpriteInstance();
@@ -704,6 +533,7 @@ bool CCanvas::InitBackground(const std::string& aPath)
 	myBackground->Init(CSpriteFactory::GetInstance()->GetSprite(aPath));
 	myBackground->SetRenderOrder(ERenderOrder::Layer0);
 	myBackground->SetPosition(myPosition);
+	myBackground->SetSize(aSize);
 	return true;
 }
 
@@ -849,6 +679,180 @@ void CCanvas::EmplaceSpritesWithoutSorting(std::vector<CSpriteInstance*>& someSp
 		if (sprite->GetShouldRender())
 		{
 			someSprites.push_back(sprite);
+		}
+	}
+}
+
+void CCanvas::Init(const std::string& aFilePath, const Vector2& aParentPivot, const Vector2& aParentPosition, const unsigned int& aSpriteRenderLayerOffset)
+{
+	Document document = CJsonReader::Get()->LoadDocument(aFilePath);
+
+	if (document.HasParseError())
+		return;
+
+	InitPivotAndPos(document.GetObjectW(), aParentPivot, aParentPosition);
+
+	myCurrentRenderLayer = aSpriteRenderLayerOffset;
+
+	if (document.HasMember("Buttons"))
+	{
+		auto buttonDataArray = document["Buttons"].GetArray();
+
+		int currentSize = (int)myButtons.size();
+		int newSize = (int)buttonDataArray.Size();
+		int difference = currentSize - newSize;
+
+		if (difference > 0)// There are fewer items than before.
+		{
+			for (int i = newSize; i < currentSize; ++i)
+			{
+				delete myButtons[i];
+				myButtons[i] = nullptr;
+				myButtons.pop_back();
+
+				delete myButtonTexts[i];
+				myButtonTexts[i] = nullptr;
+				myButtonTexts.pop_back();
+			}
+			currentSize = newSize;
+		}
+		else if (difference < 0)// There are more items than before.
+		{
+			for (int i = currentSize; i < newSize; ++i)
+			{
+				myButtonTexts.emplace_back(new CTextInstance());
+				myButtons.emplace_back(new CButton());
+				InitButton(buttonDataArray[i].GetObjectW(), i);
+				myButtons.back()->SetRenderLayer(static_cast<ERenderOrder>(2 + myCurrentRenderLayer));
+			}
+		}
+	}
+
+	if (document.HasMember("Texts"))
+	{
+		auto textDataArray = document["Texts"].GetArray();
+
+		int currentSize = (int)myTexts.size();
+		int newSize = (int)textDataArray.Size();
+		int difference = currentSize - newSize;
+
+		if (difference > 0)// There are fewer items than before.
+		{
+			for (int i = newSize; i < currentSize; ++i)
+			{
+				delete myTexts[i];
+				myTexts[i] = nullptr;
+				myTexts.pop_back();
+			}
+			currentSize = newSize;
+		}
+		else if (difference < 0)// There are more items than before.
+		{
+			for (int i = currentSize; i < newSize; ++i)
+			{
+				myTexts.emplace_back(new CTextInstance());
+				InitText(textDataArray[i].GetObjectW(), i);
+			}
+		}
+	}
+
+	if (document.HasMember("Animated UI Elements"))
+	{
+		auto animatedDataArray = document["Animated UI Elements"].GetArray();
+		int currentSize = (int)myAnimatedUIs.size();
+		int newSize = (int)animatedDataArray.Size();
+		int difference = currentSize - newSize;
+
+		if (difference > 0)// There are fewer items than before.
+		{
+			for (int i = newSize; i < currentSize; ++i)
+			{
+				delete myAnimatedUIs[i];
+				myAnimatedUIs[i] = nullptr;
+				myAnimatedUIs.pop_back();
+			}
+			currentSize = newSize;
+		}
+		else if (difference < 0)// There are more items than before.
+		{
+			for (int i = currentSize; i < newSize; ++i)
+			{
+				myAnimatedUIs.emplace_back(new CAnimatedUIElement());
+				InitAnimatedElement(animatedDataArray[i].GetObjectW(), i);
+				myAnimatedUIs.back()->SetRenderLayer(static_cast<ERenderOrder>(2 + myCurrentRenderLayer));
+			}
+		}
+	}
+
+	if (document.HasMember("Background"))
+	{
+		Vector2 size = {1.0f, 1.0f};
+		if (document["Background"].HasMember("Scale X"))
+			size.x = document["Background"]["Scale X"].GetFloat();
+		if (document["Background"].HasMember("Scale Y"))
+			size.y = document["Background"]["Scale Y"].GetFloat();
+		InitBackground(ASSETPATH(document["Background"]["Path"].GetString()), size);
+		myBackground->SetRenderOrder(static_cast<ERenderOrder>(0 + myCurrentRenderLayer));
+	}
+
+	if (document.HasMember("Sprites"))
+	{
+		auto spriteDataArray = document["Sprites"].GetArray();
+		int currentSize = (int)mySprites.size();
+		int newSize = (int)spriteDataArray.Size();
+		int difference = currentSize - newSize;
+
+		if (difference > 0)// There are fewer items than before.
+		{
+			for (int i = newSize; i < currentSize; ++i)
+			{
+				delete mySprites[i];
+				mySprites[i] = nullptr;
+				mySprites.pop_back();
+			}
+			currentSize = newSize;
+		}
+		else if (difference < 0)// There are more items than before.
+		{
+			for (int i = currentSize; i < newSize; ++i)
+			{
+				mySprites.emplace_back(new CSpriteInstance());
+				InitSprite(spriteDataArray[i].GetObjectW(), i);
+				mySprites.back()->SetRenderOrder(static_cast<ERenderOrder>(2 + myCurrentRenderLayer));
+			}
+		}
+	}
+
+	if (document.HasMember("PostmasterEvents"))
+	{
+		InitMessageTypes(document["PostmasterEvents"]["Events"].GetArray());
+	}
+
+	if (document.HasMember("Widgets"))
+	{
+		auto widgetsArray = document["Widgets"].GetArray();
+		int currentSize = (int)myWidgets.size();
+		int newSize = (int)widgetsArray.Size();
+		int difference = currentSize - newSize;
+
+		if (difference > 0)// There are fewer items than before.
+		{
+			for (int i = newSize; i < currentSize; ++i)
+			{
+				delete myWidgets[i];
+				myWidgets[i] = nullptr;
+				myWidgets.pop_back();
+			}
+			currentSize = newSize;
+		}
+		else if (difference < 0)// There are more items than before.
+		{
+			for (int i = currentSize; i < newSize; ++i)
+			{
+				myWidgets.push_back(new CCanvas());
+				myWidgets[i]->Init(ASSETPATH(widgetsArray[i]["Path"].GetString()), myPivot, myPosition, 3);
+				myWidgets[i]->SetEnabled(false);
+			}
 		}
 	}
 }

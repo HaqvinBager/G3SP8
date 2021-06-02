@@ -40,7 +40,7 @@ void CPatrol::Enter(const Vector3& aPosition)
 	if (myPatrolPoints.empty())
 		return;
 
-	CPatrolPointComponent* patrolPoint = myPatrolPoints[0];
+	CPatrolPointComponent* patrolPoint = myPatrolPoints[myTarget];
 	if (patrolPoint != nullptr) {
 		SetPath(myNavMesh->CalculatePath(aPosition, patrolPoint->GameObject().myTransform->Position(), myNavMesh), patrolPoint->GameObject().myTransform->Position());
 	}
@@ -66,8 +66,8 @@ Vector3 CPatrol::Update(const Vector3& aPosition)
 				patrolPointPosition = myPatrolPoints[myTarget]->GameObject().myTransform->Position();
 			}
 		}
-
-		SetPath(myNavMesh->CalculatePath(aPosition, patrolPointPosition, myNavMesh), patrolPointPosition);
+		CMainSingleton::PostMaster().Send({EMessageType::EnemyReachedTarget});
+		//SetPath(myNavMesh->CalculatePath(aPosition, patrolPointPosition, myNavMesh), patrolPointPosition);
 	}
 
 	size_t pathSize = myPath.size();
@@ -97,10 +97,12 @@ void CPatrol::SetPath(std::vector<Vector3> aPath, Vector3 aFinalPosition)
 	}
 
 	myPath.clear();
-	myPath.push_back(aFinalPosition);
+  	myPath.push_back(aFinalPosition);
 	for (unsigned int i = 1; i < aPath.size(); ++i) {
-		myPath.push_back(aPath[i]);
-		CDebug::GetInstance()->DrawLine(aPath[i - 1], aPath[i], 60.0f);
+		if (aPath[i] != aFinalPosition) {
+			myPath.push_back(aPath[i]);
+			CDebug::GetInstance()->DrawLine(aPath[i - 1], aPath[i], 60.0f);
+		}
 	}
 }
 
@@ -137,9 +139,9 @@ CSeek::CSeek(SNavMesh* aNavMesh) : myNavMesh(aNavMesh), myTarget(nullptr) {
 
 CSeek::~CSeek()
 {
-	 myTarget = nullptr; 
-	 CMainSingleton::PostMaster().Unsubscribe(EMessageType::EnemyFoundPlayer, this);
-	 CMainSingleton::PostMaster().Unsubscribe(EMessageType::EnemyLostPlayer, this);
+	myTarget = nullptr;
+	CMainSingleton::PostMaster().Unsubscribe(EMessageType::EnemyFoundPlayer, this);
+	CMainSingleton::PostMaster().Unsubscribe(EMessageType::EnemyLostPlayer, this);
 }
 
 void CSeek::Enter(const Vector3& aPosition)
@@ -155,18 +157,18 @@ Vector3 CSeek::Update(const Vector3& aPosition)//aPostion == EnemyRobot Position
 		return Vector3();
 
 	myPathTarget = 0;
-	float epsilon = 1.0f;
+	float epsilon = 0.5f;
 	if (myFoundPlayer == true) {
 		SetPath(myNavMesh->CalculatePath(aPosition, myTarget->Position(), myNavMesh), myTarget->Position());
 	}
 	else {
-		float dist = DirectX::SimpleMath::Vector3::DistanceSquared(aPosition, myLastPlayerPosition);
-		SetPath(myNavMesh->CalculatePath(aPosition,myLastPlayerPosition, myNavMesh), myLastPlayerPosition);
+		float dist = DirectX::SimpleMath::Vector2::DistanceSquared({ myLastPlayerPosition.x, myLastPlayerPosition.z }, { aPosition.x, aPosition.z });
+		SetPath(myNavMesh->CalculatePath(aPosition, myLastPlayerPosition, myNavMesh), myLastPlayerPosition);
 		if (dist < epsilon) {
-				CMainSingleton::PostMaster().Send({ EMessageType::EnemyReachedLastPlayerPosition });
+			CMainSingleton::PostMaster().Send({ EMessageType::EnemyReachedLastPlayerPosition });
 		}
 	}
-	
+
 	size_t pathSize = myPath.size();
 	if (pathSize > 0) {
 
@@ -211,12 +213,11 @@ void CSeek::Receive(const SMessage& aMsg)
 {
 	if (aMsg.myMessageType == EMessageType::EnemyFoundPlayer) {
 		myFoundPlayer = true;
-		myLastPlayerPosition = *static_cast<Vector3*>(aMsg.data);
 	}
 
 	if (aMsg.myMessageType == EMessageType::EnemyLostPlayer) {
 		myFoundPlayer = false;
-		
+		myLastPlayerPosition = *static_cast<Vector3*>(aMsg.data);
 	}
 }
 
@@ -276,7 +277,7 @@ CAlerted::CAlerted(SNavMesh* aNavMesh)
 
 void CAlerted::Enter(const Vector3& aPosition)
 {
-	
+
 	myPath.clear();
 
 	aPosition;
