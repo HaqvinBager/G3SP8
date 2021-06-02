@@ -157,17 +157,19 @@
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="ActivationBehavior.h" />
     <ClInclude Include="AIBehavior.h" />
     <ClInclude Include="AIBehaviorComponent.h" />
     <ClInclude Include="AIController.h" />
-    <ClInclude Include="AnimateKey.h" />
+    <ClInclude Include="RotateActivation.h" />
     <ClInclude Include="AudioResponse.h" />
     <ClInclude Include="BootUpState.h" />
     <ClInclude Include="CameraControllerComponent.h" />
     <ClInclude Include="CharacterControllerComponent.h" />
     <ClInclude Include="CollisionEventComponent.h" />
+    <ClInclude Include="MoveActivation.h" />
     <ClInclude Include="ToggleResponse.h" />
-    <ClInclude Include="DestroyKey.h" />
+    <ClInclude Include="DestroyActivation.h" />
     <ClInclude Include="DialogueSystem.h" />
     <ClInclude Include="EnemyAnimationController.h" />
     <ClInclude Include="EnemyComponent.h" />
@@ -192,7 +194,7 @@
     <ClInclude Include="PlayerControllerComponent.h" />
     <ClInclude Include="PopupTextService.h" />
     <ClInclude Include="BinReader.h" />
-    <ClInclude Include="ListenerComponent.h" />
+    <ClInclude Include="ListenerBehavior.h" />
     <ClInclude Include="PrintResponse.h" />
     <ClInclude Include="ResponseBehavior.h" />
     <ClInclude Include="RotateResponse.h" />
@@ -201,15 +203,17 @@
     <ClInclude Include="UnityFactory.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="ActivationBehavior.cpp" />
     <ClCompile Include="AIController.cpp" />
-    <ClCompile Include="AnimateKey.cpp" />
+    <ClCompile Include="RotateActivation.cpp" />
     <ClCompile Include="AudioResponse.cpp" />
     <ClCompile Include="BootUpState.cpp" />
     <ClCompile Include="CameraControllerComponent.cpp" />
     <ClCompile Include="CharacterControllerComponent.cpp" />
     <ClCompile Include="CollisionEventComponent.cpp" />
+    <ClCompile Include="MoveActivation.cpp" />
     <ClCompile Include="ToggleResponse.cpp" />
-    <ClCompile Include="DestroyKey.cpp" />
+    <ClCompile Include="DestroyActivation.cpp" />
     <ClCompile Include="DialogueSystem.cpp" />
     <ClCompile Include="EnemyAnimationController.cpp" />
     <ClCompile Include="EnemyComponent.cpp" />
@@ -234,7 +238,7 @@
     <ClCompile Include="PlayerControllerComponent.cpp" />
     <ClCompile Include="PopupTextService.cpp" />
     <ClCompile Include="BinReader.cpp" />
-    <ClCompile Include="ListenerComponent.cpp" />
+    <ClCompile Include="ListenerBehavior.cpp" />
     <ClCompile Include="PrintResponse.cpp" />
     <ClCompile Include="ResponseBehavior.cpp" />
     <ClCompile Include="RotateResponse.cpp" />

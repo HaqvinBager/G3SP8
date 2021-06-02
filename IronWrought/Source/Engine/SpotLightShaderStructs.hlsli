@@ -15,6 +15,13 @@ struct SpotLightGeometryToPixel
     float3 myUV : UV;
 };
 
+struct SpotLightVertexToPixel
+{
+    float4 myPosition : SV_POSITION;
+    float4 myWorldPosition : WORLD_POSITION;
+    float3 myUV : UV;
+};
+
 struct SpotLightPixelOutput
 {
     float4 myColor : SV_TARGET;
@@ -50,4 +57,6 @@ cbuffer SpotLightValueBuffer : register(b3)
     float4 myUpRightCorner;
     float4 myDownLeftCorner;
     float4 myDownRightCorner;
+    float2 myInnerOuterAngle;
+    float2 padding;
 }

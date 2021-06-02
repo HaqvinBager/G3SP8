@@ -172,6 +172,7 @@ public static class BinaryWriterExtensions
             aBinWriter.Write(data.intensity);
             aBinWriter.Write(data.innerSpotAngle);
             aBinWriter.Write(data.outerSpotAngle);
+            aBinWriter.Write(data.isVolumetric);
         }
     }
 

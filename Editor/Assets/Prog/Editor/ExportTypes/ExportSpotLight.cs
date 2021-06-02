@@ -12,6 +12,7 @@ public struct SpotLight
     public float intensity;
     public float innerSpotAngle;
     public float outerSpotAngle;
+    public int isVolumetric;
 }
 
 [Serializable]
@@ -46,6 +47,15 @@ public class ExportSpotLight
             spotLight.intensity = light.intensity;
             spotLight.innerSpotAngle = light.innerSpotAngle;
             spotLight.outerSpotAngle = light.spotAngle;
+
+            if(light.TryGetComponent(out VolumetricLightData aData))
+            {
+                spotLight.isVolumetric = aData.isVolumetric ? 1 : 0;
+            }
+            else
+            {
+                spotLight.isVolumetric = 0;
+            }
 
             lightCollection.spotLights.Add(spotLight);
         }
