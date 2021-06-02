@@ -10,11 +10,11 @@ enum class EResponseType
 
 class IResponseBehavior;
 
-class CListenerComponent : public CBehavior, public IStringObserver
+class CListenerBehavior : public CBehavior, public IStringObserver
 {
 public:
-	CListenerComponent(CGameObject& aParent, std::string aReceiveMessage);
-	~CListenerComponent();
+	CListenerBehavior(CGameObject& aParent, std::string aReceiveMessage);
+	~CListenerBehavior();
 	
 public:
 	void Awake() override;

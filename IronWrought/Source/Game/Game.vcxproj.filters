@@ -126,9 +126,6 @@
     <ClInclude Include="PatrolPointComponent.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="InteractionBehavior.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="OnTriggerLock.h">
       <Filter>Puzzle\Lock\Components</Filter>
     </ClInclude>
@@ -153,9 +150,6 @@
     <ClInclude Include="MoveResponse.h">
       <Filter>Puzzle\Listener/Response\Components</Filter>
     </ClInclude>
-    <ClInclude Include="ListenerComponent.h">
-      <Filter>Puzzle\Listener/Response\Base</Filter>
-    </ClInclude>
     <ClInclude Include="ToggleResponse.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -165,17 +159,26 @@
     <ClInclude Include="ResponseBehavior.h">
       <Filter>Puzzle\Listener/Response\Base</Filter>
     </ClInclude>
-    <ClInclude Include="AnimateKey.h">
-      <Filter>Puzzle\Key\Components</Filter>
-    </ClInclude>
-    <ClInclude Include="DestroyKey.h">
-      <Filter>Puzzle\Key\Components</Filter>
-    </ClInclude>
     <ClInclude Include="KeyBehavior.h">
       <Filter>Puzzle\Key\Base</Filter>
     </ClInclude>
     <ClInclude Include="AudioResponse.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ListenerBehavior.h">
+      <Filter>Puzzle\Listener/Response\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="InteractionBehavior.h">
+      <Filter>Puzzle</Filter>
+    </ClInclude>
+    <ClInclude Include="ActivationBehavior.h">
+      <Filter>Puzzle\Key\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="AnimateActivation.h">
+      <Filter>Puzzle\Key\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="DestroyActivation.h">
+      <Filter>Puzzle\Key\Components</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -278,9 +281,6 @@
     <ClCompile Include="MoveResponse.cpp">
       <Filter>Puzzle\Listener/Response\Components</Filter>
     </ClCompile>
-    <ClCompile Include="ListenerComponent.cpp">
-      <Filter>Puzzle\Listener/Response\Base</Filter>
-    </ClCompile>
     <ClCompile Include="ToggleResponse.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -290,17 +290,23 @@
     <ClCompile Include="ResponseBehavior.cpp">
       <Filter>Puzzle\Listener/Response\Base</Filter>
     </ClCompile>
-    <ClCompile Include="AnimateKey.cpp">
-      <Filter>Puzzle\Key\Components</Filter>
-    </ClCompile>
-    <ClCompile Include="DestroyKey.cpp">
-      <Filter>Puzzle\Key\Components</Filter>
-    </ClCompile>
     <ClCompile Include="KeyBehavior.cpp">
       <Filter>Puzzle\Key\Base</Filter>
     </ClCompile>
     <ClCompile Include="AudioResponse.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ListenerBehavior.cpp">
+      <Filter>Puzzle\Listener/Response\Base</Filter>
+    </ClCompile>
+    <ClCompile Include="ActivationBehavior.cpp">
+      <Filter>Puzzle\Key\Base</Filter>
+    </ClCompile>
+    <ClCompile Include="AnimateActivation.cpp">
+      <Filter>Puzzle\Key\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="DestroyActivation.cpp">
+      <Filter>Puzzle\Key\Components</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

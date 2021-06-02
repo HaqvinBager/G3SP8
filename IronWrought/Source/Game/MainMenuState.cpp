@@ -125,5 +125,4 @@ void CMainMenuState::OnComplete(std::string aSceneThatHasBeenSuccessfullyLoaded)
 	std::cout << __FUNCTION__ << "Scene Load Complete!" << aSceneThatHasBeenSuccessfullyLoaded << std::endl;
 #endif
 	this->myStateStack.PushState(CStateStack::EState::InGame);
-	CEngine::GetInstance()->LoadGraph(aSceneThatHasBeenSuccessfullyLoaded);
 }
