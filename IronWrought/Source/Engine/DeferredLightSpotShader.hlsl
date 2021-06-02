@@ -2,9 +2,10 @@
 #include "DeferredPBRFunctions.hlsli"
 #include "SpotLightShaderStructs.hlsli"
 
-PixelOutput main(SpotLightGeometryToPixel input)
+PixelOutput main(SpotLightVertexToPixel input)
 {
     PixelOutput output;
+    
     
     float2 screenUV = (input.myUV.xy / input.myUV.z) * 0.5f + 0.5f;
     
@@ -28,7 +29,7 @@ PixelOutput main(SpotLightGeometryToPixel input)
     float3 toLight = spotLightPositionAndRange.xyz - worldPosition.xyz;
     float lightDistance = length(toLight);
     toLight = normalize(toLight);
-    float3 radiance = EvaluateSpotLight(diffuseColor, specularColor, normal, perceptualRoughness, spotLightColorAndIntensity.rgb * spotLightColorAndIntensity.a, spotLightPositionAndRange.w, toLight.xyz, lightDistance, toEye.xyz, spotLightDirectionAndAngleExponent.xyz, spotLightDirectionAndAngleExponent.w);
+    float3 radiance = EvaluateSpotLight(diffuseColor, specularColor, normal, perceptualRoughness, spotLightColorAndIntensity.rgb * spotLightColorAndIntensity.a, spotLightPositionAndRange.w, toLight.xyz, lightDistance, toEye.xyz, spotLightDirectionAndAngleExponent.xyz, spotLightDirectionAndAngleExponent.w, myInnerOuterAngle);
     
     output.myColor.rgb = radiance;
     output.myColor.a = 1.0f;

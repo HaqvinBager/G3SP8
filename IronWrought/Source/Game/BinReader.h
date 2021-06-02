@@ -60,6 +60,7 @@ namespace Binary {
 		float intensity;
 		float innerSpotAngle;
 		float outerSpotAngle;
+		int isVolumetric;
 	};
 	struct SPlayer
 	{
