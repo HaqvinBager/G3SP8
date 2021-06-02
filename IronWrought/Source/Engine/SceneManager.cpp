@@ -46,7 +46,8 @@
 #include <LeftClickDownLock.h>
 #include <KeyBehavior.h>
 #include <DestroyActivation.h>
-#include <AnimateActivation.h>
+#include <RotateActivation.h>
+#include <MoveActivation.h>
 #include <ListenerBehavior.h>
 #include <MoveResponse.h>
 #include <RotateResponse.h>
@@ -212,17 +213,25 @@ bool CSceneManager::AddToScene(CScene& aScene, Binary::SLevelData& aBinLevelData
 
 			if (sceneData.HasMember("locks"))
 				AddPuzzleLock(aScene, sceneData["locks"].GetArray());
+			
 			if (sceneData.HasMember("keys"))
 				AddPuzzleKey(aScene, sceneData["keys"].GetArray());
+			if (sceneData.HasMember("activationMoves"))
+				AddPuzzleActivationMove(aScene, sceneData["activationMoves"].GetArray());
+			if (sceneData.HasMember("activationRotates"))
+				AddPuzzleActivationRotate(aScene, sceneData["activationRotates"].GetArray());
+			if (sceneData.HasMember("activationDestroys"))
+				AddPuzzleActivationDestroy(aScene, sceneData["activationDestroys"].GetArray());
+
 			if (sceneData.HasMember("listeners"))
 				AddPuzzleListener(aScene, sceneData["listeners"].GetArray());
-			if (sceneData.HasMember("moves"))
-				AddPuzzleResponseMove(aScene, sceneData["moves"].GetArray());
-			if (sceneData.HasMember("rotates"))
-				AddPuzzleResponseRotate(aScene, sceneData["rotates"].GetArray());
-			if (sceneData.HasMember("prints"))
-				AddPuzzleResponsePrint(aScene, sceneData["prints"].GetArray());
-			if (sceneData.HasMember("toggles"))
+			if (sceneData.HasMember("responseMoves"))
+				AddPuzzleResponseMove(aScene, sceneData["responseMoves"].GetArray());
+			if (sceneData.HasMember("responseRotates"))
+				AddPuzzleResponseRotate(aScene, sceneData["responseRotates"].GetArray());
+			if (sceneData.HasMember("responsePrints"))
+				AddPuzzleResponsePrint(aScene, sceneData["responsePrints"].GetArray());
+			if (sceneData.HasMember("responseToggles"))
 				AddPuzzleToggle(aScene, sceneData["toggles"].GetArray());
 
 			AddDirectionalLights(aScene, sceneData["directionalLights"].GetArray());
@@ -610,61 +619,65 @@ void CSceneManager::AddPuzzleKey(CScene& aScene, RapidArray someData)
 	for (const auto& key : someData)
 	{
 		CGameObject* gameObject = aScene.FindObjectWithID(key["instanceID"].GetInt());
-		gameObject;
 		CKeyBehavior::SSettings settings = { key["onCreateNotify"].GetString(), key["onInteractNotify"].GetString(), nullptr };
-		EKeyInteractionTypes interactionType = static_cast<EKeyInteractionTypes>(key["interactionType"].GetInt());
-		switch (interactionType)
-		{
-		case EKeyInteractionTypes::Destroy:
-		{
-			gameObject->AddComponent<CDestroyActivation>(*gameObject);
-		}
-		break;
-		case EKeyInteractionTypes::Animate:
-		{
-			CAnimateActivation::SSettings activationSettings =
-			{
-				{
-					0.0f, 0.0f, 0.0f
-				},
-				{
-					0.0f, 0.0f, 0.0f
-				},
-				{
-					0.0f, 0.0f, 135.0f
-				},
-				{
-					0.0f, 0.0f, 45.0f
-				},
-				0.5f
-				//{	
-				//	key["startPosition"]["x"].GetFloat(),
-				//	key["startPosition"]["y"].GetFloat(),
-				//	key["startPosition"]["z"].GetFloat() 
-				//},
-				//{	
-				//	key["endPosition"]["x"].GetFloat(),
-				//	key["endPosition"]["y"].GetFloat(),
-				//	key["endPosition"]["z"].GetFloat() 
-				//},
-				//{	
-				//	key["startRotation"]["x"].GetFloat(),
-				//	key["startRotation"]["y"].GetFloat(),
-				//	key["startRotation"]["z"].GetFloat() 
-				//},
-				//{	
-				//	key["endRotation"]["x"].GetFloat(),
-				//	key["endRotation"]["y"].GetFloat(),
-				//	key["endRotation"]["z"].GetFloat() 
-				//},
-				//key["duration"].GetFloat()
-			};
-			gameObject->AddComponent<CAnimateActivation>(*gameObject, activationSettings);
-		}
-		break;
-		default:
-			break;
-		}
+
+		gameObject->AddComponent<CKeyBehavior>(*gameObject, settings);
+	}
+}
+
+void CSceneManager::AddPuzzleActivationMove(CScene& aScene, RapidArray someData)
+{
+	for (const auto& response : someData)
+	{
+		CGameObject* gameObject = aScene.FindObjectWithID(response["instanceID"].GetInt());
+		if (!gameObject)
+			continue;
+
+		CMoveActivation::SSettings settings = {};
+		settings.myDuration = response["duration"].GetFloat();
+
+		settings.myStartPosition = { response["start"]["x"].GetFloat(),
+									 response["start"]["y"].GetFloat(),
+									 response["start"]["z"].GetFloat() };
+
+		settings.myEndPosition = { response["end"]["x"].GetFloat(),
+									response["end"]["y"].GetFloat(),
+									response["end"]["z"].GetFloat() };
+
+		gameObject->AddComponent<CMoveActivation>(*gameObject, settings);
+	}
+}
+
+void CSceneManager::AddPuzzleActivationRotate(CScene& aScene, RapidArray someData)
+{
+	for (const auto& response : someData)
+	{
+		CGameObject* gameObject = aScene.FindObjectWithID(response["instanceID"].GetInt());
+		if (!gameObject)
+			continue;
+
+		CRotateActivation::SSettings settings = {};
+		settings.myDuration = response["duration"].GetFloat();
+
+		settings.myStartRotation = { response["start"]["x"].GetFloat(),
+									 response["start"]["y"].GetFloat(),
+									 response["start"]["z"].GetFloat() };
+
+		settings.myEndRotation = { response["end"]["x"].GetFloat(),
+									response["end"]["y"].GetFloat(),
+									response["end"]["z"].GetFloat() };
+
+		gameObject->AddComponent<CRotateActivation>(*gameObject, settings);
+	}
+}
+
+void CSceneManager::AddPuzzleActivationDestroy(CScene& aScene, RapidArray someData)
+{
+	for (const auto& key : someData)
+	{
+		CGameObject* gameObject = aScene.FindObjectWithID(key["instanceID"].GetInt());
+
+		gameObject->AddComponent<CDestroyActivation>(*gameObject);
 	}
 }
 

@@ -1,22 +1,19 @@
 #pragma once
 #include "ActivationBehavior.h"
 
-class CAnimateActivation : public IActivationBehavior
+class CRotateActivation : public IActivationBehavior
 {
 public:
 	struct SSettings
 	{
-		Vector3 myStartPosition;
-		Vector3 myEndPosition;
-
 		Vector3 myStartRotation;
 		Vector3 myEndRotation;
 		
 		float myDuration;
 	};
 
-	CAnimateActivation(CGameObject& aParent, const SSettings& someSettings);
-	~CAnimateActivation() override;
+	CRotateActivation(CGameObject& aParent, const SSettings& someSettings);
+	~CRotateActivation() override;
 	void OnActivation() override;
 	void Update() override;
 private:

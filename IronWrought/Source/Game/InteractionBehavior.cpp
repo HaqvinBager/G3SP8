@@ -5,8 +5,8 @@
 #include "TransformComponent.h"
 #include "Engine.h"
 #include "PhysXWrapper.h"
-#include "AnimateActivation.h"
-#include "DestroyActivation.h"
+#include "KeyBehavior.h"
+#include "KeyBehavior.h"
 #include "LeftClickDownLock.h"
 #include "OnLookLock.h"
 
@@ -53,16 +53,10 @@ void CInteractionBehavior::UpdateEyes()
 			CTransformComponent* hitTransform = static_cast<CTransformComponent*>(result.actor->userData);
 			if (hitTransform != nullptr)
 			{
-				CDestroyActivation* destroyKey = nullptr;
-				if (hitTransform->GameObject().TryGetComponent(&destroyKey))
+				CKeyBehavior* key = nullptr;
+				if (hitTransform->GameObject().TryGetComponent(&key))
 				{
-					destroyKey->OnActivation();
-					return;
-				}
-				CAnimateActivation* animateKey = nullptr;
-				if (hitTransform->GameObject().TryGetComponent(&animateKey))
-				{
-					animateKey->OnActivation();
+					key->TriggerActivations();
 					return;
 				}
 				CLeftClickDownLock* leftClickDownLock = nullptr;

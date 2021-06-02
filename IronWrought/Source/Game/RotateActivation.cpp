@@ -1,19 +1,16 @@
 #include "stdafx.h"
-#include "AnimateActivation.h"
+#include "RotateActivation.h"
 #include "TransformComponent.h"
 #include "GameObject.h"
 
 #define PI 3.141592f
 
-CAnimateActivation::CAnimateActivation(CGameObject& aParent, const SSettings& someSettings) 
+CRotateActivation::CRotateActivation(CGameObject& aParent, const SSettings& someSettings) 
 	: IActivationBehavior(aParent)
 	, mySettings(someSettings)
 	, myIsInteracted(false)
 	, myTime(0.0f)
 {
-	mySettings.myStartPosition = GameObject().myTransform->Position() + mySettings.myStartPosition;
-	mySettings.myEndPosition = GameObject().myTransform->Position() + mySettings.myEndPosition;
-
 	mySettings.myStartRotation.x = (-mySettings.myStartRotation.x) - 360.0f;
 	mySettings.myStartRotation.y += 180.0f;
 	mySettings.myStartRotation.z = (-mySettings.myStartRotation.z) - 360.0f;
@@ -25,19 +22,16 @@ CAnimateActivation::CAnimateActivation(CGameObject& aParent, const SSettings& so
 	mySettings.myEndRotation *= (PI / 180.0f);
 }
 
-CAnimateActivation::~CAnimateActivation()
+CRotateActivation::~CRotateActivation()
 {
 }
 
-
-
-void CAnimateActivation::OnActivation()
+void CRotateActivation::OnActivation()
 {
-	/*CMainSingleton::PostMaster().Send({ mySettings.myInteractNotify.c_str(), mySettings.myData });*/
 	myIsInteracted = true;
 }
 
-void CAnimateActivation::Update()
+void CRotateActivation::Update()
 {
 	if (myIsInteracted)
 	{
@@ -45,24 +39,17 @@ void CAnimateActivation::Update()
 
 		Quaternion rotation;
 		static Quaternion startRotation = Quaternion::CreateFromYawPitchRoll(mySettings.myStartRotation.y, mySettings.myStartRotation.x, mySettings.myStartRotation.z);
-		//startRotation *= GameObject().myTransform->Rotation();
 		static Quaternion endRotation = Quaternion::CreateFromYawPitchRoll(mySettings.myEndRotation.y, mySettings.myEndRotation.x, mySettings.myEndRotation.z);
-		//endRotation *= GameObject().myTransform->Rotation();
-
-		Vector3 position;
 
 		if (mySettings.myDuration >= 0.0001f)
 		{
-			position = Vector3::Lerp(mySettings.myStartPosition, mySettings.myEndPosition, myTime / mySettings.myDuration);
 			rotation = Quaternion::Slerp(startRotation, endRotation, myTime / mySettings.myDuration);
 		}
 		else
 		{
-			position = mySettings.myEndPosition;
 			rotation = endRotation;
 		}
 
-		GameObject().myTransform->Position(position);
 		GameObject().myTransform->Rotation(rotation);
 
 		if (myTime >= mySettings.myDuration)
