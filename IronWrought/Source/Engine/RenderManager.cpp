@@ -238,8 +238,10 @@ void CRenderManager::Render(CScene& aScene)
 		myLightRenderer.Render(maincamera, environmentlight);
 
 		myRenderStateManager.SetRasterizerState(CRenderStateManager::RasterizerStates::RASTERIZERSTATE_NOFACECULLING);
-		myLightRenderer.Render(maincamera, onlyPointLights);
+		//myRenderStateManager.SetRasterizerState(CRenderStateManager::RasterizerStates::RASTERIZERSTATE_FRONTFACECULLING);
+
 		myLightRenderer.Render(maincamera, onlySpotLights);
+		myLightRenderer.Render(maincamera, onlyPointLights);
 		myLightRenderer.Render(maincamera, onlyBoxLights);
 	}
 

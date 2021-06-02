@@ -366,7 +366,8 @@ void CLightRenderer::Render(CCameraComponent* aCamera, std::vector<CPointLight*>
 	myContext->IASetVertexBuffers(0, 1, &myPointLightVertexBuffer, &myPointLightStride, &myPointLightOffset);
 	myContext->IASetIndexBuffer(myPointLightIndexBuffer, DXGI_FORMAT_R32_UINT, 0);
 
-	for (CPointLight* currentInstance : aPointLightList) {
+	for (CPointLight* currentInstance : aPointLightList)
+	{
 		if (!currentInstance->IsActive())
 			continue;
 
@@ -403,13 +404,19 @@ void CLightRenderer::Render(CCameraComponent* aCamera, std::vector<CSpotLight*>&
 	myFrameBufferData.myToCameraFromProjection = aCamera->GetProjection().Invert();
 	BindBuffer(myFrameBuffer, myFrameBufferData, "Frame Buffer");
 	myContext->VSSetConstantBuffers(0, 1, &myFrameBuffer);
-	myContext->GSSetConstantBuffers(0, 1, &myFrameBuffer);
+	//myContext->GSSetConstantBuffers(0, 1, &myFrameBuffer);
 	myContext->PSSetConstantBuffers(0, 1, &myFrameBuffer);
 
-	UINT stride = sizeof(Vector4);
-	UINT offset = 0;
 
-	for (CSpotLight* currentInstance : aSpotLightList) {
+	myContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY::D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	myContext->IASetInputLayout(myInputLayout);
+	myContext->IASetVertexBuffers(0, 1, &myPointLightVertexBuffer, &myPointLightStride, &myPointLightOffset);
+	myContext->IASetIndexBuffer(myPointLightIndexBuffer, DXGI_FORMAT_R32_UINT, 0);
+
+	//UINT stride = sizeof(Vector4);
+	//UINT offset = 0;
+	for (CSpotLight* currentInstance : aSpotLightList)
+	{
 		const SM::Vector3& position = currentInstance->GetPosition();
 		const SM::Vector3& color = currentInstance->GetColor();
 		const Vector3& direction = currentInstance->GetDirection();
@@ -421,23 +428,26 @@ void CLightRenderer::Render(CCameraComponent* aCamera, std::vector<CSpotLight*>&
 		mySpotLightBufferData.myDirectionAndAngleExponent = { direction.x, direction.y, direction.z, currentInstance->GetAngleExponent() };
 		mySpotLightBufferData.myDirectionNormal1 = currentInstance->GetDirectionNormal1();
 		mySpotLightBufferData.myDirectionNormal2 = currentInstance->GetDirectionNormal2();
+		mySpotLightBufferData.myInnerOuterAngle = currentInstance->GetInnerOuterAngle();
 
 		BindBuffer(mySpotLightBuffer, mySpotLightBufferData, "Spot Light Buffer");
+		myContext->VSSetConstantBuffers(3, 1, &mySpotLightBuffer);
 		myContext->PSSetConstantBuffers(3, 1, &mySpotLightBuffer);
-		myContext->GSSetConstantBuffers(3, 1, &mySpotLightBuffer);
-
-		myContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY::D3D11_PRIMITIVE_TOPOLOGY_POINTLIST);
-		myContext->IASetInputLayout(myInputLayout);
-		myContext->IASetVertexBuffers(0, 1, &myPointLightVertexBuffer, &stride, &offset);
-		myContext->IASetIndexBuffer(nullptr, DXGI_FORMAT_UNKNOWN, 0);
+		//myContext->GSSetConstantBuffers(3, 1, &mySpotLightBuffer);
+		//myContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY::D3D11_PRIMITIVE_TOPOLOGY_POINTLIST);
+		//myContext->IASetInputLayout(myInputLayout);
+		//myContext->IASetVertexBuffers(0, 1, &myPointLightVertexBuffer, &stride, &offset);
+		//myContext->IASetIndexBuffer(nullptr, DXGI_FORMAT_UNKNOWN, 0);
 
 		myContext->VSSetShader(mySpotLightVertexShader, nullptr, 0);
-		myContext->GSSetShader(mySpotLightGeometryShader, nullptr, 0);
+		//myContext->GSSetShader(mySpotLightGeometryShader, nullptr, 0);
 
 		myContext->PSSetShader(mySpotLightShader, nullptr, 0);
 		myContext->PSSetSamplers(0, 1, &mySamplerState);
+		
+		myContext->DrawIndexed(myPointLightNumberOfIndices, 0, 0);
 
-		myContext->Draw(1, 0);
+		//myContext->Draw(1, 0);
 		CRenderManager::myNumberOfDrawCallsThisFrame++;
 	}
 
@@ -464,7 +474,8 @@ void CLightRenderer::Render(CCameraComponent* aCamera, std::vector<CBoxLight*>& 
 	myContext->IASetVertexBuffers(0, 1, &myBoxLightVertexBuffer, &myPointLightStride, &myPointLightOffset);
 	myContext->IASetIndexBuffer(myBoxLightIndexBuffer, DXGI_FORMAT_R32_UINT, 0);
 
-	for (CBoxLight* currentInstance : aBoxLightList) {
+	for (CBoxLight* currentInstance : aBoxLightList)
+	{
 		const Vector3& position = currentInstance->GetPosition();
 		const Vector3& color = currentInstance->GetColor();
 		const Vector3& direction = currentInstance->GetDirection();
@@ -622,7 +633,7 @@ void CLightRenderer::RenderVolumetric(CCameraComponent* aCamera, std::vector<CPo
 	myContext->IASetVertexBuffers(0, 1, &myPointLightVertexBuffer, &myPointLightStride, &myPointLightOffset);
 	myContext->IASetIndexBuffer(myPointLightIndexBuffer, DXGI_FORMAT_R32_UINT, 0);
 
-	for (CPointLight* currentInstance : aPointLightList) 
+	for (CPointLight* currentInstance : aPointLightList)
 	{
 		if (!currentInstance->GetIsVolumetric())
 			continue;
@@ -675,7 +686,11 @@ void CLightRenderer::RenderVolumetric(CCameraComponent* aCamera, std::vector<CSp
 	UINT stride = sizeof(Vector4);
 	UINT offset = 0;
 
-	for (CSpotLight* currentInstance : aSpotLightList) {
+	for (CSpotLight* currentInstance : aSpotLightList)
+	{
+		if (!currentInstance->GetIsVolumetric())
+			continue;
+
 		const SM::Vector3& position = currentInstance->GetPosition();
 		const SM::Vector3& color = currentInstance->GetColor();
 		const Vector3& direction = currentInstance->GetDirection();
@@ -693,6 +708,7 @@ void CLightRenderer::RenderVolumetric(CCameraComponent* aCamera, std::vector<CSp
 		mySpotLightBufferData.myUpRightCorner = currentInstance->GetUpRightCorner();
 		mySpotLightBufferData.myDownLeftCorner = currentInstance->GetDownLeftCorner();
 		mySpotLightBufferData.myDownRightCorner = currentInstance->GetDownRightCorner();
+		mySpotLightBufferData.myInnerOuterAngle = currentInstance->GetInnerOuterAngle();
 
 		BindBuffer(mySpotLightBuffer, mySpotLightBufferData, "Spot Light Buffer");
 		myContext->PSSetConstantBuffers(3, 1, &mySpotLightBuffer);
@@ -737,7 +753,8 @@ void CLightRenderer::RenderVolumetric(CCameraComponent* aCamera, std::vector<CBo
 	myContext->IASetVertexBuffers(0, 1, &myBoxLightVertexBuffer, &myPointLightStride, &myPointLightOffset);
 	myContext->IASetIndexBuffer(myBoxLightIndexBuffer, DXGI_FORMAT_R32_UINT, 0);
 
-	for (CBoxLight* currentInstance : aBoxLightList) {
+	for (CBoxLight* currentInstance : aBoxLightList)
+	{
 		const Vector3& position = currentInstance->GetPosition();
 		const Vector3& color = currentInstance->GetColor();
 		const Vector3& direction = currentInstance->GetDirection();

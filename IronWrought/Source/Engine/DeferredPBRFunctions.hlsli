@@ -120,7 +120,7 @@ float3 EvaluatePointLight(float3 diffuseColor, float3 specularColor, float3 norm
     return saturate(intensityScaledColor * attenuation * ((cDiff * (1.0f - cSpec) + cSpec) * PI));
 }
 
-float3 EvaluateSpotLight(float3 diffuseColor, float3 specularColor, float3 normal, float roughness, float3 intensityScaledColor, float3 lightRange, float3 toLight, float3 lightDistance, float3 toEye, float3 lightDir, float angleExponent)
+float3 EvaluateSpotLight(float3 diffuseColor, float3 specularColor, float3 normal, float roughness, float3 intensityScaledColor, float3 lightRange, float3 toLight, float3 lightDistance, float3 toEye, float3 lightDir, float angleExponent, float2 innerOuterAngle)
 {
     float NdL = saturate(dot(normal, toLight));
     float lambert = NdL;
@@ -145,10 +145,12 @@ float3 EvaluateSpotLight(float3 diffuseColor, float3 specularColor, float3 norma
     
     finalColor *= linearAttenuation * physicalAttenuation;
     
-    finalColor *= pow(max(dot(lightDir, -toLight), 0.0f), angleExponent);
-    //finalColor *= saturate((dot(lightDir, -toLight) - 1.0f) / (0.2f - 1.0f));
+    //finalColor *= pow(max(dot(lightDir, -toLight), 0.0f), angleExponent);
+    float inner = sin(innerOuterAngle.x);
+    float outer = sin(innerOuterAngle.y);
     
-    return saturate(finalColor);
+    finalColor *= saturate((dot(lightDir, -toLight) - outer / (inner - outer)));
+    return finalColor;
 }
 
 float3 EvaluateBoxLight(float3 diffuseColor, float3 specularColor, float3 normal, float roughness, float3 intensityScaledColor, float3 lightRange, float3 toLight, float3 lightDistance, float3 toEye, float3 lightDir)

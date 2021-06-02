@@ -1,4 +1,3 @@
-
 #include "DeferredSamplingFunctions.hlsli"
 #include "DeferredPBRFunctions.hlsli"
 #include "PointLightShaderStructs.hlsli"

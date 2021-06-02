@@ -16,9 +16,12 @@ public:
 	const Vector4& GetUpRightCorner() const;
 	const Vector4& GetDownLeftCorner() const;
 	const Vector4& GetDownRightCorner() const;
+	const Vector2& GetInnerOuterAngle() const;
 	const float GetIntensity() const;
 	const float GetRange() const;
 	const float GetAngleExponent() const;
+	const bool GetIsVolumetric() const;
+	
 
 	const Matrix& GetWorldMatrix() const;
 	const Matrix& GetViewMatrix() const;
@@ -30,6 +33,8 @@ public:
 	void SetRange(float aRange);
 	void SetIntensity(float anIntensity);
 	void SetWideness(float aWideness);
+	void SetInnerOuterAngle(const Vector2& aInnerOuterAngle);
+	void SetIsVolumetric(const bool aIsVolumetric);
 
 private:
 	void UpdateWorld();
@@ -49,8 +54,10 @@ private:
 	Vector3 myPosition;
 	Vector3 myColor;
 	Vector3 myDirection;
+	Vector2 myInnerOuterAngle;
 	float myIntensity;
 	float myRange;
 	float myAngleExponent; // Low values yield a wide cone, high values a narrow cone
+	bool myIsVolumetric; 
 };
 
