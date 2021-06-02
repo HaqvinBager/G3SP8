@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 5099526212278727097}
   - component: {fileID: 5099526212278727079}
   - component: {fileID: 3322757289661101404}
+  - component: {fileID: 8303461843228553432}
   m_Layer: 0
   m_Name: SpotLight
   m_TagString: Untagged
@@ -106,3 +107,22 @@ Light:
   m_UseViewFrustumForShadowCasterCull: 1
   m_ShadowRadius: 0
   m_ShadowAngle: 0
+--- !u!114 &8303461843228553432
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5099526212278727078}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7ceee8183e86a26479d0a4415a9e1384, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isMainDirectionalLight: 0
+  isVolumetric: 0
+  isFog: 0
+  numberOfSamples: 0
+  lightPower: 0
+  scatteringProbability: 0
+  henyeyGreensteinGValue: 0

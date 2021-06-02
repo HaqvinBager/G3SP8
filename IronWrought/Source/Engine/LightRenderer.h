@@ -83,6 +83,8 @@ private:
 		Vector4 myUpRightCorner;
 		Vector4 myDownLeftCorner;
 		Vector4 myDownRightCorner;
+		Vector2 myInnerOuterAngle;
+		Vector2 padding;
 	} mySpotLightBufferData;
 
 	struct SBoxLightBufferData
