@@ -62,7 +62,7 @@ private:
 	bool InitButton(const rapidjson::GenericObject<false, rapidjson::Value>& aRapidObject, const int& anIndex);
 	bool InitText(const rapidjson::GenericObject<false, rapidjson::Value>& aRapidObject, const int& anIndex);
 	bool InitAnimatedElement(const rapidjson::GenericObject<false, rapidjson::Value>& aRapidObject, const int& anIndex);
-	bool InitBackground(const std::string& aPath);
+	bool InitBackground(const std::string& aPath, const Vector2& aSize = {1.0f, 1.0f});
 	bool InitSprite(const rapidjson::GenericObject<false, rapidjson::Value>& aRapidObject, const int& anIndex);
 	bool InitMessageTypes(const rapidjson::GenericArray<false, rapidjson::Value>& aRapidArray);
 	bool InitWidgets(const rapidjson::GenericArray<false, rapidjson::Value>& aRapidArray);
