@@ -622,7 +622,7 @@ void CSceneManager::AddPuzzleKey(CScene& aScene, RapidArray someData)
 	for (const auto& key : someData)
 	{
 		CGameObject* gameObject = aScene.FindObjectWithID(key["instanceID"].GetInt());
-		CKeyBehavior::SSettings settings = { key["onKeyCreateNotify"].GetString(), key["onKeyInteractNotify"].GetString(), nullptr };
+		CKeyBehavior::SSettings settings = { key["onKeyCreateNotify"].GetString(), key["onKeyInteractNotify"].GetString(), key["hasLock"].GetInt(), nullptr };
 
 		gameObject->AddComponent<CKeyBehavior>(*gameObject, settings);
 	}
@@ -863,10 +863,10 @@ void CSceneManager::AddPlayer(CScene& aScene, RapidObject someData)
 	camera->AddComponent<CGravityGloveComponent>(*camera, gravityGloveSlot->myTransform);
 	player->AddComponent<CPlayerComponent>(*player);
 	float speedModifider = 0.7f;
-	float walkSpeed = 0.035f * speedModifider;// was 0.09f before 2021 06 02
+	float walkSpeed = 0.04f * speedModifider;// was 0.09f before 2021 06 02
 	CPlayerControllerComponent* pcc = player->AddComponent<CPlayerControllerComponent>(*player, walkSpeed, walkSpeed * 0.4f, CEngine::GetInstance()->GetPhysx().GetPlayerReportBack());// CPlayerControllerComponent constructor sets position of camera child object.
-	pcc->SprintSpeedModifier(speedModifider * 2.0f);
-	pcc->StepTime((walkSpeed / speedModifider) * (4.0f / speedModifider));// Short explanation: for SP7 Nico added a steptimer for playback of stepsounds. It was set to walkSpeed * 5.0f. Changing walk speed to something lower does not give desirable results (shorter timer for slower speed sounds odd). Hence this.
+	pcc->SprintSpeedModifier(speedModifider * 2.6f);
+	pcc->StepTime(/*(walkSpeed / speedModifider) * (4.0f / speedModifider)*/(1.0f / walkSpeed * 60.0f));// Short explanation: for SP7 Nico added a steptimer for playback of stepsounds. It was set to walkSpeed * 5.0f. Changing walk speed to something lower does not give desirable results (shorter timer for slower speed sounds odd). Hence this.
 	//camera->AddComponent<CVFXSystemComponent>(*camera, ASSETPATH("Assets/Graphics/VFX/JSON/VFXSystem_Player.json"));
 
 	//aScene.AddInstance(model);

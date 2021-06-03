@@ -17,6 +17,7 @@ public:
 	{
 		std::string myOnCreateNotify;
 		std::string myInteractNotify;
+		int myHasLock;
 
 		void* myData;
 	};

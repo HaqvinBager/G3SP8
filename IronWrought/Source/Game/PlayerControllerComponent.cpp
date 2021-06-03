@@ -238,7 +238,7 @@ void CPlayerControllerComponent::ReceiveEvent(const EInputEvent aEvent)
 			if (myIsCrouching)
 				return;
 
-			mySpeed = myWalkSpeed / mySprintSpeedModifier;
+			mySpeed = myWalkSpeed;
 
 		}break;
 
@@ -273,6 +273,7 @@ void CPlayerControllerComponent::ControllerUpdate()
 	Vector3 vertical = -GameObject().myTransform->GetLocalMatrix().Forward() * verticalInput;
 	float y = myMovement.y;
 	myMovement = (horizontal + vertical) * mySpeed;
+	
 	myMovement.y = y;
 
 	if (myMovement.x == 0.0f && myMovement.z == 0.0f) // Reset Steps if standing still

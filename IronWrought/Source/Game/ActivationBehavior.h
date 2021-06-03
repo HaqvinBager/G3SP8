@@ -11,8 +11,13 @@ public:
 	virtual void Update() override {}
 	void OnEnable() override;
 	void OnDisable() override;
-	virtual void OnActivation() = 0;
+	void SetHasLock(const bool aHasLock) { myHasLock = aHasLock; }
 
-private:
+	bool Complete(const bool aCompletePredicate);
 
+	virtual void OnActivation() { myIsInteracted = true; };
+
+protected:
+	bool myHasLock;
+	bool myIsInteracted;
 };
