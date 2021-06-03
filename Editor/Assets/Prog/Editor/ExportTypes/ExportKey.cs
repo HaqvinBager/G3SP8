@@ -7,6 +7,7 @@ public struct KeyData
 {
     public string onKeyCreateNotify;
     public string onKeyInteractNotify;
+    public int hasLock;
     public int instanceID;
 }
 
@@ -57,6 +58,7 @@ public class ExportKey
             KeyData data = new KeyData();
             data.onKeyCreateNotify = key.myLock?.onKeyCreateNotify?.name;
             data.onKeyInteractNotify = key.myLock?.onKeyInteractNotify?.name;
+            data.hasLock = key.myLock != null ? 1 : 0;
             data.instanceID = key.transform.GetInstanceID();
             collection.keys.Add(data);
 

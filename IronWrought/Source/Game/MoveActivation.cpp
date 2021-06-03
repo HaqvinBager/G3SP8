@@ -6,7 +6,6 @@
 CMoveActivation::CMoveActivation(CGameObject& aParent, const SSettings& someSettings)
 	: IActivationBehavior(aParent)
 	, mySettings(someSettings)
-	, myIsInteracted(false)
 	, myTime(0.0f)
 {
 	mySettings.myStartPosition = GameObject().myTransform->Position() + mySettings.myStartPosition;
@@ -17,31 +16,20 @@ CMoveActivation::~CMoveActivation()
 {
 }
 
-void CMoveActivation::OnActivation()
-{
-	myIsInteracted = true;
-}
-
 void CMoveActivation::Update()
 {
 	if (myIsInteracted)
 	{
 		myTime += CTimer::Dt();
-
-		Vector3 position;
-
-		if (mySettings.myDuration >= 0.0001f)
-		{
-			position = Vector3::Lerp(mySettings.myStartPosition, mySettings.myEndPosition, myTime / mySettings.myDuration);
-		}
-		else
-		{
-			position = mySettings.myEndPosition;
-		}
-
+		Vector3 position = Vector3::Lerp(mySettings.myStartPosition, mySettings.myEndPosition, myTime / mySettings.myDuration);
 		GameObject().myTransform->Position(position);
+	}
 
-		if (myTime >= mySettings.myDuration)
-			Enabled(false);
+	if (Complete(myTime >= mySettings.myDuration))
+	{	
+		Vector3 temp = mySettings.myStartPosition;
+		mySettings.myStartPosition = mySettings.myEndPosition;
+		mySettings.myEndPosition = temp;
+		myTime = 0.0f;
 	}
 }
