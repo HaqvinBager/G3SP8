@@ -52,7 +52,7 @@ std::vector<DirectX::SimpleMath::Vector3> CAStar::GetPath(const Vector3& aStartP
 	if (newPath.empty())
 		return path;
 
-	for (size_t i = 1; i < newPath.size() - 1; ++i)
+	for (size_t i = 1; i < newPath.size(); ++i)
 	{
 		float degrees;
 		bool hasCollided;
