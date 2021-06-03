@@ -17,6 +17,8 @@ CRotateResponse::CRotateResponse(CGameObject& aParent, const SSettings& someSett
 	mySettings.myEndRotation.y += 180.0f;
 	mySettings.myEndRotation.z = (-mySettings.myEndRotation.z) - 360.0f;
 	mySettings.myEndRotation *= (PI / 180.0f);
+	myStart = Quaternion::CreateFromYawPitchRoll(mySettings.myStartRotation.y, mySettings.myStartRotation.x, mySettings.myStartRotation.z);
+	myEnd = Quaternion::CreateFromYawPitchRoll(mySettings.myEndRotation.y, mySettings.myEndRotation.x, mySettings.myEndRotation.z);
 
 	Enabled(false);
 }
@@ -31,18 +33,10 @@ void CRotateResponse::Update()
 			return;
 
 		ToggleHasBeenDelayed();
-		myTime = 0.0f;
+		myTime -= mySettings.myDelay;
 	}
 
-	Quaternion rotation;
-	Quaternion startRotation = Quaternion::CreateFromYawPitchRoll(mySettings.myStartRotation.y, mySettings.myStartRotation.x, mySettings.myStartRotation.z);
-	Quaternion endRotation = Quaternion::CreateFromYawPitchRoll(mySettings.myEndRotation.y, mySettings.myEndRotation.x, mySettings.myEndRotation.z);
-	if (mySettings.myDuration >= 0.0001f)
-		rotation = Quaternion::Slerp(startRotation, endRotation, myTime / mySettings.myDuration);
-	else
-		rotation = endRotation;
-
-	GameObject().myTransform->Rotation(rotation);
+	GameObject().myTransform->Rotation(Quaternion::Slerp(myStart, myEnd, myTime / mySettings.myDuration));
 
 	if (myTime >= mySettings.myDuration)
 		Enabled(false);

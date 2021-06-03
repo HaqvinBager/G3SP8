@@ -12,7 +12,6 @@ CMoveResponse::CMoveResponse(CGameObject& aParent, const SSettings& someSettings
 
 void CMoveResponse::Update()
 {
-	Vector3 position;
 	myTime += CTimer::Dt();
 
 	if (!HasBeenDelayed())
@@ -22,12 +21,10 @@ void CMoveResponse::Update()
 			return;
 
 		ToggleHasBeenDelayed();
-		myTime = 0.0f;
+		myTime -= mySettings.myDelay;
 	}
 
-	position = Vector3::Lerp(mySettings.myStartPosition, mySettings.myEndPosition, myTime / mySettings.myDuration);
-
-	GameObject().myTransform->Position(position);
+	GameObject().myTransform->Position(Vector3::Lerp(mySettings.myStartPosition, mySettings.myEndPosition, myTime / mySettings.myDuration));
 
 	if (myTime >= mySettings.myDuration)
 		Enabled(false);
