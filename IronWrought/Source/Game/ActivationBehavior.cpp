@@ -2,7 +2,7 @@
 #include "ActivationBehavior.h"
 #include "KeyBehavior.h"
 
-IActivationBehavior::IActivationBehavior(CGameObject& aParent) 
+IActivationBehavior::IActivationBehavior(CGameObject& aParent)
 	: CBehavior(aParent)
 	, myIsInteracted(false)
 	, myHasLock(true)
@@ -28,6 +28,7 @@ void IActivationBehavior::OnDisable()
 bool IActivationBehavior::Complete(const bool aCompletePredicate)
 {
 	myIsInteracted = aCompletePredicate ? false : myIsInteracted;
-	Enabled(!myHasLock);
+	if (aCompletePredicate)
+		Enabled(!myHasLock);
 	return aCompletePredicate;
 }

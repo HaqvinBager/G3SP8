@@ -186,7 +186,6 @@ void CInGameState::Update()
 		CMainSingleton::PostMaster().Send({ "KeyDown_K", nullptr });
 	}
 
-
 #ifdef INGAME_USE_MENU
 	if (Input::GetInstance()->IsKeyPressed(VK_ESCAPE))
 	{
@@ -243,7 +242,7 @@ void CInGameState::Receive(const SStringMessage& aMessage)
 			IRONWROUGHT->GetActiveScene().ToggleSections(data->mySceneSection);
 		else
 			IRONWROUGHT->GetActiveScene().DisableSection(data->mySceneSection);
-
+		
 		std::cout << __FUNCTION__ << (data->myState == true ? "ToggledSections: " : "DisableSection: ") << data->mySceneSection << std::endl;
 	}
 
@@ -276,6 +275,7 @@ void CInGameState::Receive(const SMessage& aMessage)
 	{
 	case EMessageType::StartGame:
 	{
+		IRONWROUGHT->GetActiveScene().ToggleSections(0);// Disable when single level loading.
 		ToggleCanvas(EInGameCanvases_HUD);
 	}break;
 
@@ -376,6 +376,17 @@ void CInGameState::DEBUGFunctionality()
 		msg2.myMessageType = PostMaster::SMSG_ENABLE_CANVAS;
 		CMainSingleton::PostMaster().Send(msg2);
 	}
+
+	//if (Input::GetInstance()->IsKeyPressed('1'))
+	//{
+	//	IRONWROUGHT->GetActiveScene().ToggleSections(0);
+	//	std::cout << __FUNCTION__ << " toggle to 0" << std::endl;
+	//}
+	//if (Input::GetInstance()->IsKeyPressed('2'))
+	//{
+	//	IRONWROUGHT->GetActiveScene().ToggleSections(1);
+	//	std::cout << __FUNCTION__ << " toggle to 1" << std::endl;
+	//}
 #endif
 }
 

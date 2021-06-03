@@ -32,7 +32,13 @@ public struct ActivationRotateData
 [System.Serializable]
 public struct ActivationPlayAudioData
 {
-    
+    public ESFX soundEffect;
+    public bool is3D;
+    public Vector3 coneDirection;
+    public float minAttenuationAngle;
+    public float maxAttenuationAngle;
+    public float minimumVolume;
+    public int instanceID;
 }
 
 [System.Serializable]
@@ -41,6 +47,7 @@ public struct KeyCollection
     public List<KeyData> keys;
     public List<ActivationMoveData> activationMoves;
     public List<ActivationRotateData> activationRotates;
+    public List<ActivationPlayAudioData> activationPlayAudios;
 }
 
 public class ExportKey
@@ -51,6 +58,7 @@ public class ExportKey
         collection.keys = new List<KeyData>();
         collection.activationMoves = new List<ActivationMoveData>();
         collection.activationRotates = new List<ActivationRotateData>();
+        collection.activationPlayAudios = new List<ActivationPlayAudioData>();
 
         Key[] keys = GameObject.FindObjectsOfType<Key>();
         foreach (Key key in keys)
@@ -64,6 +72,7 @@ public class ExportKey
 
             ExportRotateActivations(ref collection.activationRotates, key);
             ExportMoveActivations(ref collection.activationMoves, key);
+            ExportPlayAudioActivations(ref collection.activationPlayAudios, key);
         }
         return collection;
     }
@@ -91,6 +100,21 @@ public class ExportKey
             rotateData.duration = rotate.duration;
             rotateData.instanceID = rotate.transform.GetInstanceID();
             collection.Add(rotateData);
+        }
+    }
+
+    private static void ExportPlayAudioActivations(ref List<ActivationPlayAudioData> collection, Key key)
+    {
+        if (key.TryGetComponent(out ActivationPlayAudio playAudio))
+        {
+            ActivationPlayAudioData playAudioData = new ActivationPlayAudioData();
+            playAudioData.coneDirection = playAudio.myConeDirection;
+            playAudioData.is3D = playAudio.myIs3D;
+            playAudioData.minAttenuationAngle = playAudio.myMinAttenuationAngle;
+            playAudioData.maxAttenuationAngle = playAudio.myMaxAttenuationAngle;
+            playAudioData.minimumVolume = playAudio.myMinimumVolume;
+            playAudioData.instanceID = playAudio.transform.GetInstanceID();
+            collection.Add(playAudioData);
         }
     }
 }

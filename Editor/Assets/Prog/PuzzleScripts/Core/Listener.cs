@@ -55,7 +55,7 @@ public class Listener : MonoBehaviour
                     AddType<ResponseToggle>(gameObject);
                     break;
                 case ListenerType.PlayAudio:
-                    AddType<PlayAudio>(gameObject);
+                    AddType<ResponsePlayAudio>(gameObject);
                     break;
                 case ListenerType.Clear:
                     {

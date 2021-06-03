@@ -70,9 +70,15 @@ void CPlayerReportCallback::onShapeHit(const physx::PxControllerShapeHit& hit)
 							//}
 						}
 
+						
+
 						if (n.y > 0.99f) // Floor Check
 						{
+							if(objectTransform->GameObject().Tag().find(myLastTag) == std::string::npos)
+								std::cout << "Floor Tag: " << objectTransform->GameObject().Tag() << std::endl;
+
 							player->SetCurrentFloorMaterial(objectTransform->GameObject().Tag());
+							myLastTag = objectTransform->GameObject().Tag();
 						}
 					}
 				}
