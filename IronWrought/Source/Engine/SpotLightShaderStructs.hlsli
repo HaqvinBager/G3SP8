@@ -3,6 +3,13 @@ struct SpotLightVertexInput
     float4 myPosition : POSITION;
 };
 
+struct SpotLightVertexToPixel
+{
+    float4 myPosition : SV_POSITION;
+    float4 myWorldPosition : WORLD_POSITION;
+    float3 myUV : UV;
+};
+
 struct SpotLightVertexToGeometry
 {
     float4 myPosition : POSITION;
@@ -12,13 +19,6 @@ struct SpotLightGeometryToPixel
 {
     float4 myPosition : SV_POSITION;
     float4 myWorldPosition : WORLDPOSITION;
-    float3 myUV : UV;
-};
-
-struct SpotLightVertexToPixel
-{
-    float4 myPosition : SV_POSITION;
-    float4 myWorldPosition : WORLD_POSITION;
     float3 myUV : UV;
 };
 
