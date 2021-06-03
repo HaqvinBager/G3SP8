@@ -12,7 +12,8 @@ GameObject:
   - component: {fileID: 6661924854175464655}
   - component: {fileID: 8127464348758293545}
   - component: {fileID: 664754618002268970}
-  m_Layer: 0
+  - component: {fileID: -4911428341753583357}
+  m_Layer: 7
   m_Name: En_P_Box_closed
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -75,6 +76,24 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &-4911428341753583357
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8125815062568057163}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fcacea507542a2d47be01cfec7f83296, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  mySoundIndex: 10
+  myIs3D: 0
+  myConeDirection: {x: 0, y: 0, z: 0}
+  myMinAttenuationAngle: 0
+  myMaxAttenuationAngle: 0
+  myMinimumVolume: 0
 --- !u!1001 &4938554778951034136
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -133,6 +152,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 6a8a60424b4538248ab2be41e1cffea5, type: 3}
       propertyPath: m_Name
       value: En_P_Box_closed
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 6a8a60424b4538248ab2be41e1cffea5, type: 3}
+      propertyPath: m_Layer
+      value: 7
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6a8a60424b4538248ab2be41e1cffea5, type: 3}
