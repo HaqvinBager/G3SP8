@@ -46,7 +46,7 @@ CPlayerControllerComponent::CPlayerControllerComponent(CGameObject& gameObject, 
 	, myCurrentFloorMaterial(EFloorMaterial::Default)
 	, mySprintSpeedModifier(1.333f)
 {
-	INPUT_MAPPER->AddObserver(EInputEvent::Jump, this);
+	//INPUT_MAPPER->AddObserver(EInputEvent::Jump, this);
 	INPUT_MAPPER->AddObserver(EInputEvent::StartSprint, this);
 	INPUT_MAPPER->AddObserver(EInputEvent::EndSprint, this);
 	INPUT_MAPPER->AddObserver(EInputEvent::Crouch, this);
@@ -82,7 +82,7 @@ CPlayerControllerComponent::CPlayerControllerComponent(CGameObject& gameObject, 
 
 CPlayerControllerComponent::~CPlayerControllerComponent()
 {
-	INPUT_MAPPER->RemoveObserver(EInputEvent::Jump, this);
+	//INPUT_MAPPER->RemoveObserver(EInputEvent::Jump, this);
 	INPUT_MAPPER->RemoveObserver(EInputEvent::StartSprint, this);
 	INPUT_MAPPER->RemoveObserver(EInputEvent::EndSprint, this);
 	INPUT_MAPPER->RemoveObserver(EInputEvent::Crouch, this);
