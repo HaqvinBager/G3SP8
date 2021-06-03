@@ -28,8 +28,10 @@ public class PrefabProtector : MonoBehaviour
 
             if (GetComponent<Rigidbody>() == null)
             {
-                if(GetComponent<Key>() == null)
+                if (GetComponent<Key>() == null)
                     gameObject.AddComponent<Rigidbody>();
+                else
+                    collider.isTrigger = true;
                 
             }
         }
