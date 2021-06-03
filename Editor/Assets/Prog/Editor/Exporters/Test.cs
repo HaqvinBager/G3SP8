@@ -1,3 +1,4 @@
+
 using System;
 using System.IO;
 using System.Collections;
@@ -21,7 +22,7 @@ public class Test
 
 
         List<string> enumWhole = new List<string>();
-        var file = File.CreateText("Assets/Generated/AudioFile.cs");
+        var file = File.CreateText("Assets/AudioFile.cs");
         file.Write("using UnityEngine;\n");
         foreach(var str in enums)
         {
