@@ -433,6 +433,9 @@ void CPlayerControllerComponent::SetCurrentFloorMaterial(const std::string& anOb
 	else if (anObjectTag == "Carpet")
 		myCurrentFloorMaterial = EFloorMaterial::Carpet;
 
+	else if (anObjectTag == "Concrete")
+		myCurrentFloorMaterial = EFloorMaterial::Concrete;
+
 	else
 		myCurrentFloorMaterial = EFloorMaterial::Default;
 }
