@@ -49,6 +49,9 @@ std::vector<DirectX::SimpleMath::Vector3> CAStar::GetPath(const Vector3& aStartP
 	newPath = StringPull(aStartPosition, anEndPosition, GetPortals(AStar(aNavMesh, aStartTriangle, anEndTriangle), aNavMesh));
 	std::vector<Vector3> path;
 
+	if (newPath.empty())
+		return path;
+
 	for (size_t i = 1; i < newPath.size() - 1; ++i)
 	{
 		float degrees;
