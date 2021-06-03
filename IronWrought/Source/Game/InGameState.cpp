@@ -114,14 +114,28 @@ void CInGameState::Start()
 	CMainSingleton::PostMaster().Subscribe(EMessageType::MainMenu, this);
 	CMainSingleton::PostMaster().Subscribe(EMessageType::Resume, this);
 
-	std::vector<std::string> levels(3);
-	levels[0] = "Level_Cottage";
-	levels[1] = "Level_Basement1";
-	levels[2] = "Level_Basement2";
-	//levels[3] = "Level_Basement1_2";
-	//levels[4] = "Level_Cottage2";
-	//levels[5] = "Level_Basement1_3";
-	CSceneFactory::Get()->LoadSeveralScenesAsync("All", levels, myState, [this](std::string aMsg) { CInGameState::OnSceneLoadComplete(aMsg); });
+	std::string levelsPath = "Json/Settings/Levels.json";
+	const auto doc = CJsonReader::Get()->LoadDocument(levelsPath);
+	if (doc.HasParseError())
+	{
+		levelsPath.append(" has a parse error.");
+		assert(false && levelsPath.c_str());
+		return;
+	}
+	if (!doc.HasMember("Levels"))
+	{
+		levelsPath.append(" is missing Levels member!");
+		assert(false && levelsPath.c_str());
+		return;
+	}
+
+	auto levels = doc["Levels"].GetArray();
+	std::vector<std::string> levelNames(levels.Size());
+	for (auto i = 0; i < levelNames.size(); ++i)
+	{
+		levelNames[i] = levels[i].GetString();
+	}
+	CSceneFactory::Get()->LoadSeveralScenesAsync("All", levelNames, myState, [this](std::string aMsg) { CInGameState::OnSceneLoadComplete(aMsg); });
 
 	myExitTo = EExitTo::None;
 
