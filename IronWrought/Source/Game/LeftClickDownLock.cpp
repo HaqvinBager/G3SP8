@@ -11,5 +11,6 @@ CLeftClickDownLock::~CLeftClickDownLock()
 
 void CLeftClickDownLock::ActivateEvent()
 {
-	RunEvent();
+	if(Enabled())
+		RunEvent();
 }
