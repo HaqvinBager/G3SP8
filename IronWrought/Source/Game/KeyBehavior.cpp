@@ -31,13 +31,16 @@ void CKeyBehavior::Register(IActivationBehavior* aBehaviour)
 
 void CKeyBehavior::TriggerActivations()
 {
-	for (auto& activation : myActivations)
+	if (Enabled())
 	{
-		std::cout << __FUNCTION__ << "----< \tActivation type triggered \t" << activation->GameObject().Name() << std::endl;
-		activation->OnActivation();
+		for (auto& activation : myActivations)
+		{
+			std::cout << __FUNCTION__ << "----< \tActivation type triggered \t" << activation->GameObject().Name() << std::endl;
+			activation->OnActivation();
+		}
+		CMainSingleton::PostMaster().Send({ mySettings.myInteractNotify.c_str(), mySettings.myData });
+		Enabled(false);
 	}
-	CMainSingleton::PostMaster().Send({mySettings.myInteractNotify.c_str(), mySettings.myData});
-	Enabled(false);
 }
 
 void CKeyBehavior::OnEnable()
