@@ -20,6 +20,7 @@ public:
 private:
 	SSettings mySettings;
 	float myTime;
-	Quaternion myStartRotation;
+	Quaternion myStart;
+	Quaternion myEnd;
 };
 

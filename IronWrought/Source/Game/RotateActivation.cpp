@@ -44,6 +44,6 @@ void CRotateActivation::Update()
 		Quaternion temp = myStart;
 		myStart = myEnd;
 		myEnd = temp;
-		myTime = 0.0f;
+		myTime -= mySettings.myDuration;
 	}
 }

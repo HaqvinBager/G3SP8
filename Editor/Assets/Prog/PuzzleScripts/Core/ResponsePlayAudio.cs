@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayAudio : MonoBehaviour, IListener
+public class ResponsePlayAudio : MonoBehaviour, IListener
 {
     public ESFX soundEffect;
     public bool myIs3D;
