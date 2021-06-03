@@ -30,6 +30,6 @@ void CMoveActivation::Update()
 		Vector3 temp = mySettings.myStartPosition;
 		mySettings.myStartPosition = mySettings.myEndPosition;
 		mySettings.myEndPosition = temp;
-		myTime = 0.0f;
+		myTime -= mySettings.myDuration;
 	}
 }

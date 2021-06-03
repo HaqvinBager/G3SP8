@@ -48,6 +48,18 @@ public struct ResponseToggleData
 }
 
 [System.Serializable]
+public struct ResponsePlayAudioData
+{
+    public ESFX soundEffect;
+    public bool is3D;
+    public Vector3 coneDirection;
+    public float minAttenuationAngle;
+    public float maxAttenuationAngle;
+    public float minimumVolume;
+    public int instanceID;
+}
+
+[System.Serializable]
 public struct ListenerCollection
 {
     public List<ListenerData> listeners;
@@ -55,6 +67,7 @@ public struct ListenerCollection
     public List<ResponseRotateData> responseRotates;
     public List<ResponsePrintData> responsePrints;
     public List<ResponseToggleData> responseToggles;
+    public List<ResponsePlayAudioData> responsePlayAudios;
 }
 
 public class ExportResponse 
@@ -80,6 +93,7 @@ public class ExportResponse
             ExportMoveResponses(ref collection.responseMoves, listener);
             ExportPrintResponses(ref collection.responsePrints, listener);
             ExportToggleResponses(ref collection.responseToggles, listener);
+            ExportPlayAudioResponses(ref collection.responsePlayAudios, listener);
         }
         return collection;
     }
@@ -136,6 +150,21 @@ public class ExportResponse
             rotateData.delay = rotate.delay;
             rotateData.instanceID = rotate.transform.GetInstanceID();
             collection.Add(rotateData);
+        }
+    }
+
+    private static void ExportPlayAudioResponses(ref List<ResponsePlayAudioData> collection, Listener Response)
+    {
+        if (Response.TryGetComponent(out ResponsePlayAudio playAudio))
+        {
+            ResponsePlayAudioData playAudioData = new ResponsePlayAudioData();
+            playAudioData.coneDirection = playAudio.myConeDirection;
+            playAudioData.is3D = playAudio.myIs3D;
+            playAudioData.minAttenuationAngle = playAudio.myMinAttenuationAngle;
+            playAudioData.maxAttenuationAngle = playAudio.myMaxAttenuationAngle;
+            playAudioData.minimumVolume = playAudio.myMinimumVolume;
+            playAudioData.instanceID = playAudio.transform.GetInstanceID();
+            collection.Add(playAudioData);
         }
     }
 }

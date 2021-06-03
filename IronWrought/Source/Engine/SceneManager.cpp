@@ -54,6 +54,7 @@
 #include <PrintResponse.h>
 #include <ToggleResponse.h>
 #include <AudioResponse.h>
+#include <AudioActivation.h>
 
 CScene* CSceneManager::ourLastInstantiatedScene = nullptr;
 CSceneManager::CSceneManager()
@@ -223,6 +224,8 @@ bool CSceneManager::AddToScene(CScene& aScene, Binary::SLevelData& aBinLevelData
 				AddPuzzleActivationRotate(aScene, sceneData["activationRotates"].GetArray());
 			if (sceneData.HasMember("activationDestroys"))
 				AddPuzzleActivationDestroy(aScene, sceneData["activationDestroys"].GetArray());
+			if (sceneData.HasMember("activationAudios"))
+				AddPuzzleActivationAudio(aScene, sceneData["activationAudios"].GetArray());
 
 			if (sceneData.HasMember("listeners"))
 				AddPuzzleListener(aScene, sceneData["listeners"].GetArray());
@@ -233,9 +236,9 @@ bool CSceneManager::AddToScene(CScene& aScene, Binary::SLevelData& aBinLevelData
 			if (sceneData.HasMember("responsePrints"))
 				AddPuzzleResponsePrint(aScene, sceneData["responsePrints"].GetArray());
 			if (sceneData.HasMember("responseToggles"))
-				AddPuzzleToggle(aScene, sceneData["responseToggles"].GetArray());
-			if (sceneData.HasMember("audios"))
-				AddPuzzleAudio(aScene, sceneData["audios"].GetArray());
+				AddPuzzleResponseToggle(aScene, sceneData["responseToggles"].GetArray());
+			if (sceneData.HasMember("responseAudios"))
+				AddPuzzleResponseAudio(aScene, sceneData["responseAudios"].GetArray());
 
 			AddDirectionalLights(aScene, sceneData["directionalLights"].GetArray());
 			SetVertexPaintedColors(aScene, sceneData["vertexColors"].GetArray(), vertexPaintData);
@@ -684,6 +687,30 @@ void CSceneManager::AddPuzzleActivationDestroy(CScene& aScene, RapidArray someDa
 	}
 }
 
+void CSceneManager::AddPuzzleActivationAudio(CScene& aScene, RapidArray someData)
+{
+	for (const auto& activation : someData)
+	{
+		CGameObject* gameObject = aScene.FindObjectWithID(activation["instanceID"].GetInt());
+		if (!gameObject)
+			continue;
+
+		PostMaster::SAudioSourceInitData settings = {};
+		settings.mySoundIndex = activation["soundEffect"].GetInt();
+		//bool is3D = response["is3D"].GetInt() ? 1 : 0;
+		settings.myForward = Vector3
+		{
+			activation["coneDirection"]["x"].GetFloat(),
+			activation["coneDirection"]["y"].GetFloat(),
+			activation["coneDirection"]["z"].GetFloat(),
+		};
+		settings.myStartAttenuationAngle = activation["minAttenuationAngle"].GetFloat();
+		settings.myMaxAttenuationAngle = activation["maxAttenuationAngle"].GetFloat();
+		settings.myMinimumVolume = activation["minimumVolume"].GetFloat();
+		gameObject->AddComponent<CAudioActivation>(*gameObject, settings);
+	}
+}
+
 void CSceneManager::AddPuzzleLock(CScene& aScene, RapidArray someData)
 {
 	for (const auto& lock : someData)
@@ -784,7 +811,7 @@ void CSceneManager::AddPuzzleResponsePrint(CScene& aScene, RapidArray someData)
 	}
 }
 
-void CSceneManager::AddPuzzleToggle(CScene& aScene, RapidArray someData)
+void CSceneManager::AddPuzzleResponseToggle(CScene& aScene, RapidArray someData)
 {
 	for (const auto& response : someData)
 	{
@@ -802,7 +829,7 @@ void CSceneManager::AddPuzzleToggle(CScene& aScene, RapidArray someData)
 	}
 }
 
-void CSceneManager::AddPuzzleAudio(CScene& aScene, RapidArray someData)
+void CSceneManager::AddPuzzleResponseAudio(CScene& aScene, RapidArray someData)
 {
 	for (const auto& response : someData)
 	{
@@ -824,8 +851,6 @@ void CSceneManager::AddPuzzleAudio(CScene& aScene, RapidArray someData)
 		settings.myMinimumVolume = response["myMinimumVolume"].GetFloat();
 		gameObject->AddComponent<CAudioResponse>(*gameObject, settings);
 	}
-
-
 }
 
 void CSceneManager::AddDecalComponents(CScene& aScene, RapidArray someData)
