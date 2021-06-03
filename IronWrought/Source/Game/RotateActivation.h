@@ -8,16 +8,16 @@ public:
 	{
 		Vector3 myStartRotation;
 		Vector3 myEndRotation;
-		
 		float myDuration;
 	};
 
 	CRotateActivation(CGameObject& aParent, const SSettings& someSettings);
 	~CRotateActivation() override;
-	void OnActivation() override;
 	void Update() override;
+
 private:
 	SSettings mySettings;
-	bool myIsInteracted;
 	float myTime;
+	Quaternion myStart;
+	Quaternion myEnd;
 };
