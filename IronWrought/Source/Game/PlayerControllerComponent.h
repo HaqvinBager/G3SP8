@@ -89,7 +89,8 @@ private:
 	{
 		Default,
 		WoodFloor,
-		Carpet
+		Carpet,
+		Concrete
 	};
 
 	CCharacterController* myController;
