@@ -53,6 +53,7 @@
 #include <RotateResponse.h>
 #include <PrintResponse.h>
 #include <ToggleResponse.h>
+#include <AudioResponse.h>
 
 CScene* CSceneManager::ourLastInstantiatedScene = nullptr;
 CSceneManager::CSceneManager()
@@ -232,7 +233,9 @@ bool CSceneManager::AddToScene(CScene& aScene, Binary::SLevelData& aBinLevelData
 			if (sceneData.HasMember("responsePrints"))
 				AddPuzzleResponsePrint(aScene, sceneData["responsePrints"].GetArray());
 			if (sceneData.HasMember("responseToggles"))
-				AddPuzzleToggle(aScene, sceneData["toggles"].GetArray());
+				AddPuzzleToggle(aScene, sceneData["responseToggles"].GetArray());
+			if (sceneData.HasMember("audios"))
+				AddPuzzleAudio(aScene, sceneData["audios"].GetArray());
 
 			AddDirectionalLights(aScene, sceneData["directionalLights"].GetArray());
 			SetVertexPaintedColors(aScene, sceneData["vertexColors"].GetArray(), vertexPaintData);
@@ -619,7 +622,7 @@ void CSceneManager::AddPuzzleKey(CScene& aScene, RapidArray someData)
 	for (const auto& key : someData)
 	{
 		CGameObject* gameObject = aScene.FindObjectWithID(key["instanceID"].GetInt());
-		CKeyBehavior::SSettings settings = { key["onCreateNotify"].GetString(), key["onInteractNotify"].GetString(), nullptr };
+		CKeyBehavior::SSettings settings = { key["onKeyCreateNotify"].GetString(), key["onKeyInteractNotify"].GetString(), nullptr };
 
 		gameObject->AddComponent<CKeyBehavior>(*gameObject, settings);
 	}
@@ -797,6 +800,32 @@ void CSceneManager::AddPuzzleToggle(CScene& aScene, RapidArray someData)
 
 		gameObject->AddComponent<CToggleResponse>(*gameObject, settings);
 	}
+}
+
+void CSceneManager::AddPuzzleAudio(CScene& aScene, RapidArray someData)
+{
+	for (const auto& response : someData)
+	{
+		CGameObject* gameObject = aScene.FindObjectWithID(response["instanceID"].GetInt());
+		if (!gameObject)
+			continue;
+
+		PostMaster::SAudioSourceInitData settings = {};
+		settings.mySoundIndex = response["soundEffect"].GetInt();
+		//bool is3D = response["myIs3D"].GetInt() ? 1 : 0;
+		settings.myForward = Vector3
+		{
+			response["myConeDirection"]["x"].GetFloat(),
+			response["myConeDirection"]["y"].GetFloat(),
+			response["myConeDirection"]["z"].GetFloat(),
+		};
+		settings.myStartAttenuationAngle = response["myMinAttenuationAngle"].GetFloat();
+		settings.myMaxAttenuationAngle = response["myMaxAttenuationAngle"].GetFloat();
+		settings.myMinimumVolume = response["myMinimumVolume"].GetFloat();
+		gameObject->AddComponent<CAudioResponse>(*gameObject, settings);
+	}
+
+
 }
 
 void CSceneManager::AddDecalComponents(CScene& aScene, RapidArray someData)
@@ -1028,7 +1057,11 @@ void CSceneManager::AddCollider(CScene& aScene, const std::vector<Binary::SColli
 		ColliderType colliderType = static_cast<ColliderType>(c.colliderType);
 		CRigidBodyComponent* rigidBody = gameObject->GetComponent<CRigidBodyComponent>();
 		
-		if (rigidBody == nullptr && c.isStatic == false)
+		if (c.isTrigger && !c.isKinematic)
+		{
+
+		}
+		else if (rigidBody == nullptr && c.isStatic == false)
 		{
 			gameObject->AddComponent<CRigidBodyComponent>(*gameObject, c.mass, c.localMassPosition, c.inertiaTensor, c.isKinematic);
 		}
@@ -1099,8 +1132,8 @@ void CSceneManager::AddTeleporters(CScene& aScene, const RapidArray& someData)
 			triggerVolume->RegisterEventTriggerOnce(false);
 			triggerVolume->CanBeDeactivated(false);
 
-			CTeleporterComponent::ELevelName teleportersName = static_cast<CTeleporterComponent::ELevelName>(teleporter["myTeleporterName"].GetInt());
-			CTeleporterComponent::ELevelName teleportTo = static_cast<CTeleporterComponent::ELevelName>(teleporter["teleportTo"].GetInt());
+			PostMaster::ELevelName teleportersName = static_cast<PostMaster::ELevelName>(teleporter["myTeleporterName"].GetInt());
+			PostMaster::ELevelName teleportTo = static_cast<PostMaster::ELevelName>(teleporter["teleportTo"].GetInt());
 			Vector3 position = { teleporter["teleportObjectToX"].GetFloat(), teleporter["teleportObjectToY"].GetFloat(), teleporter["teleportObjectToZ"].GetFloat() };
 			gameObject->AddComponent<CTeleporterComponent>(*gameObject, teleportersName, teleportTo, position);
 		}

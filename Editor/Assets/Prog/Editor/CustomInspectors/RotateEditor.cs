@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 
-[CustomEditor(typeof(Rotate))]
+[CustomEditor(typeof(ActivationRotate))]
 public class RotateEditor : Editor
 {
     public override void OnInspectorGUI()
@@ -11,20 +11,20 @@ public class RotateEditor : Editor
         serializedObject.Update();
         base.OnInspectorGUI();
 
-        this.ShowValueAndButton<Rotate>("start", "Rotation Start", SaveRotation);
-        this.ShowValueAndButton<Rotate>("end", "Rotation End", SaveRotation);
+        this.ShowValueAndButton<ActivationRotate>("start", "Rotation Start", SaveRotation);
+        this.ShowValueAndButton<ActivationRotate>("end", "Rotation End", SaveRotation);
 
         GUI.backgroundColor = Color.green;
-        this.SetValueButtonCallback<Rotate>("start", "Rotate to Start", SetRotation);
+        this.SetValueButtonCallback<ActivationRotate>("start", "Rotate to Start", SetRotation);
         GUI.backgroundColor = Color.cyan;
-        this.SetValueButtonCallback<Rotate>("end", "Rotate to End", SetRotation);
+        this.SetValueButtonCallback<ActivationRotate>("end", "Rotate to End", SetRotation);
         
         serializedObject.ApplyModifiedProperties();
     }
 
     private void SetRotation(Quaternion quat)
     {
-        var rotate = (Rotate)target;
+        var rotate = (ActivationRotate)target;
         rotate.transform.rotation = quat;
     }
 

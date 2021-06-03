@@ -14,6 +14,7 @@ public enum ListenerType
     Move,
     Toggle,
     Print,
+    PlayAudio,
 }
 
 public interface IListener
@@ -42,16 +43,19 @@ public class Listener : MonoBehaviour
             switch (responseType)
             {
                 case ListenerType.Rotate:
-                    AddType<Rotate>(gameObject);
+                    AddType<ResponseRotate>(gameObject);
                     break;
                 case ListenerType.Move:
-                    AddType<Move>(gameObject);
+                    AddType<ResponseMove>(gameObject);
                     break;
                 case ListenerType.Print:
-                    AddType<Print>(gameObject);
+                    AddType<ResponsePrint>(gameObject);
                     break;
                 case ListenerType.Toggle:
-                    AddType<Toggle>(gameObject);
+                    AddType<ResponseToggle>(gameObject);
+                    break;
+                case ListenerType.PlayAudio:
+                    AddType<PlayAudio>(gameObject);
                     break;
                 case ListenerType.Clear:
                     {

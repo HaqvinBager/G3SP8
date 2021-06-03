@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
-[CustomEditor(typeof(Toggle))]
+[CustomEditor(typeof(ResponseToggle))]
 public class ToggleEditor : Editor 
 {
 
@@ -12,9 +12,9 @@ public class ToggleEditor : Editor
         typeof(PrefabProtector),
         typeof(MeshFilter),
         typeof(MeshRenderer),
-        typeof(Toggle),
-        typeof(Rotate),
-        typeof(Move),
+        typeof(ResponseToggle),
+        typeof(ActivationRotate),
+        typeof(ActivationMove),
         typeof(Interest),
         typeof(Rigidbody)
     };
@@ -25,7 +25,7 @@ public class ToggleEditor : Editor
         serializedObject.Update();
         base.OnInspectorGUI();
 
-        Toggle script = (Toggle)target;
+        ResponseToggle script = (ResponseToggle)target;
 
         if(script.aTarget != null)
         {

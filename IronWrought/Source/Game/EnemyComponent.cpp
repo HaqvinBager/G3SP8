@@ -115,7 +115,6 @@ void CEnemyComponent::Update()//får bestämma vilket behaviour vi vill köra i 
 
 		float range = 6.0f;
 		Vector3 dir = GameObject().myTransform->Transform().Forward();
-		//måste offseta mot origo då angle för två vectorers kollas mot origo i världen
 		Vector3 enemyPos = GameObject().myTransform->Position();
 		Vector3 furthestLookingPoint = GameObject().myTransform->WorldPosition() + (GameObject().myTransform->Transform().Forward() * range);
 		Vector3 furthestLookingPointToEnemy = furthestLookingPoint - enemyPos;
@@ -268,7 +267,7 @@ void CEnemyComponent::Receive(const SMessage& aMsg)
 		}
 	}
 	if (aMsg.myMessageType == EMessageType::EnemyReachedLastPlayerPosition) {
-		std::cout << " REACHED " << std::endl;
+		//std::cout << " REACHED " << std::endl;
 		myHasReachedLastPlayerPosition = true;
 	}
 

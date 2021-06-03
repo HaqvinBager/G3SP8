@@ -2,17 +2,49 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayAudio : MonoBehaviour
+public class PlayAudio : MonoBehaviour, IListener
 {
-    // Start is called before the first frame update
-    void Start()
+    public ESFX soundEffect;
+    public bool myIs3D;
+    [Header("!Only Applicable for 3D sources!")]
+    public Vector3 myConeDirection;
+    public float myMinAttenuationAngle;
+    public float myMaxAttenuationAngle;
+    public float myMinimumVolume;
+
+    public void Remove()
     {
-        
+#if UNITY_EDITOR
+        DestroyImmediate(this);
+#endif
     }
 
-    // Update is called once per frame
-    void Update()
+    void OnDrawGizmos()
     {
-        
+        Gizmos.DrawRay(transform.position, myConeDirection.normalized);
+
+
+        //Vector3 dir = myConeDirection + new Vector3(Mathf.Cos(myMinAttenuationAngle * Mathf.Deg2Rad), 0.0f, Mathf.Sin(myMinAttenuationAngle * Mathf.Deg2Rad));
+        //Gizmos.color = Color.red * 0.75f;
+        //Gizmos.DrawRay(transform.position, newDir.normalized);
+        //Vector3 otherDir = myConeDirection + new Vector3(Mathf.Cos(myMinAttenuationAngle * Mathf.Deg2Rad), 0.0f, Mathf.Sin(myMinAttenuationAngle * Mathf.Deg2Rad));
+
+        //Gizmos.color = Color.blue * 0.5f;
+        //Gizmos.DrawRay(transform.position, otherDir.normalized);
     }
+
+
+    //void OnDrawGizmosSelected()
+    //{
+    //    Gizmos.DrawRay(transform.position, myConeDirection.normalized);
+ 
+    //    Vector3 dir = myConeDirection + new Vector3(Mathf.Sin(myMinAttenuationAngle * Mathf.Deg2Rad), 0.0f, Mathf.Sin(myMinAttenuationAngle * Mathf.Deg2Rad));
+    //    Gizmos.color = Color.red;
+    //    Gizmos.DrawRay(transform.position, dir.normalized);
+    //    //Vector3 otherDir = myConeDirection + new Vector3(Mathf.Sin(myMinAttenuationAngle * Mathf.Deg2Rad), 0.0f, Mathf.Sin(myMinAttenuationAngle * Mathf.Deg2Rad));
+
+    //    //Gizmos.color = Color.blue;
+    //    //Gizmos.DrawRay(transform.position, otherDir.normalized);
+    //}
+
 }

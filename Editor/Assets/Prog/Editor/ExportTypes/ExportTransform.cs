@@ -36,6 +36,12 @@ public class ExportTransform
                 if(transform.GetComponentInChildren<Renderer>() != null)
                 {
                     Renderer rend = transform.GetComponentInChildren<Renderer>();
+                    
+                    if(rend.sharedMaterial == null)
+                    {
+                        Debug.Log("Material is Missing on this Object [Click here to Highlight]", transform);
+                    }
+
                     if (rend.sharedMaterial.shader.name.Contains("Decal"))
                     {
                         link.rotation = transform.rotation.eulerAngles;

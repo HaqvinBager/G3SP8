@@ -37,6 +37,9 @@ public class ExportInstancedModel
         MeshFilter[] meshFilters = GameObject.FindObjectsOfType<MeshFilter>();
         foreach (var meshFilter in meshFilters)
         {
+            if (meshFilter.gameObject.scene.name.Contains("Gameplay"))
+                continue;
+
             if (Json.TryIsValidExport(meshFilter, out GameObject prefabParent, true))
             {
                 //if (prefabParent.GetComponent<Collider>() != null)
