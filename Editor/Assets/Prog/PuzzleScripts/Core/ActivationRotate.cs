@@ -10,7 +10,7 @@ public class ActivationRotate : MonoBehaviour, IKey
 {
     [HideInInspector]
     public Vector3 start, end;
-    public float duration;
+    public float duration = 0.5f;
 
     public void Remove()
     {

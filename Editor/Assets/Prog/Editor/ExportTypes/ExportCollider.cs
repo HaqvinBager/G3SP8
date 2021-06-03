@@ -55,7 +55,27 @@ public class ExportCollider : MonoBehaviour
             {
                 if (collider.GetComponent<Rigidbody>() == null)
                 {
-                    Debug.LogWarning("Skipping Object. Missing Rigidbody Component, Please add one if you want to Export this collider =)", collider.gameObject);
+                    if(collider.GetComponent<Key>() == null)
+                        Debug.LogWarning("Skipping Object. Missing Rigidbody Component, Please add one if you want to Export this collider =)", collider.gameObject);
+                    else
+                    {
+                        if (collider.GetType() == typeof(BoxCollider))
+                        {
+                            ColliderLink triggerLink = new ColliderLink();
+                            BoxCollider boxCollider = collider as BoxCollider;
+                            triggerLink.instanceID = collider.transform.GetInstanceID();
+                            triggerLink.isStatic = collider.gameObject.isStatic;
+                            triggerLink.isTrigger = collider.isTrigger;
+                            triggerLink.layer = 1 << collider.gameObject.layer;
+                            triggerLink.colliderType = (int)IronColliderType.BoxCollider;
+                            triggerLink.positionOffest = boxCollider.center;
+                            triggerLink.boxSize = boxCollider.size;
+                            colliderCollection.colliders.Add(triggerLink);
+                            Debug.Log("NOT Expecting: ClockHand(1) == " + collider.gameObject.name);
+
+                        }
+                    }
+
                     continue;
                 }
 
@@ -64,6 +84,7 @@ public class ExportCollider : MonoBehaviour
                 link.isStatic = collider.gameObject.isStatic;
                 link.isTrigger = collider.isTrigger;
                 link.layer = 1 << collider.gameObject.layer;             
+                
                 Rigidbody rigidbody = collider.GetComponent<Rigidbody>();
                 link.mass = rigidbody.mass;
                 link.localMassPosition = rigidbody.centerOfMass;
@@ -81,6 +102,7 @@ public class ExportCollider : MonoBehaviour
                     link.colliderType = (int)IronColliderType.BoxCollider;
                     link.positionOffest = boxCollider.center;
                     link.boxSize = boxCollider.size;
+                    Debug.Log("Expecting: ClockHand(1) == " + collider.gameObject.name);
                 }
                 else if (collider.GetType() == typeof(SphereCollider))
                 {

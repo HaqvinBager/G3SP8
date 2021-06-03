@@ -1057,7 +1057,11 @@ void CSceneManager::AddCollider(CScene& aScene, const std::vector<Binary::SColli
 		ColliderType colliderType = static_cast<ColliderType>(c.colliderType);
 		CRigidBodyComponent* rigidBody = gameObject->GetComponent<CRigidBodyComponent>();
 		
-		if (rigidBody == nullptr && c.isStatic == false)
+		if (c.isTrigger && !c.isKinematic)
+		{
+
+		}
+		else if (rigidBody == nullptr && c.isStatic == false)
 		{
 			gameObject->AddComponent<CRigidBodyComponent>(*gameObject, c.mass, c.localMassPosition, c.inertiaTensor, c.isKinematic);
 		}

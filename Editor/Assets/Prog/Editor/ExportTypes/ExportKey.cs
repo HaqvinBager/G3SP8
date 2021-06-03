@@ -29,6 +29,12 @@ public struct ActivationRotateData
 }
 
 [System.Serializable]
+public struct ActivationPlayAudioData
+{
+    
+}
+
+[System.Serializable]
 public struct KeyCollection
 {
     public List<KeyData> keys;
