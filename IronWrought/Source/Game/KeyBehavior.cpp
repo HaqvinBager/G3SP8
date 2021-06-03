@@ -26,6 +26,7 @@ void CKeyBehavior::Update()
 void CKeyBehavior::Register(IActivationBehavior* aBehaviour)
 {
 	std::cout << __FUNCTION__ << "----< \tActivation type registered \t" << aBehaviour->GameObject().Name() << std::endl;
+	aBehaviour->SetHasLock(mySettings.myHasLock);
 	myActivations.push_back(aBehaviour);
 }
 
@@ -39,7 +40,9 @@ void CKeyBehavior::TriggerActivations()
 			activation->OnActivation();
 		}
 		CMainSingleton::PostMaster().Send({ mySettings.myInteractNotify.c_str(), mySettings.myData });
-		Enabled(false);
+		
+		if(mySettings.myHasLock == 1)
+			Enabled(false);
 	}
 }
 

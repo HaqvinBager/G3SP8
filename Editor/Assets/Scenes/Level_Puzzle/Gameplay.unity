@@ -123,6 +123,135 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!134 &165903406
+PhysicMaterial:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: ' (Instance) (Instance) (Instance) (Instance) (Instance)'
+  dynamicFriction: 0.6
+  staticFriction: 0.6
+  bounciness: 0
+  frictionCombine: 0
+  bounceCombine: 0
+--- !u!1001 &470011810
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 429787783560923061, guid: 2d6b4b6f5dfdbbf4eb05473276e6dcdf, type: 3}
+      propertyPath: m_RootOrder
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 429787783560923061, guid: 2d6b4b6f5dfdbbf4eb05473276e6dcdf, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 429787783560923061, guid: 2d6b4b6f5dfdbbf4eb05473276e6dcdf, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 429787783560923061, guid: 2d6b4b6f5dfdbbf4eb05473276e6dcdf, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 429787783560923061, guid: 2d6b4b6f5dfdbbf4eb05473276e6dcdf, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 429787783560923061, guid: 2d6b4b6f5dfdbbf4eb05473276e6dcdf, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 429787783560923061, guid: 2d6b4b6f5dfdbbf4eb05473276e6dcdf, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 429787783560923061, guid: 2d6b4b6f5dfdbbf4eb05473276e6dcdf, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 429787783560923061, guid: 2d6b4b6f5dfdbbf4eb05473276e6dcdf, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 429787783560923061, guid: 2d6b4b6f5dfdbbf4eb05473276e6dcdf, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 71.591
+      objectReference: {fileID: 0}
+    - target: {fileID: 429787783560923061, guid: 2d6b4b6f5dfdbbf4eb05473276e6dcdf, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4392674735594319585, guid: 2d6b4b6f5dfdbbf4eb05473276e6dcdf, type: 3}
+      propertyPath: myLock
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 4392674735594319585, guid: 2d6b4b6f5dfdbbf4eb05473276e6dcdf, type: 3}
+      propertyPath: activationType
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 4392674735594319585, guid: 2d6b4b6f5dfdbbf4eb05473276e6dcdf, type: 3}
+      propertyPath: interactionType
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4392674735594319598, guid: 2d6b4b6f5dfdbbf4eb05473276e6dcdf, type: 3}
+      propertyPath: m_Center.y
+      value: -0.02
+      objectReference: {fileID: 0}
+    - target: {fileID: 4392674735594319598, guid: 2d6b4b6f5dfdbbf4eb05473276e6dcdf, type: 3}
+      propertyPath: m_Material
+      value: 
+      objectReference: {fileID: 165903406}
+    - target: {fileID: 8480936645670850351, guid: 2d6b4b6f5dfdbbf4eb05473276e6dcdf, type: 3}
+      propertyPath: m_Name
+      value: ClockHand (2)
+      objectReference: {fileID: 0}
+    - target: {fileID: 8480936645670850351, guid: 2d6b4b6f5dfdbbf4eb05473276e6dcdf, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 2d6b4b6f5dfdbbf4eb05473276e6dcdf, type: 3}
+--- !u!1 &470011811 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8480936645670850351, guid: 2d6b4b6f5dfdbbf4eb05473276e6dcdf, type: 3}
+  m_PrefabInstance: {fileID: 470011810}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &470011812
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 470011811}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9219059e0b5c1ef4f912d596336a5711, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  start: {x: 0, y: 0, z: 0}
+  end: {x: -0, y: 71.59108, z: -0}
+  duration: 0.5
+--- !u!54 &470011813
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 470011811}
+  serializedVersion: 2
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 0
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
 --- !u!1001 &505044638
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -727,31 +856,31 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 429787783560923061, guid: 2d6b4b6f5dfdbbf4eb05473276e6dcdf, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.41653132
+      value: 0.4093209
       objectReference: {fileID: 0}
     - target: {fileID: 429787783560923061, guid: 2d6b4b6f5dfdbbf4eb05473276e6dcdf, type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0
+      value: -0.07716732
       objectReference: {fileID: 0}
     - target: {fileID: 429787783560923061, guid: 2d6b4b6f5dfdbbf4eb05473276e6dcdf, type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0.9091214
+      value: 0.8933838
       objectReference: {fileID: 0}
     - target: {fileID: 429787783560923061, guid: 2d6b4b6f5dfdbbf4eb05473276e6dcdf, type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0
+      value: -0.16842535
       objectReference: {fileID: 0}
     - target: {fileID: 429787783560923061, guid: 2d6b4b6f5dfdbbf4eb05473276e6dcdf, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
+      value: 13.755
       objectReference: {fileID: 0}
     - target: {fileID: 429787783560923061, guid: 2d6b4b6f5dfdbbf4eb05473276e6dcdf, type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
-      value: 130.768
+      value: 128.766
       objectReference: {fileID: 0}
     - target: {fileID: 429787783560923061, guid: 2d6b4b6f5dfdbbf4eb05473276e6dcdf, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
-      value: -14.472
+      value: -16.493
       objectReference: {fileID: 0}
     - target: {fileID: 4392674735594319585, guid: 2d6b4b6f5dfdbbf4eb05473276e6dcdf, type: 3}
       propertyPath: myLock
@@ -772,15 +901,7 @@ PrefabInstance:
     - target: {fileID: 4392674735594319598, guid: 2d6b4b6f5dfdbbf4eb05473276e6dcdf, type: 3}
       propertyPath: m_Material
       value: 
-      objectReference: {fileID: 2099611692}
-    - target: {fileID: 0}
-      propertyPath: m_UseGravity
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 0}
-      propertyPath: m_IsKinematic
-      value: 1
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 1979560623}
     - target: {fileID: 8480936645670850351, guid: 2d6b4b6f5dfdbbf4eb05473276e6dcdf, type: 3}
       propertyPath: m_Name
       value: ClockHand (1)
@@ -809,7 +930,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   start: {x: -0, y: 130.76843, z: -0}
-  end: {x: -0.0000012806605, y: 130.76843, z: 345.52783}
+  end: {x: 13.754642, y: 128.7655, z: 343.5068}
   duration: 0.25
 --- !u!54 &1706386730
 Rigidbody:
@@ -989,13 +1110,13 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f0eea0eec377b9b42b3fab993932c19d, type: 3}
---- !u!134 &2099611692
+--- !u!134 &1979560623
 PhysicMaterial:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: ' (Instance) (Instance) (Instance)'
+  m_Name: ' (Instance) (Instance) (Instance) (Instance)'
   dynamicFriction: 0.6
   staticFriction: 0.6
   bounciness: 0
