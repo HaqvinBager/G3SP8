@@ -986,6 +986,14 @@ void CScene::ToggleSections(const int aSection)
 	myCurrentSection = aSection;
 	if(myPlayer)
 		myPlayer->Active(true);
+
+	auto enemyComponent = FindFirstObjectWithComponentInSection<CEnemyComponent>(aSection);
+	if (enemyComponent)
+	{
+		CGameObject* enemy = &enemyComponent->GameObject();
+		CMainSingleton::PostMaster().Send({ EMessageType::SetDynamicAudioSource, enemy });
+		AddEnemyShortcut(enemy, aSection);
+	}
 }
 void CScene::EnableSection(const int aSection)
 {
@@ -1002,6 +1010,14 @@ void CScene::EnableSection(const int aSection)
 	myCurrentSection = aSection;
 	if(myPlayer)
 		myPlayer->Active(true);
+
+	auto enemyComponent = FindFirstObjectWithComponentInSection<CEnemyComponent>(aSection);
+	if (enemyComponent)
+	{
+		CGameObject* enemy = &enemyComponent->GameObject();
+		CMainSingleton::PostMaster().Send({ EMessageType::SetDynamicAudioSource, enemy });
+		AddEnemyShortcut(enemy, aSection);
+	}
 }
 void CScene::DisableSection(const int aSection)
 {
