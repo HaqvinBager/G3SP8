@@ -12,5 +12,6 @@ COnLookLock::~COnLookLock()
 
 void COnLookLock::ActivateEvent()
 {
-	RunEvent();
+	if(Enabled())
+		RunEvent();
 }

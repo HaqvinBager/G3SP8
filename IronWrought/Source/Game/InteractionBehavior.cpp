@@ -57,13 +57,11 @@ void CInteractionBehavior::UpdateEyes()
 				if (hitTransform->GameObject().TryGetComponent(&key))
 				{
 					key->TriggerActivations();
-					return;
 				}
 				CLeftClickDownLock* leftClickDownLock = nullptr;
 				if (hitTransform->GameObject().TryGetComponent(&leftClickDownLock))
-				{
+				{					
 					leftClickDownLock->ActivateEvent();
-					return;
 				}
 			}
 		}
@@ -80,7 +78,6 @@ void CInteractionBehavior::UpdateEyes()
 				if (hitTransform->GameObject().TryGetComponent(&onLookLock))
 				{
 					onLookLock->ActivateEvent();
-					return;
 				}
 			}
 		}
