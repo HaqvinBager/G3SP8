@@ -312,7 +312,7 @@ void CGravityGloveComponent::InteractionLogicContinuous()
 	Vector3 start = GameObject().myTransform->GetWorldMatrix().Translation();
 	Vector3 dir = -GameObject().myTransform->GetWorldMatrix().Forward();
 
-	PxRaycastBuffer hit = CEngine::GetInstance()->GetPhysx().Raycast(start, dir, mySettings.myMaxDistance, CPhysXWrapper::ELayerMask::WORLD);// ELayerMask could be changed to ::DYNAMIC only? // Aki 2021 05 26
+	PxRaycastBuffer hit = CEngine::GetInstance()->GetPhysx().Raycast(start, dir, mySettings.myMaxDistance, CPhysXWrapper::ELayerMask::DYNAMIC_OBJECTS);// ELayerMask could be changed to ::DYNAMIC only? // Aki 2021 05 26
 	if (hit.getNbAnyHits() > 0)
 	{
 		CTransformComponent* transform = static_cast<CTransformComponent*>(hit.getAnyHit(0).actor->userData);
@@ -336,12 +336,12 @@ void CGravityGloveComponent::InteractionLogicContinuous()
 				{
 					Release();
 				}
-
-				if (myCurrentTarget.myRigidBodyPtr)
-					myCrosshairData.myTargetStatus = PostMaster::SCrossHairData::ETargetStatus::Holding;
-				else
-					myCrosshairData.myTargetStatus = PostMaster::SCrossHairData::ETargetStatus::Targeted;
 			}
+
+			if (myCurrentTarget.myRigidBodyPtr)
+				myCrosshairData.myTargetStatus = PostMaster::SCrossHairData::ETargetStatus::Holding;
+			else
+				myCrosshairData.myTargetStatus = PostMaster::SCrossHairData::ETargetStatus::Targeted;
 		}	
 		else
 		{

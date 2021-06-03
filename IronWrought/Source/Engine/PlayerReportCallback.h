@@ -15,5 +15,6 @@ public:
 	
 private:
 	physx::PxVec3 myHitNormal;
+	std::string myLastTag;
 };
 
