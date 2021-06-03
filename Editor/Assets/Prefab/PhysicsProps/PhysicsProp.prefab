@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 5809781630519710818}
   - component: {fileID: 6129004250201049599}
   - component: {fileID: 200618237978151595}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: PhysicsProp
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -90,6 +90,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mySoundIndex: 10
   myIs3D: 0
+  myConeDirection: {x: 0, y: 0, z: 0}
+  myMinAttenuationAngle: 0
+  myMaxAttenuationAngle: 0
+  myMinimumVolume: 0
 --- !u!1001 &9194630917975425126
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -144,6 +148,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 06bf3fe8e9b27884f91c2b36787956c4, type: 3}
       propertyPath: m_Name
       value: En_P_Box2
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 06bf3fe8e9b27884f91c2b36787956c4, type: 3}
+      propertyPath: m_Layer
+      value: 7
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 06bf3fe8e9b27884f91c2b36787956c4, type: 3}
