@@ -237,8 +237,8 @@ void CRenderManager::Render(CScene& aScene)
 		mySSAOBlurTexture.SetAsResourceOnSlot(23);
 		myLightRenderer.Render(maincamera, environmentlight);
 
-		myRenderStateManager.SetRasterizerState(CRenderStateManager::RasterizerStates::RASTERIZERSTATE_NOFACECULLING);
-		//myRenderStateManager.SetRasterizerState(CRenderStateManager::RasterizerStates::RASTERIZERSTATE_FRONTFACECULLING);
+		//myRenderStateManager.SetRasterizerState(CRenderStateManager::RasterizerStates::RASTERIZERSTATE_NOFACECULLING);
+		myRenderStateManager.SetRasterizerState(CRenderStateManager::RasterizerStates::RASTERIZERSTATE_FRONTFACECULLING);
 
 		myLightRenderer.Render(maincamera, onlySpotLights);
 		myLightRenderer.Render(maincamera, onlyPointLights);
