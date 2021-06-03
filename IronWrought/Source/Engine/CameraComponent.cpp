@@ -23,8 +23,8 @@ CCameraComponent::CCameraComponent(CGameObject& aParent, const float aFoV/*, flo
 	myTestTrauma = 0.4f;
 	myShake = 0.0f;
 	myDecayInSeconds = 0.5f;
-	myShakeSpeed = 0.685f;
-	myMaxShakeRotation = { 2.0f, 1.0f, 1.0f };
+	myShakeSpeed = 0.65f;
+	myMaxShakeRotation = { 2.05f, 0.5f, 0.5f };
 
 	myNoise = FastNoise::New<FastNoise::Simplex>();
 	//myNoise = PerlinNoise(214125213);

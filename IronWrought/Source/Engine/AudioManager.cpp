@@ -115,11 +115,11 @@ CAudioManager::CAudioManager()
 	myDynamicSource->Set3DMinMaxDistance(10.0f, 1000.0f);
 	//myDynamicSource->SetVolume(0.2f);
 
-	//SetDynamicTrack(EAmbience::DynamicTestDrums, EAmbience::DynamicTestGlitches, EAmbience::DynamicTestScreamer);
+	SetDynamicTrack(EAmbience::Basement1, EAmbience::Basement1, EAmbience::Basement2);
 
-	//myChannels[CAST(EChannel::DynamicChannel1)]->SetVolume(myDynamicChannel1);
-	//myChannels[CAST(EChannel::DynamicChannel2)]->SetVolume(myDynamicChannel2);
-	//myChannels[CAST(EChannel::DynamicChannel3)]->SetVolume(myDynamicChannel3);
+	myChannels[CAST(EChannel::DynamicChannel1)]->SetVolume(0.0f);
+	myChannels[CAST(EChannel::DynamicChannel2)]->SetVolume(0.0f);
+	myChannels[CAST(EChannel::DynamicChannel3)]->SetVolume(0.0f);
 }
 
 CAudioManager::~CAudioManager()
@@ -404,12 +404,16 @@ void CAudioManager::Receive(const SMessage& aMessage) {
 		myDynamicSource->Stop();
 		myWrapper.Play(myEnemyVoiceSounds[CAST(EEnemyVoiceLine::EnemyFoundPlayer)], myDynamicSource);
 		myDelayedAudio.push_back({myEnemyVoiceSounds[CAST(EEnemyVoiceLine::EnemyChasing)], myDynamicSource, 4.0f});
+		FadeChannelOverSeconds(EChannel::DynamicChannel2, 4.0f);
+		FadeChannelOverSeconds(EChannel::DynamicChannel3, 4.0f, false);
 	}break;
 
 	case EMessageType::EnemyLostPlayer:
 	{
 		myDynamicSource->Stop();
 		myWrapper.Play(myEnemyVoiceSounds[CAST(EEnemyVoiceLine::EnemyLostPlayer)], myDynamicSource);
+		FadeChannelOverSeconds(EChannel::DynamicChannel2, 4.0f, false);
+		FadeChannelOverSeconds(EChannel::DynamicChannel3, 4.0f);
 	}break;
 
 	case EMessageType::EnemyAttack:
@@ -429,46 +433,46 @@ void CAudioManager::Receive(const SMessage& aMessage) {
 
 	case EMessageType::StartGame:
 	{
-		std::string scene = *reinterpret_cast<std::string*>(aMessage.data);
-		if (strcmp(scene.c_str(), "VerticalSlice") == 0)
-		{
-			myChannels[CAST(EChannel::Ambience)]->Stop();
-			myWrapper.Play(myAmbienceAudio[CAST(EAmbience::Inside)], myChannels[CAST(EChannel::Ambience)]);
-			return;
-		}
+		//std::string scene = *reinterpret_cast<std::string*>(aMessage.data);
+		//if (strcmp(scene.c_str(), "VerticalSlice") == 0)
+		//{
+		//	myChannels[CAST(EChannel::Ambience)]->Stop();
+		//	myWrapper.Play(myAmbienceAudio[CAST(EAmbience::Inside)], myChannels[CAST(EChannel::Ambience)]);
+		//	return;
+		//}
 
-		if (strcmp(scene.c_str(), "Level_1-1") == 0)
-		{
-			myChannels[CAST(EChannel::Ambience)]->Stop();
-			myWrapper.Play(myAmbienceAudio[CAST(EAmbience::Inside)], myChannels[CAST(EChannel::Ambience)]);
-			return;
-		}
+		//if (strcmp(scene.c_str(), "Level_1-1") == 0)
+		//{
+		//	myChannels[CAST(EChannel::Ambience)]->Stop();
+		//	myWrapper.Play(myAmbienceAudio[CAST(EAmbience::Inside)], myChannels[CAST(EChannel::Ambience)]);
+		//	return;
+		//}
 
-		if (strcmp(scene.c_str(), "Level_1-2") == 0)
-		{
-			myChannels[CAST(EChannel::Ambience)]->Stop();
-			myWrapper.Play(myAmbienceAudio[CAST(EAmbience::Inside)], myChannels[CAST(EChannel::Ambience)]);
-			return;
-		}
+		//if (strcmp(scene.c_str(), "Level_1-2") == 0)
+		//{
+		//	myChannels[CAST(EChannel::Ambience)]->Stop();
+		//	myWrapper.Play(myAmbienceAudio[CAST(EAmbience::Inside)], myChannels[CAST(EChannel::Ambience)]);
+		//	return;
+		//}
 
-		if (strcmp(scene.c_str(), "Level_2-1") == 0)
-		{
-			myChannels[CAST(EChannel::Ambience)]->Stop();
-			myWrapper.Play(myAmbienceAudio[CAST(EAmbience::Outside)], myChannels[CAST(EChannel::Ambience)]);
-			return;
-		}
+		//if (strcmp(scene.c_str(), "Level_2-1") == 0)
+		//{
+		//	myChannels[CAST(EChannel::Ambience)]->Stop();
+		//	myWrapper.Play(myAmbienceAudio[CAST(EAmbience::Outside)], myChannels[CAST(EChannel::Ambience)]);
+		//	return;
+		//}
 
-		if (strcmp(scene.c_str(), "Level_2-2") == 0)
-		{
-			myChannels[CAST(EChannel::Ambience)]->Stop();
-			myWrapper.Play(myAmbienceAudio[CAST(EAmbience::Outside)], myChannels[CAST(EChannel::Ambience)]);
-			return;
-		}
+		//if (strcmp(scene.c_str(), "Level_2-2") == 0)
+		//{
+		//	myChannels[CAST(EChannel::Ambience)]->Stop();
+		//	myWrapper.Play(myAmbienceAudio[CAST(EAmbience::Outside)], myChannels[CAST(EChannel::Ambience)]);
+		//	return;
+		//}
 	}break;
 
 	case EMessageType::BootUpState:
 	{
-		myWrapper.Play(myAmbienceAudio[CAST(EAmbience::Inside)], myChannels[CAST(EChannel::Ambience)]);
+		//myWrapper.Play(myAmbienceAudio[CAST(EAmbience::Inside)], myChannels[CAST(EChannel::Ambience)]);
 		myWrapper.Play(myResearcherEventSounds[CAST(EResearcherEventVoiceLine::BootUp)], myChannels[CAST(EChannel::ResearcherVOX)]);
 	}break;
 
@@ -479,7 +483,7 @@ void CAudioManager::Receive(const SMessage& aMessage) {
 		myChannels[CAST(EChannel::ResearcherVOX)]->Stop();
 		myChannels[CAST(EChannel::RobotVOX)]->Stop();
 		myChannels[CAST(EChannel::SFX)]->Stop();
-		myWrapper.Play(myAmbienceAudio[CAST(EAmbience::Inside)], myChannels[CAST(EChannel::Ambience)]);
+		//myWrapper.Play(myAmbienceAudio[CAST(EAmbience::Inside)], myChannels[CAST(EChannel::Ambience)]);
 	}break;
 
 	case EMessageType::AddStaticAudioSource:
@@ -512,6 +516,65 @@ void CAudioManager::Receive(const SMessage& aMessage) {
 		myWrapper.Play(mySFXAudio[data.mySoundIndex], data.myChannel);
 	}break;
 
+	case EMessageType::Teleport:
+	{
+		PostMaster::STeleportData data = *reinterpret_cast<PostMaster::STeleportData*>(aMessage.data);
+		
+		switch (data.myTarget)
+		{
+		case PostMaster::ELevelName::Cottage_1:
+		{
+			//FadeChannelOverSeconds(EChannel::DynamicChannel1, 1.0f, false);
+			//FadeChannelOverSeconds(EChannel::DynamicChannel2, 1.0f);
+			//FadeChannelOverSeconds(EChannel::DynamicChannel3, 1.0f);
+		}break;
+		case PostMaster::ELevelName::Cottage_2:
+		{
+			//FadeChannelOverSeconds(EChannel::DynamicChannel1, 1.0f, false);
+			//FadeChannelOverSeconds(EChannel::DynamicChannel2, 1.0f);
+			//FadeChannelOverSeconds(EChannel::DynamicChannel3, 1.0f);
+		}break;
+		case PostMaster::ELevelName::Basement_1_1_A:
+		{
+			FadeChannelOverSeconds(EChannel::DynamicChannel2, 1.0f, false);
+			FadeChannelOverSeconds(EChannel::DynamicChannel1, 1.0f);
+			FadeChannelOverSeconds(EChannel::DynamicChannel3, 1.0f);
+		}break;
+		case PostMaster::ELevelName::Basement_1_1_B:
+		{
+			FadeChannelOverSeconds(EChannel::DynamicChannel2, 1.0f, false);
+			FadeChannelOverSeconds(EChannel::DynamicChannel1, 1.0f);
+			FadeChannelOverSeconds(EChannel::DynamicChannel3, 1.0f);
+		}break;
+		case PostMaster::ELevelName::Basement_1_2_A:
+		{
+			FadeChannelOverSeconds(EChannel::DynamicChannel2, 1.0f, false);
+			FadeChannelOverSeconds(EChannel::DynamicChannel1, 1.0f);
+			FadeChannelOverSeconds(EChannel::DynamicChannel3, 1.0f);
+		}break;
+		case PostMaster::ELevelName::Basement_1_2_B:
+		{
+			FadeChannelOverSeconds(EChannel::DynamicChannel2, 1.0f, false);
+			FadeChannelOverSeconds(EChannel::DynamicChannel1, 1.0f);
+			FadeChannelOverSeconds(EChannel::DynamicChannel3, 1.0f);
+		}break;
+		case PostMaster::ELevelName::Basement_1_3:
+		{
+			FadeChannelOverSeconds(EChannel::DynamicChannel2, 1.0f, false);
+			FadeChannelOverSeconds(EChannel::DynamicChannel1, 1.0f);
+			FadeChannelOverSeconds(EChannel::DynamicChannel3, 1.0f);
+		}break;
+		case PostMaster::ELevelName::Basement_2:
+		{
+			FadeChannelOverSeconds(EChannel::DynamicChannel2, 1.0f, false);
+			FadeChannelOverSeconds(EChannel::DynamicChannel1, 1.0f);
+			FadeChannelOverSeconds(EChannel::DynamicChannel3, 1.0f);
+		}break;
+		default:
+			break;
+		}
+	}break;
+	
 	case EMessageType::PauseMenu:
 	{
 		Pause();
@@ -526,7 +589,7 @@ void CAudioManager::Receive(const SMessage& aMessage) {
 	}
 }
 
-void CAudioManager::Receive(const SStringMessage& aMessage)
+void CAudioManager::Receive(const SStringMessage& /*aMessage*/)
 {
 	//Puzzle Clips
 	//
@@ -534,33 +597,33 @@ void CAudioManager::Receive(const SStringMessage& aMessage)
 	//myWrapper.Play(myAmbienceAudio[0], myChannels[0]);
 
 
-	if (strcmp(aMessage.myMessageType, "Level_1-1") == 0)
-	{
-		myChannels[CAST(EChannel::Ambience)]->Stop();
-		myWrapper.Play(myAmbienceAudio[CAST(EAmbience::Inside)], myChannels[CAST(EChannel::Ambience)]);
-		return;
-	}
+	//if (strcmp(aMessage.myMessageType, "Level_1-1") == 0)
+	//{
+	//	myChannels[CAST(EChannel::Ambience)]->Stop();
+	//	myWrapper.Play(myAmbienceAudio[CAST(EAmbience::Inside)], myChannels[CAST(EChannel::Ambience)]);
+	//	return;
+	//}
 
-	if (strcmp(aMessage.myMessageType, "Level_1-2") == 0)
-	{
-		myChannels[CAST(EChannel::Ambience)]->Stop();
-		myWrapper.Play(myAmbienceAudio[CAST(EAmbience::Inside)], myChannels[CAST(EChannel::Ambience)]);
-		return;
-	}
+	//if (strcmp(aMessage.myMessageType, "Level_1-2") == 0)
+	//{
+	//	myChannels[CAST(EChannel::Ambience)]->Stop();
+	//	myWrapper.Play(myAmbienceAudio[CAST(EAmbience::Inside)], myChannels[CAST(EChannel::Ambience)]);
+	//	return;
+	//}
 
-	if (strcmp(aMessage.myMessageType, "Level_2-1") == 0)
-	{
-		myChannels[CAST(EChannel::Ambience)]->Stop();
-		myWrapper.Play(myAmbienceAudio[CAST(EAmbience::Outside)], myChannels[CAST(EChannel::Ambience)]);
-		return;
-	}
+	//if (strcmp(aMessage.myMessageType, "Level_2-1") == 0)
+	//{
+	//	myChannels[CAST(EChannel::Ambience)]->Stop();
+	//	myWrapper.Play(myAmbienceAudio[CAST(EAmbience::Outside)], myChannels[CAST(EChannel::Ambience)]);
+	//	return;
+	//}
 
-	if (strcmp(aMessage.myMessageType, "Level_2-2") == 0)
-	{
-		myChannels[CAST(EChannel::Ambience)]->Stop();
-		myWrapper.Play(myAmbienceAudio[CAST(EAmbience::Outside)], myChannels[CAST(EChannel::Ambience)]);
-		return;
-	}
+	//if (strcmp(aMessage.myMessageType, "Level_2-2") == 0)
+	//{
+	//	myChannels[CAST(EChannel::Ambience)]->Stop();
+	//	myWrapper.Play(myAmbienceAudio[CAST(EAmbience::Outside)], myChannels[CAST(EChannel::Ambience)]);
+	//	return;
+	//}
 
 }
 
@@ -704,6 +767,8 @@ void CAudioManager::SubscribeToMessages()
 
 	CMainSingleton::PostMaster().Subscribe(EMessageType::EnemyStateChange, this);
 
+	CMainSingleton::PostMaster().Subscribe(EMessageType::Teleport, this);
+
 	//Pussel
 	CMainSingleton::PostMaster().Subscribe(EMessageType::PlayDynamicAudioSource, this);
 
@@ -767,6 +832,7 @@ void CAudioManager::UnsubscribeToMessages()
 	//Pussel
 	CMainSingleton::PostMaster().Unsubscribe(EMessageType::PlayDynamicAudioSource, this);
 
+	CMainSingleton::PostMaster().Subscribe(EMessageType::Teleport, this);
 }
 
 std::string CAudioManager::GetPath(EMusic type) const
@@ -781,7 +847,7 @@ std::string CAudioManager::GetPath(EAmbience type) const
 {
 	std::string path = myAmbiencePath;
 	path.append(TranslateEnum(type));
-	path.append(".mp3");
+	path.append(".wav");
 	return path;
 }
 
@@ -856,20 +922,10 @@ std::string CAudioManager::TranslateEnum(EMusic /*enumerator*/) const
 std::string CAudioManager::TranslateEnum(EAmbience enumerator) const {
 	switch (enumerator)
 	{
-	case EAmbience::AirVent:
-		return "AirVent";
-	case EAmbience::Inside:
-		return "Inside";
-	case EAmbience::Outside:
-		return "Outside";
-	case EAmbience::EnemyArea:
-		return "EnemyArea";
-	case EAmbience::DynamicTestDrums:
-		return "DynamicTestDrums";
-	case EAmbience::DynamicTestGlitches:
-		return "DynamicTestGlitches";
-	case EAmbience::DynamicTestScreamer:
-		return "DynamicTestScreamer";
+	case EAmbience::Basement1:
+		return "Basement1";
+	case EAmbience::Basement2:
+		return "Basement2";
 	default:
 		return "";
 	}
@@ -890,6 +946,10 @@ std::string CAudioManager::TranslateEnum(EPropAmbience enumerator) const
 		return "Refrigerator";
 	case EPropAmbience::Toilet:
 		return "Toilet";
+	case EPropAmbience::PhoneCalling:
+		return "PhoneCalling";
+	case EPropAmbience::PhoneDead:
+		return "PhoneDead";
 	default:
 		return "";
 	}
