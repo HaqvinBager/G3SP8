@@ -10,7 +10,7 @@ CSpotLightComponent::CSpotLightComponent(CGameObject& aParent, const Binary::SSp
 	: CBehavior(aParent)
 	, myColor(aData.color)
 	, myIntensity(aData.intensity)
-	, myDirection(-GameObject().myTransform->Transform().Forward())
+	, myDirection(GameObject().myTransform->GetLocalMatrix().Forward())
 	, myRange(aData.range)
 	, myWideness(aData.outerSpotAngle)
 	//, myInnerWidness(aData.innerSpotAngle) ? =)) /Axel Savage 26/05/2021
@@ -22,7 +22,7 @@ CSpotLightComponent::CSpotLightComponent(CGameObject& aParent, const Binary::SSp
 	mySpotLight->SetRange(myRange);
 	mySpotLight->SetDirection(myDirection);
 	mySpotLight->SetWideness(2.5f);
-	mySpotLight->SetInnerOuterAngle({ aData.innerSpotAngle, aData.outerSpotAngle });
+	mySpotLight->SetInnerOuterAngle({ aData.innerSpotAngle * 0.5f, aData.outerSpotAngle * 0.5f });
 	mySpotLight->SetIsVolumetric(aData.isVolumetric ? 1 : 0);
 }
 
