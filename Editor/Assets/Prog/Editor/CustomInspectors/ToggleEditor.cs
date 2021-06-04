@@ -2,16 +2,17 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
+
 [CustomEditor(typeof(ResponseToggle))]
 public class ToggleEditor : Editor 
 {
 
     private List<System.Type> validTypes = new List<System.Type>()
     {
-        typeof(Transform),
-        typeof(PrefabProtector),
+        typeof(Light),
+        typeof(BoxCollider),
         typeof(MeshFilter),
-        typeof(MeshRenderer),
+        //typeof(),
         typeof(ResponseToggle),
         typeof(ActivationRotate),
         typeof(ActivationMove),
@@ -81,15 +82,15 @@ public class ToggleEditor : Editor
         serializedObject.ApplyModifiedProperties();
     }
 
-    private bool CheckValidity(Component comp, params System.Type[] types)
+    private bool CheckValidity(Component comp, params System.Type[] someValidTypes)
     {
         System.Type compType = comp.GetType();
-        foreach(System.Type type in types)
+        foreach(System.Type type in someValidTypes)
         {
             if (compType == type)
-                return false;
+                return true;
         }
-        return true;
+        return false;
     }
 
 }
