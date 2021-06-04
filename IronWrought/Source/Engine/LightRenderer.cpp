@@ -350,7 +350,7 @@ void CLightRenderer::Render(CCameraComponent* aCamera, std::vector<CPointLight*>
 	if (aPointLightList.empty())
 		return;
 
-	SM::Matrix cameraMatrix = /*aCamera->GetViewMatrix()*/aCamera->GameObject().myTransform->Transform();
+	SM::Matrix cameraMatrix = aCamera->GameObject().myTransform->Transform();
 	myFrameBufferData.myCameraPosition = SM::Vector4{ cameraMatrix._41, cameraMatrix._42, cameraMatrix._43, 1.f };
 	myFrameBufferData.myToCameraSpace = cameraMatrix.Invert();
 	myFrameBufferData.myToWorldFromCamera = cameraMatrix;
@@ -358,7 +358,7 @@ void CLightRenderer::Render(CCameraComponent* aCamera, std::vector<CPointLight*>
 	myFrameBufferData.myToCameraFromProjection = aCamera->GetProjection().Invert();
 	BindBuffer(myFrameBuffer, myFrameBufferData, "Frame Buffer");
 	myContext->VSSetConstantBuffers(0, 1, &myFrameBuffer);
-	myContext->GSSetConstantBuffers(0, 1, &myFrameBuffer);
+	//myContext->GSSetConstantBuffers(0, 1, &myFrameBuffer);
 	myContext->PSSetConstantBuffers(0, 1, &myFrameBuffer);
 
 	myContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY::D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
@@ -396,7 +396,7 @@ void CLightRenderer::Render(CCameraComponent* aCamera, std::vector<CSpotLight*>&
 	if (aSpotLightList.empty())
 		return;
 
-	SM::Matrix cameraMatrix = /*aCamera->GetViewMatrix()*/aCamera->GameObject().myTransform->Transform();
+	SM::Matrix cameraMatrix = aCamera->GameObject().myTransform->Transform();
 	myFrameBufferData.myCameraPosition = SM::Vector4{ cameraMatrix._41, cameraMatrix._42, cameraMatrix._43, 1.f };
 	myFrameBufferData.myToCameraSpace = cameraMatrix.Invert();
 	myFrameBufferData.myToWorldFromCamera = cameraMatrix;
@@ -404,17 +404,13 @@ void CLightRenderer::Render(CCameraComponent* aCamera, std::vector<CSpotLight*>&
 	myFrameBufferData.myToCameraFromProjection = aCamera->GetProjection().Invert();
 	BindBuffer(myFrameBuffer, myFrameBufferData, "Frame Buffer");
 	myContext->VSSetConstantBuffers(0, 1, &myFrameBuffer);
-	//myContext->GSSetConstantBuffers(0, 1, &myFrameBuffer);
 	myContext->PSSetConstantBuffers(0, 1, &myFrameBuffer);
-
 
 	myContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY::D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	myContext->IASetInputLayout(myInputLayout);
 	myContext->IASetVertexBuffers(0, 1, &myPointLightVertexBuffer, &myPointLightStride, &myPointLightOffset);
 	myContext->IASetIndexBuffer(myPointLightIndexBuffer, DXGI_FORMAT_R32_UINT, 0);
 
-	//UINT stride = sizeof(Vector4);
-	//UINT offset = 0;
 	for (CSpotLight* currentInstance : aSpotLightList)
 	{
 		const SM::Vector3& position = currentInstance->GetPosition();
@@ -433,21 +429,13 @@ void CLightRenderer::Render(CCameraComponent* aCamera, std::vector<CSpotLight*>&
 		BindBuffer(mySpotLightBuffer, mySpotLightBufferData, "Spot Light Buffer");
 		myContext->VSSetConstantBuffers(3, 1, &mySpotLightBuffer);
 		myContext->PSSetConstantBuffers(3, 1, &mySpotLightBuffer);
-		//myContext->GSSetConstantBuffers(3, 1, &mySpotLightBuffer);
-		//myContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY::D3D11_PRIMITIVE_TOPOLOGY_POINTLIST);
-		//myContext->IASetInputLayout(myInputLayout);
-		//myContext->IASetVertexBuffers(0, 1, &myPointLightVertexBuffer, &stride, &offset);
-		//myContext->IASetIndexBuffer(nullptr, DXGI_FORMAT_UNKNOWN, 0);
 
 		myContext->VSSetShader(mySpotLightVertexShader, nullptr, 0);
-		//myContext->GSSetShader(mySpotLightGeometryShader, nullptr, 0);
 
 		myContext->PSSetShader(mySpotLightShader, nullptr, 0);
 		myContext->PSSetSamplers(0, 1, &mySamplerState);
 		
 		myContext->DrawIndexed(myPointLightNumberOfIndices, 0, 0);
-
-		//myContext->Draw(1, 0);
 		CRenderManager::myNumberOfDrawCallsThisFrame++;
 	}
 
