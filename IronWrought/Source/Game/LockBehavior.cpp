@@ -44,9 +44,12 @@ void CLockBehavior::OnDisable()
 
 void CLockBehavior::RunEvent()
 {
-	std::cout << __FUNCTION__ << "----< \tLock Activated \t" << GameObject().Name() << std::endl;
-	myHasTriggered = true;
-	CMainSingleton::PostMaster().Send({ mySettings.myOnNotify.c_str(), mySettings.myData });
+	if (myAmountOfKeys >= myMaxAmountOfKeys)
+	{
+		std::cout << __FUNCTION__ << "----< \tLock Activated \t" << GameObject().Name() << std::endl;
+		myHasTriggered = true;
+		CMainSingleton::PostMaster().Send({ mySettings.myOnNotify.c_str(), mySettings.myData });
+	}
 }
 
 void CLockBehavior::RunEventEditor()
