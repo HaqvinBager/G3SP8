@@ -37,26 +37,36 @@ public class PrefabProtector : MonoBehaviour
             {
                 //if (smartAddCollider)
                 //{             
-                    //bool hasCollider = GetComponent<BoxCollider>();
-                    //if (myHasCollider != hasCollider)
-                    //{
-                    //    if (transform.childCount > 0)
-                    //    {
-                    //        if (transform.GetChild(0).TryGetComponent(out Renderer rend))
-                    //        {
-                    //            BoxCollider childCollider = rend.gameObject.AddComponent<BoxCollider>();
-                    //            BoxCollider newCollider = GetComponent<BoxCollider>();
-                    //            newCollider.size = childCollider.size;
-                    //            newCollider.center = childCollider.center;
-                    //            if (GetComponent<Rigidbody>() == null)
-                    //            {
-                    //                gameObject.AddComponent<Rigidbody>().isKinematic = true;
-                    //            }
-                    //            DestroyImmediate(childCollider);
-                    //        }
-                    //    }
-                    //}
-                //}
+                bool hasCollider = GetComponent<BoxCollider>();
+                if (myHasCollider != hasCollider)
+                {
+                    if (transform.childCount > 0)
+                    {
+                        if (transform.GetChild(0).TryGetComponent(out Renderer rend))
+                        {
+                            if (GetComponent<Rigidbody>() == null)
+                            {
+                                gameObject.AddComponent<Rigidbody>().isKinematic = true;
+                            }
+
+                            //BoxCollider childCollider = rend.gameObject.AddComponent<BoxCollider>();
+                            //BoxCollider newCollider = GetComponent<BoxCollider>();
+                            //newCollider.size = childCollider.size;
+                            //if (newCollider.size.x <= 0.0f || newCollider.size.y <= 0.0f || newCollider.size.z <= 0.0f)
+                            //{
+                            //    Debug.LogWarning("Box Collider Size is == 0! This will cause a crash in IronWrought", newCollider);
+                            //}
+                            //newCollider.center = childCollider.center;
+                            //DestroyImmediate(childCollider);
+                        }
+                    }
+                }
+
+                BoxCollider boxCollider = collider as BoxCollider;
+                if (boxCollider.size.x <= 0.0f || boxCollider.size.y <= 0.0f || boxCollider.size.z <= 0.0f)
+                {
+                    Debug.LogWarning("Box Collider Size is == 0! This will cause a crash in IronWrought", boxCollider);
+                }
 
                 if (GetComponent<Rigidbody>() == null)
                 {
@@ -68,7 +78,6 @@ public class PrefabProtector : MonoBehaviour
                 }
             }
         }
-
         myHasCollider = GetComponent<BoxCollider>();
     }
 }
