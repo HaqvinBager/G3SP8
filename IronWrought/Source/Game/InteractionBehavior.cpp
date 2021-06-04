@@ -8,6 +8,7 @@
 #include "KeyBehavior.h"
 #include "KeyBehavior.h"
 #include "LeftClickDownLock.h"
+#include "BoxColliderComponent.h"
 #include "OnLookLock.h"
 
 CInteractionBehavior::CInteractionBehavior(CGameObject& aParent)
@@ -56,11 +57,16 @@ void CInteractionBehavior::UpdateEyes()
 				CKeyBehavior* key = nullptr;
 				if (hitTransform->GameObject().TryGetComponent(&key))
 				{
-					key->TriggerActivations();
+					CBoxColliderComponent* boxCollider = nullptr;
+					if (key->GameObject().TryGetComponent(&boxCollider))
+					{
+						if (boxCollider->Enabled())
+							key->TriggerActivations();
+					}
 				}
 				CLeftClickDownLock* leftClickDownLock = nullptr;
 				if (hitTransform->GameObject().TryGetComponent(&leftClickDownLock))
-				{					
+				{
 					leftClickDownLock->ActivateEvent();
 				}
 			}
