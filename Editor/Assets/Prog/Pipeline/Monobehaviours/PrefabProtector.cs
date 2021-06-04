@@ -36,27 +36,26 @@ public class PrefabProtector : MonoBehaviour
             else if (collider.GetType() == typeof(BoxCollider))
             {
                 //if (smartAddCollider)
-                //{
-                    bool hasCollider = GetComponent<BoxCollider>();
-                    if (myHasCollider != hasCollider)
-                    {
-                        if (transform.childCount > 0)
-                        {
-                            if (transform.GetChild(0).TryGetComponent(out Renderer rend))
-                            {
-                                BoxCollider childCollider = rend.gameObject.AddComponent<BoxCollider>();
-                                BoxCollider newCollider = GetComponent<BoxCollider>();
-                                newCollider.size = childCollider.size;
-                                newCollider.center = childCollider.center;
-
-                                if (GetComponent<Rigidbody>() == null)
-                                {
-                                    gameObject.AddComponent<Rigidbody>().isKinematic = true;
-                                }
-                                DestroyImmediate(childCollider);
-                            }
-                        }
-                    }
+                //{             
+                    //bool hasCollider = GetComponent<BoxCollider>();
+                    //if (myHasCollider != hasCollider)
+                    //{
+                    //    if (transform.childCount > 0)
+                    //    {
+                    //        if (transform.GetChild(0).TryGetComponent(out Renderer rend))
+                    //        {
+                    //            BoxCollider childCollider = rend.gameObject.AddComponent<BoxCollider>();
+                    //            BoxCollider newCollider = GetComponent<BoxCollider>();
+                    //            newCollider.size = childCollider.size;
+                    //            newCollider.center = childCollider.center;
+                    //            if (GetComponent<Rigidbody>() == null)
+                    //            {
+                    //                gameObject.AddComponent<Rigidbody>().isKinematic = true;
+                    //            }
+                    //            DestroyImmediate(childCollider);
+                    //        }
+                    //    }
+                    //}
                 //}
 
                 if (GetComponent<Rigidbody>() == null)
