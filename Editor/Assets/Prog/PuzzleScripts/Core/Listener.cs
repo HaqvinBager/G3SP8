@@ -57,6 +57,7 @@ public class Listener : MonoBehaviour
                 case ListenerType.PlayAudio:
                     AddType<ResponsePlayAudio>(gameObject);
                     break;
+
                 case ListenerType.Clear:
                     {
                         IListener[] others = GetComponents<IListener>();

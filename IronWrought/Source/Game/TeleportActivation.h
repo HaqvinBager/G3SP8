@@ -28,6 +28,6 @@ private:
 	Vector3 myOnTeleportToMeRotation;// 12
 	PostMaster::ELevelName myTeleportTo;// 4
 	float myTeleportTimer;// 4
-	CTransformComponent* myTeleportTarget;// 8
+	bool myHasTeleported;
 };
  

@@ -724,16 +724,17 @@ void CSceneManager::AddPuzzleActivationTeleporter(CScene& aScene, RapidArray som
 		PostMaster::ELevelName target = static_cast<PostMaster::ELevelName>(activation["teleporterTarget"].GetInt());
 
 		Vector3 teleportToPos;
-		teleportToPos.x = activation["teleportToPosX"].GetFloat();
-		teleportToPos.y = activation["teleportToPosY"].GetFloat();
-		teleportToPos.z = activation["teleportToPosZ"].GetFloat();
+		teleportToPos.x = activation["teleportToPos"]["x"].GetFloat();
+		teleportToPos.y = activation["teleportToPos"]["y"].GetFloat();
+		teleportToPos.z = activation["teleportToPos"]["z"].GetFloat();
 
 		Vector3 teleportToRot;
-		teleportToRot.x = activation["teleportToRotX"].GetFloat();
-		teleportToRot.y = activation["teleportToRotY"].GetFloat();
-		teleportToRot.z = activation["teleportToRotZ"].GetFloat();
+		teleportToRot.x = activation["teleportToRot"]["x"].GetFloat();
+		teleportToRot.y = activation["teleportToRot"]["y"].GetFloat();
+		teleportToRot.z = activation["teleportToRot"]["z"].GetFloat();
 	
 		float aTimeUntilTeleport = activation["timeUntilTeleport"].GetFloat();
+		aTimeUntilTeleport = (aTimeUntilTeleport <= 0.0f ? 0.01f : aTimeUntilTeleport);
 
 		gameObject->AddComponent<CTeleportActivation>(*gameObject, name, target, teleportToPos, teleportToRot, aTimeUntilTeleport);
 	}
