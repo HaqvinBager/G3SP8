@@ -260,20 +260,14 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!114 &470011814 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 4392674735594319585, guid: 2d6b4b6f5dfdbbf4eb05473276e6dcdf, type: 3}
-  m_PrefabInstance: {fileID: 470011810}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 470011811}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 612d23f628453ef479b54a4a0238406c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!4 &470011815 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 429787783560923061, guid: 2d6b4b6f5dfdbbf4eb05473276e6dcdf, type: 3}
+  m_PrefabInstance: {fileID: 470011810}
+  m_PrefabAsset: {fileID: 0}
+--- !u!65 &470011816 stripped
+BoxCollider:
+  m_CorrespondingSourceObject: {fileID: 4392674735594319598, guid: 2d6b4b6f5dfdbbf4eb05473276e6dcdf, type: 3}
   m_PrefabInstance: {fileID: 470011810}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &505044638
@@ -471,7 +465,7 @@ MonoBehaviour:
   enabledOnStart: 0
   enableOnNotify: 1
   aTarget: {fileID: 470011815}
-  aTargetType: {fileID: 470011814}
+  aTargetType: {fileID: 470011816}
 --- !u!134 &940394785
 PhysicMaterial:
   m_ObjectHideFlags: 0
