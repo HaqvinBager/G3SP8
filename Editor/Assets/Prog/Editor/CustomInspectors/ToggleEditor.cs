@@ -12,8 +12,6 @@ public class ToggleEditor : Editor
         typeof(Light),
         typeof(BoxCollider),
         typeof(MeshFilter),
-        //typeof(),
-        typeof(ResponseToggle),
         typeof(ActivationRotate),
         typeof(ActivationMove),
         typeof(Interest),
