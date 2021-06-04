@@ -19,19 +19,20 @@ public:
 
 private:
 	template<typename T>
-	void SetTarget();
+	void SetTarget(const CGameObject& aTarget);
 
 	CBehavior* myTarget;
 	SSettings mySettings;
 };
 
 template<typename T>
-inline void CToggleResponse::SetTarget()
+inline void CToggleResponse::SetTarget(const CGameObject& aTarget)
 {
 	T* componentType = nullptr;
-	if (GameObject().TryGetComponent(&componentType))
+	if (aTarget.TryGetComponent(&componentType))
 	{
 		myTarget = componentType;
+		//myTarget->Enabled(mySettings.myEnableOnStart);
 	}
 	else
 	{
