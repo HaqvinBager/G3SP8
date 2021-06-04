@@ -19,7 +19,7 @@ ImGui::CVFXEditorWindow::CVFXEditorWindow(const char* aName)
 	: CWindow(aName)
 	, myCurrentMenu(EVFXEditorMenu::MainMenu)
 {
-	std::string saveDestination = "Assets/Graphics/VFX/JSON/VFXSystem_Tester.json";
+	std::string saveDestination = "Assets/IronWrought/VFX/VFX_JSON/VFXSystem_Tester.json";
 	ZeroMemory(mySaveDestination, 256);
 	memcpy(&mySaveDestination[0], saveDestination.c_str(), strlen(saveDestination.c_str()));
 
@@ -41,7 +41,7 @@ ImGui::CVFXEditorWindow::~CVFXEditorWindow()
 
 void ImGui::CVFXEditorWindow::OnEnable()
 {
-	std::vector<std::string> generatedJsonFiles = CFolderUtility::GetFileNamesInFolder(ASSETPATH("Assets/Graphics/VFX/JSON/"), ".json", ".json");
+	std::vector<std::string> generatedJsonFiles = CFolderUtility::GetFileNamesInFolder(ASSETPATH("Assets/IronWrought/VFX/VFX_JSON/"), ".json", ".json");
 	for (auto& file : generatedJsonFiles) {
 		auto startIndex = file.find_first_of('_') + 1;
 		std::string filePath = file.substr(startIndex, file.length() - 15);
@@ -184,7 +184,7 @@ void ImGui::CVFXEditorWindow::ShowMainMenu()
 					return;
 				}
 
-				std::string saveDestination = "Assets/Graphics/VFX/JSON/VFXSystem_";
+				std::string saveDestination = "Assets/IronWrought/VFX/VFX_JSON/VFXSystem_";
 				saveDestination.append(myEffectFilePaths[mySelectedIndex] + ".json");
 				ZeroMemory(mySaveDestination, 256);
 				memcpy(&mySaveDestination[0], saveDestination.c_str(), strlen(saveDestination.c_str()));
