@@ -72,8 +72,8 @@ public struct ListenerCollection
     public List<ResponsePlayAudioData> responsePlayAudios;
 }
 
-public class ExportResponse 
-{  
+public class ExportResponse
+{
     public static ListenerCollection Export()
     {
         ListenerCollection collection = new ListenerCollection();
@@ -85,7 +85,7 @@ public class ExportResponse
         collection.responsePlayAudios = new List<ResponsePlayAudioData>();
 
         Listener[] listeners = GameObject.FindObjectsOfType<Listener>();
-        foreach(Listener listener in listeners)
+        foreach (Listener listener in listeners)
         {
             ListenerData data = new ListenerData();
             data.onResponseNotify = listener.myLock?.onLockNotify?.name;
@@ -107,7 +107,14 @@ public class ExportResponse
         {
             ResponseToggleData data = new ResponseToggleData();
             data.instanceID = obj.transform.GetInstanceID();
-            data.type = obj.aTargetType.GetType().Name;
+            if (obj.aTargetType.GetType() == typeof(Light))
+            {
+                Light light = obj.aTargetType as Light;
+                data.type = light.type.ToString();
+            }
+            else
+                data.type = obj.aTargetType.GetType().Name;
+            
             if (obj.aTarget == null)
                 Debug.Log("Missing Reference", obj);
             data.target = obj.aTarget.transform.GetInstanceID();
@@ -170,7 +177,7 @@ public class ExportResponse
             playAudioData.minimumVolume = playAudio.myMinimumVolume;
             playAudioData.instanceID = playAudio.transform.GetInstanceID();
             playAudioData.soundEffect = (int)playAudio.soundEffect;
-           // Debug.Log("Audio: " + playAudioData.soundEffect.ToString());
+            // Debug.Log("Audio: " + playAudioData.soundEffect.ToString());
             collection.Add(playAudioData);
         }
     }
