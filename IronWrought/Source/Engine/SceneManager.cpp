@@ -873,15 +873,15 @@ void CSceneManager::AddPuzzleResponseAudio(CScene& aScene, RapidArray someData)
 		//bool is3D = response["myIs3D"].GetInt() ? 1 : 0;
 		settings.myForward = Vector3
 		{
-			response["myConeDirection"]["x"].GetFloat(),
-			response["myConeDirection"]["y"].GetFloat(),
-			response["myConeDirection"]["z"].GetFloat(),
+			response["coneDirection"]["x"].GetFloat(),
+			response["coneDirection"]["y"].GetFloat(),
+			response["coneDirection"]["z"].GetFloat(),
 		};
-		settings.myStartAttenuationAngle = response["myMinAttenuationAngle"].GetFloat();
-		settings.myMaxAttenuationAngle = response["myMaxAttenuationAngle"].GetFloat();
+		settings.myStartAttenuationAngle = response["minAttenuationAngle"].GetFloat();
+		settings.myMaxAttenuationAngle = response["maxAttenuationAngle"].GetFloat();
 		settings.myMinAttenuationDistance = response["minAttenuationDistance"].GetFloat();
 		settings.myMaxAttenuationDistance = response["maxAttenuationDistance"].GetFloat();
-		settings.myMinimumVolume = response["myMinimumVolume"].GetFloat();
+		settings.myMinimumVolume = response["minimumVolume"].GetFloat();
 		settings.myGameObjectID = gameObject->InstanceID();
 		gameObject->AddComponent<CAudioResponse>(*gameObject, settings);
 	}
