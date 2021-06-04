@@ -102,7 +102,7 @@ public class ExportCollider : MonoBehaviour
                     link.colliderType = (int)IronColliderType.BoxCollider;
                     link.positionOffest = boxCollider.center;
                     link.boxSize = boxCollider.size;
-                    Debug.Log("Expecting: ClockHand(1) == " + collider.gameObject.name);
+                    //Debug.Log("Expecting: ClockHand(1) == " + collider.gameObject.name);
                 }
                 else if (collider.GetType() == typeof(SphereCollider))
                 {

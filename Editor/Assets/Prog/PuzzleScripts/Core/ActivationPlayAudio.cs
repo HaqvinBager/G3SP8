@@ -18,4 +18,9 @@ public class ActivationPlayAudio : MonoBehaviour, IKey
         DestroyImmediate(this);
 #endif
     }
+
+    void OnDrawGizmos()
+    {
+        Gizmos.DrawRay(transform.position, myConeDirection.normalized);
+    }
 }

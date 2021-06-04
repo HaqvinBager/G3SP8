@@ -32,7 +32,7 @@ public struct ActivationRotateData
 [System.Serializable]
 public struct ActivationPlayAudioData
 {
-    public ESFX soundEffect;
+    public int soundEffect;
     public bool is3D;
     public Vector3 coneDirection;
     public float minAttenuationAngle;
@@ -47,7 +47,7 @@ public struct KeyCollection
     public List<KeyData> keys;
     public List<ActivationMoveData> activationMoves;
     public List<ActivationRotateData> activationRotates;
-    public List<ActivationPlayAudioData> activationPlayAudios;
+    public List<ActivationPlayAudioData> activationAudios;
 }
 
 public class ExportKey
@@ -58,7 +58,7 @@ public class ExportKey
         collection.keys = new List<KeyData>();
         collection.activationMoves = new List<ActivationMoveData>();
         collection.activationRotates = new List<ActivationRotateData>();
-        collection.activationPlayAudios = new List<ActivationPlayAudioData>();
+        collection.activationAudios = new List<ActivationPlayAudioData>();
 
         Key[] keys = GameObject.FindObjectsOfType<Key>();
         foreach (Key key in keys)
@@ -72,7 +72,7 @@ public class ExportKey
 
             ExportRotateActivations(ref collection.activationRotates, key);
             ExportMoveActivations(ref collection.activationMoves, key);
-            ExportPlayAudioActivations(ref collection.activationPlayAudios, key);
+            ExportPlayAudioActivations(ref collection.activationAudios, key);
         }
         return collection;
     }
@@ -114,6 +114,7 @@ public class ExportKey
             playAudioData.maxAttenuationAngle = playAudio.myMaxAttenuationAngle;
             playAudioData.minimumVolume = playAudio.myMinimumVolume;
             playAudioData.instanceID = playAudio.transform.GetInstanceID();
+            playAudioData.soundEffect = (int)playAudio.soundEffect;         
             collection.Add(playAudioData);
         }
     }

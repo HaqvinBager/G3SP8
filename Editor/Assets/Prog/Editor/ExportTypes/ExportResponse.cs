@@ -50,7 +50,7 @@ public struct ResponseToggleData
 [System.Serializable]
 public struct ResponsePlayAudioData
 {
-    public ESFX soundEffect;
+    public int soundEffect;
     public bool is3D;
     public Vector3 coneDirection;
     public float minAttenuationAngle;
@@ -80,6 +80,7 @@ public class ExportResponse
         collection.responseRotates = new List<ResponseRotateData>();
         collection.responsePrints = new List<ResponsePrintData>();
         collection.responseToggles = new List<ResponseToggleData>();
+        collection.responsePlayAudios = new List<ResponsePlayAudioData>();
 
         Listener[] listeners = GameObject.FindObjectsOfType<Listener>();
         foreach(Listener listener in listeners)
@@ -164,6 +165,8 @@ public class ExportResponse
             playAudioData.maxAttenuationAngle = playAudio.myMaxAttenuationAngle;
             playAudioData.minimumVolume = playAudio.myMinimumVolume;
             playAudioData.instanceID = playAudio.transform.GetInstanceID();
+            playAudioData.soundEffect = (int)playAudio.soundEffect;
+           // Debug.Log("Audio: " + playAudioData.soundEffect.ToString());
             collection.Add(playAudioData);
         }
     }
