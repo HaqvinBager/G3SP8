@@ -57,6 +57,7 @@ private:
 	static void AddPuzzleActivationRotate(CScene& aScene, RapidArray someData);
 	static void AddPuzzleActivationDestroy(CScene& aScene, RapidArray someData);
 	static void AddPuzzleActivationAudio(CScene& aScene, RapidArray someData);
+	static void AddPuzzleActivationTeleporter(CScene& aScene, RapidArray someData);
 	static void AddPuzzleLock(CScene& aScene, RapidArray someData);
 	static void AddPuzzleListener(CScene& aScene, RapidArray someData);
 	static void AddPuzzleResponseMove(CScene& aScene, RapidArray someData);

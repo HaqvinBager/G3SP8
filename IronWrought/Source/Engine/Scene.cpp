@@ -994,6 +994,8 @@ void CScene::ToggleSections(const int aSection)
 		CMainSingleton::PostMaster().Send({ EMessageType::SetDynamicAudioSource, enemy });
 		AddEnemyShortcut(enemy, aSection);
 	}
+
+	CMainSingleton::PostMaster().SendLate({ EMessageType::SetAmbience, &myCurrentSection });
 }
 void CScene::EnableSection(const int aSection)
 {

@@ -110,5 +110,7 @@ enum class EMessageType
 
 	Teleport,
 
+	SetAmbience,
+
 	Count
 };

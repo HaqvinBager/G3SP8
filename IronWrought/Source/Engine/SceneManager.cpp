@@ -55,6 +55,7 @@
 #include <ToggleResponse.h>
 #include <AudioResponse.h>
 #include <AudioActivation.h>
+#include <TeleportActivation.h>
 
 CScene* CSceneManager::ourLastInstantiatedScene = nullptr;
 CSceneManager::CSceneManager()
@@ -85,8 +86,6 @@ CScene* CSceneManager::CreateEmpty()
 	emptyScene->MainCamera(ESceneCamera::FreeCam);
 	emptyScene->EnvironmentLight(envLight->GetComponent<CEnvironmentLightComponent>()->GetEnvironmentLight());
 	emptyScene->AddInstance(envLight);
-
-
 
 	//AddPlayer(*emptyScene, std::string());
 
@@ -226,6 +225,8 @@ bool CSceneManager::AddToScene(CScene& aScene, Binary::SLevelData& aBinLevelData
 				AddPuzzleActivationDestroy(aScene, sceneData["activationDestroys"].GetArray());
 			if (sceneData.HasMember("activationAudios"))
 				AddPuzzleActivationAudio(aScene, sceneData["activationAudios"].GetArray());
+			if (sceneData.HasMember("activationTeleporters"))
+				AddPuzzleActivationTeleporter(aScene, sceneData["activationTeleporters"].GetArray());
 
 			if (sceneData.HasMember("listeners"))
 				AddPuzzleListener(aScene, sceneData["listeners"].GetArray());
@@ -708,6 +709,33 @@ void CSceneManager::AddPuzzleActivationAudio(CScene& aScene, RapidArray someData
 		settings.myMaxAttenuationAngle = activation["maxAttenuationAngle"].GetFloat();
 		settings.myMinimumVolume = activation["minimumVolume"].GetFloat();
 		gameObject->AddComponent<CAudioActivation>(*gameObject, settings);
+	}
+}
+
+void CSceneManager::AddPuzzleActivationTeleporter(CScene& aScene, RapidArray someData)
+{
+	for (const auto& activation : someData)
+	{
+		CGameObject* gameObject = aScene.FindObjectWithID(activation["instanceID"].GetInt());
+		if (!gameObject)
+			continue;
+
+		PostMaster::ELevelName name = static_cast<PostMaster::ELevelName>(activation["teleporterName"].GetInt());
+		PostMaster::ELevelName target = static_cast<PostMaster::ELevelName>(activation["teleporterTarget"].GetInt());
+
+		Vector3 teleportToPos;
+		teleportToPos.x = activation["teleportToPosX"].GetFloat();
+		teleportToPos.y = activation["teleportToPosY"].GetFloat();
+		teleportToPos.z = activation["teleportToPosZ"].GetFloat();
+
+		Vector3 teleportToRot;
+		teleportToRot.x = activation["teleportToRotX"].GetFloat();
+		teleportToRot.y = activation["teleportToRotY"].GetFloat();
+		teleportToRot.z = activation["teleportToRotZ"].GetFloat();
+	
+		float aTimeUntilTeleport = activation["timeUntilTeleport"].GetFloat();
+
+		gameObject->AddComponent<CTeleportActivation>(*gameObject, name, target, teleportToPos, teleportToRot, aTimeUntilTeleport);
 	}
 }
 
