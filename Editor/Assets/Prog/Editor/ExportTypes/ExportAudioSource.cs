@@ -11,6 +11,8 @@ public struct AudioSourceLink
     public Vector3 coneDirection;
     public float minAttenuationAngle;
     public float maxAttenuationAngle;
+    public float minAttenuationDistance;
+    public float maxAttenuationDistance;
     public float minimumVolume;
 }
 
@@ -37,6 +39,8 @@ public class ExportAudioSource
             audioSourceLink.minAttenuationAngle = source.myMinAttenuationAngle;
             audioSourceLink.maxAttenuationAngle = source.myMaxAttenuationAngle;
             audioSourceLink.minimumVolume = source.myMinimumVolume;
+            audioSourceLink.minAttenuationDistance = source.myMinAttenuationDistance;
+            audioSourceLink.maxAttenuationDistance = source.myMaxAttenuationDistance; 
             audioSourceLink.is3D = source.myIs3D;
             collection.myAudioSources.Add(audioSourceLink);
         }

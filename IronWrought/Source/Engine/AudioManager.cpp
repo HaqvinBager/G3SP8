@@ -493,7 +493,7 @@ void CAudioManager::Receive(const SMessage& aMessage) {
 		if (data.mySoundIndex < 0 || data.mySoundIndex >= static_cast<int>(EPropAmbience::Count))
 			return;
 
-		this->AddSource(data.myGameObjectID, data.mySoundIndex, data.myPosition, data.myForward, data.myStartAttenuationAngle, data.myMaxAttenuationAngle, data.myMinimumVolume);
+		this->AddStaticSource(data);
 	}break;
 
 	case EMessageType::SetDynamicAudioSource:
@@ -682,11 +682,6 @@ void CAudioManager::Update()
 			++it;
 		}
 	}
-
-	if (INPUT->IsKeyPressed(0x31))
-	{
-		FadeChannelOverSeconds(EChannel::DynamicChannel1, 1.0f, false);
-	}
 }
 
 void CAudioManager::SetListener(CGameObject* aGameObject)
@@ -694,18 +689,20 @@ void CAudioManager::SetListener(CGameObject* aGameObject)
 	myListener = aGameObject;
 }
 
-CAudioChannel* CAudioManager::AddSource(const PostMaster::SAudioSourceInitData& aData) 
+CAudioChannel* CAudioManager::AddSource(const PostMaster::SAudioSourceInitData& someData) 
 {
-	myDynamicSources.push_back(myWrapper.RequestAudioSource(std::to_string(aData.myGameObjectID)));
+	myDynamicSources.push_back(myWrapper.RequestAudioSource(std::to_string(someData.myGameObjectID)));
+	myDynamicSources.back()->Set3DMinMaxDistance(someData.myMinAttenuationDistance, someData.myMaxAttenuationDistance);
 	return myDynamicSources.back();
 }
 
-void CAudioManager::AddSource(const int anIdentifier, const unsigned int aSoundIndex, const Vector3& aPosition, const Vector3& aDirection, float aStartAttenuationAngle, float aMaxAttenuationAngle, float aMinimumVolume)
+void CAudioManager::AddStaticSource(const PostMaster::SAudioSourceInitData& someData)
 {
-	myStaticAudioSources.push_back({ anIdentifier, aSoundIndex, myWrapper.RequestAudioSource("3D") });
-	myStaticAudioSources.back().myChannel->Set3DAttributes(aPosition, Vector3::Zero);
-	myStaticAudioSources.back().myChannel->Set3DConeAttributes(aDirection, aStartAttenuationAngle, aMaxAttenuationAngle, aMinimumVolume);
-	myWrapper.Play(myPropAmbienceAudio[aSoundIndex], myStaticAudioSources.back().myChannel);
+	myStaticAudioSources.push_back({ someData.myGameObjectID, static_cast<unsigned int>(someData.mySoundIndex), myWrapper.RequestAudioSource("3D") });
+	myStaticAudioSources.back().myChannel->Set3DAttributes(someData.myPosition, Vector3::Zero);
+	myStaticAudioSources.back().myChannel->Set3DConeAttributes(someData.myForward, someData.myStartAttenuationAngle, someData.myMaxAttenuationAngle, someData.myMinimumVolume);
+	myStaticAudioSources.back().myChannel->Set3DMinMaxDistance(someData.myMinAttenuationDistance, someData.myMaxAttenuationDistance);
+	myWrapper.Play(myPropAmbienceAudio[someData.mySoundIndex], myStaticAudioSources.back().myChannel);
 }
 
 void CAudioManager::RemoveSource(const int /*anIdentifier*/)

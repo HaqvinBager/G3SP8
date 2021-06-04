@@ -10,6 +10,8 @@ public class IronAudioSource : MonoBehaviour
     public Vector3 myConeDirection;
     public float myMinAttenuationAngle;
     public float myMaxAttenuationAngle;
+    public float myMinAttenuationDistance = 1.0f;
+    public float myMaxAttenuationDistance = 10000.0f;
     public float myMinimumVolume;
 
     // Start is called before the first frame update

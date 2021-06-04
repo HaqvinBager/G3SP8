@@ -68,6 +68,8 @@ namespace PostMaster
 		float myStartAttenuationAngle;
 		float myMaxAttenuationAngle;
 		float myMinimumVolume;
+		float myMinAttenuationDistance;
+		float myMaxAttenuationDistance;
 		int mySoundIndex;
 		int myGameObjectID;
 	};
