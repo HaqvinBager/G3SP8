@@ -7,13 +7,13 @@ using UnityEngine;
 public enum ELevelName
 {
     Cottage_1,
-    Cottage_2,
     Basement_1_1_A,
     Basement_1_1_B,
+    Basement_2,
     Basement_1_2_A,
     Basement_1_2_B,
+    Cottage_2,
     Basement_1_3,
-    Basement_2,
     None
 }
 
