@@ -10,6 +10,8 @@ public class ResponsePlayAudio : MonoBehaviour, IListener
     public Vector3 myConeDirection;
     public float myMinAttenuationAngle;
     public float myMaxAttenuationAngle;
+    public float myMinAttenuationDistance = 1.0f;
+    public float myMaxAttenuationDistance = 10000.0f;
     public float myMinimumVolume;
 
     public void Remove()
