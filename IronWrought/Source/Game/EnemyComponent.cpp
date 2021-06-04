@@ -156,7 +156,9 @@ void CEnemyComponent::Update()//får bestämma vilket behaviour vi vill köra i 
 
 		if (myHasFoundPlayer) {
 			//std::cout << "SEEK" << std::endl;
+			mySettings.mySpeed = 3.0f;
 			SetState(EBehaviour::Seek);
+
 		}
 		else if (myHasReachedTarget && myHasReachedLastPlayerPosition) {
 			
@@ -166,6 +168,7 @@ void CEnemyComponent::Update()//får bestämma vilket behaviour vi vill köra i 
 			{
 				myIdlingTimer = 0.0f;
 				//std::cout << "PATROL" << std::endl;
+				mySettings.mySpeed = 1.5f;
 				myHasReachedTarget = false;
 				SetState(EBehaviour::Patrol);
 			}

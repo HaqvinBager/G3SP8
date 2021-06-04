@@ -80,8 +80,11 @@ public class LevelCollectionEditor : Editor
         GUI.backgroundColor = collection.myScenes.Count > 0 ? Color.green : Color.red;
         if (GUILayout.Button("Export"))
         {
-            OpenScenes();
-            ExporterJson.ExportJson();
+            if (EditorSceneManager.SaveCurrentModifiedScenesIfUserWantsTo())
+            {
+                OpenScenes();
+                ExporterJson.ExportJson();
+            }
         }
     }
 

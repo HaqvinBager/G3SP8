@@ -55,6 +55,8 @@ public struct ResponsePlayAudioData
     public Vector3 coneDirection;
     public float minAttenuationAngle;
     public float maxAttenuationAngle;
+    public float minAttenuationDistance;
+    public float maxAttenuationDistance;
     public float minimumVolume;
     public int instanceID;
 }
@@ -170,6 +172,8 @@ public class ExportResponse
             playAudioData.is3D = playAudio.myIs3D;
             playAudioData.minAttenuationAngle = playAudio.myMinAttenuationAngle;
             playAudioData.maxAttenuationAngle = playAudio.myMaxAttenuationAngle;
+            playAudioData.minAttenuationDistance = playAudio.myMinAttenuationDistance;
+            playAudioData.maxAttenuationDistance = playAudio.myMaxAttenuationDistance;
             playAudioData.minimumVolume = playAudio.myMinimumVolume;
             playAudioData.instanceID = playAudio.transform.GetInstanceID();
             playAudioData.soundEffect = (int)playAudio.soundEffect;

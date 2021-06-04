@@ -78,7 +78,6 @@ void CInGameState::Awake()
 	CJsonReader::Get()->InitFromGenerated();
 	myEnemyAnimationController = new CEnemyAnimationController();
 
-#ifdef INGAME_USE_MENU
 	for (size_t i = 0; i < myCanvases.size(); ++i)
 	{
 		myCanvases[i] = new CCanvas();
@@ -87,6 +86,9 @@ void CInGameState::Awake()
 	myCanvases[EInGameCanvases_HUD]->Init(ASSETPATH("Assets/IronWrought/UI/JSON/UI_HUD.json"));
 	myCanvases[EInGameCanvases_PauseMenu]->Init(ASSETPATH("Assets/IronWrought/UI/JSON/UI_PauseMenu.json"));
 	myCanvases[EInGameCanvases_LoadingScreen]->Init(ASSETPATH("Assets/IronWrought/UI/JSON/UI_LoadingScreen.json"));
+
+#ifdef INGAME_USE_MENU
+
 #else
 	CScene* scene = CSceneManager::CreateEmpty();
 	CEngine::GetInstance()->AddScene(myState, scene);
@@ -204,6 +206,7 @@ void CInGameState::Update()
 		myMenuCamera->myTransform->Position(Vector3::Lerp(myMenuCamera->myTransform->Position(), myMenuCameraTargetPosition, myMenuCameraSpeed * CTimer::Dt()));
 		myMenuCamera->myTransform->Rotation(Quaternion::Slerp(myMenuCamera->myTransform->Rotation(), myMenuCameraTargetRotation, myMenuCameraSpeed * CTimer::Dt()));
 	}
+#else
 #endif
 
 	DEBUGFunctionality();
@@ -377,6 +380,12 @@ void CInGameState::DEBUGFunctionality()
 		CMainSingleton::PostMaster().Send(msg2);
 	}
 
+#ifndef INGAME_USE_MENU
+	// TEMP
+	ToggleCanvas(EInGameCanvases_HUD);
+	// ! TEMP
+#endif
+
 	//if (Input::GetInstance()->IsKeyPressed('1'))
 	//{
 	//	IRONWROUGHT->GetActiveScene().ToggleSections(0);
@@ -419,6 +428,15 @@ void CInGameState::ToggleCanvas(EInGameCanvases anEInGameCanvases)
 		scene.MainCamera(ESceneCamera::PlayerFirstPerson);
 		CMainSingleton::PostMaster().Unsubscribe(EMessageType::CanvasButtonIndex, this);
 		IRONWROUGHT->HideCursor();
+	}
+#else
+	if (myCurrentCanvas == EInGameCanvases_HUD)
+	{
+		CScene& scene = IRONWROUGHT->GetActiveScene();
+		scene.SetCanvas(myCanvases[myCurrentCanvas]);
+		scene.UpdateOnlyCanvas(false);
+		scene.CanvasIsHUD(true);
+		CMainSingleton::PostMaster().Unsubscribe(EMessageType::CanvasButtonIndex, this);
 	}
 #endif
 }
