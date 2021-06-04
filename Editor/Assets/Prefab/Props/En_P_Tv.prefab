@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 1683550236371812103}
   - component: {fileID: 7897045005340711281}
   - component: {fileID: 5437857548293205457}
+  - component: {fileID: 1473947458620397438}
   m_Layer: 0
   m_Name: En_P_Tv
   m_TagString: Untagged
@@ -77,6 +78,19 @@ MonoBehaviour:
   myMinAttenuationAngle: 90
   myMaxAttenuationAngle: 180
   myMinimumVolume: 0.1
+--- !u!65 &1473947458620397438
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2382810824661067142}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1001 &6386508862630912957
 PrefabInstance:
   m_ObjectHideFlags: 0
