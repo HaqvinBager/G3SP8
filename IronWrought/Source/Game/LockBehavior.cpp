@@ -32,13 +32,6 @@ void CLockBehavior::Start()
 
 void CLockBehavior::Update()
 {
-	if (!myHasTriggered)
-	{
-		if (myAmountOfKeys >= myMaxAmountOfKeys)
-		{
-			RunEvent();
-		}
-	}
 }
 
 void CLockBehavior::OnEnable()

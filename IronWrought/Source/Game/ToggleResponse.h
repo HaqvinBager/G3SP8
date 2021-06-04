@@ -32,6 +32,7 @@ inline void CToggleResponse::SetTarget(const CGameObject& aTarget)
 	if (aTarget.TryGetComponent(&componentType))
 	{
 		myTarget = componentType;
+		//myTarget->Enabled(mySettings.myEnableOnStart);
 	}
 	else
 	{
