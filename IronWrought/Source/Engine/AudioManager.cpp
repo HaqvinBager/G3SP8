@@ -38,7 +38,7 @@ CAudioManager::CAudioManager()
 
 	for (unsigned int i = 0; i < static_cast<unsigned int>(EAmbience::Count); ++i)
 	{
-		myAmbienceAudio.push_back(myWrapper.Request3DSound(GetPath(static_cast<EAmbience>(i)), true));
+		myAmbienceAudio.push_back(myWrapper.RequestSound(GetPath(static_cast<EAmbience>(i)), true));
 	}
 
 	for (unsigned int i = 0; i < static_cast<unsigned int>(EPropAmbience::Count); ++i)

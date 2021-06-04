@@ -23,6 +23,7 @@ public:
 	void Set3DConeAttributes(const Vector3& aDirection, float anUnattenuatedAngleSpread, float anAttenuatedAngleSpread, float anAttenuatedVolume);
 	void Set3DMinMaxDistance(float aMinDistance, float aMaxDistance);
 
+	void SetIs3D(bool aShouldBe3D);
 
 public:
 	~CAudioChannel();// 2020 12 04  - Destruction of CAudioChannel is not taken care of by FMOD

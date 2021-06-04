@@ -60,6 +60,14 @@ void CAudioChannel::Set3DMinMaxDistance(float aMinDistance, float aMaxDistance)
     myFModChannel->set3DMinMaxDistance(aMinDistance, aMaxDistance);
 }
 
+void CAudioChannel::SetIs3D(bool aShouldBe3D)
+{
+    if (aShouldBe3D)
+        myFModChannel->setMode(FMOD_3D);
+    else
+        myFModChannel->setMode(FMOD_2D);
+}
+
 CAudioChannel::CAudioChannel(FMOD::ChannelGroup* aChannelPointer)
 {
     myFModChannel = aChannelPointer;
