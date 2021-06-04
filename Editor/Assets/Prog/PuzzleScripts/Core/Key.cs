@@ -13,7 +13,8 @@ public enum KeyType
     Rotate,
     Move,
     PlayAudio,
-    Destroy
+    Destroy,
+    Teleport
 }
 
 public interface IKey
@@ -49,6 +50,9 @@ public class Key : MonoBehaviour
                     break;
                 case KeyType.PlayAudio:
                     AddType<ActivationPlayAudio>(gameObject);
+                    break;
+                case KeyType.Teleport:
+                    AddType<ActivationTeleporter>(gameObject);
                     break;
                 case KeyType.Clear:
                     {

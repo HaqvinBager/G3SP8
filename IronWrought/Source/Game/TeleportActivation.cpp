@@ -22,7 +22,7 @@ CTeleportActivation::CTeleportActivation(
 	,	myTeleportTo(aNameOfTeleportTo)
 	,	myOnTeleportToMePosition(aPosOnTeleportTo)
 	,	myTeleportTimer(aTimeUntilTeleport)
-	,	myTeleportTarget(nullptr)
+	,	myHasTeleported(false)
 
 {
 	myOnTeleportToMeRotation = aRotOnTeleportTo;
@@ -51,9 +51,13 @@ void CTeleportActivation::Update()
 
 	if (Complete(myTeleportTimer <= 0.0f))
 	{
+		if (myHasTeleported)
+			return;
+
 		CTransformComponent* aTargetToTeleport = IRONWROUGHT->GetActiveScene().Player()->myTransform;
 		PostMaster::STeleportData teleportData = { aTargetToTeleport, myTeleportTo, true };
 		CMainSingleton::PostMaster().Send({ EMessageType::Teleport, &teleportData });
+		myHasTeleported = true;
 	}
 }
 
@@ -65,7 +69,7 @@ void CTeleportActivation::Receive(const SMessage & aMessage)
 		STeleportData& teleportData = *static_cast<STeleportData*>(aMessage.data);
 		if (teleportData.myTarget == myName)
 		{
-			HandleTeleport(myTeleportTarget);
+			HandleTeleport(teleportData.myTransformToTeleport);
 			teleportData.Reset();
 			return;
 		}
@@ -75,14 +79,14 @@ void CTeleportActivation::Receive(const SMessage & aMessage)
 void CTeleportActivation::HandleTeleport(CTransformComponent* aTargetToTeleport)
 {
 	// Debug Code: OK TO REMOVE
-	//std::cout << "teleport To: " << myOnTeleportToMe.x << " " << myOnTeleportToMe.y << " " << myOnTeleportToMe.z << std::endl;
-	//std::cout << "target: " << myTeleportTarget->Position().x << " " << myTeleportTarget->Position().y << " " << myTeleportTarget->Position().z << std::endl;
-	//if (myTeleportTarget->GameObject().GetComponent<CPlayerControllerComponent>())
-	//{
+	//std::cout << "teleport To: " << myOnTeleportToMePosition.x << " " << myOnTeleportToMePosition.y << " " << myOnTeleportToMePosition.z << std::endl;
+	//td::cout << "target: " << aTargetToTeleport->Position().x << " " << aTargetToTeleport->Position().y << " " << aTargetToTeleport->Position().z << std::endl;
+	//f (aTargetToTeleport->GameObject().GetComponent<CPlayerControllerComponent>())
+	//
 	//	std::cout << "Is Player " << std::endl;
-	//}
-	//std::cout << static_cast<int>(myName) << std::endl;
-	//std::cout << "----" << std::endl;
+	//
+	//td::cout << static_cast<int>(myName) << std::endl;
+	//td::cout << "----" << std::endl;
 
 	if (!aTargetToTeleport)
 		return;
