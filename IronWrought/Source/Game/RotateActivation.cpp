@@ -28,8 +28,6 @@ CRotateActivation::~CRotateActivation()
 {
 }
 
-
-
 void CRotateActivation::Update()
 {
 	if (myIsInteracted)

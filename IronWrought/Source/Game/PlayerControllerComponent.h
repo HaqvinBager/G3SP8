@@ -65,9 +65,9 @@ public:
 	void SetRespawnPosition();
 	void SetCurrentFloorMaterial(const std::string& anObjectTag);
 
+	void LockMovementFor(const float& someSeconds);
 private:
 	void RayCastWorld();
-	void LockMovementFor(const float& someSeconds);
 	void UpdateMovementLock();
 	void InitForceForward();
 	void UpdateForceForward();

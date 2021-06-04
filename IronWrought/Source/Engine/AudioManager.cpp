@@ -115,7 +115,7 @@ CAudioManager::CAudioManager()
 	myDynamicSource->Set3DMinMaxDistance(10.0f, 1000.0f);
 	//myDynamicSource->SetVolume(0.2f);
 
-	SetDynamicTrack(EAmbience::Basement1, EAmbience::Basement1, EAmbience::Basement2);
+	SetDynamicTrack(EAmbience::Cottage, EAmbience::Basement1, EAmbience::Basement2);
 
 	myChannels[CAST(EChannel::DynamicChannel1)]->SetVolume(0.0f);
 	myChannels[CAST(EChannel::DynamicChannel2)]->SetVolume(0.0f);
@@ -516,23 +516,23 @@ void CAudioManager::Receive(const SMessage& aMessage) {
 		myWrapper.Play(mySFXAudio[data.mySoundIndex], data.myChannel);
 	}break;
 
-	case EMessageType::Teleport:
+	case EMessageType::SetAmbience:
 	{
-		PostMaster::STeleportData data = *reinterpret_cast<PostMaster::STeleportData*>(aMessage.data);
+		PostMaster::ELevelName level = *reinterpret_cast<PostMaster::ELevelName*>(aMessage.data);
 		
-		switch (data.myTarget)
+		switch (level)
 		{
 		case PostMaster::ELevelName::Cottage_1:
 		{
-			//FadeChannelOverSeconds(EChannel::DynamicChannel1, 1.0f, false);
-			//FadeChannelOverSeconds(EChannel::DynamicChannel2, 1.0f);
-			//FadeChannelOverSeconds(EChannel::DynamicChannel3, 1.0f);
+			FadeChannelOverSeconds(EChannel::DynamicChannel1, 1.0f, false);
+			FadeChannelOverSeconds(EChannel::DynamicChannel2, 1.0f);
+			FadeChannelOverSeconds(EChannel::DynamicChannel3, 1.0f);
 		}break;
 		case PostMaster::ELevelName::Cottage_2:
 		{
-			//FadeChannelOverSeconds(EChannel::DynamicChannel1, 1.0f, false);
-			//FadeChannelOverSeconds(EChannel::DynamicChannel2, 1.0f);
-			//FadeChannelOverSeconds(EChannel::DynamicChannel3, 1.0f);
+			FadeChannelOverSeconds(EChannel::DynamicChannel1, 1.0f, false);
+			FadeChannelOverSeconds(EChannel::DynamicChannel2, 1.0f);
+			FadeChannelOverSeconds(EChannel::DynamicChannel3, 1.0f);
 		}break;
 		case PostMaster::ELevelName::Basement_1_1_A:
 		{
@@ -682,6 +682,11 @@ void CAudioManager::Update()
 			++it;
 		}
 	}
+
+	if (INPUT->IsKeyPressed(0x31))
+	{
+		FadeChannelOverSeconds(EChannel::DynamicChannel1, 1.0f, false);
+	}
 }
 
 void CAudioManager::SetListener(CGameObject* aGameObject)
@@ -767,7 +772,7 @@ void CAudioManager::SubscribeToMessages()
 
 	CMainSingleton::PostMaster().Subscribe(EMessageType::EnemyStateChange, this);
 
-	CMainSingleton::PostMaster().Subscribe(EMessageType::Teleport, this);
+	CMainSingleton::PostMaster().Subscribe(EMessageType::SetAmbience, this);
 
 	//Pussel
 	CMainSingleton::PostMaster().Subscribe(EMessageType::PlayDynamicAudioSource, this);
@@ -832,7 +837,7 @@ void CAudioManager::UnsubscribeToMessages()
 	//Pussel
 	CMainSingleton::PostMaster().Unsubscribe(EMessageType::PlayDynamicAudioSource, this);
 
-	CMainSingleton::PostMaster().Subscribe(EMessageType::Teleport, this);
+	CMainSingleton::PostMaster().Unsubscribe(EMessageType::SetAmbience, this);
 }
 
 std::string CAudioManager::GetPath(EMusic type) const
@@ -922,6 +927,8 @@ std::string CAudioManager::TranslateEnum(EMusic /*enumerator*/) const
 std::string CAudioManager::TranslateEnum(EAmbience enumerator) const {
 	switch (enumerator)
 	{
+	case EAmbience::Cottage:
+		return "Cottage";
 	case EAmbience::Basement1:
 		return "Basement1";
 	case EAmbience::Basement2:
