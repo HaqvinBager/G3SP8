@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEditor;
 
 [CustomEditor(typeof(ActivationRotate))]
-public class RotateEditor : Editor
+public class ActivationRotateEditor : Editor
 {
     public override void OnInspectorGUI()
     {

@@ -123,6 +123,32 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!134 &253612830
+PhysicMaterial:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: ' (Instance) (Instance) (Instance) (Instance) (Instance) (Instance) (Instance)
+    (Instance) (Instance) (Instance) (Instance)'
+  dynamicFriction: 0.6
+  staticFriction: 0.6
+  bounciness: 0
+  frictionCombine: 0
+  bounceCombine: 0
+--- !u!134 &312346355
+PhysicMaterial:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: ' (Instance) (Instance) (Instance) (Instance) (Instance) (Instance) (Instance)
+    (Instance) (Instance) (Instance) (Instance)'
+  dynamicFriction: 0.6
+  staticFriction: 0.6
+  bounciness: 0
+  frictionCombine: 0
+  bounceCombine: 0
 --- !u!1001 &399345824
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -133,6 +159,10 @@ PrefabInstance:
     - target: {fileID: 1876437162237682842, guid: 9a1d7dbd82c43544caa94fe9a5552770, type: 3}
       propertyPath: m_Layer
       value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 1876437162237682842, guid: 9a1d7dbd82c43544caa94fe9a5552770, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5853259892417439921, guid: 9a1d7dbd82c43544caa94fe9a5552770, type: 3}
       propertyPath: m_RootOrder
@@ -268,12 +298,24 @@ BoxCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 399345825}
-  m_Material: {fileID: 1601845491}
+  m_Material: {fileID: 471384309}
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
   m_Size: {x: 0.52, y: 2.22, z: 0.42}
   m_Center: {x: 0, y: 0.93, z: 0}
+--- !u!134 &471384309
+PhysicMaterial:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: ' (Instance) (Instance)'
+  dynamicFriction: 0.6
+  staticFriction: 0.6
+  bounciness: 0
+  frictionCombine: 0
+  bounceCombine: 0
 --- !u!1001 &483037078
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -325,6 +367,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3650480744812690863, guid: 2d6b4b6f5dfdbbf4eb05473276e6dcdf, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4392674735594319585, guid: 2d6b4b6f5dfdbbf4eb05473276e6dcdf, type: 3}
       propertyPath: myLock
       value: 
@@ -364,7 +410,7 @@ PrefabInstance:
     - target: {fileID: 4392674735594319598, guid: 2d6b4b6f5dfdbbf4eb05473276e6dcdf, type: 3}
       propertyPath: m_Material
       value: 
-      objectReference: {fileID: 1027274760}
+      objectReference: {fileID: 253612830}
     - target: {fileID: 8480936645670850351, guid: 2d6b4b6f5dfdbbf4eb05473276e6dcdf, type: 3}
       propertyPath: m_Name
       value: First_Moose_1 (3)
@@ -458,6 +504,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1697232072}
     m_Modifications:
+    - target: {fileID: 2088140495638762946, guid: a3f89f38a583b7a428af8a8ecd40406b, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 5728913010445663377, guid: a3f89f38a583b7a428af8a8ecd40406b, type: 3}
       propertyPath: m_RootOrder
       value: 4
@@ -527,6 +577,10 @@ PrefabInstance:
     - target: {fileID: 1876437162237682842, guid: 9a1d7dbd82c43544caa94fe9a5552770, type: 3}
       propertyPath: m_Layer
       value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 1876437162237682842, guid: 9a1d7dbd82c43544caa94fe9a5552770, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5853259892417439921, guid: 9a1d7dbd82c43544caa94fe9a5552770, type: 3}
       propertyPath: m_RootOrder
@@ -649,39 +703,13 @@ BoxCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 531384360}
-  m_Material: {fileID: 1261400344}
+  m_Material: {fileID: 1397198556}
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
   m_Size: {x: 0.52, y: 2.22, z: 0.42}
   m_Center: {x: 0, y: 0.93, z: 0}
---- !u!134 &593390587
-PhysicMaterial:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_Name: ' (Instance) (Instance) (Instance) (Instance) (Instance) (Instance) (Instance)
-    (Instance) (Instance) (Instance)'
-  dynamicFriction: 0.6
-  staticFriction: 0.6
-  bounciness: 0
-  frictionCombine: 0
-  bounceCombine: 0
---- !u!134 &766846646
-PhysicMaterial:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_Name: ' (Instance) (Instance) (Instance) (Instance) (Instance) (Instance) (Instance)
-    (Instance) (Instance)'
-  dynamicFriction: 0.6
-  staticFriction: 0.6
-  bounciness: 0
-  frictionCombine: 0
-  bounceCombine: 0
---- !u!134 &1027274760
+--- !u!134 &781637489
 PhysicMaterial:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -745,6 +773,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3650480744812690863, guid: 2d6b4b6f5dfdbbf4eb05473276e6dcdf, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4392674735594319585, guid: 2d6b4b6f5dfdbbf4eb05473276e6dcdf, type: 3}
       propertyPath: myLock
       value: 
@@ -784,7 +816,7 @@ PrefabInstance:
     - target: {fileID: 4392674735594319598, guid: 2d6b4b6f5dfdbbf4eb05473276e6dcdf, type: 3}
       propertyPath: m_Material
       value: 
-      objectReference: {fileID: 1027274760}
+      objectReference: {fileID: 312346355}
     - target: {fileID: 8480936645670850351, guid: 2d6b4b6f5dfdbbf4eb05473276e6dcdf, type: 3}
       propertyPath: m_Name
       value: First_Moose_1 (2)
@@ -878,6 +910,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1697232072}
     m_Modifications:
+    - target: {fileID: 6161346724012137747, guid: af67b8236ebb6fd4a9e73186084df7be, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 6181547853763369786, guid: af67b8236ebb6fd4a9e73186084df7be, type: 3}
       propertyPath: m_Name
       value: PointLight (2)
@@ -896,7 +932,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8835479947515533950, guid: af67b8236ebb6fd4a9e73186084df7be, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 2.51
+      value: 2.28
       objectReference: {fileID: 0}
     - target: {fileID: 8835479947515533950, guid: af67b8236ebb6fd4a9e73186084df7be, type: 3}
       propertyPath: m_LocalPosition.z
@@ -1023,6 +1059,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3650480744812690863, guid: 2d6b4b6f5dfdbbf4eb05473276e6dcdf, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4392674735594319585, guid: 2d6b4b6f5dfdbbf4eb05473276e6dcdf, type: 3}
       propertyPath: myLock
       value: 
@@ -1062,7 +1102,7 @@ PrefabInstance:
     - target: {fileID: 4392674735594319598, guid: 2d6b4b6f5dfdbbf4eb05473276e6dcdf, type: 3}
       propertyPath: m_Material
       value: 
-      objectReference: {fileID: 593390587}
+      objectReference: {fileID: 1673786767}
     - target: {fileID: 8480936645670850351, guid: 2d6b4b6f5dfdbbf4eb05473276e6dcdf, type: 3}
       propertyPath: m_Name
       value: First_Moose_1 (1)
@@ -1149,18 +1189,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   myLock: {fileID: 531384361}
   responseType: 1
---- !u!134 &1261400344
-PhysicMaterial:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_Name: 
-  dynamicFriction: 0.6
-  staticFriction: 0.6
-  bounciness: 0
-  frictionCombine: 0
-  bounceCombine: 0
 --- !u!1 &1282146762
 GameObject:
   m_ObjectHideFlags: 0
@@ -1200,6 +1228,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1697232072}
     m_Modifications:
+    - target: {fileID: 6161346724012137747, guid: af67b8236ebb6fd4a9e73186084df7be, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 6181547853763369786, guid: af67b8236ebb6fd4a9e73186084df7be, type: 3}
       propertyPath: m_Name
       value: PointLight (3)
@@ -1294,13 +1326,39 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   myLock: {fileID: 531384361}
   responseType: 1
---- !u!134 &1601845491
+--- !u!134 &1380080745
+PhysicMaterial:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: ' (Instance) (Instance) (Instance) (Instance) (Instance) (Instance) (Instance)
+    (Instance) (Instance) (Instance) (Instance)'
+  dynamicFriction: 0.6
+  staticFriction: 0.6
+  bounciness: 0
+  frictionCombine: 0
+  bounceCombine: 0
+--- !u!134 &1397198556
 PhysicMaterial:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: ' (Instance)'
+  dynamicFriction: 0.6
+  staticFriction: 0.6
+  bounciness: 0
+  frictionCombine: 0
+  bounceCombine: 0
+--- !u!134 &1673786767
+PhysicMaterial:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: ' (Instance) (Instance) (Instance) (Instance) (Instance) (Instance) (Instance)
+    (Instance) (Instance) (Instance) (Instance)'
   dynamicFriction: 0.6
   staticFriction: 0.6
   bounciness: 0
@@ -1313,6 +1371,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1697232072}
     m_Modifications:
+    - target: {fileID: 6161346724012137747, guid: af67b8236ebb6fd4a9e73186084df7be, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 6181547853763369786, guid: af67b8236ebb6fd4a9e73186084df7be, type: 3}
       propertyPath: m_Name
       value: PointLight (1)
@@ -1493,6 +1555,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: -16.493
       objectReference: {fileID: 0}
+    - target: {fileID: 3650480744812690863, guid: 2d6b4b6f5dfdbbf4eb05473276e6dcdf, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4392674735594319585, guid: 2d6b4b6f5dfdbbf4eb05473276e6dcdf, type: 3}
       propertyPath: myLock
       value: 
@@ -1532,7 +1598,7 @@ PrefabInstance:
     - target: {fileID: 4392674735594319598, guid: 2d6b4b6f5dfdbbf4eb05473276e6dcdf, type: 3}
       propertyPath: m_Material
       value: 
-      objectReference: {fileID: 766846646}
+      objectReference: {fileID: 781637489}
     - target: {fileID: 8480936645670850351, guid: 2d6b4b6f5dfdbbf4eb05473276e6dcdf, type: 3}
       propertyPath: m_Name
       value: First_Moose_1
@@ -1579,13 +1645,13 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!134 &1724853169
+--- !u!134 &1778739702
 PhysicMaterial:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: 
+  m_Name: ' (Instance)'
   dynamicFriction: 0.6
   staticFriction: 0.6
   bounciness: 0
@@ -1598,6 +1664,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1697232072}
     m_Modifications:
+    - target: {fileID: 6161346724012137747, guid: af67b8236ebb6fd4a9e73186084df7be, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 6181547853763369786, guid: af67b8236ebb6fd4a9e73186084df7be, type: 3}
       propertyPath: m_Name
       value: PointLight
@@ -1743,6 +1813,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3650480744812690863, guid: 2d6b4b6f5dfdbbf4eb05473276e6dcdf, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4392674735594319585, guid: 2d6b4b6f5dfdbbf4eb05473276e6dcdf, type: 3}
       propertyPath: myLock
       value: 
@@ -1782,7 +1856,7 @@ PrefabInstance:
     - target: {fileID: 4392674735594319598, guid: 2d6b4b6f5dfdbbf4eb05473276e6dcdf, type: 3}
       propertyPath: m_Material
       value: 
-      objectReference: {fileID: 1027274760}
+      objectReference: {fileID: 1380080745}
     - target: {fileID: 8480936645670850351, guid: 2d6b4b6f5dfdbbf4eb05473276e6dcdf, type: 3}
       propertyPath: m_Name
       value: First_Moose_1 (4)
@@ -1882,7 +1956,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2439827793302937304, guid: f0eea0eec377b9b42b3fab993932c19d, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 2.808
+      value: 1.674
       objectReference: {fileID: 0}
     - target: {fileID: 2439827793302937304, guid: f0eea0eec377b9b42b3fab993932c19d, type: 3}
       propertyPath: m_LocalPosition.y
@@ -1890,7 +1964,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2439827793302937304, guid: f0eea0eec377b9b42b3fab993932c19d, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0.414
+      value: -0.414
       objectReference: {fileID: 0}
     - target: {fileID: 2439827793302937304, guid: f0eea0eec377b9b42b3fab993932c19d, type: 3}
       propertyPath: m_LocalRotation.w
@@ -1981,13 +2055,17 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: -22.754
       objectReference: {fileID: 0}
+    - target: {fileID: 3650480744812690863, guid: 2d6b4b6f5dfdbbf4eb05473276e6dcdf, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4392674735594319585, guid: 2d6b4b6f5dfdbbf4eb05473276e6dcdf, type: 3}
       propertyPath: myLock
       value: 
       objectReference: {fileID: 531384361}
     - target: {fileID: 4392674735594319585, guid: 2d6b4b6f5dfdbbf4eb05473276e6dcdf, type: 3}
       propertyPath: activationType
-      value: 2
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 4392674735594319585, guid: 2d6b4b6f5dfdbbf4eb05473276e6dcdf, type: 3}
       propertyPath: interactionType
@@ -2020,7 +2098,7 @@ PrefabInstance:
     - target: {fileID: 4392674735594319598, guid: 2d6b4b6f5dfdbbf4eb05473276e6dcdf, type: 3}
       propertyPath: m_Material
       value: 
-      objectReference: {fileID: 1724853169}
+      objectReference: {fileID: 1778739702}
     - target: {fileID: 4392674735594319598, guid: 2d6b4b6f5dfdbbf4eb05473276e6dcdf, type: 3}
       propertyPath: m_IsTrigger
       value: 1
@@ -2055,3 +2133,43 @@ MonoBehaviour:
   start: {x: -0, y: 136.28677, z: -0}
   end: {x: -0, y: 136.28677, z: 337.2465}
   duration: 0.25
+--- !u!114 &3550197636003494884
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3550197636003494882}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fcacea507542a2d47be01cfec7f83296, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  mySoundIndex: 31
+  myIs3D: 0
+  myConeDirection: {x: 0, y: 0, z: 0}
+  myMinAttenuationAngle: 0
+  myMaxAttenuationAngle: 0
+  myMinAttenuationDistance: 1
+  myMaxAttenuationDistance: 10000
+  myMinimumVolume: 0
+--- !u!114 &3550197636003494885
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3550197636003494882}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a773d588b90225c42a6c299e9ff92366, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  soundEffect: 0
+  myIs3D: 0
+  myConeDirection: {x: 0, y: 0, z: 0}
+  myMinAttenuationAngle: 0
+  myMaxAttenuationAngle: 0
+  myMinAttenuationDistance: 1
+  myMaxAttenuationDistance: 10000
+  myMinimumVolume: 0

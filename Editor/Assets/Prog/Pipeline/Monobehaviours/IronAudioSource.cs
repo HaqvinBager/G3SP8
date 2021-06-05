@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class IronAudioSource : MonoBehaviour
 {
+    //public EPropAmbience sound;
     public int mySoundIndex;
     public bool myIs3D;
     [Header("!Only Applicable for 3D sources!")]

@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 
-[CustomEditor(typeof(ActivationMove))]
-public class KeyMoveEditor : Editor
+[CustomEditor(typeof(ResponseMove))]
+public class ResponseMoveEditor : Editor
 {
     public override void OnInspectorGUI()
     {
