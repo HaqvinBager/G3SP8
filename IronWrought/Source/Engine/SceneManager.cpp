@@ -143,7 +143,7 @@ CScene* CSceneManager::CreateSceneFromSeveral(const std::vector<std::string>& so
 		AddToScene(*scene, binLevelData, doc, i);
 		scene->NextSection(false);
 	}
-	CEngine::GetInstance()->GetPhysx().Cooking(scene->ActiveGameObjects(), scene);
+	CEngine::GetInstance()->GetPhysx().Cooking(scene->AllGameObjects(), scene);
 	scene->ToggleSections(0);
 
 	return scene;
@@ -930,7 +930,7 @@ void CSceneManager::AddPlayer(CScene& aScene, RapidObject someData)
 	camera->AddComponent<CGravityGloveComponent>(*camera, gravityGloveSlot->myTransform);
 	player->AddComponent<CPlayerComponent>(*player);
 	float speedModifider = 0.7f;
-	float walkSpeed = 0.08f * speedModifider;// was 0.09f before 2021 06 02
+	float walkSpeed = 0.04f * speedModifider;// was 0.09f before 2021 06 02
 	CPlayerControllerComponent* pcc = player->AddComponent<CPlayerControllerComponent>(*player, walkSpeed, walkSpeed * 0.4f, CEngine::GetInstance()->GetPhysx().GetPlayerReportBack());// CPlayerControllerComponent constructor sets position of camera child object.
 	pcc->SprintSpeedModifier(speedModifider * 2.6f);
 	pcc->StepTime((1.0f / (walkSpeed * 60.0f)));// Short explanation: for SP7 Nico added a steptimer for playback of stepsounds. It was set to walkSpeed * 5.0f. Changing walk speed to something lower does not give desirable results (shorter timer for slower speed sounds odd). Hence this.

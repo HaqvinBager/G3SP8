@@ -453,14 +453,20 @@ void CInGameState::CreateMenuCamera(CScene& aScene)
 	}
 
 	Vector3 playerPos = aScene.Player()->myTransform->Position();
-	myMenuCameraPositions[0] = playerPos +  aScene.Player()->myTransform->FetchChildren()[0]->GameObject().GetComponent<CCameraComponent>()->GameObject().myTransform->Position();
+	//myMenuCameraPositions[0] = playerPos +  aScene.Player()->myTransform->FetchChildren()[0]->GameObject().GetComponent<CCameraComponent>()->GameObject().myTransform->Position();
 	Quaternion playerRot = aScene.Player()->myTransform->FetchChildren()[0]->GameObject().GetComponent<CCameraComponent>()->GameObject().myTransform->Rotation();
 
-	myMenuCamera->myTransform->Position(myMenuCameraPositions[0]);
-	myMenuCamera->myTransform->Rotation(playerRot);
-
 	myMenuCameraTargetPosition = myMenuCameraPositions[0];
-	myMenuCameraTargetRotation = playerRot;
+	//myMenuCameraTargetRotation = playerRot;
+	myMenuCameraTargetRotation = Quaternion::CreateFromYawPitchRoll
+	(
+		DirectX::XMConvertToRadians(myMenuCameraRotations[0].y)
+		, DirectX::XMConvertToRadians(myMenuCameraRotations[0].x)
+		, DirectX::XMConvertToRadians(myMenuCameraRotations[0].z)
+	);
+
+	myMenuCamera->myTransform->Position(myMenuCameraPositions[0]);
+	myMenuCamera->myTransform->Rotation(myMenuCameraTargetRotation);
 
 	aScene.AddInstance(myMenuCamera);
 	CCameraComponent* camComp = myMenuCamera->GetComponent<CCameraComponent>();

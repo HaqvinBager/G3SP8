@@ -81,7 +81,10 @@ private:
 	bool myHasFoundPlayer;
 	bool myHasReachedLastPlayerPosition;
 	bool myMovementLocked;
-	bool myHasReachedTarget;
+	bool myHasReachedAlertedTarget;
+	bool myHeardSound;
+	bool myIsIdle;
+
 	float myWakeUpTimer;
 	float myIdlingTimer;
 	SNavMesh* myNavMesh;

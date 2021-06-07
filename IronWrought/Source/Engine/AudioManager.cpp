@@ -63,7 +63,7 @@ CAudioManager::CAudioManager()
 
 	for (unsigned int i = 0; i < static_cast<unsigned int>(EVOX::Count); ++i)
 	{
-		myResearcherEventSounds.push_back(myWrapper.RequestSound(GetPath(static_cast<EVOX>(i))));
+		myVoiceEventSounds.push_back(myWrapper.RequestSound(GetPath(static_cast<EVOX>(i))));
 	}
 
 	LoadEnemyLines();
@@ -171,12 +171,7 @@ CAudioManager::~CAudioManager()
 		delete sound;
 		sound = nullptr;
 	}
-	for (auto& sound : myResearcherEventSounds)
-	{
-		delete sound;
-		sound = nullptr;
-	}
-	for (auto& sound : myResearcherReactionsExplosives)
+	for (auto& sound : myVoiceEventSounds)
 	{
 		delete sound;
 		sound = nullptr;
@@ -263,17 +258,11 @@ void CAudioManager::Receive(const SMessage& aMessage) {
 	}
 	break;
 
-	case EMessageType::PlayResearcherReactionExplosives:
-	{
-		PlayRandomSoundFromCollection(myResearcherReactionsExplosives, EChannel::VOX);
-	}
-	break;
-
-	case EMessageType::PlayResearcherEvent:
+	case EMessageType::PlayVoiceEvent:
 	{
 		int index = *static_cast<int*>(aMessage.data);
 		myChannels[CAST(EChannel::VOX)]->Stop();
-		myWrapper.Play(myResearcherEventSounds[index], myChannels[CAST(EChannel::VOX)]);
+		myWrapper.Play(myVoiceEventSounds[index], myChannels[CAST(EChannel::VOX)]);
 	}
 	break;
 
@@ -366,7 +355,7 @@ void CAudioManager::Receive(const SMessage& aMessage) {
 
 	case EMessageType::GameStarted:
 	{
-		myWrapper.Play(myResearcherEventSounds[CAST(EVOX::Line1)], myChannels[CAST(EChannel::VOX)]);
+		myWrapper.Play(myVoiceEventSounds[CAST(EVOX::Line1)], myChannels[CAST(EChannel::VOX)]);
 
 	}break;
 
@@ -412,7 +401,7 @@ void CAudioManager::Receive(const SMessage& aMessage) {
 	case EMessageType::BootUpState:
 	{
 		//myWrapper.Play(myAmbienceAudio[CAST(EAmbience::Inside)], myChannels[CAST(EChannel::Ambience)]);
-		myWrapper.Play(myResearcherEventSounds[CAST(EVOX::Line0)], myChannels[CAST(EChannel::VOX)]);
+		myWrapper.Play(myVoiceEventSounds[CAST(EVOX::Line0)], myChannels[CAST(EChannel::VOX)]);
 	}break;
 
 	case EMessageType::MainMenu:
@@ -661,7 +650,7 @@ void CAudioManager::SubscribeToMessages()
 	CMainSingleton::PostMaster().Subscribe(EMessageType::PlayRobotIdleSound, this);
 	CMainSingleton::PostMaster().Subscribe(EMessageType::PlayRobotPatrolling, this);
 	CMainSingleton::PostMaster().Subscribe(EMessageType::PlayRobotSearching, this);
-	CMainSingleton::PostMaster().Subscribe(EMessageType::PlayResearcherEvent, this);
+	CMainSingleton::PostMaster().Subscribe(EMessageType::PlayVoiceEvent, this);
 	CMainSingleton::PostMaster().Subscribe(EMessageType::PlaySFX, this);
 
 	// Player & Gravity Glove 
@@ -723,7 +712,7 @@ void CAudioManager::UnsubscribeToMessages()
 	CMainSingleton::PostMaster().Unsubscribe(EMessageType::PlayRobotIdleSound, this);
 	CMainSingleton::PostMaster().Unsubscribe(EMessageType::PlayRobotPatrolling, this);
 	CMainSingleton::PostMaster().Unsubscribe(EMessageType::PlayRobotSearching, this);
-	CMainSingleton::PostMaster().Unsubscribe(EMessageType::PlayResearcherEvent, this);
+	CMainSingleton::PostMaster().Unsubscribe(EMessageType::PlayVoiceEvent, this);
 	CMainSingleton::PostMaster().Unsubscribe(EMessageType::PlaySFX, this);
 
 	// Player & Gravity Glove 

@@ -66,8 +66,8 @@ Vector3 CPatrol::Update(const Vector3& aPosition)
 				patrolPointPosition = myPatrolPoints[myTarget]->GameObject().myTransform->Position();
 			}
 		}
-		CMainSingleton::PostMaster().Send({EMessageType::EnemyReachedTarget});
-		//SetPath(myNavMesh->CalculatePath(aPosition, patrolPointPosition, myNavMesh), patrolPointPosition);
+		//CMainSingleton::PostMaster().Send({ EMessageType::EnemyReachedTarget });
+		SetPath(myNavMesh->CalculatePath(aPosition, patrolPointPosition, myNavMesh), patrolPointPosition);
 	}
 
 	size_t pathSize = myPath.size();
@@ -97,7 +97,7 @@ void CPatrol::SetPath(std::vector<Vector3> aPath, Vector3 aFinalPosition)
 	}
 
 	myPath.clear();
-  	myPath.push_back(aFinalPosition);
+	myPath.push_back(aFinalPosition);
 	for (unsigned int i = 1; i < aPath.size(); ++i) {
 		if (aPath[i] != aFinalPosition) {
 			myPath.push_back(aPath[i]);
@@ -147,7 +147,7 @@ CSeek::~CSeek()
 void CSeek::Enter(const Vector3& aPosition)
 {
 	myPath.clear();
-
+	SetPath(myNavMesh->CalculatePath(aPosition, myTarget->Position(), myNavMesh), myTarget->Position());
 	aPosition;
 }
 
@@ -221,53 +221,22 @@ void CSeek::Receive(const SMessage& aMsg)
 	}
 }
 
-CAttack::CAttack(CEnemyComponent* aUser, Vector3 aResetPosition) : myDamage(1.0f), myTarget(nullptr), myAttackCooldown(1.f), myAttackTimer(0.f), myUser(aUser), myResetPosition(aResetPosition) {}
+CAttack::CAttack() {}
 
 void CAttack::Enter(const Vector3& aPosition)
 {
 	myPath.clear();
-
+	CMainSingleton::PostMaster().Send({ EMessageType::EnemyAttackedPlayer });
 	aPosition;
 }
 
-Vector3 CAttack::Update(const Vector3& aPosition)
+Vector3 CAttack::Update(const Vector3& /*aPosition*/)
 {
-
-	if (!myTarget) {
-		return Vector3();
-	}
-	Vector3 direction = myTarget->WorldPosition() - aPosition;
-
-	//byt ut attacktimer och attackcooldown till animationtimer - Alexander Matth�i 2021-05-07
-	myAttackTimer += CTimer::Dt();
-	if (myAttackTimer >= myAttackCooldown) {
-		Vector3 origin = aPosition;
-		PxRaycastBuffer hit = CEngine::GetInstance()->GetPhysx().Raycast(origin, direction, 10.0f, CPhysXWrapper::ELayerMask::PLAYER);
-		int hits = hit.getNbAnyHits();
-
-		/*CLineInstance* myLine2 = new CLineInstance();
-		myLine2->Init(CLineFactory::GetInstance()->CreateLine(origin, origin + (direction * 10.f), { 255,0,0,255 }));
-		CEngine::GetInstance()->GetActiveScene().AddInstance(myLine2);*/
-
-		if (hits > 0) {
-			//std::cout << __FUNCTION__ <<  " Player Hit " << std::endl;
-			myUser->GameObject().myTransform->PositionRigidbody(myResetPosition);
-			CMainSingleton::PostMaster().SendLate({ EMessageType::EnemyAttack, myUser });
-			CMainSingleton::PostMaster().Send({ EMessageType::PlayerTakeDamage });
-			CMainSingleton::PostMaster().Send({ EMessageType::EnemyAttackedPlayer });
-		}
-		myAttackTimer = 0.f;
-	}
-	return std::move(direction);
+	return  Vector3();
 }
 
 void CAttack::ClearPath() {
 	myPath.clear();
-}
-
-void CAttack::SetTarget(CTransformComponent* aTarget)
-{
-	myTarget = aTarget;
 }
 
 CAlerted::CAlerted(SNavMesh* aNavMesh)
@@ -279,14 +248,14 @@ void CAlerted::Enter(const Vector3& aPosition)
 {
 
 	myPath.clear();
-
+	SetPath(myNavMesh->CalculatePath(aPosition, myAlertedPosition, myNavMesh), myAlertedPosition);
 	aPosition;
 }
 
 Vector3 CAlerted::Update(const Vector3& aPosition)
 {
 
-	SetPath(myNavMesh->CalculatePath(aPosition, myAlertedPosition, myNavMesh), myAlertedPosition);
+	//SetPath(myNavMesh->CalculatePath(aPosition, myAlertedPosition, myNavMesh), myAlertedPosition);
 
 	float dist = DirectX::SimpleMath::Vector3::DistanceSquared(aPosition, myAlertedPosition);
 	float epsilon = 0.3f;
@@ -332,6 +301,9 @@ void CAlerted::SetPath(std::vector<Vector3> aPath, Vector3 aFinalPosition)
 	myPath.push_back(aFinalPosition);
 	for (unsigned int i = 0; i < aPath.size(); ++i) {
 		myPath.push_back(aPath[i]);
+		if (i > 0) {
+			CDebug::GetInstance()->DrawLine(aPath[i - 1], aPath[i], 60.0f);
+		}
 	}
 }
 
