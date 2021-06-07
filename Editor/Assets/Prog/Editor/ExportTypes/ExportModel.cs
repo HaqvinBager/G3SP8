@@ -120,7 +120,7 @@ public class ExportModel
                     SkinnedMeshRenderer skinnedRenderer = renderer as SkinnedMeshRenderer;
 
                     ModelLink link = new ModelLink();
-                    link.instanceID = renderer.transform.parent.parent.GetInstanceID();
+                    link.instanceID = renderer.transform.parent.parent.parent.GetInstanceID();
 
                     link.materialIDs = new List<int>();
                     foreach (Material mat in renderer.sharedMaterials)
