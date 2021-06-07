@@ -1,5 +1,34 @@
 {
   "Sprites": [
+    {
+      "Path": "Assets/IronWrought/UI/Menu/UI_Logo_Animated.dds",
+      "Position X": 0.0,
+      "Position Y": -0.6,
+      "Scale X": 1.0,
+      "Scale Y": 1.0,
+      "Animations": [
+        {
+          "Name": "Loading",
+          "FrameWidth": 256.0,
+          "FrameHeight": 256.0,
+          "VerticalStartingPos": 0.0,
+          "FrameOffset": 0,
+          "NumberOfFrames": 3,
+          "FramesPerSecond": 7,
+          "RotationSpeedPerSecond": 0.0,
+          "ShouldLoop": false,
+          "TransitionIndex": 0,
+          "ReverseTransitionIndex": 0
+        }
+      ]
+    },
+    {
+      "Path": "Assets/IronWrought/UI/Menu/UI_Logo.dds",
+      "Position X": 0.5,
+      "Position Y": -0.6,
+      "Scale X": 1.0,
+      "Scale Y": 1.0
+    }
   ],
 
   "Buttons": [
@@ -36,7 +65,7 @@
       "Hover Sprite Path": "Assets/IronWrought/UI/Menu/UI_MainMenu_LevelSelect_Hover.dds",
       "Click Sprite Path": "Assets/IronWrought/UI/Menu/UI_MainMenu_LevelSelect_Click.dds",
       "Messages": [ ],
-      "Sub Canvas Toggle Index": 0
+      "Sub Canvas Toggle Index": 2
     },
     {
       "FontAndFontSize": "Assets/Fonts/MorrisRoman42",
@@ -99,6 +128,7 @@
 
   "Widgets": [
     { "Path": "Assets/IronWrought/UI/JSON/UI_Credits.json" },
-    { "Path": "Assets/IronWrought/UI/JSON/UI_Settings.json" }
+    { "Path": "Assets/IronWrought/UI/JSON/UI_Settings.json" },
+    { "Path": "Assets/IronWrought/UI/JSON/UI_LevelSelect.json" }
   ]
 }
