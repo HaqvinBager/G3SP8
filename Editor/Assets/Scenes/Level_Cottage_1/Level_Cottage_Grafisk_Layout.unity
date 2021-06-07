@@ -284,6 +284,10 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 7
       objectReference: {fileID: 0}
+    - target: {fileID: 7046059043730983114, guid: 5d042e2281322ed41a42c782a9b74412, type: 3}
+      propertyPath: m_Material
+      value: 
+      objectReference: {fileID: 1152907992}
     - target: {fileID: 7528979442241307011, guid: 5d042e2281322ed41a42c782a9b74412, type: 3}
       propertyPath: m_RootOrder
       value: 7
@@ -358,7 +362,7 @@ BoxCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 67105847}
-  m_Material: {fileID: 325374286}
+  m_Material: {fileID: 1272247006}
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
@@ -437,6 +441,10 @@ PrefabInstance:
       propertyPath: myConeDirection.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2737556115473196901, guid: 936411fd5bae231479059dd7621b28b6, type: 3}
+      propertyPath: m_Material
+      value: 
+      objectReference: {fileID: 532999462}
     - target: {fileID: 6418772804997508639, guid: 936411fd5bae231479059dd7621b28b6, type: 3}
       propertyPath: m_RootOrder
       value: 1
@@ -510,6 +518,8 @@ MonoBehaviour:
   myConeDirection: {x: 0, y: 0, z: 0}
   myMinAttenuationAngle: 0
   myMaxAttenuationAngle: 0
+  myMinAttenuationDistance: 1
+  myMaxAttenuationDistance: 10000
   myMinimumVolume: 0
 --- !u!114 &155433360
 MonoBehaviour:
@@ -548,12 +558,24 @@ BoxCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 155433358}
-  m_Material: {fileID: 1865448397}
+  m_Material: {fileID: 861582345}
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
   m_Size: {x: 0.40589634, y: 1.1205024, z: 0.1556757}
   m_Center: {x: 0, y: 1.9197319, z: 0.07783785}
+--- !u!134 &252630237
+PhysicMaterial:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: ' (Instance)'
+  dynamicFriction: 0.6
+  staticFriction: 0.6
+  bounciness: 0
+  frictionCombine: 0
+  bounceCombine: 0
 --- !u!1001 &255125281
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -595,19 +617,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8847440190740160236, guid: b0131b0d3deef3640b5521a4ae482fe4, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.6830127
+      value: 0.7071068
       objectReference: {fileID: 0}
     - target: {fileID: 8847440190740160236, guid: b0131b0d3deef3640b5521a4ae482fe4, type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0.18301274
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8847440190740160236, guid: b0131b0d3deef3640b5521a4ae482fe4, type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0.6830127
+      value: 0.7071068
       objectReference: {fileID: 0}
     - target: {fileID: 8847440190740160236, guid: b0131b0d3deef3640b5521a4ae482fe4, type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0.18301274
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8847440190740160236, guid: b0131b0d3deef3640b5521a4ae482fe4, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -686,7 +708,7 @@ BoxCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 255125282}
-  m_Material: {fileID: 469857393}
+  m_Material: {fileID: 2083687992}
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
@@ -721,13 +743,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   myLock: {fileID: 0}
   activationType: 1
---- !u!134 &325374286
+--- !u!134 &257849115
 PhysicMaterial:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: 
+  m_Name: ' (Instance) (Instance) (Instance) (Instance) (Instance) (Instance) (Instance)
+    (Instance) (Instance) (Instance) (Instance) (Instance)'
   dynamicFriction: 0.6
   staticFriction: 0.6
   bounciness: 0
@@ -851,19 +874,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7955587304818088466, guid: 70f7f44421d9f784791b01110d387d14, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.6830127
+      value: -0.7071068
       objectReference: {fileID: 0}
     - target: {fileID: 7955587304818088466, guid: 70f7f44421d9f784791b01110d387d14, type: 3}
       propertyPath: m_LocalRotation.x
-      value: -0.18301274
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7955587304818088466, guid: 70f7f44421d9f784791b01110d387d14, type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0.6830127
+      value: 0.7071068
       objectReference: {fileID: 0}
     - target: {fileID: 7955587304818088466, guid: 70f7f44421d9f784791b01110d387d14, type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0.18301274
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7955587304818088466, guid: 70f7f44421d9f784791b01110d387d14, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -942,7 +965,7 @@ BoxCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 380421652}
-  m_Material: {fileID: 2133580913}
+  m_Material: {fileID: 1644316662}
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
@@ -977,6 +1000,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   myLock: {fileID: 0}
   activationType: 1
+--- !u!134 &388466010
+PhysicMaterial:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: 
+  dynamicFriction: 0.6
+  staticFriction: 0.6
+  bounciness: 0
+  frictionCombine: 0
+  bounceCombine: 0
 --- !u!1001 &395078461
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1064,18 +1099,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5c562e108cc65394cb59634177042694, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!134 &421053896
-PhysicMaterial:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_Name: 
-  dynamicFriction: 0.6
-  staticFriction: 0.6
-  bounciness: 0
-  frictionCombine: 0
-  bounceCombine: 0
 --- !u!1001 &434506810
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1167,6 +1190,10 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 7
       objectReference: {fileID: 0}
+    - target: {fileID: 5542638928154208186, guid: bc6e15712d6a3dd488299351f0db4119, type: 3}
+      propertyPath: m_Material
+      value: 
+      objectReference: {fileID: 790393756}
     - target: {fileID: 8192910085652644421, guid: bc6e15712d6a3dd488299351f0db4119, type: 3}
       propertyPath: m_Layer
       value: 7
@@ -1212,39 +1239,13 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 1555496760709689427, guid: bc6e15712d6a3dd488299351f0db4119, type: 3}
   m_PrefabInstance: {fileID: 434506810}
   m_PrefabAsset: {fileID: 0}
---- !u!134 &446936723
-PhysicMaterial:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_Name: ' (Instance) (Instance) (Instance) (Instance) (Instance) (Instance) (Instance)
-    (Instance) (Instance) (Instance) (Instance) (Instance)'
-  dynamicFriction: 0.6
-  staticFriction: 0.6
-  bounciness: 0
-  frictionCombine: 0
-  bounceCombine: 0
---- !u!134 &469857393
+--- !u!134 &532999462
 PhysicMaterial:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: 
-  dynamicFriction: 0.6
-  staticFriction: 0.6
-  bounciness: 0
-  frictionCombine: 0
-  bounceCombine: 0
---- !u!134 &599065349
-PhysicMaterial:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_Name: ' (Instance) (Instance) (Instance) (Instance) (Instance) (Instance) (Instance)
-    (Instance) (Instance) (Instance)'
   dynamicFriction: 0.6
   staticFriction: 0.6
   bounciness: 0
@@ -1328,7 +1329,7 @@ PrefabInstance:
     - target: {fileID: 5897895507786433534, guid: 194925144615dc3439cb512b90e1fed1, type: 3}
       propertyPath: m_Material
       value: 
-      objectReference: {fileID: 1490302258}
+      objectReference: {fileID: 257849115}
     - target: {fileID: 6712031321680381071, guid: 194925144615dc3439cb512b90e1fed1, type: 3}
       propertyPath: m_Name
       value: VolumeTrigger (1)
@@ -1340,6 +1341,10 @@ PrefabInstance:
     - target: {fileID: 6712031321680381071, guid: 194925144615dc3439cb512b90e1fed1, type: 3}
       propertyPath: m_IsActive
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6712031321680381071, guid: 194925144615dc3439cb512b90e1fed1, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8182266059135024246, guid: 194925144615dc3439cb512b90e1fed1, type: 3}
       propertyPath: m_UseGravity
@@ -1521,6 +1526,18 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 9069949789875487254, guid: ae45b3ffc8d1a4645b20bb66c8548d5a, type: 3}
   m_PrefabInstance: {fileID: 627279009}
   m_PrefabAsset: {fileID: 0}
+--- !u!134 &710165558
+PhysicMaterial:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: 
+  dynamicFriction: 0.6
+  staticFriction: 0.6
+  bounciness: 0
+  frictionCombine: 0
+  bounceCombine: 0
 --- !u!1001 &717980814
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1600,6 +1617,14 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 7
       objectReference: {fileID: 0}
+    - target: {fileID: 7069792947270398937, guid: e003e6005d232aa4897d5ca485792bb4, type: 3}
+      propertyPath: m_Material
+      value: 
+      objectReference: {fileID: 805781689}
+    - target: {fileID: 8102857302109905906, guid: e003e6005d232aa4897d5ca485792bb4, type: 3}
+      propertyPath: m_Material
+      value: 
+      objectReference: {fileID: 1392297009}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e003e6005d232aa4897d5ca485792bb4, type: 3}
 --- !u!4 &717980815 stripped
@@ -1706,12 +1731,73 @@ BoxCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 717980816}
-  m_Material: {fileID: 1086016071}
+  m_Material: {fileID: 1409782965}
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
   m_Size: {x: 0.50965923, y: 0.060084686, z: 0.84600556}
   m_Center: {x: 0.2364787, y: 0.015823212, z: 0}
+--- !u!134 &739455424
+PhysicMaterial:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: 
+  dynamicFriction: 0.6
+  staticFriction: 0.6
+  bounciness: 0
+  frictionCombine: 0
+  bounceCombine: 0
+--- !u!134 &790393756
+PhysicMaterial:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: 
+  dynamicFriction: 0.6
+  staticFriction: 0.6
+  bounciness: 0
+  frictionCombine: 0
+  bounceCombine: 0
+--- !u!134 &805781689
+PhysicMaterial:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: 
+  dynamicFriction: 0.6
+  staticFriction: 0.6
+  bounciness: 0
+  frictionCombine: 0
+  bounceCombine: 0
+--- !u!134 &861582345
+PhysicMaterial:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: ' (Instance) (Instance)'
+  dynamicFriction: 0.6
+  staticFriction: 0.6
+  bounciness: 0
+  frictionCombine: 0
+  bounceCombine: 0
+--- !u!134 &863368460
+PhysicMaterial:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: ' (Instance) (Instance) (Instance) (Instance) (Instance) (Instance) (Instance)
+    (Instance) (Instance) (Instance) (Instance)'
+  dynamicFriction: 0.6
+  staticFriction: 0.6
+  bounciness: 0
+  frictionCombine: 0
+  bounceCombine: 0
 --- !u!1 &1002093444
 GameObject:
   m_ObjectHideFlags: 0
@@ -1751,13 +1837,14 @@ Transform:
   m_Father: {fileID: 1790173248}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!134 &1086016071
+--- !u!134 &1100025881
 PhysicMaterial:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: ' (Instance) (Instance) (Instance)'
+  m_Name: ' (Instance) (Instance) (Instance) (Instance) (Instance) (Instance) (Instance)
+    (Instance) (Instance) (Instance) (Instance) (Instance) (Instance)'
   dynamicFriction: 0.6
   staticFriction: 0.6
   bounciness: 0
@@ -1846,6 +1933,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: cabinDoor_1 (4)
       objectReference: {fileID: 0}
+    - target: {fileID: 5542638928154208186, guid: bc6e15712d6a3dd488299351f0db4119, type: 3}
+      propertyPath: m_Material
+      value: 
+      objectReference: {fileID: 1640552839}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: bc6e15712d6a3dd488299351f0db4119, type: 3}
 --- !u!4 &1130418987 stripped
@@ -1875,6 +1966,8 @@ MonoBehaviour:
   myConeDirection: {x: 0, y: 0, z: 0}
   myMinAttenuationAngle: 0
   myMaxAttenuationAngle: 0
+  myMinAttenuationDistance: 1
+  myMaxAttenuationDistance: 10000
   myMinimumVolume: 0
 --- !u!114 &1130418990
 MonoBehaviour:
@@ -1890,7 +1983,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   myLock: {fileID: 0}
   activationType: 1
---- !u!134 &1135078996
+--- !u!134 &1152907992
 PhysicMaterial:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1980,7 +2073,7 @@ PrefabInstance:
     - target: {fileID: 5897895507786433534, guid: 194925144615dc3439cb512b90e1fed1, type: 3}
       propertyPath: m_Material
       value: 
-      objectReference: {fileID: 446936723}
+      objectReference: {fileID: 1100025881}
     - target: {fileID: 6712031321680381071, guid: 194925144615dc3439cb512b90e1fed1, type: 3}
       propertyPath: m_Name
       value: VolumeTrigger (9)
@@ -1992,6 +2085,10 @@ PrefabInstance:
     - target: {fileID: 6712031321680381071, guid: 194925144615dc3439cb512b90e1fed1, type: 3}
       propertyPath: m_IsActive
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6712031321680381071, guid: 194925144615dc3439cb512b90e1fed1, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8182266059135024246, guid: 194925144615dc3439cb512b90e1fed1, type: 3}
       propertyPath: m_UseGravity
@@ -2059,7 +2156,21 @@ MonoBehaviour:
   myConeDirection: {x: 1, y: 0, z: 0}
   myMinAttenuationAngle: 90
   myMaxAttenuationAngle: 180
+  myMinAttenuationDistance: 1
+  myMaxAttenuationDistance: 10000
   myMinimumVolume: 1
+--- !u!134 &1272247006
+PhysicMaterial:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: ' (Instance)'
+  dynamicFriction: 0.6
+  staticFriction: 0.6
+  bounciness: 0
+  frictionCombine: 0
+  bounceCombine: 0
 --- !u!1001 &1303550153
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2234,14 +2345,37 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 3906651569399797678, guid: a822022263503164a97c3910ea9e04ef, type: 3}
   m_PrefabInstance: {fileID: 1349197171}
   m_PrefabAsset: {fileID: 0}
---- !u!134 &1490302258
+--- !u!134 &1392297009
 PhysicMaterial:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: ' (Instance) (Instance) (Instance) (Instance) (Instance) (Instance) (Instance)
-    (Instance) (Instance) (Instance) (Instance)'
+  m_Name: 
+  dynamicFriction: 0.6
+  staticFriction: 0.6
+  bounciness: 0
+  frictionCombine: 0
+  bounceCombine: 0
+--- !u!134 &1409782965
+PhysicMaterial:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: ' (Instance) (Instance) (Instance) (Instance)'
+  dynamicFriction: 0.6
+  staticFriction: 0.6
+  bounciness: 0
+  frictionCombine: 0
+  bounceCombine: 0
+--- !u!134 &1525748123
+PhysicMaterial:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: 
   dynamicFriction: 0.6
   staticFriction: 0.6
   bounciness: 0
@@ -2254,6 +2388,30 @@ PhysicMaterial:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: ' (Instance) (Instance) (Instance) (Instance) (Instance)'
+  dynamicFriction: 0.6
+  staticFriction: 0.6
+  bounciness: 0
+  frictionCombine: 0
+  bounceCombine: 0
+--- !u!134 &1640552839
+PhysicMaterial:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: 
+  dynamicFriction: 0.6
+  staticFriction: 0.6
+  bounciness: 0
+  frictionCombine: 0
+  bounceCombine: 0
+--- !u!134 &1644316662
+PhysicMaterial:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: ' (Instance)'
   dynamicFriction: 0.6
   staticFriction: 0.6
   bounciness: 0
@@ -2272,11 +2430,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1117991978317291218, guid: 194925144615dc3439cb512b90e1fed1, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 15.957
+      value: 16.05
       objectReference: {fileID: 0}
     - target: {fileID: 1117991978317291218, guid: 194925144615dc3439cb512b90e1fed1, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -1.081
+      value: -0.96
       objectReference: {fileID: 0}
     - target: {fileID: 1117991978317291218, guid: 194925144615dc3439cb512b90e1fed1, type: 3}
       propertyPath: m_LocalPosition.z
@@ -2325,7 +2483,7 @@ PrefabInstance:
     - target: {fileID: 5897895507786433534, guid: 194925144615dc3439cb512b90e1fed1, type: 3}
       propertyPath: m_Material
       value: 
-      objectReference: {fileID: 599065349}
+      objectReference: {fileID: 863368460}
     - target: {fileID: 6712031321680381071, guid: 194925144615dc3439cb512b90e1fed1, type: 3}
       propertyPath: m_Name
       value: VolumeTrigger (5)
@@ -2337,6 +2495,10 @@ PrefabInstance:
     - target: {fileID: 6712031321680381071, guid: 194925144615dc3439cb512b90e1fed1, type: 3}
       propertyPath: m_IsActive
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6712031321680381071, guid: 194925144615dc3439cb512b90e1fed1, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8182266059135024246, guid: 194925144615dc3439cb512b90e1fed1, type: 3}
       propertyPath: m_UseGravity
@@ -2377,16 +2539,31 @@ MonoBehaviour:
   m_GameObject: {fileID: 1679518441}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 612d23f628453ef479b54a4a0238406c, type: 3}
+  m_Script: {fileID: 11500000, guid: c4658c45421bee243b23126e64318e12, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  myLock: {fileID: 1977547023}
-  activationType: 1
+  start: {x: 16.05, y: -1.081, z: -27.657}
+  end: {x: 18.612, y: -1.081, z: -27.657}
+  duration: 0
 --- !u!4 &1679518444 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1117991978317291218, guid: 194925144615dc3439cb512b90e1fed1, type: 3}
   m_PrefabInstance: {fileID: 1679518440}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1679518445
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1679518441}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 612d23f628453ef479b54a4a0238406c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  myLock: {fileID: 1977547023}
+  activationType: 1
 --- !u!1001 &1719392209
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2442,6 +2619,10 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 7
       objectReference: {fileID: 0}
+    - target: {fileID: 3219774557274174925, guid: e8449e75002f94c4a9a3ea6af85f4ad3, type: 3}
+      propertyPath: m_Material
+      value: 
+      objectReference: {fileID: 739455424}
     - target: {fileID: 8678048452124275836, guid: e8449e75002f94c4a9a3ea6af85f4ad3, type: 3}
       propertyPath: m_Name
       value: En_P_DoorHandle
@@ -2499,7 +2680,7 @@ BoxCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1719392211}
-  m_Material: {fileID: 421053896}
+  m_Material: {fileID: 252630237}
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
@@ -2608,6 +2789,10 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 7
       objectReference: {fileID: 0}
+    - target: {fileID: 5542638928154208186, guid: bc6e15712d6a3dd488299351f0db4119, type: 3}
+      propertyPath: m_Material
+      value: 
+      objectReference: {fileID: 1525748123}
     - target: {fileID: 8192910085652644421, guid: bc6e15712d6a3dd488299351f0db4119, type: 3}
       propertyPath: m_Layer
       value: 7
@@ -2617,11 +2802,6 @@ PrefabInstance:
 --- !u!1 &1783787875 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 1793320033249751144, guid: bc6e15712d6a3dd488299351f0db4119, type: 3}
-  m_PrefabInstance: {fileID: 1783787874}
-  m_PrefabAsset: {fileID: 0}
---- !u!65 &1783787876 stripped
-BoxCollider:
-  m_CorrespondingSourceObject: {fileID: 412141782623110073, guid: bc6e15712d6a3dd488299351f0db4119, type: 3}
   m_PrefabInstance: {fileID: 1783787874}
   m_PrefabAsset: {fileID: 0}
 --- !u!114 &1783787877
@@ -2687,6 +2867,8 @@ MonoBehaviour:
   myConeDirection: {x: 1, y: 0, z: 0}
   myMinAttenuationAngle: 90
   myMaxAttenuationAngle: 180
+  myMinAttenuationDistance: 1
+  myMaxAttenuationDistance: 10000
   myMinimumVolume: 1
 --- !u!114 &1783787882
 MonoBehaviour:
@@ -2703,7 +2885,7 @@ MonoBehaviour:
   enabledOnStart: 1
   enableOnNotify: 0
   aTarget: {fileID: 1783787879}
-  aTargetType: {fileID: 1783787876}
+  aTargetType: {fileID: 0}
 --- !u!114 &1783787883
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2719,6 +2901,18 @@ MonoBehaviour:
   start: {x: -0, y: 270, z: 0}
   end: {x: -0, y: 0, z: 0}
   duration: 0.5
+--- !u!134 &1786328558
+PhysicMaterial:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: ' (Instance)'
+  dynamicFriction: 0.6
+  staticFriction: 0.6
+  bounciness: 0
+  frictionCombine: 0
+  bounceCombine: 0
 --- !u!1 &1790173247
 GameObject:
   m_ObjectHideFlags: 0
@@ -2777,7 +2971,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3638084435692037442, guid: 286d0cccd804a4b4ea1e54945ae1a31c, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.9659258
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3638084435692037442, guid: 286d0cccd804a4b4ea1e54945ae1a31c, type: 3}
       propertyPath: m_LocalRotation.x
@@ -2789,7 +2983,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3638084435692037442, guid: 286d0cccd804a4b4ea1e54945ae1a31c, type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0.2588191
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3638084435692037442, guid: 286d0cccd804a4b4ea1e54945ae1a31c, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -2884,7 +3078,7 @@ BoxCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1827178319}
-  m_Material: {fileID: 1135078996}
+  m_Material: {fileID: 1786328558}
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
@@ -2919,18 +3113,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   myLock: {fileID: 0}
   activationType: 1
---- !u!134 &1865448397
-PhysicMaterial:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_Name: ' (Instance)'
-  dynamicFriction: 0.6
-  staticFriction: 0.6
-  bounciness: 0
-  frictionCombine: 0
-  bounceCombine: 0
 --- !u!134 &1897977736
 PhysicMaterial:
   m_ObjectHideFlags: 0
@@ -3123,6 +3305,10 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 7
       objectReference: {fileID: 0}
+    - target: {fileID: 5542638928154208186, guid: bc6e15712d6a3dd488299351f0db4119, type: 3}
+      propertyPath: m_Material
+      value: 
+      objectReference: {fileID: 388466010}
     - target: {fileID: 8192910085652644421, guid: bc6e15712d6a3dd488299351f0db4119, type: 3}
       propertyPath: m_Layer
       value: 7
@@ -3132,11 +3318,6 @@ PrefabInstance:
 --- !u!1 &2032221334 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 1793320033249751144, guid: bc6e15712d6a3dd488299351f0db4119, type: 3}
-  m_PrefabInstance: {fileID: 2032221333}
-  m_PrefabAsset: {fileID: 0}
---- !u!65 &2032221335 stripped
-BoxCollider:
-  m_CorrespondingSourceObject: {fileID: 412141782623110073, guid: bc6e15712d6a3dd488299351f0db4119, type: 3}
   m_PrefabInstance: {fileID: 2032221333}
   m_PrefabAsset: {fileID: 0}
 --- !u!114 &2032221336
@@ -3168,7 +3349,7 @@ MonoBehaviour:
   enabledOnStart: 1
   enableOnNotify: 0
   aTarget: {fileID: 2032221338}
-  aTargetType: {fileID: 2032221335}
+  aTargetType: {fileID: 0}
 --- !u!4 &2032221338 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1555496760709689427, guid: bc6e15712d6a3dd488299351f0db4119, type: 3}
@@ -3191,6 +3372,8 @@ MonoBehaviour:
   myConeDirection: {x: 1, y: 0, z: 0}
   myMinAttenuationAngle: 90
   myMaxAttenuationAngle: 180
+  myMinAttenuationDistance: 1
+  myMaxAttenuationDistance: 10000
   myMinimumVolume: 1
 --- !u!114 &2032221340
 MonoBehaviour:
@@ -3206,13 +3389,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   myLock: {fileID: 0}
   activationType: 1
---- !u!134 &2133580913
+--- !u!134 &2083687992
 PhysicMaterial:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: 
+  m_Name: ' (Instance)'
   dynamicFriction: 0.6
   staticFriction: 0.6
   bounciness: 0
@@ -3309,6 +3492,10 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 7
       objectReference: {fileID: 0}
+    - target: {fileID: 5542638928154208186, guid: bc6e15712d6a3dd488299351f0db4119, type: 3}
+      propertyPath: m_Material
+      value: 
+      objectReference: {fileID: 710165558}
     - target: {fileID: 8192910085652644421, guid: bc6e15712d6a3dd488299351f0db4119, type: 3}
       propertyPath: m_Layer
       value: 7
@@ -3385,6 +3572,8 @@ MonoBehaviour:
   myConeDirection: {x: 1, y: 0, z: 0}
   myMinAttenuationAngle: 90
   myMaxAttenuationAngle: 180
+  myMinAttenuationDistance: 1
+  myMaxAttenuationDistance: 10000
   myMinimumVolume: 1
 --- !u!114 &923748274555618353
 MonoBehaviour:

@@ -276,14 +276,18 @@ void CBoxColliderComponent::CanBeDeactivated(const bool aCanBeDeactivated)
 
 void CBoxColliderComponent::OnEnable()
 {
+#ifdef DEBUG_COLLIDER_BOX
 	if(myColliderDraw != nullptr)
 		myColliderDraw->SetIsActive(true);
+#endif // _DEBUG
 }
 
 void CBoxColliderComponent::OnDisable()
 {
+#ifdef DEBUG_COLLIDER_BOX
 	if (myColliderDraw != nullptr)
 		myColliderDraw->SetIsActive(false);
+#endif
 }
 
 void CBoxColliderComponent::CreateColliderDraw(const float& aHalfSizeX, const float& aHalfSizeY, const float& aHalfSizeZ, const Vector3& aPosOffset)
