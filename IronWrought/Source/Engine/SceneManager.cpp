@@ -87,6 +87,12 @@ CScene* CSceneManager::CreateEmpty()
 	emptyScene->EnvironmentLight(envLight->GetComponent<CEnvironmentLightComponent>()->GetEnvironmentLight());
 	emptyScene->AddInstance(envLight);
 
+	CGameObject* vfxTester = new CGameObject(2);
+	vfxTester->AddComponent<CVFXSystemComponent>(*vfxTester, ASSETPATH("Assets/IronWrought/VFX/VFX_JSON/VFXSystem_Tester.json"));
+	vfxTester->GetComponent<CVFXSystemComponent>()->EnableEffect(0);
+	emptyScene->AddInstance(vfxTester);
+	emptyScene->SetVFXTester(vfxTester);
+
 	//AddPlayer(*emptyScene, std::string());
 
 	return emptyScene;
@@ -727,16 +733,17 @@ void CSceneManager::AddPuzzleActivationTeleporter(CScene& aScene, RapidArray som
 		PostMaster::ELevelName target = static_cast<PostMaster::ELevelName>(activation["teleporterTarget"].GetInt());
 
 		Vector3 teleportToPos;
-		teleportToPos.x = activation["teleportToPosX"].GetFloat();
-		teleportToPos.y = activation["teleportToPosY"].GetFloat();
-		teleportToPos.z = activation["teleportToPosZ"].GetFloat();
+		teleportToPos.x = activation["teleportToPos"]["x"].GetFloat();
+		teleportToPos.y = activation["teleportToPos"]["y"].GetFloat();
+		teleportToPos.z = activation["teleportToPos"]["z"].GetFloat();
 
 		Vector3 teleportToRot;
-		teleportToRot.x = activation["teleportToRotX"].GetFloat();
-		teleportToRot.y = activation["teleportToRotY"].GetFloat();
-		teleportToRot.z = activation["teleportToRotZ"].GetFloat();
+		teleportToRot.x = activation["teleportToRot"]["x"].GetFloat();
+		teleportToRot.y = activation["teleportToRot"]["y"].GetFloat();
+		teleportToRot.z = activation["teleportToRot"]["z"].GetFloat();
 	
 		float aTimeUntilTeleport = activation["timeUntilTeleport"].GetFloat();
+		aTimeUntilTeleport = (aTimeUntilTeleport <= 0.0f ? 0.01f : aTimeUntilTeleport);
 
 		gameObject->AddComponent<CTeleportActivation>(*gameObject, name, target, teleportToPos, teleportToRot, aTimeUntilTeleport);
 	}
@@ -873,15 +880,15 @@ void CSceneManager::AddPuzzleResponseAudio(CScene& aScene, RapidArray someData)
 		//bool is3D = response["myIs3D"].GetInt() ? 1 : 0;
 		settings.myForward = Vector3
 		{
-			response["myConeDirection"]["x"].GetFloat(),
-			response["myConeDirection"]["y"].GetFloat(),
-			response["myConeDirection"]["z"].GetFloat(),
+			response["coneDirection"]["x"].GetFloat(),
+			response["coneDirection"]["y"].GetFloat(),
+			response["coneDirection"]["z"].GetFloat(),
 		};
-		settings.myStartAttenuationAngle = response["myMinAttenuationAngle"].GetFloat();
-		settings.myMaxAttenuationAngle = response["myMaxAttenuationAngle"].GetFloat();
+		settings.myStartAttenuationAngle = response["minAttenuationAngle"].GetFloat();
+		settings.myMaxAttenuationAngle = response["maxAttenuationAngle"].GetFloat();
 		settings.myMinAttenuationDistance = response["minAttenuationDistance"].GetFloat();
 		settings.myMaxAttenuationDistance = response["maxAttenuationDistance"].GetFloat();
-		settings.myMinimumVolume = response["myMinimumVolume"].GetFloat();
+		settings.myMinimumVolume = response["minimumVolume"].GetFloat();
 		settings.myGameObjectID = gameObject->InstanceID();
 		gameObject->AddComponent<CAudioResponse>(*gameObject, settings);
 	}

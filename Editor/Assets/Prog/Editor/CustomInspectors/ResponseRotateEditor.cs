@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 
-[CustomEditor(typeof(ActivationRotate))]
-public class KeyRotateEditor : Editor
+[CustomEditor(typeof(ResponseRotate))]
+public class ResponseRotateEditor : Editor
 {
     public override void OnInspectorGUI()
     {

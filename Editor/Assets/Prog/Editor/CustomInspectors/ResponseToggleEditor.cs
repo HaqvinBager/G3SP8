@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEditor;
 
 [CustomEditor(typeof(ResponseToggle))]
-public class ToggleEditor : Editor 
+public class ResponseToggleEditor : Editor 
 {
 
     private List<System.Type> validTypes = new List<System.Type>()

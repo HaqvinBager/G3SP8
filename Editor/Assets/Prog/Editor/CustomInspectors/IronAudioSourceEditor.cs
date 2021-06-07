@@ -6,7 +6,7 @@ using UnityEditor;
 public class IronAudioSourceEditor : Editor
 {
 
-    int selected = 0;
+    //int selected = 0;
     public override void OnInspectorGUI()
     {
         base.OnInspectorGUI();
