@@ -5,16 +5,19 @@ CPrintResponse::CPrintResponse(CGameObject& aParent, const SSettings& someSettin
 	: IResponseBehavior(aParent)
 	, mySettings(someSettings)
 {
-	Enabled(false);
+	HasBeenActivated(false);
 }
 
 void CPrintResponse::Update()
 {
+	if (!HasBeenActivated())
+		return;
+
 	std::cout << __FUNCTION__ << mySettings.myData << "\n";
-	Enabled(false);
+	HasBeenActivated(false);
 }
 
 void CPrintResponse::OnRespond()
 {
-	Enabled(true);
+	HasBeenActivated(true);
 }
