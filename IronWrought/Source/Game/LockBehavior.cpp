@@ -67,14 +67,20 @@ void CLockBehavior::RunEventEditor()
 
 void CLockBehavior::Receive(const SStringMessage& aMessage)
 {
+	//if (strcmp(aMessage.myMessageType, mySettings.myOnKeyCreateNotify.c_str()) == 0)
+	//{
+	//	std::cout << __FUNCTION__ << " STRCMP == 0    " << aMessage.myMessageType << std::endl;
+	//}
+
 	if (mySettings.myOnKeyCreateNotify.find(aMessage.myMessageType) != std::string::npos)
 	{
 		++myMaxAmountOfKeys;
-		std::cout << __FUNCTION__ << "----| \t" << GameObject().Name() << " Keys: " << myMaxAmountOfKeys << std::endl;
+		std::cout << __FUNCTION__ << "----| \t" << GameObject().Name() << " Keys: " << myMaxAmountOfKeys << "   Message: " << aMessage.myMessageType << std::endl;
 	}
 	else
 	{
 		++myAmountOfKeys;
+		std::cout << __FUNCTION__ << "----> \t" << GameObject().Name() << " Key Pickup: " << myAmountOfKeys << std::endl;
 	}
 }
 

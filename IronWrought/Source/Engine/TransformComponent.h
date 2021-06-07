@@ -57,7 +57,7 @@ public:
 	void RemoveParent();
 
 public:
-	std::vector<CTransformComponent*> FetchChildren() { return myChildren; }
+	std::vector<CTransformComponent*>& FetchChildren() { return myChildren; }
 
 private:
 

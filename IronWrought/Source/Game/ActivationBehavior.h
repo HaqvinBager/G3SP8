@@ -15,7 +15,12 @@ public:
 
 	bool Complete(const bool aCompletePredicate);
 
-	virtual void OnActivation() { myIsInteracted = true; };
+	virtual void OnActivation() 
+	{ 
+		std::cout << __FUNCTION__ << " Key Activated " << std::endl;
+		myIsInteracted = true; 
+
+	};
 
 protected:
 	bool myHasLock;

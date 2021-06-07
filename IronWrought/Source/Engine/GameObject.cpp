@@ -76,14 +76,18 @@ void CGameObject::LateUpdate()
 
 void CGameObject::Active(bool aActive)
 {
-	myIsActive = aActive;
-
-	if (aActive)
+	if (myIsActive != aActive)
+	{
 		for (const auto& component : myComponents)		
-			component->Enabled(true);		
-	else	
-		for (const auto& component : myComponents)	
-			component->Enabled(false);		
+			component->Enabled(aActive);
+
+		auto& children = myTransform->FetchChildren();
+		for (auto& child : children)
+		{
+			child->GameObject().Active(aActive);
+		}
+		myIsActive = aActive;
+	}
 }
 
 bool CGameObject::CompareTag(const std::string& aTag) const

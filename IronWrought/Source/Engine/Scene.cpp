@@ -984,8 +984,9 @@ void CScene::ToggleSections(const int aSection)
 		}
 	}
 	myCurrentSection = aSection;
-	if(myPlayer)
+	if (myPlayer)
 		myPlayer->Active(true);
+
 
 	auto enemyComponent = FindFirstObjectWithComponentInSection<CEnemyComponent>(aSection);
 	if (enemyComponent)

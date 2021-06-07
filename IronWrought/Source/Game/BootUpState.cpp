@@ -65,7 +65,7 @@ void CBootUpState::Start()
 	myTimer = 0.0f;
 	myLogoToRender = 0;
 
-	//CMainSingleton::PostMaster().SendLate({ EMessageType::BootUpState, nullptr });
+	CMainSingleton::PostMaster().SendLate({ EMessageType::BootUpState, nullptr });
 }
 
 void CBootUpState::Stop()

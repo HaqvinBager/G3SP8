@@ -11,18 +11,18 @@ public class ResponseMoveEditor : Editor
         serializedObject.Update();
         base.OnInspectorGUI();
         
-        this.ShowValueAndButton<ActivationMove>("start", "Save Start", SavePosition);
-        this.ShowValueAndButton<ActivationMove>("end", "Save End", SavePosition);
+        this.ShowValueAndButton<ResponseMove>("start", "Save Start", SavePosition);
+        this.ShowValueAndButton<ResponseMove>("end", "Save End", SavePosition);
         GUI.backgroundColor = Color.green;
-        this.SetValueButtonCallback<ActivationMove>("start", "Move To Start", SetPosition);
+        this.SetValueButtonCallback<ResponseMove>("start", "Move To Start", SetPosition);
         GUI.backgroundColor = Color.cyan;
-        this.SetValueButtonCallback<ActivationMove>("end", "Move To End", SetPosition);
+        this.SetValueButtonCallback<ResponseMove>("end", "Move To End", SetPosition);
         serializedObject.ApplyModifiedProperties();
     }
 
     void SetPosition(Vector3 aValue)
     {
-        var move = (ActivationMove)target;
+        var move = (ResponseMove)target;
         move.transform.position = aValue;
     }
 
