@@ -61,14 +61,9 @@ CAudioManager::CAudioManager()
 		myUIAudio.push_back(myWrapper.RequestSound(GetPath(static_cast<EUI>(i))));
 	}
 
-	for (unsigned int i = 0; i < static_cast<unsigned int>(EResearcherEventVoiceLine::Count); ++i)
+	for (unsigned int i = 0; i < static_cast<unsigned int>(EVOX::Count); ++i)
 	{
-		myResearcherEventSounds.push_back(myWrapper.RequestSound(GetPath(static_cast<EResearcherEventVoiceLine>(i))));
-	}
-
-	for (unsigned int i = 0; i < static_cast<unsigned int>(EResearcherReactionVoiceLine::Count); ++i)
-	{
-		FillCollection(static_cast<EResearcherReactionVoiceLine>(i));
+		myResearcherEventSounds.push_back(myWrapper.RequestSound(GetPath(static_cast<EVOX>(i))));
 	}
 
 	LoadEnemyLines();
@@ -103,12 +98,7 @@ CAudioManager::CAudioManager()
 	if (volDoc.HasMember("ResearcherVoice"))
 	{
 		float value = volDoc["ResearcherVoice"].GetFloat();
-		myChannels[CAST(EChannel::ResearcherVOX)]->SetVolume(value);
-	}
-	if (volDoc.HasMember("RobotVoice"))
-	{
-		float value = volDoc["RobotVoice"].GetFloat();
-		myChannels[CAST(EChannel::RobotVOX)]->SetVolume(value);
+		myChannels[CAST(EChannel::VOX)]->SetVolume(value);
 	}
 
 	myDynamicSource = myWrapper.RequestAudioSource("Enemy");
@@ -275,65 +265,15 @@ void CAudioManager::Receive(const SMessage& aMessage) {
 
 	case EMessageType::PlayResearcherReactionExplosives:
 	{
-		PlayRandomSoundFromCollection(myResearcherReactionsExplosives, EChannel::ResearcherVOX);
-	}
-	break;
-
-	//case EMessageType::PlayRobotAttackSound:
-	//{
-	//	if (myChannels[CAST(EChannel::ResearcherVOX)]->IsPlaying())
-	//		return;
-	//	PlayCyclicRandomSoundFromCollection(myRobotAttackSounds, EChannel::RobotVOX, myAttackSoundIndices, AUDIO_MAX_NR_OF_SFX_FROM_COLLECTION);
-	//}
-	//break;
-
-	//case EMessageType::PlayRobotDeathSound:
-	//{
-	//	if (myChannels[CAST(EChannel::ResearcherVOX)]->IsPlaying())
-	//		return;
-	//	PlayCyclicRandomSoundFromCollection(myRobotDeathSounds, EChannel::RobotVOX, myDeathSoundIndices, AUDIO_MAX_NR_OF_SFX_FROM_COLLECTION);
-	//}
-	//break;
-
-	//case EMessageType::PlayRobotIdleSound:
-	//{
-	//	if (myChannels[CAST(EChannel::ResearcherVOX)]->IsPlaying())
-	//		return;
-	//	PlayCyclicRandomSoundFromCollection(myRobotIdleSounds, EChannel::RobotVOX, myIdleSoundIndices, AUDIO_MAX_NR_OF_SFX_FROM_COLLECTION);
-	//}
-	//break;
-
-	//case EMessageType::PlayRobotPatrolling:
-	//{
-	//	if (myChannels[CAST(EChannel::ResearcherVOX)]->IsPlaying())
-	//		return;
-	//	PlayCyclicRandomSoundFromCollection(myRobotPatrollingSounds, EChannel::RobotVOX, myPatrollingSoundIndices, AUDIO_MAX_NR_OF_SFX_FROM_COLLECTION);
-	//}
-	//break;
-
-	//case EMessageType::PlayRobotSearching:
-	//{
-	//	if (myChannels[CAST(EChannel::ResearcherVOX)]->IsPlaying())
-	//		return;
-	//	PlayCyclicRandomSoundFromCollection(myRobotSearchingSounds, EChannel::RobotVOX, mySearchingSoundIndices, AUDIO_MAX_NR_OF_SFX_FROM_COLLECTION);
-	//}
-	//break;
-
-	case EMessageType::EnemyTakeDamage:
-	{
-		if (myChannels[CAST(EChannel::ResearcherVOX)]->IsPlaying())
-			return;
-		PlayCyclicRandomSoundFromCollection(myRobotDamageSounds, EChannel::RobotVOX, myDamageSoundIndices, AUDIO_MAX_NR_OF_SFX_FROM_COLLECTION);
-		myWrapper.Play(mySFXAudio[CAST(ESFX::EnemyHit)], myChannels[CAST(EChannel::SFX)]);
+		PlayRandomSoundFromCollection(myResearcherReactionsExplosives, EChannel::VOX);
 	}
 	break;
 
 	case EMessageType::PlayResearcherEvent:
 	{
 		int index = *static_cast<int*>(aMessage.data);
-		myChannels[CAST(EChannel::RobotVOX)]->Stop();
-		myChannels[CAST(EChannel::ResearcherVOX)]->Stop();
-		myWrapper.Play(myResearcherEventSounds[index], myChannels[CAST(EChannel::ResearcherVOX)]);
+		myChannels[CAST(EChannel::VOX)]->Stop();
+		myWrapper.Play(myResearcherEventSounds[index], myChannels[CAST(EChannel::VOX)]);
 	}
 	break;
 
@@ -368,10 +308,9 @@ void CAudioManager::Receive(const SMessage& aMessage) {
 
 	case EMessageType::EnemyAttackState:
 	{
-		if (myChannels[CAST(EChannel::ResearcherVOX)]->IsPlaying())
+		if (myChannels[CAST(EChannel::VOX)]->IsPlaying())
 			return;
 
-		PlayCyclicRandomSoundFromCollection(myRobotAttackSounds, EChannel::RobotVOX, myAttackSoundIndices, AUDIO_MAX_NR_OF_SFX_FROM_COLLECTION);
 	}break;
 
 	case EMessageType::EnemyPatrolState:
@@ -418,7 +357,7 @@ void CAudioManager::Receive(const SMessage& aMessage) {
 
 	case EMessageType::EnemyAttack:
 	{
-		if (myChannels[CAST(EChannel::ResearcherVOX)]->IsPlaying())
+		if (myChannels[CAST(EChannel::VOX)]->IsPlaying())
 			return;
 
 		if (mySFXAudio[CAST(ESFX::EnemyAttack)])
@@ -427,7 +366,7 @@ void CAudioManager::Receive(const SMessage& aMessage) {
 
 	case EMessageType::GameStarted:
 	{
-		myWrapper.Play(myResearcherEventSounds[CAST(EResearcherEventVoiceLine::V1)], myChannels[CAST(EChannel::ResearcherVOX)]);
+		myWrapper.Play(myResearcherEventSounds[CAST(EVOX::Line1)], myChannels[CAST(EChannel::VOX)]);
 
 	}break;
 
@@ -473,15 +412,14 @@ void CAudioManager::Receive(const SMessage& aMessage) {
 	case EMessageType::BootUpState:
 	{
 		//myWrapper.Play(myAmbienceAudio[CAST(EAmbience::Inside)], myChannels[CAST(EChannel::Ambience)]);
-		myWrapper.Play(myResearcherEventSounds[CAST(EResearcherEventVoiceLine::BootUp)], myChannels[CAST(EChannel::ResearcherVOX)]);
+		myWrapper.Play(myResearcherEventSounds[CAST(EVOX::Line0)], myChannels[CAST(EChannel::VOX)]);
 	}break;
 
 	case EMessageType::MainMenu:
 	{
 		myChannels[CAST(EChannel::Ambience)]->Stop();
 		myChannels[CAST(EChannel::Music)]->Stop();
-		myChannels[CAST(EChannel::ResearcherVOX)]->Stop();
-		myChannels[CAST(EChannel::RobotVOX)]->Stop();
+		myChannels[CAST(EChannel::VOX)]->Stop();
 		myChannels[CAST(EChannel::SFX)]->Stop();
 		//myWrapper.Play(myAmbienceAudio[CAST(EAmbience::Inside)], myChannels[CAST(EChannel::Ambience)]);
 	}break;
@@ -877,7 +815,7 @@ std::string CAudioManager::GetPath(EUI type) const
 	return path;
 }
 
-std::string CAudioManager::GetPath(EResearcherEventVoiceLine type) const
+std::string CAudioManager::GetPath(EVOX type) const
 {
 	std::string path = myVoxPath;
 	path.append(TranslateEnum(type));
@@ -897,10 +835,8 @@ std::string CAudioManager::TranslateEnum(EChannel enumerator) const
 		return "SFX";
 	case EChannel::UI:
 		return "UI";
-	case EChannel::ResearcherVOX:
-		return "ResearcherVOX";
-	case EChannel::RobotVOX:
-		return "RobotVOX";
+	case EChannel::VOX:
+		return "VOX";
 	case EChannel::DynamicChannel1:
 		return "DynamicChannel1";
 	case EChannel::DynamicChannel2:
@@ -1022,101 +958,93 @@ std::string CAudioManager::TranslateEnum(EUI enumerator) const {
 		return "";
 	}
 }
-std::string CAudioManager::TranslateEnum(EResearcherEventVoiceLine enumerator) const
+std::string CAudioManager::TranslateEnum(EVOX enumerator) const
 {
 	switch (enumerator)
 	{
-	case EResearcherEventVoiceLine::V1:
-		return "V1";
-	case EResearcherEventVoiceLine::V2:
-		return "V2";
-	case EResearcherEventVoiceLine::BootUp:
-		return "BootUp";
-	case EResearcherEventVoiceLine::Intro:
-		return "Intro";
-	case EResearcherEventVoiceLine::Line1:
+	case EVOX::Line0:
+		return "0";
+	case EVOX::Line1:
 		return "1";
-	case EResearcherEventVoiceLine::Line2:
+	case EVOX::Line2:
 		return "2";
-	case EResearcherEventVoiceLine::Line3:
+	case EVOX::Line3:
 		return "3";
-	case EResearcherEventVoiceLine::Line4:
+	case EVOX::Line4:
 		return "4";
-	case EResearcherEventVoiceLine::Line5:
+	case EVOX::Line5:
 		return "5";
-	case EResearcherEventVoiceLine::Line6:
+	case EVOX::Line6:
 		return "6";
-	case EResearcherEventVoiceLine::Line7:
+	case EVOX::Line7:
 		return "7";
-	case EResearcherEventVoiceLine::Line8:
+	case EVOX::Line8:
 		return "8";
-	case EResearcherEventVoiceLine::Line9:
+	case EVOX::Line9:
 		return "9";
-	case EResearcherEventVoiceLine::Line10:
+	case EVOX::Line10:
 		return "10";
-	case EResearcherEventVoiceLine::Line11:
+	case EVOX::Line11:
 		return "11";
-	case EResearcherEventVoiceLine::Line12:
+	case EVOX::Line12:
 		return "12";
-	case EResearcherEventVoiceLine::Line13:
+	case EVOX::Line13:
 		return "13";
-	case EResearcherEventVoiceLine::Line14:
+	case EVOX::Line14:
 		return "14";
-	case EResearcherEventVoiceLine::Line15:
+	case EVOX::Line15:
 		return "15";
-	case EResearcherEventVoiceLine::Line16:
+	case EVOX::Line16:
 		return "16";
-	case EResearcherEventVoiceLine::Line17:
+	case EVOX::Line17:
 		return "17";
-	case EResearcherEventVoiceLine::Line18:
+	case EVOX::Line18:
 		return "18";
-	case EResearcherEventVoiceLine::Line19:
+	case EVOX::Line19:
 		return "19";
-	case EResearcherEventVoiceLine::Line20:
+	case EVOX::Line20:
 		return "20";
-	case EResearcherEventVoiceLine::Line21:
+	case EVOX::Line21:
 		return "21";
-	case EResearcherEventVoiceLine::Line22:
+	case EVOX::Line22:
 		return "22";
-	case EResearcherEventVoiceLine::Line23:
+	case EVOX::Line23:
 		return "23";
-	case EResearcherEventVoiceLine::Line24:
+	case EVOX::Line24:
 		return "24";
-	case EResearcherEventVoiceLine::Line25:
+	case EVOX::Line25:
 		return "25";
-	case EResearcherEventVoiceLine::Line26:
+	case EVOX::Line26:
 		return "26";
-	case EResearcherEventVoiceLine::Line27:
+	case EVOX::Line27:
 		return "27";
-	case EResearcherEventVoiceLine::Outro1:
-		return "Outro1";
-	case EResearcherEventVoiceLine::Outro2:
-		return "Outro2";
-	case EResearcherEventVoiceLine::Outro3:
-		return "Outro3";
-	case EResearcherEventVoiceLine::Outro4:
-		return "Outro4";
-	case EResearcherEventVoiceLine::Outro5:
-		return "Outro5";
-	case EResearcherEventVoiceLine::Outro6:
-		return "Outro6";
-	case EResearcherEventVoiceLine::Outro7:
-		return "Outro7";
+	case EVOX::Line28:
+		return "28";
+	case EVOX::Line29:
+		return "29";
+	case EVOX::Line30:
+		return "30";
+	case EVOX::Line31:
+		return "31";
+	case EVOX::Line32:
+		return "32";
+	case EVOX::Line33:
+		return "33";
+	case EVOX::Line34:
+		return "34";
+	case EVOX::Line35:
+		return "35";
+	case EVOX::Line36:
+		return "36";
+	case EVOX::Line37:
+		return "37";
+	case EVOX::Line38:
+		return "38";
+	default:
+		return "";
+	}
+}
 
-	default:
-		return "";
-	}
-}
-std::string CAudioManager::TranslateEnum(EResearcherReactionVoiceLine enumerator) const
-{
-	switch (enumerator)
-	{
-	case EResearcherReactionVoiceLine::ResearcherReactionExplosives:
-		return "ResearcherReactionExplosives";
-	default:
-		return "";
-	}
-}
 std::string CAudioManager::TranslateEnum(EEnemyVoiceLine enumerator) const
 {
 	switch (enumerator)
@@ -1217,28 +1145,6 @@ void CAudioManager::FillCollection(ESFXCollection enumerator)
 	}
 }
 
-void CAudioManager::FillCollection(EResearcherReactionVoiceLine enumerator)
-{
-	unsigned int counter = 0;
-
-	switch (enumerator)
-	{
-	case EResearcherReactionVoiceLine::ResearcherReactionExplosives:
-	{
-		CAudio* sound = myWrapper.TryGetSound(myVoxPath + GetCollectionPath(enumerator, ++counter));
-
-		while (sound != nullptr)
-		{
-			myResearcherReactionsExplosives.push_back(sound);
-			sound = myWrapper.TryGetSound(myVoxPath + GetCollectionPath(enumerator, ++counter));
-		}
-	}
-	break;
-	default:
-		break;
-	}
-}
-
 void CAudioManager::LoadEnemyLines()
 {
 	std::string path = myVoxPath;
@@ -1319,8 +1225,7 @@ void CAudioManager::Pause()
 	myChannels[CAST(EChannel::Ambience)]->SetPaused(true);
 	myChannels[CAST(EChannel::Music)]->SetPaused(true);
 	myChannels[CAST(EChannel::SFX)]->SetPaused(true);
-	myChannels[CAST(EChannel::ResearcherVOX)]->SetPaused(true);
-	myChannels[CAST(EChannel::RobotVOX)]->SetPaused(true);
+	myChannels[CAST(EChannel::VOX)]->SetPaused(true);
 	myChannels[CAST(EChannel::DynamicChannel1)]->SetPaused(true);
 	myChannels[CAST(EChannel::DynamicChannel2)]->SetPaused(true);
 	myChannels[CAST(EChannel::DynamicChannel3)]->SetPaused(true);
@@ -1338,8 +1243,7 @@ void CAudioManager::Resume()
 	myChannels[CAST(EChannel::Ambience)]->SetPaused(false);
 	myChannels[CAST(EChannel::Music)]->SetPaused(false);
 	myChannels[CAST(EChannel::SFX)]->SetPaused(false);
-	myChannels[CAST(EChannel::ResearcherVOX)]->SetPaused(false);
-	myChannels[CAST(EChannel::RobotVOX)]->SetPaused(false);
+	myChannels[CAST(EChannel::VOX)]->SetPaused(false);
 	myChannels[CAST(EChannel::DynamicChannel1)]->SetPaused(false);
 	myChannels[CAST(EChannel::DynamicChannel2)]->SetPaused(false);
 	myChannels[CAST(EChannel::DynamicChannel3)]->SetPaused(false);
