@@ -72,6 +72,7 @@ void CLockBehavior::Receive(const SStringMessage& aMessage)
 	else
 	{
 		++myAmountOfKeys;
+		std::cout << __FUNCTION__ << "----> \t" << GameObject().Name() << " Key Pickup: " << myAmountOfKeys << std::endl;
 	}
 }
 
