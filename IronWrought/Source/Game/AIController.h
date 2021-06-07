@@ -59,21 +59,14 @@ private:
 class CAttack : public CAIController
 {
 public:
-	CAttack(CEnemyComponent* aUser, Vector3 aResetPosition);
-	~CAttack() override { myTarget = nullptr; }
+	CAttack();
+	~CAttack() override { }
 	void Enter(const Vector3& aPosition)override;
 	Vector3 Update(const Vector3& aPosition) override;
 	void ClearPath() override;
-	void SetTarget(CTransformComponent* aTarget);
 
 private:
-	float myDamage;
-	float myAttackCooldown;
-	float myAttackTimer;
-	CTransformComponent* myTarget;
-	CEnemyComponent* myUser;
 	std::vector<Vector3> myPath;
-	Vector3 myResetPosition;
 };
 
 class CAlerted : public CAIController {

@@ -16,7 +16,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 4294967295
   m_IsActive: 1
 --- !u!4 &6418772804997508639
 Transform:
@@ -75,15 +75,15 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8031064123738822522}
-  - component: {fileID: 2563234706113825235}
   - component: {fileID: 5860392940673970155}
+  - component: {fileID: 3624550964760476811}
   m_Layer: 0
   m_Name: Coll
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_StaticEditorFlags: 4294967295
+  m_IsActive: 0
 --- !u!4 &8031064123738822522
 Transform:
   m_ObjectHideFlags: 0
@@ -98,20 +98,6 @@ Transform:
   m_Father: {fileID: 6418772804997508639}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!64 &2563234706113825235
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5417017172608564264}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 4
-  m_Convex: 1
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 3094893996545440317, guid: cad288f1a6005a04fb8eb6cae94b4f24, type: 3}
 --- !u!54 &5860392940673970155
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -128,6 +114,19 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!65 &3624550964760476811
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5417017172608564264}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.40183854, y: 0.59553003, z: 0.15375537}
+  m_Center: {x: -0.0071750954, y: 1.6469543, z: 0.06850788}
 --- !u!1001 &1785228937807553792
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -186,6 +185,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: cad288f1a6005a04fb8eb6cae94b4f24, type: 3}
       propertyPath: m_Name
       value: En_P_electricalCabinet
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: cad288f1a6005a04fb8eb6cae94b4f24, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 4294967295
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: cad288f1a6005a04fb8eb6cae94b4f24, type: 3}

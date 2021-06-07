@@ -16,8 +16,8 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_StaticEditorFlags: 4294967295
+  m_IsActive: 0
 --- !u!4 &6375287806807245282
 Transform:
   m_ObjectHideFlags: 0
@@ -76,7 +76,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 4294967295
   m_IsActive: 1
 --- !u!4 &2514833175267437998
 Transform:
@@ -172,6 +172,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: c8ef45bfeaa73b44d96ef32cf4cfe80d, type: 3}
       propertyPath: m_Name
       value: En_P_Kitchen_table2
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: c8ef45bfeaa73b44d96ef32cf4cfe80d, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 4294967295
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c8ef45bfeaa73b44d96ef32cf4cfe80d, type: 3}
