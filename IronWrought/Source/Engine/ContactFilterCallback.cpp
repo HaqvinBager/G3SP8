@@ -10,14 +10,16 @@ physx::PxFilterFlags CContactFilterCallback::pairFound(physx::PxU32 /*pairID*/, 
 	CTransformComponent* firstTransform = (CTransformComponent*)a0->userData;
 	CTransformComponent* secondTransform = (CTransformComponent*)a1->userData;
 	CPhysicsPropAudioComponent* audioComponent = nullptr;
-	if (firstTransform) {
-		audioComponent = firstTransform->GameObject().GetComponent<CPhysicsPropAudioComponent>();
+
+	if (firstTransform != nullptr)
+	{
+		audioComponent = firstTransform->GetComponent<CPhysicsPropAudioComponent>();
 	}
-	else {
-		audioComponent = secondTransform->GameObject().GetComponent<CPhysicsPropAudioComponent>();
+
+	if (secondTransform != nullptr)
+	{
+		audioComponent = secondTransform->GetComponent<CPhysicsPropAudioComponent>();
 	}
-	if (!audioComponent)
-		audioComponent = secondTransform->GameObject().GetComponent<CPhysicsPropAudioComponent>();
 
 	if (audioComponent)
 	{
