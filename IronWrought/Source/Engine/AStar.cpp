@@ -83,7 +83,7 @@ std::vector<DirectX::SimpleMath::Vector3> CAStar::GetPath(const Vector3& aStartP
 		}
 	}
 
-	return newPath;
+	return path;
 }
 
 std::vector<DirectX::SimpleMath::Vector3> CAStar::GetPath(const Vector3& aStartPosition, const Vector3& anEndPosition, SNavMesh* aNavMesh/*, STriangle* aStartTriangle, STriangle* anEndTriangle*/)
