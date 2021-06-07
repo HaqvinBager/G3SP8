@@ -130,6 +130,7 @@ public:
 	std::vector<CGameObject*> ModelsToOutline() const;
 	std::vector<CPointLight*>& PointLights();
 	CCanvas* Canvas();
+	std::vector<CGameObject*> AllGameObjects();
 	const std::vector<CGameObject*>& ActiveGameObjects() const;
 	const std::vector<CPatrolPointComponent*>& PatrolPoints() const;
 //GETTERS END

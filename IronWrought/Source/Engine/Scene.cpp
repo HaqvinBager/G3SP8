@@ -500,6 +500,27 @@ CCanvas* CScene::Canvas()
 	return myCanvas;
 }
 
+std::vector<CGameObject*> CScene::AllGameObjects()
+{
+	std::vector<CGameObject*> go; 
+	size_t numberOfGameObjects = 0;
+	for (auto& gameObjectList : myGameObjects)
+	{
+		numberOfGameObjects += gameObjectList.size();
+	}
+	go.reserve(numberOfGameObjects);
+
+	for (auto& gameObjectList : myGameObjects)
+	{
+		for (unsigned int i = 0; i < gameObjectList.size(); ++i)
+		{
+			go.push_back(gameObjectList[i]);
+		}
+	}
+
+	return std::move(go);
+}
+
 const std::vector<CPatrolPointComponent*>& CScene::PatrolPoints() const
 {
 	return myPatrolPoints;

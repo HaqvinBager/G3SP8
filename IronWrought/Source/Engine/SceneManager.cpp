@@ -143,7 +143,7 @@ CScene* CSceneManager::CreateSceneFromSeveral(const std::vector<std::string>& so
 		AddToScene(*scene, binLevelData, doc, i);
 		scene->NextSection(false);
 	}
-	CEngine::GetInstance()->GetPhysx().Cooking(scene->ActiveGameObjects(), scene);
+	CEngine::GetInstance()->GetPhysx().Cooking(scene->AllGameObjects(), scene);
 	scene->ToggleSections(0);
 
 	return scene;
