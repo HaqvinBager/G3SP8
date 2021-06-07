@@ -1042,6 +1042,10 @@ void CScene::EnableSection(const int aSection)
 		CMainSingleton::PostMaster().Send({ EMessageType::SetDynamicAudioSource, enemy });
 		AddEnemyShortcut(enemy, aSection);
 	}
+	else
+	{
+		CMainSingleton::PostMaster().Send({ EMessageType::SetDynamicAudioSource, nullptr });
+	}
 }
 void CScene::DisableSection(const int aSection)
 {
