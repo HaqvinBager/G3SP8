@@ -398,7 +398,7 @@ namespace ImGui {
 
 	struct SParticleEmitterTransformData
 	{
-		char myPath[128] = "Assets/IronWrought/VFX/VFX_JSON/Data/ParticleData_Pull.json";
+		char myPath[128] = "Assets/IronWrought/VFX/VFX_JSON/VFX_DATA/ParticleData_Pull.json";
 		Vector3 myOffsetFromParent = { 0.0f, 0.0f, 0.0f };
 		Vector3 myRotationAroundParent = { 0.0f, 0.0f, 0.0f };
 		float myUniformScale = 1.0f;
