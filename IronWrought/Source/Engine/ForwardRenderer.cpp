@@ -343,6 +343,7 @@ void CForwardRenderer::RenderLines(CCameraComponent* aCamera, const std::vector<
 
 	for (const SLineTime& instance : aLineList)
 	{
+
 		const CLine::SLineData& lineData = instance.myLine.GetLine()->GetLineData();
 
 		myObjectBufferData.myToWorld = instance.myLine.GetTransform();
@@ -432,6 +433,9 @@ void CForwardRenderer::RenderLineInstances(CCameraComponent* aCamera, const std:
 
 	for (const CLineInstance* instance : aLineList)
 	{
+		if (!instance->GetIsActive())
+			continue;
+
 		const CLine::SLineData& lineData = instance->GetLine()->GetLineData();
 
 		myObjectBufferData.myToWorld = instance->GetTransform();
