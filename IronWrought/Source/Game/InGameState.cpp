@@ -94,6 +94,7 @@ void CInGameState::Awake()
 	CEngine::GetInstance()->AddScene(myState, scene);
 #ifndef NDEBUG
 	TEMP_VFX(scene);
+	myCanvases[EInGameCanvases_HUD]->SetEnabled(false);
 #endif
 #endif
 }
@@ -436,6 +437,7 @@ void CInGameState::ToggleCanvas(EInGameCanvases anEInGameCanvases)
 		scene.SetCanvas(myCanvases[myCurrentCanvas]);
 		scene.UpdateOnlyCanvas(false);
 		scene.CanvasIsHUD(true);
+		myCanvases[myCurrentCanvas]->SetEnabled(true);
 		CMainSingleton::PostMaster().Unsubscribe(EMessageType::CanvasButtonIndex, this);
 	}
 #endif
