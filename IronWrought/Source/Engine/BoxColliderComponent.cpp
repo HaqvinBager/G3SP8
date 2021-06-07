@@ -45,16 +45,18 @@ CBoxColliderComponent::~CBoxColliderComponent()
 
 void CBoxColliderComponent::Awake()
 {
-	CreateBoxCollider();
+
 }
 
 void CBoxColliderComponent::Start()
 {
+	CreateBoxCollider();
 }
 
 //#define DEBUG_COLLIDER_BOX
 void CBoxColliderComponent::Update()
 {
+
 #ifdef DEBUG_COLLIDER_BOX
 	auto quatRot = myShape->getActor()->getGlobalPose().q;
 	myColliderDraw->SetRotation(Quaternion(quatRot.x, quatRot.y, quatRot.z, quatRot.w));
@@ -274,10 +276,14 @@ void CBoxColliderComponent::CanBeDeactivated(const bool aCanBeDeactivated)
 
 void CBoxColliderComponent::OnEnable()
 {
+	if(myColliderDraw != nullptr)
+		myColliderDraw->SetIsActive(true);
 }
 
 void CBoxColliderComponent::OnDisable()
 {
+	if (myColliderDraw != nullptr)
+		myColliderDraw->SetIsActive(false);
 }
 
 void CBoxColliderComponent::CreateColliderDraw(const float& aHalfSizeX, const float& aHalfSizeY, const float& aHalfSizeZ, const Vector3& aPosOffset)
