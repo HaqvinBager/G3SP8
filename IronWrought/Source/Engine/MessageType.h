@@ -44,7 +44,7 @@ enum class EMessageType
 	PlayRobotIdleSound,
 	PlayRobotPatrolling,
 	PlayRobotSearching,
-	PlayResearcherEvent,
+	PlayVoiceEvent,
 	PlaySFX,
 
 	CursorHideAndLock,

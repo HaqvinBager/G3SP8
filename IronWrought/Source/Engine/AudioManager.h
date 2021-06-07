@@ -102,8 +102,7 @@ private:
 	std::vector<CAudio*> myConcreteStepSounds;
 	std::vector<CAudio*> myConcreteFastStepSounds;
 
-	std::vector<CAudio*> myResearcherEventSounds;
-	std::vector<CAudio*> myResearcherReactionsExplosives;
+	std::vector<CAudio*> myVoiceEventSounds;
 
 	std::vector<CAudio*> myEnemyVoiceSounds;
 

@@ -141,7 +141,7 @@ void CBoxColliderComponent::OnTriggerEnter(CTransformComponent* aOther)
 
 			if (myAudioEventIndex > -1)
 			{
-				CMainSingleton::PostMaster().SendLate({ EMessageType::PlayResearcherEvent, &myAudioEventIndex });
+				CMainSingleton::PostMaster().SendLate({ EMessageType::PlayVoiceEvent, &myAudioEventIndex });
 			}
 
 			CTeleporterComponent* teleporter = nullptr;
@@ -196,7 +196,7 @@ void CBoxColliderComponent::OnTriggerExit(CTransformComponent* aOther)
 
 			if (myAudioEventIndex > -1)
 			{
-				CMainSingleton::PostMaster().SendLate({ EMessageType::PlayResearcherEvent, &myAudioEventIndex });
+				CMainSingleton::PostMaster().SendLate({ EMessageType::PlayVoiceEvent, &myAudioEventIndex });
 			}
 
 			CTeleporterComponent* teleporter = nullptr;
