@@ -151,7 +151,7 @@ void CEnemyComponent::Update()//får bestämma vilket behaviour vi vill köra i 
 			CMainSingleton::PostMaster().Send(msg);
 			myIdlingTimer = 0.0f;
 		}
-		std::cout << "MY CURRENT STATE: " << (int)myCurrentState << std::endl;
+
 		if (myIsIdle) {
 			myIdlingTimer += CTimer::Dt();
 			if (myIdlingTimer >= 0.5f) {
