@@ -7,11 +7,14 @@ CMoveResponse::CMoveResponse(CGameObject& aParent, const SSettings& someSettings
 	, myTime(0.0f)
 	, mySettings(someSettings)
 {
-	Enabled(false);
+	HasBeenActivated(false);
 }
 
 void CMoveResponse::Update()
 {
+	if (!HasBeenActivated())
+		return;
+	
 	myTime += CTimer::Dt();
 
 	if (!HasBeenDelayed())
@@ -27,10 +30,10 @@ void CMoveResponse::Update()
 	GameObject().myTransform->Position(Vector3::Lerp(mySettings.myStartPosition, mySettings.myEndPosition, myTime / mySettings.myDuration));
 
 	if (myTime >= mySettings.myDuration)
-		Enabled(false);
+		HasBeenActivated(false);
 }
 
 void CMoveResponse::OnRespond()
 {
-	Enabled(true);
+	HasBeenActivated(true);
 }
