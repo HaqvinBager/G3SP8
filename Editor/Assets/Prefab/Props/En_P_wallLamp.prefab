@@ -9,15 +9,15 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4902976692528032627}
-  - component: {fileID: 6160505880810459147}
   - component: {fileID: 3511798256171090831}
+  - component: {fileID: 5854518241680295199}
   m_Layer: 0
   m_Name: GameObject
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_StaticEditorFlags: 4294967295
+  m_IsActive: 0
 --- !u!4 &4902976692528032627
 Transform:
   m_ObjectHideFlags: 0
@@ -32,20 +32,6 @@ Transform:
   m_Father: {fileID: 6656008269465399528}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!64 &6160505880810459147
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3075121095709515513}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 4
-  m_Convex: 1
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 5165288509074363660, guid: 38a38b68a5172c944a978972dc562418, type: 3}
 --- !u!54 &3511798256171090831
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -62,6 +48,19 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!65 &5854518241680295199
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3075121095709515513}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.18600404, y: 0.67178893, z: 0.25020564}
+  m_Center: {x: -0.0009885281, y: 0.34473193, z: 0.120052755}
 --- !u!1 &7312701260482224138
 GameObject:
   m_ObjectHideFlags: 0
@@ -77,7 +76,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 4294967295
   m_IsActive: 1
 --- !u!4 &6656008269465399528
 Transform:
@@ -173,6 +172,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 38a38b68a5172c944a978972dc562418, type: 3}
       propertyPath: m_Name
       value: En_P_wallLamp
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 38a38b68a5172c944a978972dc562418, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 4294967295
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 38a38b68a5172c944a978972dc562418, type: 3}

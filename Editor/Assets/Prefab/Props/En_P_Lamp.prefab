@@ -15,7 +15,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 4294967295
   m_IsActive: 1
 --- !u!4 &4297153720304184977
 Transform:
@@ -55,14 +55,14 @@ GameObject:
   m_Component:
   - component: {fileID: 7897712242415412878}
   - component: {fileID: 5956439049419607060}
-  - component: {fileID: 6838741540060127899}
+  - component: {fileID: 7083090267538972690}
   m_Layer: 0
   m_Name: GameObject
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_StaticEditorFlags: 4294967295
+  m_IsActive: 0
 --- !u!4 &7897712242415412878
 Transform:
   m_ObjectHideFlags: 0
@@ -93,8 +93,8 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!64 &6838741540060127899
-MeshCollider:
+--- !u!65 &7083090267538972690
+BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -103,10 +103,9 @@ MeshCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
-  serializedVersion: 4
-  m_Convex: 1
-  m_CookingOptions: 30
-  m_Mesh: {fileID: -1773386138374953510, guid: 3d4f8d9fdc741b744977602af686b104, type: 3}
+  serializedVersion: 2
+  m_Size: {x: 0.20000444, y: 1.7243121, z: 0.6030179}
+  m_Center: {x: 0.0035845265, y: 0.868152, z: 0.19849102}
 --- !u!1001 &9149102318842353592
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -169,6 +168,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 3d4f8d9fdc741b744977602af686b104, type: 3}
       propertyPath: m_Name
       value: En_P_Lamp
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 3d4f8d9fdc741b744977602af686b104, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 4294967295
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3d4f8d9fdc741b744977602af686b104, type: 3}
