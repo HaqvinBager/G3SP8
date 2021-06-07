@@ -94,6 +94,7 @@ void CInGameState::Awake()
 	CEngine::GetInstance()->AddScene(myState, scene);
 #ifndef NDEBUG
 	TEMP_VFX(scene);
+	myCanvases[EInGameCanvases_HUD]->SetEnabled(false);
 #endif
 #endif
 }

@@ -346,7 +346,7 @@ namespace ImGui {
 
 	struct SVFXMeshTransformData
 	{
-		char myPath[128] = "Assets/IronWrought/VFX/VFX_JSON/Data/VFXMeshData_Ball.json";
+		char myPath[128] = "Assets/IronWrought/VFX/VFX_JSON/VFX_DATA/VFXMeshData_Ball.json";
 		Vector3 myOffsetFromParent = { 0.0f, 0.0f, 0.0f };
 		Vector3 myRotationAroundParent = { 0.0f, 0.0f, 0.0f };
 		Vector3 myScale = { 1.0f, 1.0f, 1.0f };

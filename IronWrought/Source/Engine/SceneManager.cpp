@@ -87,6 +87,12 @@ CScene* CSceneManager::CreateEmpty()
 	emptyScene->EnvironmentLight(envLight->GetComponent<CEnvironmentLightComponent>()->GetEnvironmentLight());
 	emptyScene->AddInstance(envLight);
 
+	CGameObject* vfxTester = new CGameObject(2);
+	vfxTester->AddComponent<CVFXSystemComponent>(*vfxTester, ASSETPATH("Assets/IronWrought/VFX/VFX_JSON/VFXSystem_Tester.json"));
+	vfxTester->GetComponent<CVFXSystemComponent>()->EnableEffect(0);
+	emptyScene->AddInstance(vfxTester);
+	emptyScene->SetVFXTester(vfxTester);
+
 	//AddPlayer(*emptyScene, std::string());
 
 	return emptyScene;
