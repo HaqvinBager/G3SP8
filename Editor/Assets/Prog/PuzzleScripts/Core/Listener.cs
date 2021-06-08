@@ -15,6 +15,7 @@ public enum ListenerType
     Toggle,
     Print,
     PlayAudio,
+    PlayVoice
 }
 
 public interface IListener
@@ -56,6 +57,9 @@ public class Listener : MonoBehaviour
                     break;
                 case ListenerType.PlayAudio:
                     AddType<ResponsePlayAudio>(gameObject);
+                    break;
+                case ListenerType.PlayVoice:
+                    AddType<ResponsePlayVoice>(gameObject);
                     break;
 
                 case ListenerType.Clear:

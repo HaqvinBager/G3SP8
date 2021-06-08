@@ -34,6 +34,7 @@ void CAudioActivation::Update()
 void CAudioActivation::OnActivation()
 {
 	std::cout << __FUNCTION__ << "Play Audio" << std::endl;
+	myIsInteracted = true;
 	CMainSingleton::PostMaster().SendLate({ EMessageType::PlayDynamicAudioSource, &myPlayMessage });
 }
 
