@@ -5,8 +5,10 @@ using UnityEngine;
 [System.Serializable]
 public struct KeyData
 {
-    public string onKeyCreateNotify;
-    public string onKeyInteractNotify;
+    public string onKeyCreateNotifyName;
+    public string onKeyInteractNotifyName;
+    public int onKeyCreateNotify;
+    public int onKeyInteractNotify;
     public int hasLock;
     public int instanceID;
 }
@@ -79,9 +81,16 @@ public class ExportKey
         foreach (Key key in keys)
         {
             KeyData data = new KeyData();
-            data.onKeyCreateNotify = key.myLock?.onKeyCreateNotify?.name;
-            data.onKeyInteractNotify = key.myLock?.onKeyInteractNotify?.name;
             data.hasLock = key.myLock != null ? 1 : 0;
+
+            if (data.hasLock == 1)
+            {
+                data.onKeyCreateNotifyName = key.myLock.onKeyCreateNotify.name;
+                data.onKeyInteractNotifyName = key.myLock.onKeyInteractNotify.name;
+                data.onKeyCreateNotify = key.myLock.onKeyCreateNotify.GetInstanceID();
+                data.onKeyInteractNotify = key.myLock.onKeyInteractNotify.GetInstanceID();
+            }
+
             data.instanceID = key.transform.GetInstanceID();
             collection.keys.Add(data);
 
@@ -132,7 +141,7 @@ public class ExportKey
             playAudioData.maxAttenuationDistance = playAudio.myMaxAttenuationDistance;
             playAudioData.minimumVolume = playAudio.myMinimumVolume;
             playAudioData.instanceID = playAudio.transform.GetInstanceID();
-            playAudioData.soundEffect = (int)playAudio.soundEffect;         
+            playAudioData.soundEffect = (int)playAudio.soundEffect;
             collection.Add(playAudioData);
         }
     }

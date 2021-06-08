@@ -4,7 +4,7 @@
 
 CKeyBehavior::CKeyBehavior(CGameObject& aParent, const SSettings& someSettings) : CBehavior(aParent), mySettings(someSettings)
 {
-	CMainSingleton::PostMaster().Send({ mySettings.myOnCreateNotify.c_str(), mySettings.myData });
+	CMainSingleton::PostMaster().Send({ mySettings.myOnCreateNotifyName.c_str(), mySettings.myOnCreateNotify });
 }
 
 CKeyBehavior::~CKeyBehavior()
@@ -39,7 +39,7 @@ void CKeyBehavior::TriggerActivations()
 			std::cout << __FUNCTION__ << "----< \tActivation type triggered \t" << activation->GameObject().Name() << std::endl;
 			activation->OnActivation();
 		}
-		CMainSingleton::PostMaster().Send({ mySettings.myInteractNotify.c_str(), mySettings.myData });
+		CMainSingleton::PostMaster().Send({ mySettings.myInteractNotifyName, mySettings.myInteractNotify });
 		
 		if(mySettings.myHasLock == 1)
 			Enabled(false);

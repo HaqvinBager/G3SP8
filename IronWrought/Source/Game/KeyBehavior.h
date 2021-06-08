@@ -15,8 +15,10 @@ class CKeyBehavior : public CBehavior
 public:
 	struct SSettings
 	{
-		std::string myOnCreateNotify;
-		std::string myInteractNotify;
+		std::string myOnCreateNotifyName;
+		std::string myInteractNotifyName;
+		int myOnCreateNotify;
+		int myInteractNotify;
 		int myHasLock;
 
 		void* myData;

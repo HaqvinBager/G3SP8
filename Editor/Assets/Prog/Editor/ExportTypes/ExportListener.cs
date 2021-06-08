@@ -72,7 +72,7 @@ public struct ListenerCollection
     public List<ResponsePlayAudioData> responseAudios;
 }
 
-public class ExportResponse
+public class ExportListener
 {
     public static ListenerCollection Export()
     {
@@ -90,6 +90,12 @@ public class ExportResponse
             if(listener.myLock == null)
             {
                 Debug.LogWarning("This Listener does not have a Lock. Please add one if you want to see the Response Behaviour play out. <3 /Axel Mcfluffykins", listener.gameObject);
+                continue;
+            }
+
+            if(listener.myLock.onLockNotify == null)
+            {
+                Debug.LogWarning("This lock does not have a onLockNotify, this response will never trigger. Please add an onLockNotify to the lock to be able to trigger the event", listener.myLock);
                 continue;
             }
 

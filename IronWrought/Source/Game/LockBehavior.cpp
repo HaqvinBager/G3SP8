@@ -8,38 +8,14 @@ CLockBehavior::CLockBehavior(CGameObject& aParent, const SSettings someSettings)
 	myAmountOfKeys(0),
 	myHasTriggered(false)
 {
-	CMainSingleton::PostMaster().Subscribe(mySettings.myOnKeyCreateNotify.c_str(), this);
-	CMainSingleton::PostMaster().Subscribe(mySettings.myOnKeyInteractNotify.c_str(), this);
+	CMainSingleton::PostMaster().Subscribe(mySettings.myOnKeyCreateNotify, this);
+	CMainSingleton::PostMaster().Subscribe(mySettings.myOnKeyInteractNotify, this);
 }
 
 CLockBehavior::~CLockBehavior()
 {
-	CMainSingleton::PostMaster().Unsubscribe(mySettings.myOnKeyCreateNotify.c_str(), this);
-	CMainSingleton::PostMaster().Unsubscribe(mySettings.myOnKeyInteractNotify.c_str(), this);
-}
-
-void CLockBehavior::Destroy()
-{
-}
-
-void CLockBehavior::Awake()
-{
-}
-
-void CLockBehavior::Start()
-{
-}
-
-void CLockBehavior::Update()
-{
-}
-
-void CLockBehavior::OnEnable()
-{
-}
-
-void CLockBehavior::OnDisable()
-{
+	CMainSingleton::PostMaster().Unsubscribe(mySettings.myOnKeyCreateNotify, this);
+	CMainSingleton::PostMaster().Unsubscribe(mySettings.myOnKeyInteractNotify, this);
 }
 
 void CLockBehavior::RunEvent()
@@ -50,7 +26,7 @@ void CLockBehavior::RunEvent()
 		{
 			std::cout << __FUNCTION__ << "----< \tLock Activated \t" << GameObject().Name() << std::endl;
 			myHasTriggered = true;
-			CMainSingleton::PostMaster().Send({ mySettings.myOnNotify.c_str(), mySettings.myData });
+			CMainSingleton::PostMaster().Send({ mySettings.myOnNotifyName.c_str(), mySettings.myOnNotify });
 		}
 	}
 }
@@ -60,22 +36,17 @@ void CLockBehavior::RunEventEditor()
 	if (!myHasTriggered)
 	{
 		myHasTriggered = true;
-		CMainSingleton::PostMaster().Send({ mySettings.myOnNotify.c_str(), mySettings.myData });
+		CMainSingleton::PostMaster().Send({ mySettings.myOnNotifyName.c_str(), mySettings.myOnNotify });
 	}
 }
 
 
-void CLockBehavior::Receive(const SStringMessage& aMessage)
+void CLockBehavior::Receive(const SIDMessage& aMessage)
 {
-	//if (strcmp(aMessage.myMessageType, mySettings.myOnKeyCreateNotify.c_str()) == 0)
-	//{
-	//	std::cout << __FUNCTION__ << " STRCMP == 0    " << aMessage.myMessageType << std::endl;
-	//}
-
-	if (mySettings.myOnKeyCreateNotify.find(aMessage.myMessageType) != std::string::npos)
+	if (mySettings.myOnKeyCreateNotify == aMessage.myMessageID)
 	{
 		++myMaxAmountOfKeys;
-		std::cout << __FUNCTION__ << "----| \t" << GameObject().Name() << " Keys: " << myMaxAmountOfKeys << "   Message: " << aMessage.myMessageType << std::endl;
+		std::cout << __FUNCTION__ << "----| \t" << GameObject().Name() << " Keys: " << myMaxAmountOfKeys << "   Message: " << aMessage.myName << std::endl;
 	}
 	else
 	{
