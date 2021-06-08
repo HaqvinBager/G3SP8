@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 1635303018583682663}
   - component: {fileID: 2377105752592797221}
   - component: {fileID: 2502267599587984993}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: EN_P_Coffejug
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -78,8 +78,8 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Size: {x: 0.06376648, y: 0.18064225, z: 0.07603073}
+  m_Center: {x: -0.004070282, y: 0.08336955, z: -0.0012722015}
 --- !u!54 &2502267599587984993
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -92,7 +92,7 @@ Rigidbody:
   m_Drag: 0
   m_AngularDrag: 0.05
   m_UseGravity: 1
-  m_IsKinematic: 1
+  m_IsKinematic: 0
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
@@ -150,6 +150,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: a857b0b2728cbb947b39e76590081536, type: 3}
       propertyPath: m_Name
       value: EN_P_Coffejug
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: a857b0b2728cbb947b39e76590081536, type: 3}
+      propertyPath: m_Layer
+      value: 7
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a857b0b2728cbb947b39e76590081536, type: 3}
