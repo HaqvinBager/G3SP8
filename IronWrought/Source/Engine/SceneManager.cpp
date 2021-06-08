@@ -952,7 +952,7 @@ void CSceneManager::AddPuzzleResponseVoice(CScene& aScene, RapidArray someData)
 
 		PostMaster::SAudioSourceInitData settings = {};
 		settings.mySoundIndex = response["voiceLine"].GetInt();
-		bool is3D = response["myIs3D"].GetBool()/* ? 1 : 0*/;
+		bool is3D = response["is3D"].GetBool()/* ? 1 : 0*/;
 		settings.myForward = Vector3
 		{
 			response["coneDirection"]["x"].GetFloat(),
