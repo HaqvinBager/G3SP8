@@ -102,6 +102,55 @@ inline float Sign(Vector3& p1, Vector3& p2, Vector3& p3)
 	return (p1.x - p3.x) * (p2.z - p3.z) - (p2.x - p3.x) * (p1.z - p3.z);
 }
 
+Vector3 SNavMesh::GetClosestPointInsideTriangle(STriangle* aTriangle, const Vector3& aPosition)
+{
+	//Case 1
+	const float wn = aTriangle->GetWindingNumber(aPosition);
+	if (fabs(wn) > 1.f) {
+		return aPosition;
+	}
+
+	//Case 2
+	std::vector<SLineSegment> edgeList = aTriangle->GetEdges();
+	for (auto& edge : edgeList) {
+		if (edge.IsPointOnSegment(aPosition)) {
+			return aPosition;
+		}
+	}
+
+	//Case 3 - A
+	float minDist = FLT_MAX;
+	Vector3 closestPoint = aPosition;
+	for (auto& edge : edgeList) {
+		if (edge.IsProjectionOnSegment(aPosition)) {
+			Vector3 pp = edge.GetProjectedPointOnSegment(aPosition);
+			float dist = Vector3::Distance(aPosition, pp);
+			if (dist < minDist) {
+				closestPoint = pp;
+				minDist = dist;
+			}
+		}
+	}
+
+	//Case 3 - B
+	minDist = FLT_MAX;
+	Vector3 closestVertex = aPosition;
+	for (auto& vertex : aTriangle->myVertexPositions) {
+		float dist = Vector3::Distance(aPosition, vertex);
+		if (dist < minDist) {
+			closestVertex = vertex;
+			minDist = dist;
+		}
+	}
+
+	if (closestPoint == aPosition) {
+		return closestVertex;
+	}
+	else {
+		return closestPoint;
+	}
+}
+
 STriangle* SNavMesh::GetTriangleAtPoint(Vector3 aPosition)
 {
 	float d1, d2, d3;
@@ -152,6 +201,7 @@ std::vector<Vector3> SNavMesh::CalculatePath(Vector3 aStartPosition, DirectX::Si
 
 	auto startPosition = aStartPosition;
 	auto startTriangle = aNavMesh->GetTriangleAtPoint(startPosition);
+	auto endTriangle = aNavMesh->GetTriangleAtPoint(aDestination);
 
 	if (startTriangle == nullptr)
 	{
@@ -162,9 +212,27 @@ std::vector<Vector3> SNavMesh::CalculatePath(Vector3 aStartPosition, DirectX::Si
 			startTriangle = ReturnClosestTriangle(startPosition, aNavMesh);
 		}
 	}
+	if (endTriangle == nullptr)
+	{
+		ResolveStuck(endTriangle, aDestination, aDestination, aNavMesh);
+		if (endTriangle == nullptr)
+		{
+			// Return closest triangle if ResolveStuck doesn't work
+			endTriangle = ReturnClosestTriangle(aDestination, aNavMesh);
+		}
+	}	
+	Vector3 closestPoint = aDestination;
+	if (aNavMesh->GetTriangleAtPoint(aDestination) == nullptr) {
+		closestPoint = GetClosestPointInsideTriangle(endTriangle, aDestination);
+	}
 
-	path = CAStar::GetInstance()->GetPath(startPosition, aDestination, aNavMesh, startTriangle, aNavMesh->GetTriangleAtPoint(aDestination));
-	path = ReversePath(path, aDestination);
+	path = CAStar::GetInstance()->GetPath(startPosition, closestPoint, aNavMesh, startTriangle, endTriangle);
+	//if (aNavMesh->GetTriangleAtPoint(aDestination)) {
+		path = ReversePath(path, closestPoint);
+	//}
+	//else {
+	//	path = ReversePath(path);
+	//}
 	return path;
 }
 
@@ -178,15 +246,30 @@ std::vector<Vector3> SNavMesh::ReversePath(std::vector<Vector3> aPath, DirectX::
 	return path;
 }
 
+std::vector<Vector3> SNavMesh::ReversePath(std::vector<Vector3> aPath)
+{
+	std::vector<Vector3> path;
+	for (unsigned int i = 0; i < aPath.size(); ++i) {
+		path.emplace_back(aPath[(aPath.size() - 1) - i]);
+	}
+	return path;
+}
+
 STriangle* SNavMesh::ReturnClosestTriangle(const DirectX::SimpleMath::Vector3& aStartPosition, SNavMesh* aNavMesh)
 {
 	STriangle* closestTriangle = nullptr;
 	float lastDistance = FLT_MAX;
+	std::vector<Vector3> closestPoints;
 	for (unsigned int i = 0; i < aNavMesh->myTriangles.size(); ++i)
 	{
-		float currentDistance = DirectX::SimpleMath::Vector3::DistanceSquared(aStartPosition, aNavMesh->myTriangles[i]->myCenterPosition);
+		Vector3 closest = GetClosestPointInsideTriangle(aNavMesh->myTriangles[i], aStartPosition);
+		closestPoints.push_back(closest);
+	}
+	for (unsigned int i = 0; i < closestPoints.size(); ++i) {
+		float currentDistance = DirectX::SimpleMath::Vector3::DistanceSquared(aStartPosition, closestPoints[i]);
 		if (currentDistance < lastDistance)
 		{
+
 			lastDistance = currentDistance;
 			closestTriangle = aNavMesh->myTriangles[i];
 		}

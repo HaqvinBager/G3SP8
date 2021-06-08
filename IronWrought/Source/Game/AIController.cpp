@@ -161,7 +161,7 @@ Vector3 CSeek::Update(const Vector3& aPosition)//aPostion == EnemyRobot Position
 	if (myFoundPlayer == true) {
 		Vector3 playerPos = myTarget->Position();
 		playerPos.y = aPosition.y;
-		SetPath(myNavMesh->CalculatePath(aPosition, playerPos, myNavMesh), myTarget->Position());
+		SetPath(myNavMesh->CalculatePath(aPosition, playerPos, myNavMesh), playerPos);
 	}
 	else {
 		float dist = DirectX::SimpleMath::Vector2::DistanceSquared({ myLastPlayerPosition.x, myLastPlayerPosition.z }, { aPosition.x, aPosition.z });

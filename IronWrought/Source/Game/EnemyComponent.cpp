@@ -21,6 +21,7 @@
 #include "LineFactory.h"
 #include <algorithm>
 #include "Debug.h"
+#include "PlayerControllerComponent.h"
 
 //EnemyComp
 
@@ -126,7 +127,7 @@ void CEnemyComponent::Update()//får bestämma vilket behaviour vi vill köra i 
 		float lengthSquaredEnemy = furthestLookingPointToEnemy.LengthSquared();
 		float lengthSquaredPlayer = playerToEnemy.LengthSquared();
 		float degrees = std::acos(dot / sqrt(lengthSquaredEnemy * lengthSquaredPlayer)) * 180.f / PI;
-		float viewAngle = 60.f;
+		float viewAngle = 65.f;
 
 		if (degrees <= viewAngle) {
 			Vector3 direction = playerPos - enemyPos;
@@ -277,6 +278,7 @@ void CEnemyComponent::Receive(const SMessage& aMsg)
 	{
 		myMovementLocked = true;
 		GameObject().myTransform->Position({ -10.0f, 0.0f, -13.0f });
+		myPlayer->GetComponent<CPlayerControllerComponent>()->LockMovementFor(3.f);
 	}
 
 	if (aMsg.myMessageType == EMessageType::PropCollided) {
