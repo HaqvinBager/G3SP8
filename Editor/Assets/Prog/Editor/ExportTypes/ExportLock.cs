@@ -4,9 +4,10 @@ using UnityEngine;
 [System.Serializable]
 public struct LockData
 {
-    public string onNotify;
-    public string onKeyCreateNotify;
-    public string onKeyInteractNotify;
+    public string onNotifyName;
+    public int onNotify;
+    public int onKeyCreateNotify;
+    public int onKeyInteractNotify;
     public int interactionType;
     public int instanceID;
 }
@@ -27,10 +28,16 @@ public class ExportLock
         Lock[] locks = GameObject.FindObjectsOfType<Lock>();
         foreach(Lock aLock in locks)
         {
+            if(aLock.onLockNotify == null)
+            {
+                Debug.LogWarning("Missing a event type on lock, make sure that all event slots are filled", aLock);
+                continue;
+            }
             LockData data = new LockData();
-            data.onNotify = aLock.onLockNotify.name;
-            data.onKeyCreateNotify = aLock.onKeyCreateNotify?.name;
-            data.onKeyInteractNotify = aLock.onKeyInteractNotify?.name;
+            data.onNotifyName = aLock.onLockNotify.name;
+            data.onNotify = aLock.onLockNotify.GetInstanceID();
+            data.onKeyCreateNotify = aLock.onKeyCreateNotify.GetInstanceID();
+            data.onKeyInteractNotify = aLock.onKeyInteractNotify.GetInstanceID();
             data.interactionType = (int)aLock.interactionType;
             data.instanceID = aLock.transform.GetInstanceID();
             collection.locks.Add(data);

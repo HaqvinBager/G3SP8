@@ -633,7 +633,14 @@ void CSceneManager::AddPuzzleKey(CScene& aScene, RapidArray someData)
 	for (const auto& key : someData)
 	{
 		CGameObject* gameObject = aScene.FindObjectWithID(key["instanceID"].GetInt());
-		CKeyBehavior::SSettings settings = { key["onKeyCreateNotify"].GetString(), key["onKeyInteractNotify"].GetString(), key["hasLock"].GetInt(), nullptr };
+		CKeyBehavior::SSettings settings = { 
+			key["onKeyCreateNotifyName"].GetString(),
+			key["onKeyInteractNotifyName"].GetString(),
+			key["onKeyCreateNotify"].GetInt(),
+			key["onKeyInteractNotify"].GetInt(),
+			key["hasLock"].GetInt(),
+			nullptr
+		};
 
 		gameObject->AddComponent<CKeyBehavior>(*gameObject, settings);
 	}
@@ -755,8 +762,15 @@ void CSceneManager::AddPuzzleLock(CScene& aScene, RapidArray someData)
 	for (const auto& lock : someData)
 	{
 		CGameObject* gameObject = aScene.FindObjectWithID(lock["instanceID"].GetInt());
-		gameObject;
-		CLockBehavior::SSettings settings = { lock["onKeyCreateNotify"].GetString(), lock["onKeyInteractNotify"].GetString(), lock["onNotify"].GetString(), nullptr};
+
+		CLockBehavior::SSettings settings = { 
+			lock["onNotifyName"].GetString(),
+			lock["onNotify"].GetInt(),
+			lock["onKeyCreateNotify"].GetInt(),
+			lock["onKeyInteractNotify"].GetInt(),
+			nullptr
+		};
+
 		ELockInteractionTypes interactionType = static_cast<ELockInteractionTypes>(lock["interactionType"].GetInt());
 		switch (interactionType)
 		{

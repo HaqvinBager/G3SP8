@@ -8,28 +8,29 @@ enum class ELockInteractionTypes
 	OnLeftClickDown
 };
 
-class CLockBehavior : public CBehavior, public IStringObserver
+class CLockBehavior : public CBehavior, public IMessageObserver
 {
 public:
 	struct SSettings
 	{
-		std::string myOnKeyCreateNotify;
-		std::string myOnKeyInteractNotify;
-		std::string myOnNotify;
+		std::string myOnNotifyName;
+		int myOnNotify;
+		int myOnKeyCreateNotify;
+		int myOnKeyInteractNotify;
 		void* myData;
 	};
 
 	CLockBehavior(CGameObject& aParent, const SSettings someSettings);
 	virtual ~CLockBehavior() override;
-	void Destroy();
+	void Destroy() {}
 
 public:
-	void Awake() override;
-	void Start() override;
-	virtual void Update() override;
+	void Awake() override {}
+	void Start() override {}
+	virtual void Update() override {}
 
-	void OnEnable() override;
-	void OnDisable() override;
+	void OnEnable() override {}
+	void OnDisable() override {}
 
 	void RunEvent();
 	void RunEventEditor();
@@ -39,7 +40,7 @@ public:
 	const int AmountOfKeys() const { return myAmountOfKeys; }
 
 private:
-	void Receive(const SStringMessage& aMessage) override;
+	void Receive(const SIDMessage& aMessage) override;
 
 	SSettings mySettings;
 

@@ -11,20 +11,20 @@ public class ResponseRotateEditor : Editor
         serializedObject.Update();
         base.OnInspectorGUI();
 
-        this.ShowValueAndButton<ActivationRotate>("start", "Rotation Start", SaveRotation);
-        this.ShowValueAndButton<ActivationRotate>("end", "Rotation End", SaveRotation);
+        this.ShowValueAndButton<ResponseRotate>("start", "Rotation Start", SaveRotation);
+        this.ShowValueAndButton<ResponseRotate>("end", "Rotation End", SaveRotation);
 
         GUI.backgroundColor = Color.green;
-        this.SetValueButtonCallback<ActivationRotate>("start", "Rotate to Start", SetRotation);
+        this.SetValueButtonCallback<ResponseRotate>("start", "Rotate to Start", SetRotation);
         GUI.backgroundColor = Color.cyan;
-        this.SetValueButtonCallback<ActivationRotate>("end", "Rotate to End", SetRotation);
+        this.SetValueButtonCallback<ResponseRotate>("end", "Rotate to End", SetRotation);
         
         serializedObject.ApplyModifiedProperties();
     }
 
     private void SetRotation(Quaternion quat)
     {
-        var rotate = (ActivationRotate)target;
+        var rotate = (ResponseRotate)target;
         rotate.transform.rotation = quat;
     }
 
