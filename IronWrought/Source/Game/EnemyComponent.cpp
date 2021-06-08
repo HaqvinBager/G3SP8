@@ -20,6 +20,7 @@
 #include "LineInstance.h"
 #include "LineFactory.h"
 #include <algorithm>
+#include "Debug.h"
 
 //EnemyComp
 
@@ -133,7 +134,13 @@ void CEnemyComponent::Update()//får bestämma vilket behaviour vi vill köra i 
 			if (hit.getNbAnyHits() > 0) {
 				CTransformComponent* transform = (CTransformComponent*)hit.getAnyHit(0).actor->userData;
 				if (!transform && !myHasFoundPlayer) {
-					myIsIdle = false;
+					if (myHasReachedLastPlayerPosition == true) {
+						myIsIdle = true;
+						SetState(EBehaviour::Idle);
+					}
+					else {
+						myIsIdle = false;	
+					}
 					myHeardSound = false;
 					myHasReachedAlertedTarget = true;
 					myHasFoundPlayer = true;
