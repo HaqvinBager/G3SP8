@@ -53,11 +53,11 @@ CInGameState::CInGameState(CStateStack& aStateStack, const CStateStack::EState a
 	, myEnemyAnimationController(nullptr)
 	, myExitTo(EExitTo::None)
 	, myMenuCamera(nullptr)
-	, myMenuCameraPositions({ Vector3(-15.0f, 7.0f, -75.55f), Vector3(15.59f, -0.64f, -37.5f), Vector3(17.36f, -1.04f, -27.89f), Vector3(13.18f, -1.12f, -33.25f) })
-	, myMenuCameraRotations({ Vector3(0.0f, 0.0f, 0.0f), Vector3(0.0f, 85.221f, 0.0f) , Vector3(-20.59f, -30.739f, 0.119f) , Vector3(3.47f, 241.13f, 0.12f) })
+	, myMenuCameraPositions({ Vector3(9.73f, -0.615f, -37.74f), Vector3(15.59f, -0.64f, -37.5f), Vector3(17.36f, -1.04f, -27.89f), Vector3(11.84f, -1.201564f, -34.0f) })
+	, myMenuCameraRotations({ Vector3(-1.098f, 91.25f, 0.789f), Vector3(0.0f, 85.221f, 0.0f) , Vector3(-20.59f, -30.739f, 0.119f) , Vector3(88.101f, -106.6f, 25.316f) })
 	, myCanvases({ nullptr, nullptr, nullptr })
 	, myCurrentCanvas(EInGameCanvases_Count)
-	, myMenuCameraSpeed(5.0f)
+	, myMenuCameraSpeed(2.0f)
 {
 }
 
