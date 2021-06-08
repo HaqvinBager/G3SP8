@@ -16,8 +16,8 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_StaticEditorFlags: 4294967295
+  m_IsActive: 0
 --- !u!4 &4336575980664092127
 Transform:
   m_ObjectHideFlags: 0
@@ -77,8 +77,8 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_StaticEditorFlags: 4294967295
+  m_IsActive: 0
 --- !u!4 &2929704962792553257
 Transform:
   m_ObjectHideFlags: 0
@@ -137,7 +137,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 4294967295
   m_IsActive: 1
 --- !u!4 &4853211271385596400
 Transform:
@@ -230,6 +230,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 8d9c91e9bb071ad46a499422c873cccd, type: 3}
       propertyPath: m_Name
       value: En_W_Wall_Corner_Out_1x1
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 8d9c91e9bb071ad46a499422c873cccd, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 4294967295
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 8d9c91e9bb071ad46a499422c873cccd, type: 3}
