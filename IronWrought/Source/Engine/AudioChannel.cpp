@@ -16,6 +16,13 @@ const int CAudioChannel::PlayCount() const
     return count;
 }
 
+const float CAudioChannel::GetVolume() const
+{
+    float vol = 0.0f;
+    myFModChannel->getVolume(&vol);
+    return vol;
+}
+
 void CAudioChannel::SetVolume(float aVolumeLevel)
 {
     myFModChannel->setVolume(aVolumeLevel);

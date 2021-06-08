@@ -780,7 +780,7 @@ void CSceneManager::AddPuzzleListener(CScene& aScene, RapidArray someData)
 {
 	for (const auto& listener : someData)
 	{
-		std::string onResponseNotify = listener["onResponseNotify"].GetString();
+		int onResponseNotify = listener["onResponseNotify"].GetInt();
 		CGameObject* gameObject = aScene.FindObjectWithID(listener["instanceID"].GetInt());
 
 		gameObject->AddComponent<CListenerBehavior>(*gameObject, onResponseNotify);

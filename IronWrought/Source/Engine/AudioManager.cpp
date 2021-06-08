@@ -1199,7 +1199,20 @@ void CAudioManager::PlayCyclicRandomSoundFromCollection(const std::vector<CAudio
 
 void CAudioManager::FadeChannelOverSeconds(const EChannel& aChannel, const float& aNumberOfSeconds, const bool& aShouldFadeOut)
 {
-	myFadingChannels.push_back({ aChannel, aNumberOfSeconds, aNumberOfSeconds, aShouldFadeOut });
+	if (aShouldFadeOut)
+	{
+		if (myChannels[CAST(aChannel)]->GetVolume() != 0.0f)
+		{
+			myFadingChannels.push_back({ aChannel, aNumberOfSeconds, aNumberOfSeconds, aShouldFadeOut });
+		}
+	}
+	else 
+	{
+		if (myChannels[CAST(aChannel)]->GetVolume() != 1.0f)
+		{
+			myFadingChannels.push_back({ aChannel, aNumberOfSeconds, aNumberOfSeconds, aShouldFadeOut });
+		}
+	}
 }
 
 void CAudioManager::SetDynamicTrack(const EAmbience& aFirstTrack, const EAmbience& aSecondTrack, const EAmbience& aThirdTrack)
