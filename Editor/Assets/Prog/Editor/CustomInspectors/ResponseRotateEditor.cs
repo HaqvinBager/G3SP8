@@ -3,11 +3,13 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 
+[CanEditMultipleObjects]
 [CustomEditor(typeof(ResponseRotate))]
 public class ResponseRotateEditor : Editor
 {
     public override void OnInspectorGUI()
     {
+        
         serializedObject.Update();
         base.OnInspectorGUI();
 
