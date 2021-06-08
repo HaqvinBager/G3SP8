@@ -159,10 +159,13 @@ Vector3 CSeek::Update(const Vector3& aPosition)//aPostion == EnemyRobot Position
 	myPathTarget = 0;
 	float epsilon = 0.5f;
 	if (myFoundPlayer == true) {
-		SetPath(myNavMesh->CalculatePath(aPosition, myTarget->Position(), myNavMesh), myTarget->Position());
+		Vector3 playerPos = myTarget->Position();
+		playerPos.y = aPosition.y;
+		SetPath(myNavMesh->CalculatePath(aPosition, playerPos, myNavMesh), myTarget->Position());
 	}
 	else {
 		float dist = DirectX::SimpleMath::Vector2::DistanceSquared({ myLastPlayerPosition.x, myLastPlayerPosition.z }, { aPosition.x, aPosition.z });
+		myLastPlayerPosition.y = aPosition.y;
 		SetPath(myNavMesh->CalculatePath(aPosition, myLastPlayerPosition, myNavMesh), myLastPlayerPosition);
 		if (dist < epsilon) {
 			CMainSingleton::PostMaster().Send({ EMessageType::EnemyReachedLastPlayerPosition });
