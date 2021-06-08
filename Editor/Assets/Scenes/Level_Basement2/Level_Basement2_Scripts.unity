@@ -237,10 +237,18 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 7
       objectReference: {fileID: 0}
+    - target: {fileID: 1031876864474078861, guid: ab5d7692403be4f479a01a0eebef1bf7, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1070503220590700542, guid: ab5d7692403be4f479a01a0eebef1bf7, type: 3}
       propertyPath: m_Material
       value: 
       objectReference: {fileID: 1169384921}
+    - target: {fileID: 1456175435945743374, guid: ab5d7692403be4f479a01a0eebef1bf7, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1510145675905276361, guid: ab5d7692403be4f479a01a0eebef1bf7, type: 3}
       propertyPath: m_UseGravity
       value: 0
@@ -253,10 +261,14 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 7
       objectReference: {fileID: 0}
+    - target: {fileID: 1967565704843625714, guid: ab5d7692403be4f479a01a0eebef1bf7, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3792499741601621569, guid: ab5d7692403be4f479a01a0eebef1bf7, type: 3}
       propertyPath: m_Material
       value: 
-      objectReference: {fileID: 1849083907}
+      objectReference: {fileID: 1632287300}
     - target: {fileID: 4061629146543513904, guid: ab5d7692403be4f479a01a0eebef1bf7, type: 3}
       propertyPath: m_Layer
       value: 7
@@ -291,7 +303,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8917648072707779782, guid: ab5d7692403be4f479a01a0eebef1bf7, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -1
+      value: 0.353
       objectReference: {fileID: 0}
     - target: {fileID: 8917648072707779782, guid: ab5d7692403be4f479a01a0eebef1bf7, type: 3}
       propertyPath: m_LocalPosition.y
@@ -384,13 +396,13 @@ MonoBehaviour:
   myMinAttenuationDistance: 1
   myMaxAttenuationDistance: 10000
   myMinimumVolume: 0
---- !u!134 &1167883371
+--- !u!134 &1153940614
 PhysicMaterial:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: 
+  m_Name: ' (Instance) (Instance)'
   dynamicFriction: 0.6
   staticFriction: 0.6
   bounciness: 0
@@ -420,6 +432,22 @@ PhysicMaterial:
   bounciness: 0
   frictionCombine: 0
   bounceCombine: 0
+--- !u!134 &1632287300
+PhysicMaterial:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: ' (Instance) (Instance) (Instance) (Instance) (Instance) (Instance) (Instance)
+    (Instance) (Instance) (Instance) (Instance) (Instance) (Instance) (Instance)
+    (Instance) (Instance) (Instance) (Instance) (Instance) (Instance) (Instance)
+    (Instance) (Instance) (Instance) (Instance) (Instance) (Instance) (Instance)
+    (Instance) (Instance) (Instance) (Instance) (Instance) (Instance)'
+  dynamicFriction: 0.6
+  staticFriction: 0.6
+  bounciness: 0
+  frictionCombine: 0
+  bounceCombine: 0
 --- !u!134 &1741673250
 PhysicMaterial:
   m_ObjectHideFlags: 0
@@ -439,22 +467,6 @@ PhysicMaterial:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: ' (Instance)'
-  dynamicFriction: 0.6
-  staticFriction: 0.6
-  bounciness: 0
-  frictionCombine: 0
-  bounceCombine: 0
---- !u!134 &1849083907
-PhysicMaterial:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_Name: ' (Instance) (Instance) (Instance) (Instance) (Instance) (Instance) (Instance)
-    (Instance) (Instance) (Instance) (Instance) (Instance) (Instance) (Instance)
-    (Instance) (Instance) (Instance) (Instance) (Instance) (Instance) (Instance)
-    (Instance) (Instance) (Instance) (Instance) (Instance) (Instance) (Instance)
-    (Instance) (Instance) (Instance) (Instance)'
   dynamicFriction: 0.6
   staticFriction: 0.6
   bounciness: 0
@@ -669,7 +681,7 @@ PrefabInstance:
     - target: {fileID: 6479129669874735601, guid: 22a53de81c7bb09419b3c85b8ffb2476, type: 3}
       propertyPath: m_Material
       value: 
-      objectReference: {fileID: 1167883371}
+      objectReference: {fileID: 1153940614}
     - target: {fileID: 6533606345511498953, guid: 22a53de81c7bb09419b3c85b8ffb2476, type: 3}
       propertyPath: m_Material
       value: 

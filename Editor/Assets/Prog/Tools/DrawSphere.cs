@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 
 public class DrawSphere : MonoBehaviour
@@ -10,14 +11,16 @@ public class DrawSphere : MonoBehaviour
 
     private void OnDrawGizmos()
     {
-        Gizmos.color = color * 0.70f;
+        Gizmos.color = color * 0.40f;
         Gizmos.DrawSphere(transform.position, radius);
+        Handles.Label(transform.position, gameObject.name);
     }
 
     private void OnDrawGizmosSelected()
     {
-        Gizmos.color = color;
+        Gizmos.color = color * 0.70f;
         Gizmos.DrawSphere(transform.position, radius);
+        Handles.Label(transform.position, gameObject.name);
     }
 
     public void SetColorGreen()

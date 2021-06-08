@@ -122,7 +122,7 @@ NavMeshSettings:
     preserveTilesOutsideBounds: 0
     debug:
       m_Flags: 0
-  m_NavMeshData: {fileID: 23800000, guid: c18ced3f16ec34645b442f33b97b047c, type: 2}
+  m_NavMeshData: {fileID: 23800000, guid: 94b0a87814aee2844b28fad731720218, type: 2}
 --- !u!134 &21863897
 PhysicMaterial:
   m_ObjectHideFlags: 0
@@ -2044,6 +2044,42 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 24dc741bd847f244aa1ecec19fd14017, type: 3}
+--- !u!1 &1598409243 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3512818939265636537, guid: 24dc741bd847f244aa1ecec19fd14017, type: 3}
+  m_PrefabInstance: {fileID: 1598409242}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1598409244
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1598409243}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0c8be42bcf5a796429d2bbcad7f3858d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  myName: 2
+  myTarget: 3
+  myTeleportTimer: 0
+  onTeleportToMePosition: {x: 0, y: 0, z: 0}
+  onTeleportToMeRotation: {x: 0, y: 0, z: 0}
+--- !u!114 &1598409245
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1598409243}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 612d23f628453ef479b54a4a0238406c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  myLock: {fileID: 0}
+  activationType: 1
 --- !u!134 &1694827534
 PhysicMaterial:
   m_ObjectHideFlags: 0
@@ -2287,7 +2323,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1117991978317291218, guid: 194925144615dc3439cb512b90e1fed1, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -2.8703294
+      value: -3.307
       objectReference: {fileID: 0}
     - target: {fileID: 1117991978317291218, guid: 194925144615dc3439cb512b90e1fed1, type: 3}
       propertyPath: m_LocalPosition.z
@@ -2320,6 +2356,10 @@ PrefabInstance:
     - target: {fileID: 1117991978317291218, guid: 194925144615dc3439cb512b90e1fed1, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5897895507786433534, guid: 194925144615dc3439cb512b90e1fed1, type: 3}
+      propertyPath: m_Enabled
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5897895507786433534, guid: 194925144615dc3439cb512b90e1fed1, type: 3}
       propertyPath: m_Material
