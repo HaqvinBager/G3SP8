@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEditor;
+using UnityEditor.SceneManagement;
 
 [System.Serializable]
 public struct PlayerID
@@ -22,6 +23,11 @@ public class ExporterJson
     [MenuItem("Export/Export")]
     public static void ExportJson()
     {
+        if (!EditorSceneManager.SaveCurrentModifiedScenesIfUserWantsTo())
+        {
+            return;
+        }
+
         if (GameObject.FindObjectOfType<PlayerSpawnPosition>() == null)
         {
             Debug.LogError("Export Cancelled. Please place a PlayerSpawnPosition Prefab in your Layout Scene");
