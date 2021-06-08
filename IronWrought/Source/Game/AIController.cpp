@@ -58,7 +58,7 @@ Vector3 CPatrol::Update(const Vector3& aPosition)
 
 	if (CheckIfOverlap(aPosition, patrolPointPosition)) // change patrol points & calculate path
 	{
-		myPatrolPoints[myTarget]->AddBonusValue(5);
+		myPatrolPoints[myTarget]->AddBonusValue(100);
 		patrolPoint = FindBestPatrolPoint(aPosition);
 		for (int i = 0; i < myPatrolPoints.size(); ++i) {
 			if (myPatrolPoints[i] == patrolPoint) {
@@ -124,7 +124,7 @@ CPatrolPointComponent* CPatrol::FindBestPatrolPoint(const Vector3& aPosition)
 		//std::cout << "Length Value: " << min << std::endl;
 
 		for (int i = 0; i < myPatrolPoints.size(); ++i) {
-			if (myPatrolPoints[i]->GetIntrestValue() <= min) {
+			if (myPatrolPoints[i]->GetIntrestValue() == min) {
 				return myPatrolPoints[i];
 			}
 		}
