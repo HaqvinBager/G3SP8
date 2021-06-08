@@ -12,6 +12,8 @@ public:
 
 	const int PlayCount() const;
 
+	const float GetVolume() const;
+
 	void SetVolume(float aVolumeLevel);
 	void Stop();
 	void Mute(bool aDoMute);
