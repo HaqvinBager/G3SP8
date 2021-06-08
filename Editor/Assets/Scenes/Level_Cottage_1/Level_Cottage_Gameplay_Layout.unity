@@ -1191,7 +1191,7 @@ PrefabInstance:
     - target: {fileID: 5897895507786433534, guid: 194925144615dc3439cb512b90e1fed1, type: 3}
       propertyPath: m_Material
       value: 
-      objectReference: {fileID: 905263232}
+      objectReference: {fileID: 993915922}
     - target: {fileID: 6450191594220255832, guid: 194925144615dc3439cb512b90e1fed1, type: 3}
       propertyPath: eventFilter
       value: 0
@@ -2788,18 +2788,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 4108131478240307542, guid: 12d848a820bb263489cc8261ee74c551, type: 3}
   m_PrefabInstance: {fileID: 885547397}
   m_PrefabAsset: {fileID: 0}
---- !u!134 &905263232
-PhysicMaterial:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_Name: ' (Instance) (Instance) (Instance) (Instance) (Instance) (Instance)'
-  dynamicFriction: 0.6
-  staticFriction: 0.6
-  bounciness: 0
-  frictionCombine: 0
-  bounceCombine: 0
 --- !u!1 &924819480
 GameObject:
   m_ObjectHideFlags: 0
@@ -3305,6 +3293,18 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 4108131478240307542, guid: 12d848a820bb263489cc8261ee74c551, type: 3}
   m_PrefabInstance: {fileID: 978887531}
   m_PrefabAsset: {fileID: 0}
+--- !u!134 &993915922
+PhysicMaterial:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: ' (Instance) (Instance) (Instance) (Instance) (Instance) (Instance) (Instance)'
+  dynamicFriction: 0.6
+  staticFriction: 0.6
+  bounciness: 0
+  frictionCombine: 0
+  bounceCombine: 0
 --- !u!1 &1084646443
 GameObject:
   m_ObjectHideFlags: 0

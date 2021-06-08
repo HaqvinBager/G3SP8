@@ -442,6 +442,18 @@ void CAudioManager::Receive(const SMessage& aMessage) {
 		PostMaster::SPlayDynamicAudioData data = *static_cast<PostMaster::SPlayDynamicAudioData*>(aMessage.data);
 		myWrapper.Play(mySFXAudio[data.mySoundIndex], data.myChannel);
 	}break;
+	
+	case EMessageType::Play3DVoiceLine:
+	{
+		PostMaster::SPlayDynamicAudioData data = *static_cast<PostMaster::SPlayDynamicAudioData*>(aMessage.data);
+		myWrapper.Play(myVoiceEventSounds[data.mySoundIndex], data.myChannel);
+	}break;
+
+	case EMessageType::Play2DVoiceLine:
+	{
+		int data = *static_cast<int*>(aMessage.data);
+		myWrapper.Play(myVoiceEventSounds[data], myChannels[CAST(EChannel::VOX)]);
+	}break;
 
 	case EMessageType::SetAmbience:
 	{
@@ -700,6 +712,8 @@ void CAudioManager::SubscribeToMessages()
 
 	//Pussel
 	CMainSingleton::PostMaster().Subscribe(EMessageType::PlayDynamicAudioSource, this);
+	CMainSingleton::PostMaster().Subscribe(EMessageType::Play3DVoiceLine, this);
+	CMainSingleton::PostMaster().Subscribe(EMessageType::Play2DVoiceLine, this);
 
 }
 
@@ -758,10 +772,12 @@ void CAudioManager::UnsubscribeToMessages()
 
 	CMainSingleton::PostMaster().Unsubscribe(EMessageType::EnemyStateChange, this);
 
+	CMainSingleton::PostMaster().Unsubscribe(EMessageType::SetAmbience, this);
+	
 	//Pussel
 	CMainSingleton::PostMaster().Unsubscribe(EMessageType::PlayDynamicAudioSource, this);
-
-	CMainSingleton::PostMaster().Unsubscribe(EMessageType::SetAmbience, this);
+	CMainSingleton::PostMaster().Unsubscribe(EMessageType::Play3DVoiceLine, this);
+	CMainSingleton::PostMaster().Unsubscribe(EMessageType::Play2DVoiceLine, this);
 }
 
 std::string CAudioManager::GetPath(EMusic type) const
@@ -905,13 +921,15 @@ std::string CAudioManager::TranslateEnum(ESFX enumerator) const {
 	case ESFX::PickupHeal:
 		return "PickupHeal";
 	case ESFX::EnemyAttack:
-		return "EnemyAttack";
+		return "EnemyBackToPatrol";
 	case ESFX::CardboardBox:
 		return "CardboardBox";
 	case ESFX::MovePainting:
 		return "MovePainting";
 	case ESFX::DoorOpen:
 		return "DoorOpen";
+	case ESFX::PhoneDead:
+		return "PhoneDead";
 	default:
 		return "";
 	}
@@ -1029,6 +1047,22 @@ std::string CAudioManager::TranslateEnum(EVOX enumerator) const
 		return "37";
 	case EVOX::Line38:
 		return "38";
+	case EVOX::Heal1:
+		return "Heal1";
+	case EVOX::Heal2:
+		return "Heal2";
+	case EVOX::Heal3:
+		return "Heal3";
+	case EVOX::LeaveCottage:
+		return "LeaveCottage";
+	case EVOX::PickUpPhone:
+		return "PickUpPhone";
+	case EVOX::WakeUpAfterDamage1:
+		return "WakeUpAfterDamage1";
+	case EVOX::WakeUpAfterDamage2:
+		return "WakeUpAfterDamage2";
+	case EVOX::WakeUpAfterDamage3:
+		return "WakeUpAfterDamage3";
 	default:
 		return "";
 	}

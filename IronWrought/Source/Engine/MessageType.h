@@ -112,5 +112,8 @@ enum class EMessageType
 
 	SetAmbience,
 
+	Play3DVoiceLine,
+	Play2DVoiceLine,
+
 	Count
 };

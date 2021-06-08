@@ -54,7 +54,9 @@
 #include <PrintResponse.h>
 #include <ToggleResponse.h>
 #include <AudioResponse.h>
+#include <VoiceResponse.h>
 #include <AudioActivation.h>
+#include <VoiceActivation.h>
 #include <TeleportActivation.h>
 
 CScene* CSceneManager::ourLastInstantiatedScene = nullptr;
@@ -234,6 +236,8 @@ bool CSceneManager::AddToScene(CScene& aScene, Binary::SLevelData& aBinLevelData
 				AddPuzzleActivationDestroy(aScene, sceneData["activationDestroys"].GetArray());
 			if (sceneData.HasMember("activationAudios"))
 				AddPuzzleActivationAudio(aScene, sceneData["activationAudios"].GetArray());
+			if (sceneData.HasMember("activationVoices"))
+				AddPuzzleActivationVoice(aScene, sceneData["activationVoices"].GetArray());
 			if (sceneData.HasMember("activationTeleporters"))
 				AddPuzzleActivationTeleporter(aScene, sceneData["activationTeleporters"].GetArray());
 
@@ -249,6 +253,8 @@ bool CSceneManager::AddToScene(CScene& aScene, Binary::SLevelData& aBinLevelData
 				AddPuzzleResponseToggle(aScene, sceneData["responseToggles"].GetArray());
 			if (sceneData.HasMember("responseAudios"))
 				AddPuzzleResponseAudio(aScene, sceneData["responseAudios"].GetArray());
+			if (sceneData.HasMember("responseVoices"))
+				AddPuzzleResponseVoice(aScene, sceneData["responseVoices"].GetArray());
 
 			AddDirectionalLights(aScene, sceneData["directionalLights"].GetArray());
 			SetVertexPaintedColors(aScene, sceneData["vertexColors"].GetArray(), vertexPaintData);
@@ -729,6 +735,33 @@ void CSceneManager::AddPuzzleActivationAudio(CScene& aScene, RapidArray someData
 	}
 }
 
+void CSceneManager::AddPuzzleActivationVoice(CScene& aScene, RapidArray someData)
+{
+	for (const auto& activation : someData)
+	{
+		CGameObject* gameObject = aScene.FindObjectWithID(activation["instanceID"].GetInt());
+		if (!gameObject)
+			continue;
+
+		PostMaster::SAudioSourceInitData settings = {};
+		settings.mySoundIndex = activation["voiceLine"].GetInt();
+		bool is3D = activation["is3D"].GetBool()/* ? 1 : 0*/;
+		settings.myForward = Vector3
+		{
+			activation["coneDirection"]["x"].GetFloat(),
+			activation["coneDirection"]["y"].GetFloat(),
+			activation["coneDirection"]["z"].GetFloat(),
+		};
+		settings.myStartAttenuationAngle = activation["minAttenuationAngle"].GetFloat();
+		settings.myMaxAttenuationAngle = activation["maxAttenuationAngle"].GetFloat();
+		settings.myMinAttenuationDistance = activation["minAttenuationDistance"].GetFloat();
+		settings.myMaxAttenuationDistance = activation["maxAttenuationDistance"].GetFloat();
+		settings.myMinimumVolume = activation["minimumVolume"].GetFloat();
+		settings.myGameObjectID = gameObject->InstanceID();
+		gameObject->AddComponent<CVoiceActivation>(*gameObject, settings, is3D);
+	}
+}
+
 void CSceneManager::AddPuzzleActivationTeleporter(CScene& aScene, RapidArray someData)
 {
 	for (const auto& activation : someData)
@@ -906,6 +939,33 @@ void CSceneManager::AddPuzzleResponseAudio(CScene& aScene, RapidArray someData)
 		settings.myMinimumVolume = response["minimumVolume"].GetFloat();
 		settings.myGameObjectID = gameObject->InstanceID();
 		gameObject->AddComponent<CAudioResponse>(*gameObject, settings);
+	}
+}
+
+void CSceneManager::AddPuzzleResponseVoice(CScene& aScene, RapidArray someData)
+{
+	for (const auto& response : someData)
+	{
+		CGameObject* gameObject = aScene.FindObjectWithID(response["instanceID"].GetInt());
+		if (!gameObject)
+			continue;
+
+		PostMaster::SAudioSourceInitData settings = {};
+		settings.mySoundIndex = response["voiceLine"].GetInt();
+		bool is3D = response["is3D"].GetBool()/* ? 1 : 0*/;
+		settings.myForward = Vector3
+		{
+			response["coneDirection"]["x"].GetFloat(),
+			response["coneDirection"]["y"].GetFloat(),
+			response["coneDirection"]["z"].GetFloat(),
+		};
+		settings.myStartAttenuationAngle = response["minAttenuationAngle"].GetFloat();
+		settings.myMaxAttenuationAngle = response["maxAttenuationAngle"].GetFloat();
+		settings.myMinAttenuationDistance = response["minAttenuationDistance"].GetFloat();
+		settings.myMaxAttenuationDistance = response["maxAttenuationDistance"].GetFloat();
+		settings.myMinimumVolume = response["minimumVolume"].GetFloat();
+		settings.myGameObjectID = gameObject->InstanceID();
+		gameObject->AddComponent<CVoiceResponse>(*gameObject, settings, is3D);
 	}
 }
 
@@ -1140,9 +1200,10 @@ void CSceneManager::AddCollider(CScene& aScene, const std::vector<Binary::SColli
 		ColliderType colliderType = static_cast<ColliderType>(c.colliderType);
 		CRigidBodyComponent* rigidBody = gameObject->GetComponent<CRigidBodyComponent>();
 		
-		if (c.isTrigger && !c.isKinematic)
+		if (c.isTrigger == 1 && c.isKinematic == 0)
 		{
-
+			//68520
+			std::cout << "What?" << std::endl;
 		}
 		else if (rigidBody == nullptr && c.isStatic == false)
 		{
