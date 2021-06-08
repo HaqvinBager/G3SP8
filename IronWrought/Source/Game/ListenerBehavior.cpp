@@ -2,7 +2,10 @@
 #include "ListenerBehavior.h"
 #include "ResponseBehavior.h"
 
-CListenerBehavior::CListenerBehavior(CGameObject& aParent, std::string aReceiveMessage) : CBehavior(aParent), myReceiveMessage(aReceiveMessage), myHasTriggered(false)
+CListenerBehavior::CListenerBehavior(CGameObject& aParent, const int aReceiveMessage) 
+	: CBehavior(aParent)
+	, myReceiveMessage(aReceiveMessage)
+	, myHasTriggered(false)
 {
 }
 
@@ -11,26 +14,14 @@ CListenerBehavior::~CListenerBehavior()
 	myResponses.clear();
 }
 
-void CListenerBehavior::Awake()
-{
-}
-
-void CListenerBehavior::Start()
-{
-}
-
-void CListenerBehavior::Update()
-{
-}
-
 void CListenerBehavior::OnEnable()
 {
-	CMainSingleton::PostMaster().Subscribe(myReceiveMessage.c_str(), this);
+	CMainSingleton::PostMaster().Subscribe(myReceiveMessage, this);
 }
 
 void CListenerBehavior::OnDisable()
 {
-	CMainSingleton::PostMaster().Unsubscribe(myReceiveMessage.c_str(), this);
+	CMainSingleton::PostMaster().Unsubscribe(myReceiveMessage, this);
 }
 
 void CListenerBehavior::Register(IResponseBehavior* aBehaviour)
@@ -47,7 +38,7 @@ void CListenerBehavior::TriggerResponses()
 	}
 }
 
-void CListenerBehavior::Receive(const SStringMessage& /*aMessage*/)
+void CListenerBehavior::Receive(const SIDMessage& /*aMessage*/)
 {
 	if (Enabled())
 	{

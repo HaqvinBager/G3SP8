@@ -78,6 +78,41 @@ void CPostMaster::Send(const SStringMessage& aMessage)
 	//myStringMessageQueue.push(SStringMessage(aMessage));
 }
 
+void CPostMaster::Subscribe(const int aMessageID, IMessageObserver* anObserver)
+{
+	if (myIDMessageObserverMap.find(aMessageID) != myIDMessageObserverMap.end())
+		if (std::find(myIDMessageObserverMap[aMessageID].begin(), myIDMessageObserverMap[aMessageID].end(), anObserver) != myIDMessageObserverMap[aMessageID].end())
+			return;
+
+	myIDMessageObserverMap[aMessageID].push_back(anObserver);
+}
+
+void CPostMaster::Unsubscribe(const int aMessageID, IMessageObserver* anObserver)
+{
+	for (int i = 0; i < myIDMessageObserverMap[aMessageID].size(); ++i)
+	{
+		if (myIDMessageObserverMap[aMessageID][i] == anObserver)
+		{
+			myIDMessageObserverMap[aMessageID][i] = myIDMessageObserverMap[aMessageID].back();
+			myIDMessageObserverMap[aMessageID].pop_back();
+			return;
+		}
+	}
+}
+
+void CPostMaster::SendLate(const SIDMessage& aMessage)
+{
+	myIDMessageQueue.push(SIDMessage(aMessage));
+}
+
+void CPostMaster::Send(const SIDMessage& aMessage)
+{
+	for (int i = 0; i < myIDMessageObserverMap[aMessage.myMessageID].size(); ++i)
+	{
+		myIDMessageObserverMap[aMessage.myMessageID][i]->Receive(aMessage);
+	}
+}
+
 void CPostMaster::FlushEvents()
 {
 	while (!myMessageQueue.empty())
@@ -98,6 +133,16 @@ void CPostMaster::FlushEvents()
 			myStringObserverMap[message.myMessageType][i]->Receive(message);
 		}
 		myStringMessageQueue.pop();
+	}
+
+	while (!myIDMessageQueue.empty())
+	{
+		SIDMessage message = myIDMessageQueue.front();
+		for (int i = 0; i < myIDMessageObserverMap[message.myMessageID].size(); ++i)
+		{
+			myIDMessageObserverMap[message.myMessageID][i]->Receive(message);
+		}
+		myIDMessageQueue.pop();
 	}
 }
 

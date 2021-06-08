@@ -12,3 +12,9 @@ struct SStringMessage
 	const char* myMessageType;
 	void* data;
 };
+
+struct SIDMessage
+{
+	std::string myName;
+	int myMessageID;
+};
