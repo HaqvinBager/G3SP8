@@ -24,7 +24,7 @@ public class ResponseRotateEditor : Editor
 
     private void SetRotation(Quaternion quat)
     {
-        var rotate = (ActivationRotate)target;
+        var rotate = (ResponseRotate)target;
         rotate.transform.rotation = quat;
     }
 
