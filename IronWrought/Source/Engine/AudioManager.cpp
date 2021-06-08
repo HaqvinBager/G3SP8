@@ -921,7 +921,7 @@ std::string CAudioManager::TranslateEnum(ESFX enumerator) const {
 	case ESFX::PickupHeal:
 		return "PickupHeal";
 	case ESFX::EnemyAttack:
-		return "EnemyAttack";
+		return "EnemyBackToPatrol";
 	case ESFX::CardboardBox:
 		return "CardboardBox";
 	case ESFX::MovePainting:
