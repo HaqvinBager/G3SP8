@@ -55,7 +55,7 @@ public class ExportCollider : MonoBehaviour
             {
                 if (collider.GetComponent<Rigidbody>() == null)
                 {
-                    if(collider.GetComponent<Key>() == null || collider.GetComponent<Lock>() == null)
+                    if(collider.GetComponent<Key>() == null && collider.GetComponent<Lock>() == null)
                         Debug.LogWarning("Skipping Object. Missing Rigidbody Component, Please add one if you want to Export this collider =)", collider.gameObject);
                     else
                     {
