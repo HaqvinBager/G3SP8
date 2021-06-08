@@ -69,7 +69,7 @@ public struct ListenerCollection
     public List<ResponseRotateData> responseRotates;
     public List<ResponsePrintData> responsePrints;
     public List<ResponseToggleData> responseToggles;
-    public List<ResponsePlayAudioData> responsePlayAudios;
+    public List<ResponsePlayAudioData> responseAudios;
 }
 
 public class ExportResponse
@@ -82,7 +82,7 @@ public class ExportResponse
         collection.responseRotates = new List<ResponseRotateData>();
         collection.responsePrints = new List<ResponsePrintData>();
         collection.responseToggles = new List<ResponseToggleData>();
-        collection.responsePlayAudios = new List<ResponsePlayAudioData>();
+        collection.responseAudios = new List<ResponsePlayAudioData>();
 
         Listener[] listeners = GameObject.FindObjectsOfType<Listener>();
         foreach (Listener listener in listeners)
@@ -102,7 +102,7 @@ public class ExportResponse
             ExportMoveResponses(ref collection.responseMoves, listener);
             ExportPrintResponses(ref collection.responsePrints, listener);
             ExportToggleResponses(ref collection.responseToggles, listener);
-            ExportPlayAudioResponses(ref collection.responsePlayAudios, listener);
+            ExportPlayAudioResponses(ref collection.responseAudios, listener);
         }
         return collection;
     }

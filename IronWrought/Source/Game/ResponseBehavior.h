@@ -16,8 +16,11 @@ public:
 	const std::string ResponseNotify() { return myResponseNotify; }
 	const bool HasBeenDelayed() const { return myHasBeenDelayed; }
 	void ToggleHasBeenDelayed() { myHasBeenDelayed = !myHasBeenDelayed; }
+	inline const bool HasBeenActivated() const { return myHasBeenActivated; }
+	void HasBeenActivated(const bool anActivated) { myHasBeenActivated = anActivated; }
 private:
 	std::string myResponseNotify;
 	bool myHasBeenDelayed;
+	bool myHasBeenActivated;
 };
 

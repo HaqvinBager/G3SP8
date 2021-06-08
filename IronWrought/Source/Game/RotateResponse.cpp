@@ -20,11 +20,14 @@ CRotateResponse::CRotateResponse(CGameObject& aParent, const SSettings& someSett
 	myStart = Quaternion::CreateFromYawPitchRoll(mySettings.myStartRotation.y, mySettings.myStartRotation.x, mySettings.myStartRotation.z);
 	myEnd = Quaternion::CreateFromYawPitchRoll(mySettings.myEndRotation.y, mySettings.myEndRotation.x, mySettings.myEndRotation.z);
 
-	Enabled(false);
+	HasBeenActivated(false);
 }
 
 void CRotateResponse::Update()
 {
+	if (!HasBeenActivated())
+		return;
+
 	myTime += CTimer::Dt();
 
 	if (!HasBeenDelayed())
@@ -39,10 +42,10 @@ void CRotateResponse::Update()
 	GameObject().myTransform->Rotation(Quaternion::Slerp(myStart, myEnd, myTime / mySettings.myDuration));
 
 	if (myTime >= mySettings.myDuration)
-		Enabled(false);
+		HasBeenActivated(false);
 }
 
 void CRotateResponse::OnRespond()
 {
-	Enabled(true);
+	HasBeenActivated(true);
 }
