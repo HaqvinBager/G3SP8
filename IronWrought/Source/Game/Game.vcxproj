@@ -203,6 +203,8 @@
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="TokenPool.h" />
     <ClInclude Include="UnityFactory.h" />
+    <ClInclude Include="VoiceActivation.h" />
+    <ClInclude Include="VoiceResponse.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ActivationBehavior.cpp" />
@@ -253,6 +255,8 @@
     </ClCompile>
     <ClCompile Include="TokenPool.cpp" />
     <ClCompile Include="UnityFactory.cpp" />
+    <ClCompile Include="VoiceActivation.cpp" />
+    <ClCompile Include="VoiceResponse.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

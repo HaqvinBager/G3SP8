@@ -57,6 +57,7 @@ private:
 	static void AddPuzzleActivationRotate(CScene& aScene, RapidArray someData);
 	static void AddPuzzleActivationDestroy(CScene& aScene, RapidArray someData);
 	static void AddPuzzleActivationAudio(CScene& aScene, RapidArray someData);
+	static void AddPuzzleActivationVoice(CScene& aScene, RapidArray someData);
 	static void AddPuzzleActivationTeleporter(CScene& aScene, RapidArray someData);
 	static void AddPuzzleLock(CScene& aScene, RapidArray someData);
 	static void AddPuzzleListener(CScene& aScene, RapidArray someData);
@@ -65,6 +66,7 @@ private:
 	static void AddPuzzleResponsePrint(CScene& aScene, RapidArray someData);
 	static void AddPuzzleResponseToggle(CScene& aScene, RapidArray someData);
 	static void AddPuzzleResponseAudio(CScene& aScene, RapidArray someData);
+	static void AddPuzzleResponseVoice(CScene& aScene, RapidArray someData);
 
 	static void AddCollider(CScene& aScene, RapidArray someData);
 	static void AddCollider(CScene& aScene, const std::vector<Binary::SCollider>& someData);
