@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 
+[CanEditMultipleObjects]
 [CustomEditor(typeof(ResponseMove))]
 public class ResponseMoveEditor : Editor
 {
@@ -26,10 +27,8 @@ public class ResponseMoveEditor : Editor
         move.transform.position = aValue;
     }
 
-
     void SavePosition(SerializedProperty aProperty, Vector3 aValue)
     {
         aProperty.vector3Value = aValue;
     }
-
 }
