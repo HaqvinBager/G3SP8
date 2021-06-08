@@ -15,7 +15,7 @@ GameObject:
   m_TagString: Concrete
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 4294967295
   m_IsActive: 1
 --- !u!4 &369385568520459464
 Transform:
@@ -61,8 +61,8 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_StaticEditorFlags: 4294967295
+  m_IsActive: 0
 --- !u!4 &8087297712953220705
 Transform:
   m_ObjectHideFlags: 0
@@ -164,6 +164,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 9b84fd3e6f974ef44bbd4ee94df3df15, type: 3}
       propertyPath: m_Name
       value: En_G_Floor400x300
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 9b84fd3e6f974ef44bbd4ee94df3df15, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 4294967295
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9b84fd3e6f974ef44bbd4ee94df3df15, type: 3}

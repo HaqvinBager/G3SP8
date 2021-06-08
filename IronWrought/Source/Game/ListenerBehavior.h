@@ -10,16 +10,16 @@ enum class EResponseType
 
 class IResponseBehavior;
 
-class CListenerBehavior : public CBehavior, public IStringObserver
+class CListenerBehavior : public CBehavior, public IMessageObserver
 {
 public:
-	CListenerBehavior(CGameObject& aParent, std::string aReceiveMessage);
+	CListenerBehavior(CGameObject& aParent, const int aReceiveMessage);
 	~CListenerBehavior();
 	
 public:
-	void Awake() override;
-	void Start() override;
-	void Update() override;
+	void Awake() override{}
+	void Start() override{}
+	void Update() override{}
 
 	void OnEnable() override;
 	void OnDisable() override;
@@ -29,9 +29,9 @@ public:
 	void TriggerResponses();
 
 private:
-	void Receive(const SStringMessage& aMessage) override;
+	void Receive(const SIDMessage& aMessage) override;
 
-	std::string myReceiveMessage;
+	int myReceiveMessage;
 	std::vector<IResponseBehavior*> myResponses;
 	bool myHasTriggered;
 };

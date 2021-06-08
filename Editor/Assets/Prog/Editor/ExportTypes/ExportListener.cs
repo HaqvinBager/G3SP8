@@ -6,7 +6,7 @@ using UnityEditor;
 [System.Serializable]
 public struct ListenerData
 {
-    public string onResponseNotify;
+    public int onResponseNotify;
     public int instanceID;
 }
 
@@ -87,7 +87,7 @@ public struct ListenerCollection
     public List<ResponsePlayVoiceData> responseVoices;
 }
 
-public class ExportResponse
+public class ExportListener
 {
     public static ListenerCollection Export()
     {
@@ -103,8 +103,20 @@ public class ExportResponse
         Listener[] listeners = GameObject.FindObjectsOfType<Listener>();
         foreach (Listener listener in listeners)
         {
+            if(listener.myLock == null)
+            {
+                Debug.LogWarning("This Listener does not have a Lock. Please add one if you want to see the Response Behaviour play out. <3 /Axel Mcfluffykins", listener.gameObject);
+                continue;
+            }
+
+            if(listener.myLock.onLockNotify == null)
+            {
+                Debug.LogWarning("This lock does not have a onLockNotify, this response will never trigger. Please add an onLockNotify to the lock to be able to trigger the event", listener.myLock);
+                continue;
+            }
+
             ListenerData data = new ListenerData();
-            data.onResponseNotify = listener.myLock?.onLockNotify?.name;
+            data.onResponseNotify = listener.myLock.onLockNotify.GetInstanceID();
             data.instanceID = listener.transform.GetInstanceID();
             collection.listeners.Add(data);
 

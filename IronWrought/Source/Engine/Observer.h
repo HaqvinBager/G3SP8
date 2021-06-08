@@ -14,3 +14,10 @@ public:
 	virtual ~IStringObserver() { }
 	virtual void Receive(const SStringMessage& aMessage) = 0;
 };
+
+class IMessageObserver
+{
+public:
+	virtual ~IMessageObserver() {}
+	virtual void Receive(const SIDMessage& aMessage) = 0;
+};
