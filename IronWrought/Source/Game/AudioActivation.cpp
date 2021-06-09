@@ -8,6 +8,8 @@ CAudioActivation::CAudioActivation(CGameObject& aParent, const PostMaster::SAudi
 	, mySettings(someSettings)
 	, myTime(0.0f)
 {
+	if (mySettings.myDelay < 0.001f)
+		mySettings.myDelay = 0.001f;
 	myAudioChannel = CEngine::GetInstance()->RequestAudioSource(mySettings);
 	myPlayMessage.myChannel = myAudioChannel;
 	myPlayMessage.mySoundIndex = mySettings.mySoundIndex;
