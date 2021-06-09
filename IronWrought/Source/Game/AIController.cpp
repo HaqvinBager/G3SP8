@@ -58,7 +58,7 @@ Vector3 CPatrol::Update(const Vector3& aPosition)
 
 	if (CheckIfOverlap(aPosition, patrolPointPosition)) // change patrol points & calculate path
 	{
-		myPatrolPoints[myTarget]->AddBonusValue(5);
+		myPatrolPoints[myTarget]->AddBonusValue(100);
 		patrolPoint = FindBestPatrolPoint(aPosition);
 		for (int i = 0; i < myPatrolPoints.size(); ++i) {
 			if (myPatrolPoints[i] == patrolPoint) {
@@ -124,7 +124,7 @@ CPatrolPointComponent* CPatrol::FindBestPatrolPoint(const Vector3& aPosition)
 		//std::cout << "Length Value: " << min << std::endl;
 
 		for (int i = 0; i < myPatrolPoints.size(); ++i) {
-			if (myPatrolPoints[i]->GetIntrestValue() <= min) {
+			if (myPatrolPoints[i]->GetIntrestValue() == min) {
 				return myPatrolPoints[i];
 			}
 		}
@@ -159,10 +159,13 @@ Vector3 CSeek::Update(const Vector3& aPosition)//aPostion == EnemyRobot Position
 	myPathTarget = 0;
 	float epsilon = 0.5f;
 	if (myFoundPlayer == true) {
-		SetPath(myNavMesh->CalculatePath(aPosition, myTarget->Position(), myNavMesh), myTarget->Position());
+		Vector3 playerPos = myTarget->Position();
+		playerPos.y = aPosition.y;
+		SetPath(myNavMesh->CalculatePath(aPosition, playerPos, myNavMesh), playerPos);
 	}
 	else {
 		float dist = DirectX::SimpleMath::Vector2::DistanceSquared({ myLastPlayerPosition.x, myLastPlayerPosition.z }, { aPosition.x, aPosition.z });
+		myLastPlayerPosition.y = aPosition.y;
 		SetPath(myNavMesh->CalculatePath(aPosition, myLastPlayerPosition, myNavMesh), myLastPlayerPosition);
 		if (dist < epsilon) {
 			CMainSingleton::PostMaster().Send({ EMessageType::EnemyReachedLastPlayerPosition });

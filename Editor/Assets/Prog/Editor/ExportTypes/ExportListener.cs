@@ -63,6 +63,20 @@ public struct ResponsePlayAudioData
 }
 
 [System.Serializable]
+public struct ResponsePlayVoiceData
+{
+    public int voiceLine;
+    public bool is3D;
+    public Vector3 coneDirection;
+    public float minAttenuationAngle;
+    public float maxAttenuationAngle;
+    public float minAttenuationDistance;
+    public float maxAttenuationDistance;
+    public float minimumVolume;
+    public int instanceID;
+}
+
+[System.Serializable]
 public struct ListenerCollection
 {
     public List<ListenerData> listeners;
@@ -71,6 +85,7 @@ public struct ListenerCollection
     public List<ResponsePrintData> responsePrints;
     public List<ResponseToggleData> responseToggles;
     public List<ResponsePlayAudioData> responseAudios;
+    public List<ResponsePlayVoiceData> responseVoices;
 }
 
 public class ExportListener
@@ -84,6 +99,7 @@ public class ExportListener
         collection.responsePrints = new List<ResponsePrintData>();
         collection.responseToggles = new List<ResponseToggleData>();
         collection.responseAudios = new List<ResponsePlayAudioData>();
+        collection.responseVoices = new List<ResponsePlayVoiceData>();
 
         Listener[] listeners = GameObject.FindObjectsOfType<Listener>();
         foreach (Listener listener in listeners)
@@ -110,6 +126,7 @@ public class ExportListener
             ExportPrintResponses(ref collection.responsePrints, listener);
             ExportToggleResponses(ref collection.responseToggles, listener);
             ExportPlayAudioResponses(ref collection.responseAudios, listener);
+            ExportPlayVoiceResponses(ref collection.responseVoices, listener);
         }
         return collection;
     }
@@ -193,6 +210,25 @@ public class ExportListener
             playAudioData.delay = playAudio.myDelay;
             // Debug.Log("Audio: " + playAudioData.soundEffect.ToString());
             collection.Add(playAudioData);
+        }
+    }
+
+    private static void ExportPlayVoiceResponses(ref List<ResponsePlayVoiceData> collection, Listener Response)
+    {
+        if (Response.TryGetComponent(out ResponsePlayVoice playVoice))
+        {
+            ResponsePlayVoiceData playVoiceData = new ResponsePlayVoiceData();
+            playVoiceData.coneDirection = playVoice.myConeDirection;
+            playVoiceData.is3D = playVoice.myIs3D;
+            playVoiceData.minAttenuationAngle = playVoice.myMinAttenuationAngle;
+            playVoiceData.maxAttenuationAngle = playVoice.myMaxAttenuationAngle;
+            playVoiceData.minAttenuationDistance = playVoice.myMinAttenuationDistance;
+            playVoiceData.maxAttenuationDistance = playVoice.myMaxAttenuationDistance;
+            playVoiceData.minimumVolume = playVoice.myMinimumVolume;
+            playVoiceData.instanceID = playVoice.transform.GetInstanceID();
+            playVoiceData.voiceLine = (int)playVoice.voiceLine;
+            // Debug.Log("Audio: " + playAudioData.soundEffect.ToString());
+            collection.Add(playVoiceData);
         }
     }
 }

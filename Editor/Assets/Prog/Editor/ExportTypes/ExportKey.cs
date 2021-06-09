@@ -47,6 +47,20 @@ public struct ActivationPlayAudioData
 }
 
 [System.Serializable]
+public struct ActivationPlayVoiceData
+{
+    public int voiceLine;
+    public bool is3D;
+    public Vector3 coneDirection;
+    public float minAttenuationAngle;
+    public float maxAttenuationAngle;
+    public float minAttenuationDistance;
+    public float maxAttenuationDistance;
+    public float minimumVolume;
+    public int instanceID;
+}
+
+[System.Serializable]
 public struct ActivationTeleporterData
 {
     public Vector3 teleportToPos;
@@ -64,6 +78,7 @@ public struct KeyCollection
     public List<ActivationMoveData> activationMoves;
     public List<ActivationRotateData> activationRotates;
     public List<ActivationPlayAudioData> activationAudios;
+    public List<ActivationPlayVoiceData> activationVoices;
     public List<ActivationTeleporterData> activationTeleporters;
 }
 
@@ -76,6 +91,7 @@ public class ExportKey
         collection.activationMoves = new List<ActivationMoveData>();
         collection.activationRotates = new List<ActivationRotateData>();
         collection.activationAudios = new List<ActivationPlayAudioData>();
+        collection.activationVoices = new List<ActivationPlayVoiceData>();
         collection.activationTeleporters = new List<ActivationTeleporterData>();
 
         Key[] keys = GameObject.FindObjectsOfType<Key>();
@@ -98,6 +114,7 @@ public class ExportKey
             ExportRotateActivations(ref collection.activationRotates, key);
             ExportMoveActivations(ref collection.activationMoves, key);
             ExportPlayAudioActivations(ref collection.activationAudios, key);
+            ExportPlayVoiceActivations(ref collection.activationVoices, key);
             ExportTeleportActivations(ref collection.activationTeleporters, key);
         }
         return collection;
@@ -145,6 +162,24 @@ public class ExportKey
             playAudioData.soundEffect = (int)playAudio.soundEffect;
             playAudioData.delay = playAudio.myDelay;
             collection.Add(playAudioData);
+        }
+    }
+
+    private static void ExportPlayVoiceActivations(ref List<ActivationPlayVoiceData> collection, Key key)
+    {
+        if (key.TryGetComponent(out ActivationPlayVoice playVoice))
+        {
+            ActivationPlayVoiceData playVoiceData = new ActivationPlayVoiceData();
+            playVoiceData.coneDirection = playVoice.myConeDirection;
+            playVoiceData.is3D = playVoice.myIs3D;
+            playVoiceData.minAttenuationAngle = playVoice.myMinAttenuationAngle;
+            playVoiceData.maxAttenuationAngle = playVoice.myMaxAttenuationAngle;
+            playVoiceData.minAttenuationDistance = playVoice.myMinAttenuationDistance;
+            playVoiceData.maxAttenuationDistance = playVoice.myMaxAttenuationDistance;
+            playVoiceData.minimumVolume = playVoice.myMinimumVolume;
+            playVoiceData.instanceID = playVoice.transform.GetInstanceID();
+            playVoiceData.voiceLine = (int)playVoice.voiceLine;
+            collection.Add(playVoiceData);
         }
     }
 

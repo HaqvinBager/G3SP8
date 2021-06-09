@@ -20,6 +20,8 @@
 #include "LineInstance.h"
 #include "LineFactory.h"
 #include <algorithm>
+#include "Debug.h"
+#include "PlayerControllerComponent.h"
 
 //EnemyComp
 
@@ -125,7 +127,7 @@ void CEnemyComponent::Update()//får bestämma vilket behaviour vi vill köra i 
 		float lengthSquaredEnemy = furthestLookingPointToEnemy.LengthSquared();
 		float lengthSquaredPlayer = playerToEnemy.LengthSquared();
 		float degrees = std::acos(dot / sqrt(lengthSquaredEnemy * lengthSquaredPlayer)) * 180.f / PI;
-		float viewAngle = 60.f;
+		float viewAngle = 65.f;
 
 		if (degrees <= viewAngle) {
 			Vector3 direction = playerPos - enemyPos;
@@ -133,7 +135,13 @@ void CEnemyComponent::Update()//får bestämma vilket behaviour vi vill köra i 
 			if (hit.getNbAnyHits() > 0) {
 				CTransformComponent* transform = (CTransformComponent*)hit.getAnyHit(0).actor->userData;
 				if (!transform && !myHasFoundPlayer) {
-					myIsIdle = false;
+					if (myHasReachedLastPlayerPosition == true) {
+						myIsIdle = true;
+						SetState(EBehaviour::Idle);
+					}
+					else {
+						myIsIdle = false;	
+					}
 					myHeardSound = false;
 					myHasReachedAlertedTarget = true;
 					myHasFoundPlayer = true;
@@ -188,52 +196,7 @@ void CEnemyComponent::Update()//får bestämma vilket behaviour vi vill köra i 
 				mySettings.mySpeed = 3.0f;
 				SetState(EBehaviour::Alerted);
 			}
-
-			/*if (!myHeardSound && !myHasFoundPlayer && myHasReachedLastPlayerPosition) {
-				mySettings.mySpeed = 1.5f;
-				SetState(EBehaviour::Patrol);
-			}
-			else if (!myHasReachedAlertedTarget && !myHasFoundPlayer && myHasReachedLastPlayerPosition) {
-				mySettings.mySpeed = 3.0f;
-				SetState(EBehaviour::Alerted);
-			}
-			else if (myHasReachedAlertedTarget && !myHasFoundPlayer && !myHasReachedLastPlayerPosition) {
-				myHasReachedAlertedTarget = false;
-			}*/
 		}
-
-		//if (!myHasFoundPlayer && !myHasReachedLastPlayerPosition) {
-		//	//std::cout << "SEEK LAST POSITION" << std::endl;'
-		//	mySettings.mySpeed = 3.0f;
-		//	if (myIdlingTimer == 0.0f) {
-		//		SetState(EBehaviour::Idle);
-		//	}
-		//	myIdlingTimer += CTimer::Dt();
-		//	if (myIdlingTimer > 0.5f) {
-		//		myIdlingTimer = 0.0f;
-		//		SetState(EBehaviour::Seek);
-		//	}
-		//}
-
-		//if (myHasFoundPlayer) {
-		//	//std::cout << "SEEK" << std::endl;
-		//	mySettings.mySpeed = 3.0f;
-		//	SetState(EBehaviour::Seek);
-
-		//}
-		//else if (myHasReachedTarget && myHasReachedLastPlayerPosition) {
-		//	//std::cout << "PATROL" << std::endl;
-		//	mySettings.mySpeed = 1.5f;
-		//	myHasReachedTarget = false;
-		//	SetState(EBehaviour::Patrol);
-		//}
-
-		//if (distanceToPlayer <= 1.0f) {
-		//	myHasFoundPlayer = false;
-		//	myHasReachedTarget = true;
-		//	myHasReachedLastPlayerPosition = true;
-		//	SetState(EBehaviour::Attack);
-		//}
 
 		Vector3 targetDirection = myBehaviours[static_cast<int>(myCurrentState)]->Update(GameObject().myTransform->Position());
 		targetDirection.y = 0;
@@ -315,6 +278,7 @@ void CEnemyComponent::Receive(const SMessage& aMsg)
 	{
 		myMovementLocked = true;
 		GameObject().myTransform->Position({ -10.0f, 0.0f, -13.0f });
+		myPlayer->GetComponent<CPlayerControllerComponent>()->LockMovementFor(3.f);
 	}
 
 	if (aMsg.myMessageType == EMessageType::PropCollided) {

@@ -1,11 +1,16 @@
 #include "stdafx.h"
 #include "PhysicsPropAudioComponent.h"
+#include "Engine.h"
+#include "AudioChannel.h"
 
-CPhysicsPropAudioComponent::CPhysicsPropAudioComponent(CGameObject& aParent, unsigned int aSoundIndex)
+CPhysicsPropAudioComponent::CPhysicsPropAudioComponent(CGameObject& aParent, const PostMaster::SAudioSourceInitData& someSettings)
     : CComponent(aParent)
-    , mySoundIndex(aSoundIndex)
+    , mySettings(someSettings)
     , myTimer(0.0f)
 {
+    myAudioChannel = CEngine::GetInstance()->RequestAudioSource(mySettings);
+    myPlayMessage.myChannel = myAudioChannel;
+    myPlayMessage.mySoundIndex = mySettings.mySoundIndex;
 }
 
 CPhysicsPropAudioComponent::~CPhysicsPropAudioComponent()
@@ -35,7 +40,9 @@ bool CPhysicsPropAudioComponent::Ready()
     return false;
 }
 
-unsigned int& CPhysicsPropAudioComponent::GetSoundIndex()
+PostMaster::SPlayDynamicAudioData& CPhysicsPropAudioComponent::GetPlayMessage()
 {
-    return mySoundIndex;
+    const Matrix& matrix = GameObject().myTransform->GetWorldMatrix();
+    myAudioChannel->Set3DAttributes(matrix.Translation());
+    return myPlayMessage;
 }

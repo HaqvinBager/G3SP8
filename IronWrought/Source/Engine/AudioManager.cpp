@@ -246,12 +246,6 @@ void CAudioManager::Receive(const SMessage& aMessage) {
 	}
 	break;
 
-	case EMessageType::PlayJumpSound:
-	{
-		myWrapper.Play(mySFXAudio[CAST(ESFX::Jump)], myChannels[CAST(EChannel::SFX)]);
-	}
-	break;
-
 	case EMessageType::PlayerTakeDamage:
 	{
 		myWrapper.Play(mySFXAudio[CAST(ESFX::EnemyHit)], myChannels[CAST(EChannel::SFX)]);
@@ -279,14 +273,14 @@ void CAudioManager::Receive(const SMessage& aMessage) {
 		if (aMessage.data)
 			release = *static_cast<bool*>(aMessage.data);
 		if (release)
-			myWrapper.Play(mySFXAudio[CAST(ESFX::GravityGlovePullRelease)], myChannels[CAST(EChannel::SFX)]);
+			myWrapper.Play(mySFXAudio[CAST(ESFX::LetGo)], myChannels[CAST(EChannel::SFX)]);
 		else
-			myWrapper.Play(mySFXAudio[CAST(ESFX::GravityGlovePullHit)], myChannels[CAST(EChannel::SFX)]);
+			myWrapper.Play(mySFXAudio[CAST(ESFX::Grab)], myChannels[CAST(EChannel::SFX)]);
 	}break;
 
 	case EMessageType::GravityGlovePush:
 	{
-		myWrapper.Play(mySFXAudio[CAST(ESFX::GravityGlovePush)], myChannels[CAST(EChannel::SFX)]);
+		myWrapper.Play(mySFXAudio[CAST(ESFX::Throw)], myChannels[CAST(EChannel::SFX)]);
 	}break;
 
 	case EMessageType::PlayerHealthPickup:
@@ -432,15 +426,27 @@ void CAudioManager::Receive(const SMessage& aMessage) {
 
 	case EMessageType::PhysicsPropCollision:
 	{
-		unsigned int soundIndex = *reinterpret_cast<unsigned int*>(aMessage.data);
-		myChannels[CAST(EChannel::SFX)]->SetPitch(Random(0.95f, 1.05f));
-		myWrapper.Play(mySFXAudio[soundIndex], myChannels[CAST(EChannel::SFX)]);
+		PostMaster::SPlayDynamicAudioData data = *static_cast<PostMaster::SPlayDynamicAudioData*>(aMessage.data);
+		data.myChannel->SetPitch(Random(0.95f, 1.05f));
+		myWrapper.Play(mySFXAudio[data.mySoundIndex], data.myChannel);
 	}break;
 
 	case EMessageType::PlayDynamicAudioSource:
 	{
 		PostMaster::SPlayDynamicAudioData data = *static_cast<PostMaster::SPlayDynamicAudioData*>(aMessage.data);
 		myWrapper.Play(mySFXAudio[data.mySoundIndex], data.myChannel);
+	}break;
+	
+	case EMessageType::Play3DVoiceLine:
+	{
+		PostMaster::SPlayDynamicAudioData data = *static_cast<PostMaster::SPlayDynamicAudioData*>(aMessage.data);
+		myWrapper.Play(myVoiceEventSounds[data.mySoundIndex], data.myChannel);
+	}break;
+
+	case EMessageType::Play2DVoiceLine:
+	{
+		int data = *static_cast<int*>(aMessage.data);
+		myWrapper.Play(myVoiceEventSounds[data], myChannels[CAST(EChannel::VOX)]);
 	}break;
 
 	case EMessageType::SetAmbience:
@@ -700,6 +706,8 @@ void CAudioManager::SubscribeToMessages()
 
 	//Pussel
 	CMainSingleton::PostMaster().Subscribe(EMessageType::PlayDynamicAudioSource, this);
+	CMainSingleton::PostMaster().Subscribe(EMessageType::Play3DVoiceLine, this);
+	CMainSingleton::PostMaster().Subscribe(EMessageType::Play2DVoiceLine, this);
 
 }
 
@@ -758,10 +766,12 @@ void CAudioManager::UnsubscribeToMessages()
 
 	CMainSingleton::PostMaster().Unsubscribe(EMessageType::EnemyStateChange, this);
 
+	CMainSingleton::PostMaster().Unsubscribe(EMessageType::SetAmbience, this);
+	
 	//Pussel
 	CMainSingleton::PostMaster().Unsubscribe(EMessageType::PlayDynamicAudioSource, this);
-
-	CMainSingleton::PostMaster().Unsubscribe(EMessageType::SetAmbience, this);
+	CMainSingleton::PostMaster().Unsubscribe(EMessageType::Play3DVoiceLine, this);
+	CMainSingleton::PostMaster().Unsubscribe(EMessageType::Play2DVoiceLine, this);
 }
 
 std::string CAudioManager::GetPath(EMusic type) const
@@ -886,16 +896,16 @@ std::string CAudioManager::TranslateEnum(EPropAmbience enumerator) const
 std::string CAudioManager::TranslateEnum(ESFX enumerator) const {
 	switch (enumerator)
 	{
-	case ESFX::GravityGlovePullBuildup:
-		return "GravityGlovePullBuildup";
-	case ESFX::GravityGlovePullHit:
-		return "GravityGlovePullHit";
-	case ESFX::GravityGlovePush:
-		return "GravityGlovePush";
-	case ESFX::GravityGlovePullRelease:
-		return "GravityGlovePullRelease";
-	case ESFX::Jump:
-		return "Jump";
+	case ESFX::Unused:
+		return "Grab";
+	case ESFX::Unused1:
+		return "Grab";
+	case ESFX::Grab:
+		return "Grab";
+	case ESFX::Throw:
+		return "Throw";
+	case ESFX::LetGo:
+		return "LetGo";
 	case ESFX::EnemyHit:
 		return "EnemyHit";
 	case ESFX::SwitchPress:
@@ -905,13 +915,15 @@ std::string CAudioManager::TranslateEnum(ESFX enumerator) const {
 	case ESFX::PickupHeal:
 		return "PickupHeal";
 	case ESFX::EnemyAttack:
-		return "EnemyAttack";
+		return "EnemyBackToPatrol";
 	case ESFX::CardboardBox:
 		return "CardboardBox";
 	case ESFX::MovePainting:
 		return "MovePainting";
 	case ESFX::DoorOpen:
 		return "DoorOpen";
+	case ESFX::PhoneDead:
+		return "PhoneDead";
 	default:
 		return "";
 	}
@@ -1029,6 +1041,22 @@ std::string CAudioManager::TranslateEnum(EVOX enumerator) const
 		return "37";
 	case EVOX::Line38:
 		return "38";
+	case EVOX::Heal1:
+		return "Heal1";
+	case EVOX::Heal2:
+		return "Heal2";
+	case EVOX::Heal3:
+		return "Heal3";
+	case EVOX::LeaveCottage:
+		return "LeaveCottage";
+	case EVOX::PickUpPhone:
+		return "PickUpPhone";
+	case EVOX::WakeUpAfterDamage1:
+		return "WakeUpAfterDamage1";
+	case EVOX::WakeUpAfterDamage2:
+		return "WakeUpAfterDamage2";
+	case EVOX::WakeUpAfterDamage3:
+		return "WakeUpAfterDamage3";
 	default:
 		return "";
 	}
