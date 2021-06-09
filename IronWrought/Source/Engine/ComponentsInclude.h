@@ -20,9 +20,10 @@
 #include "LeftClickDownLock.h"
 #include "OnTriggerLock.h"
 
-
 #include <EnemyComponent.h>
 #include <PlayerComponent.h>
 #include <GravityGloveComponent.h>
 #include <HealthPickupComponent.h>
 #include <PlayerControllerComponent.h>
+#include <ListenerBehavior.h>
+#include <KeyBehavior.h>

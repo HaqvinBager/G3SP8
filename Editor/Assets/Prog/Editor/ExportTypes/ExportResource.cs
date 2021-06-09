@@ -108,15 +108,15 @@ public class ExportResource
             assets.materials.Add(asset);
         }
 
-        //List<IronEvent> events = MagicString.LoadAssets<IronEvent>("l:IronEvent", "Assets/CustomEvents");
-        //foreach(IronEvent ironEvent in events)
-        //{
-        //    Debug.Log(ironEvent?.name);
-        //    //EventAsset asset = new EventAsset();
-        //    //asset.id = ironEvent.GetInstanceID();
-        //    //asset.eventName = ironEvent.name;
-        //    //assets.events.Add(asset);
-        //}
+        List<CustomEvent> events = MagicString.LoadAssets<CustomEvent>("l:IronEvent", "Assets");
+        foreach (CustomEvent customEvent in events)
+        {
+            //Debug.Log(ironEvent?.name);
+            EventAsset asset = new EventAsset();
+            asset.id = customEvent.GetInstanceID();
+            asset.eventName = customEvent.name;
+            assets.events.Add(asset);
+        }
 
         foreach (string assetPath in allAssetPaths)
         {

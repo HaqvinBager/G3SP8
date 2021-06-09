@@ -15,6 +15,8 @@ class CListenerBehavior : public CBehavior, public IMessageObserver
 public:
 	CListenerBehavior(CGameObject& aParent, const int aReceiveMessage);
 	~CListenerBehavior();
+
+	const int RecieveMessage() const { return myReceiveMessage; }
 	
 public:
 	void Awake() override{}
