@@ -26,7 +26,7 @@ CGravityGloveComponent::CGravityGloveComponent(CGameObject& aParent, CTransformC
 	//mySettings.myDistanceToMaxLinearVelocity = 2.5f;
 	mySettings.myMaxPushForce = 100.0f;
 	mySettings.myMinPushForce = 10.0f;
-	mySettings.myMinPullForce = 1.5f;
+	mySettings.myMinPullForce = 200.0f;
 
 	mySettings.myMaxDistance = 2.0f;
 	mySettings.myCurrentDistanceInverseLerp = 0.0f;
@@ -72,7 +72,7 @@ void CGravityGloveComponent::Update()
 
 		mySettings.myCurrentDistanceInverseLerp = min(1.0f, InverseLerp(0.0f, maxDistance, distance));
 
-		if (mySettings.myCurrentDistanceInverseLerp < 0.1f)
+		if (mySettings.myCurrentDistanceInverseLerp < 0.5f)
 		{
 			//dont remove pls - Alexander Matth�i 2021-04-30
 			/*myJoint = PxD6JointCreate(*CEngine::GetInstance()->GetPhysx().GetPhysics(), myRigidStatic, myRigidStatic->getGlobalPose(), &myCurrentTarget->GetDynamicRigidBody()->GetBody(), myCurrentTarget->GetDynamicRigidBody()->GetBody().getGlobalPose());

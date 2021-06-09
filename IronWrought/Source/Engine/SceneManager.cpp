@@ -1030,7 +1030,7 @@ void CSceneManager::AddPlayer(CScene& aScene, RapidObject someData)
 	CGameObject* gravityGloveSlot = new CGameObject(PLAYER_GLOVE_ID);
 	gravityGloveSlot->myTransform->Scale(0.1f);
 	gravityGloveSlot->myTransform->SetParent(camera->myTransform);
-	gravityGloveSlot->myTransform->Position({ 0.f, 0.f, 1.5f });
+	gravityGloveSlot->myTransform->Position({ 0.0f, 0.0f, 0.75f });
 	gravityGloveSlot->myTransform->Rotation(playerRot);
 
 	camera->AddComponent<CGravityGloveComponent>(*camera, gravityGloveSlot->myTransform);
