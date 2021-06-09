@@ -246,12 +246,6 @@ void CAudioManager::Receive(const SMessage& aMessage) {
 	}
 	break;
 
-	case EMessageType::PlayJumpSound:
-	{
-		myWrapper.Play(mySFXAudio[CAST(ESFX::Jump)], myChannels[CAST(EChannel::SFX)]);
-	}
-	break;
-
 	case EMessageType::PlayerTakeDamage:
 	{
 		myWrapper.Play(mySFXAudio[CAST(ESFX::EnemyHit)], myChannels[CAST(EChannel::SFX)]);
@@ -279,14 +273,14 @@ void CAudioManager::Receive(const SMessage& aMessage) {
 		if (aMessage.data)
 			release = *static_cast<bool*>(aMessage.data);
 		if (release)
-			myWrapper.Play(mySFXAudio[CAST(ESFX::GravityGlovePullRelease)], myChannels[CAST(EChannel::SFX)]);
+			myWrapper.Play(mySFXAudio[CAST(ESFX::LetGo)], myChannels[CAST(EChannel::SFX)]);
 		else
-			myWrapper.Play(mySFXAudio[CAST(ESFX::GravityGlovePullHit)], myChannels[CAST(EChannel::SFX)]);
+			myWrapper.Play(mySFXAudio[CAST(ESFX::Grab)], myChannels[CAST(EChannel::SFX)]);
 	}break;
 
 	case EMessageType::GravityGlovePush:
 	{
-		myWrapper.Play(mySFXAudio[CAST(ESFX::GravityGlovePush)], myChannels[CAST(EChannel::SFX)]);
+		myWrapper.Play(mySFXAudio[CAST(ESFX::Throw)], myChannels[CAST(EChannel::SFX)]);
 	}break;
 
 	case EMessageType::PlayerHealthPickup:
@@ -902,16 +896,16 @@ std::string CAudioManager::TranslateEnum(EPropAmbience enumerator) const
 std::string CAudioManager::TranslateEnum(ESFX enumerator) const {
 	switch (enumerator)
 	{
-	case ESFX::GravityGlovePullBuildup:
-		return "GravityGlovePullBuildup";
-	case ESFX::GravityGlovePullHit:
-		return "GravityGlovePullHit";
-	case ESFX::GravityGlovePush:
-		return "GravityGlovePush";
-	case ESFX::GravityGlovePullRelease:
-		return "GravityGlovePullRelease";
-	case ESFX::Jump:
-		return "Jump";
+	case ESFX::Unused:
+		return "Grab";
+	case ESFX::Unused1:
+		return "Grab";
+	case ESFX::Grab:
+		return "Grab";
+	case ESFX::Throw:
+		return "Throw";
+	case ESFX::LetGo:
+		return "LetGo";
 	case ESFX::EnemyHit:
 		return "EnemyHit";
 	case ESFX::SwitchPress:
