@@ -8,10 +8,11 @@ class CEnemyAnimationController : public IObserver
 public:
 	enum class EEnemyAnimations
 	{
-		Attack = 1,
-		Chase,
+		Alert = 1,
+		Attack,
+		Chase,// == Seek
+		Grab,
 		Idle,
-		Search,
 		Walk,
 		Count
 	};
@@ -32,8 +33,6 @@ private:
 	void OnTakeDamage(CEnemyComponent* anEnemy);
 	void OnDeath(CEnemyComponent* anEnemy);
 	void OnDisabled(CEnemyComponent* anEnemy);
-
-private:
-	CAnimationComponent* myAnimationComponent;
+	void UpdateCurrent(CEnemyComponent* anEnemy);
 };
 

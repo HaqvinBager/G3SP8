@@ -84,6 +84,14 @@ void CJsonReader::InitFromGenerated()
 		myMaterialsNameMap[materialID] = materialName;
 		myMaterialsIDMap[materialName] = materialID;
 	}
+
+	if (doc.GetObjectW().HasMember("events"))
+	{
+		for (const auto& eventObj : doc.GetObjectW()["events"].GetArray())
+		{
+			myPathsMap[eventObj["id"].GetInt()] = eventObj["eventName"].GetString();
+		}
+	}
 }
 
 const bool CJsonReader::HasAssetPath(const int anAssetID) const

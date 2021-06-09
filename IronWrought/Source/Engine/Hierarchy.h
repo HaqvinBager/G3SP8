@@ -29,6 +29,8 @@ class CHealthPickupComponent;
 class CPlayerControllerComponent;
 class CLeftClickDownLock;
 class COnTriggerLock;
+class CListenerBehavior;
+class CKeyBehavior;
 
 namespace ImGui {
 	class CHierarchy : public CWindow
@@ -41,6 +43,11 @@ namespace ImGui {
 		void OnEnable() override;
 		void OnInspectorGUI() override;
 		void OnDisable() override;
+
+		
+
+		void EditGameObjects(std::vector<CGameObject*> someGameObjects);
+		std::vector<CGameObject*> Filter(const std::vector<CGameObject*>& someGameObjects, const std::vector<std::type_index>& filterTypes);
 
 		void SubscribeToCallback(const std::type_index& aTypeIndex, std::function<void(CComponent*)> aCallback);
 
@@ -68,6 +75,8 @@ namespace ImGui {
 		void Edit(CPlayerControllerComponent*	aComponent);
 		void Edit(CLeftClickDownLock* aComponent);
 		void Edit(COnTriggerLock* aComponent);
+		void Edit(CListenerBehavior* aComponent);
+		void Edit(CKeyBehavior* aComponent);
 
 	private:
 		std::unordered_map<std::type_index, std::function<void(CComponent*)>> myComponentMap;
@@ -76,6 +85,7 @@ namespace ImGui {
 		std::unordered_map<std::type_index, std::string> myTypeNames;
 
 		CScene* myScene;
+		std::vector<std::type_index> myCurrentFilter;
 
 	private:
 		void SaveClassName(std::type_index aType)

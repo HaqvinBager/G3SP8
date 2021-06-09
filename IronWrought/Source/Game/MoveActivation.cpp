@@ -8,8 +8,8 @@ CMoveActivation::CMoveActivation(CGameObject& aParent, const SSettings& someSett
 	, mySettings(someSettings)
 	, myTime(0.0f)
 {
-	mySettings.myStartPosition = GameObject().myTransform->Position() + mySettings.myStartPosition;
-	mySettings.myEndPosition = GameObject().myTransform->Position() + mySettings.myEndPosition;
+	mySettings.myStartPosition = /*GameObject().myTransform->Position() +*/ mySettings.myStartPosition;
+	mySettings.myEndPosition = /*GameObject().myTransform->Position() +*/ mySettings.myEndPosition;
 }
 
 CMoveActivation::~CMoveActivation()
