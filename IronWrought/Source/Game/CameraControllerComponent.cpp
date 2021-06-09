@@ -29,6 +29,7 @@ CCameraControllerComponent::CCameraControllerComponent(CGameObject& aGameObject,
 
 CCameraControllerComponent::~CCameraControllerComponent()
 {
+	CMainSingleton::PostMaster().Unsubscribe(EMessageType::LockFPSCamera, this);
 }
 
 void CCameraControllerComponent::Awake()
@@ -38,7 +39,7 @@ void CCameraControllerComponent::Awake()
 
 void CCameraControllerComponent::Start()
 {
-
+	CMainSingleton::PostMaster().Subscribe(EMessageType::LockFPSCamera, this);
 }
 
 void CCameraControllerComponent::Update()
@@ -162,7 +163,12 @@ void CCameraControllerComponent::Receive(const SMessage& aMsg)
 {
 	if (aMsg.myMessageType == EMessageType::LockFPSCamera)
 	{
-		myLimitFirstPerson = true;
+		bool lock = true;
+		if (aMsg.data)
+		{
+			lock = *static_cast<bool*>(aMsg.data);
+		}
+		myLimitFirstPerson = lock;
 		return;
 	}
 }

@@ -98,6 +98,11 @@ void CRigidBodyComponent::SetLinearVelocity(const Vector3& aVelocity)
 	myDynamicRigidBody->GetBody().setLinearVelocity({ aVelocity.x, aVelocity.y, aVelocity.z });
 }
 
+const float CRigidBodyComponent::GetLinearVelocityLengthSqr() const
+{
+	return myDynamicRigidBody->GetLinearVelocity().LengthSquared();
+}
+
 void CRigidBodyComponent::AddForce(const physx::PxVec3& aDirectionAndForce, const EForceMode aForceMode)
 {
 	myDynamicRigidBody->GetBody().addForce(aDirectionAndForce, (PxForceMode::Enum)aForceMode);
