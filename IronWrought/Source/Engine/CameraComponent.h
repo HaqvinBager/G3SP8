@@ -9,6 +9,14 @@ class CSpriteInstance;
 class CCameraComponent : public CComponent
 {
 public:
+
+	enum class ECameraShakeState
+	{
+		IdleSway,
+		Shake,
+		None
+	};
+
 	static constexpr float SP8_FOV = 59.5f;
 
 	CCameraComponent(CGameObject& aParent, const float aFoV = 70.0f/*, float aNearPlane = 0.3f, float aFarPlane = 10000.0f, DirectX::SimpleMath::Vector2 aResolution = {1600.f, 900.f}*/);
@@ -22,7 +30,7 @@ public:
 	const DirectX::SimpleMath::Matrix& GetProjection() const;
 	float GetFoV();
 
-	void SetTrauma(float aValue);
+	void SetTrauma(float aValue, const ECameraShakeState aShakeState = ECameraShakeState::Shake);
 	void SetStartingRotation(DirectX::SimpleMath::Vector3 aRotation);
 	void SetFoV(float aFoV);
 
@@ -64,7 +72,10 @@ private:
 	DirectX::SimpleMath::Vector3 myMaxShakeRotation;
 	DirectX::SimpleMath::Vector3 myShakeVector;
 	/*PerlinNoise myNoise;*/
-	FastNoise::SmartNode<FastNoise::Simplex> myNoise;
+	FastNoise::SmartNode<FastNoise::Simplex> myIdleNoise;
+	FastNoise::SmartNode<FastNoise::Simplex> myShakeNoise;
+	ECameraShakeState myShakeState;
+	float myIdleTrauma;
 	float myTrauma;
 	float myTestTrauma;
 	float myShake;
@@ -78,6 +89,8 @@ private:
 	ECameraState myState;
 	bool myFadingPlaneActive;
 	bool myFadePermanent;
+
+
 
 	float myFoV; 
 };

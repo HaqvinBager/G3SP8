@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0, g: 0, b: 0, a: 1}
+  m_IndirectSpecularColor: {r: 0.18028378, g: 0.22571412, b: 0.30692285, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -217,6 +217,7 @@ MonoBehaviour:
   myMinAttenuationDistance: 1
   myMaxAttenuationDistance: 10000
   myMinimumVolume: 10
+  myDelay: 0
 --- !u!114 &79527618
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -253,7 +254,7 @@ BoxCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 79527616}
-  m_Material: {fileID: 833368447}
+  m_Material: {fileID: 2037318259}
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
@@ -275,19 +276,19 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!134 &292947936
+--- !u!134 &689123598
 PhysicMaterial:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: ' (Instance)'
+  m_Name: ' (Instance) (Instance)'
   dynamicFriction: 0.6
   staticFriction: 0.6
   bounciness: 0
   frictionCombine: 0
   bounceCombine: 0
---- !u!134 &833368447
+--- !u!134 &888843833
 PhysicMaterial:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -423,6 +424,7 @@ MonoBehaviour:
   myMinAttenuationDistance: 1
   myMaxAttenuationDistance: 10000
   myMinimumVolume: 10
+  myDelay: 0
 --- !u!114 &942056438
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -450,7 +452,7 @@ BoxCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 942056435}
-  m_Material: {fileID: 1604204549}
+  m_Material: {fileID: 689123598}
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
@@ -660,6 +662,7 @@ MonoBehaviour:
   myMinAttenuationDistance: 1
   myMaxAttenuationDistance: 10000
   myMinimumVolume: 10
+  myDelay: 0
 --- !u!114 &1250483857
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -696,7 +699,7 @@ BoxCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1250483855}
-  m_Material: {fileID: 1675157026}
+  m_Material: {fileID: 1993238584}
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
@@ -752,19 +755,7 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!134 &1604204549
-PhysicMaterial:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_Name: ' (Instance)'
-  dynamicFriction: 0.6
-  staticFriction: 0.6
-  bounciness: 0
-  frictionCombine: 0
-  bounceCombine: 0
---- !u!134 &1675157026
+--- !u!134 &1512822427
 PhysicMaterial:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -805,15 +796,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8801373144652855123, guid: 4124aa2c71002b04da1074b8a99c4acd, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 20.096
+      value: 19.473
       objectReference: {fileID: 0}
     - target: {fileID: 8801373144652855123, guid: 4124aa2c71002b04da1074b8a99c4acd, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 65.749
+      value: 65.707
       objectReference: {fileID: 0}
     - target: {fileID: 8801373144652855123, guid: 4124aa2c71002b04da1074b8a99c4acd, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -36.383
+      value: -36.5335
       objectReference: {fileID: 0}
     - target: {fileID: 8801373144652855123, guid: 4124aa2c71002b04da1074b8a99c4acd, type: 3}
       propertyPath: m_LocalRotation.w
@@ -867,9 +858,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e7ce7700dceebbb4682835e8a36c682f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  start: {x: 14.788, y: 65.638, z: -36.625}
+  start: {x: 14.788, y: 65.707, z: -36.5335}
   end: {x: 14.788, y: 65.749, z: -36.3833}
-  duration: 2
+  duration: 1
   delay: 0
 --- !u!114 &1727195253
 MonoBehaviour:
@@ -885,6 +876,30 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   myLock: {fileID: 7583396419264505223}
   responseType: 1
+--- !u!134 &1993238584
+PhysicMaterial:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: ' (Instance) (Instance) (Instance)'
+  dynamicFriction: 0.6
+  staticFriction: 0.6
+  bounciness: 0
+  frictionCombine: 0
+  bounceCombine: 0
+--- !u!134 &2037318259
+PhysicMaterial:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: ' (Instance) (Instance) (Instance)'
+  dynamicFriction: 0.6
+  staticFriction: 0.6
+  bounciness: 0
+  frictionCombine: 0
+  bounceCombine: 0
 --- !u!1001 &2124301340
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1117,7 +1132,7 @@ BoxCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 406547622860585527}
-  m_Material: {fileID: 292947936}
+  m_Material: {fileID: 1512822427}
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
@@ -1304,7 +1319,7 @@ BoxCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2118541223123314273}
-  m_Material: {fileID: 889386788}
+  m_Material: {fileID: 888843833}
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
