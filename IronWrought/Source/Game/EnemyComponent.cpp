@@ -38,8 +38,8 @@ CEnemyComponent::CEnemyComponent(CGameObject& aParent, const SEnemySetting& some
 	, myHasReachedLastPlayerPosition(true)
 	, myHeardSound(false)
 	, myIsIdle(false)
-
-
+	, mySqrdDistanceToPlayer(FLT_MAX)
+	, myCloseToPlayerThreshold(FLT_MAX)
 {
 	//myController = CEngine::GetInstance()->GetPhysx().CreateCharacterController(GameObject().myTransform->Position(), 0.6f * 0.5f, 1.8f * 0.5f, GameObject().myTransform, aHitReport);
 	//myController->GetController().getActor()->setRigidBodyFlag(PxRigidBodyFlag::eUSE_KINEMATIC_TARGET_FOR_SCENE_QUERIES, true);
@@ -114,9 +114,11 @@ void CEnemyComponent::Start()
 void CEnemyComponent::Update()//får bestämma vilket behaviour vi vill köra i denna Update()!!!
 {
 	if (!myMovementLocked) {
-		float distanceToPlayer = Vector3::DistanceSquared(myPlayer->myTransform->Position(), GameObject().myTransform->Position());
+		mySqrdDistanceToPlayer = Vector3::DistanceSquared(myPlayer->myTransform->Position(), GameObject().myTransform->Position());
 
 		float range = 6.0f;
+		myCloseToPlayerThreshold = range * 0.8f;
+		//std::cout << __FUNCTION__ << " SqrDist: " << mySqrdDistanceToPlayer << " threshold: " << myCloseToPlayerThreshold << std::endl;
 		Vector3 dir = GameObject().myTransform->Transform().Forward();
 		Vector3 enemyPos = GameObject().myTransform->Position();
 		Vector3 furthestLookingPoint = GameObject().myTransform->WorldPosition() + (GameObject().myTransform->Transform().Forward() * range);
@@ -169,7 +171,7 @@ void CEnemyComponent::Update()//får bestämma vilket behaviour vi vill köra i 
 		}
 		else {
 
-			if (distanceToPlayer <= 1.0f) {
+			if (mySqrdDistanceToPlayer <= 1.0f) {
 				myHasFoundPlayer = false;
 				myHeardSound = false;
 				myIsIdle = false;
@@ -204,6 +206,9 @@ void CEnemyComponent::Update()//får bestämma vilket behaviour vi vill köra i 
 		float targetOrientation = WrapAngle(atan2f(targetDirection.x, targetDirection.z));
 		myCurrentOrientation = Lerp(myCurrentOrientation, targetOrientation, 10.0f * CTimer::Dt());
 		GameObject().myTransform->Rotation({ 0, DirectX::XMConvertToDegrees(myCurrentOrientation) + 180.f, 0 });
+
+		//if(myCurrentState == EBehaviour::Seek)
+			CMainSingleton::PostMaster().SendLate({ EMessageType::EnemyUpdateCurrentState, this });
 	}
 	else {
 		myWakeUpTimer += CTimer::Dt();
@@ -312,3 +317,9 @@ void CEnemyComponent::Receive(const SMessage& aMsg)
 		SetState(EBehaviour::Idle);
 	}
 }
+
+const float CEnemyComponent::PercentileDistanceToPlayer() const
+{
+	return mySqrdDistanceToPlayer / (myCloseToPlayerThreshold * myCloseToPlayerThreshold);
+}
+
