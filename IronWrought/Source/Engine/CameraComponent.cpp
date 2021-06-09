@@ -21,12 +21,14 @@ CCameraComponent::CCameraComponent(CGameObject& aParent, const float aFoV/*, flo
 
 	myTrauma = 0.0f;
 	myTestTrauma = 0.4f;
+	myIdleTrauma = 0.4f;
 	myShake = 0.0f;
 	myDecayInSeconds = 0.5f;
 	myShakeSpeed = 0.65f;
 	myMaxShakeRotation = { 2.05f, 0.5f, 0.5f };
 
-	myNoise = FastNoise::New<FastNoise::Simplex>();
+	myIdleNoise = FastNoise::New<FastNoise::Simplex>();
+	myShakeNoise = FastNoise::New<FastNoise::Simplex>();
 	//myNoise = PerlinNoise(214125213);
 
 	myShakeTimer = 0.0f;
@@ -38,6 +40,7 @@ CCameraComponent::CCameraComponent(CGameObject& aParent, const float aFoV/*, flo
 	myFadePermanent = false;
 
 	myState = ECameraState::Default;
+	myShakeState = ECameraShakeState::IdleSway;
 }
 
 CCameraComponent::~CCameraComponent()
@@ -72,17 +75,14 @@ float LogEaseIn(float x) {
 void CCameraComponent::Update()
 {
 #ifdef _DEBUG
-	if (Input::GetInstance()->IsKeyPressed('H'))
-	{
-		this->SetTrauma(myTestTrauma);
-	}
 	if (Input::GetInstance()->IsKeyDown('J'))
 	{
 		/*this->Fade(false, 5.0f);*/this->SetTrauma(myTestTrauma);
 	}
 #endif
 
-	this->SetTrauma(myTestTrauma);
+	if(myShakeState == ECameraShakeState::IdleSway)
+		this->SetTrauma(myIdleTrauma, ECameraShakeState::IdleSway);
 
 	if (myTrauma > 0.0f) {
 		//myShakeTimer += CTimer::Dt();
@@ -92,6 +92,8 @@ void CCameraComponent::Update()
 
 	if (myTrauma < 0.0f) {
 		myTrauma = 0.0f;
+		if (myShakeState != ECameraShakeState::IdleSway)
+			myShakeState = ECameraShakeState::IdleSway;
 	}
 
 	if (myState != ECameraState::Default)
@@ -140,9 +142,10 @@ void CCameraComponent::Update()
 	}
 }
 
-void CCameraComponent::SetTrauma(float aValue)
+void CCameraComponent::SetTrauma(float aValue, const ECameraShakeState aShakeState)
 {
 	myTrauma = aValue;
+	myShakeState = aShakeState;
 }
 
 void CCameraComponent::SetStartingRotation(DirectX::SimpleMath::Vector3 aRotation)
@@ -257,11 +260,20 @@ void CCameraComponent::Shake()
 {
 	myShake = myTrauma * myTrauma * myTrauma;
 
+	auto& noise = myIdleNoise;
+	switch (myShakeState)
+	{
+		case ECameraShakeState::Shake:
+			noise = myShakeNoise;
+		break;
+
+		default:break;
+	}
 	static int seed = 1462;
 	float speed = myShakeSpeed * myShakeSpeed * myShakeSpeed;
-	float newRotX = myMaxShakeRotation.x * myShake * myNoise->GenSingle2D(CTimer::Time() * speed, CTimer::Time() * speed, seed);
-	float newRotY = myMaxShakeRotation.y * myShake * myNoise->GenSingle2D(CTimer::Time() * speed, CTimer::Time() * speed, seed+1);
-	float newRotZ = myMaxShakeRotation.z * myShake * myNoise->GenSingle2D(CTimer::Time() * speed, CTimer::Time() * speed, seed+2);
+	float newRotX = myMaxShakeRotation.x * myShake * noise->GenSingle2D(CTimer::Time() * speed, CTimer::Time() * speed, seed);
+	float newRotY = myMaxShakeRotation.y * myShake * noise->GenSingle2D(CTimer::Time() * speed, CTimer::Time() * speed, seed+1);
+	float newRotZ = myMaxShakeRotation.z * myShake * noise->GenSingle2D(CTimer::Time() * speed, CTimer::Time() * speed, seed+2);
 
 	DirectX::SimpleMath::Vector3 newRotation = { newRotX, newRotY, newRotZ };
 
