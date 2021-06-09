@@ -86,6 +86,18 @@ public struct ListenerCollection
     public List<ResponseToggleData> responseToggles;
     public List<ResponsePlayAudioData> responseAudios;
     public List<ResponsePlayVoiceData> responseVoices;
+    public List<ResponseTeleporterData> responseTeleporter;
+}
+
+[System.Serializable]
+public struct ResponseTeleporterData
+{
+    public Vector3 teleportToPos;
+    public Vector3 teleportToRot;
+    public int teleporterName;
+    public int teleporterTarget;
+    public float timeUntilTeleport;
+    public int instanceID;
 }
 
 public class ExportListener
@@ -100,6 +112,7 @@ public class ExportListener
         collection.responseToggles = new List<ResponseToggleData>();
         collection.responseAudios = new List<ResponsePlayAudioData>();
         collection.responseVoices = new List<ResponsePlayVoiceData>();
+        collection.responseTeleporter = new List<ResponseTeleporterData>();
 
         Listener[] listeners = GameObject.FindObjectsOfType<Listener>();
         foreach (Listener listener in listeners)
@@ -127,6 +140,7 @@ public class ExportListener
             ExportToggleResponses(ref collection.responseToggles, listener);
             ExportPlayAudioResponses(ref collection.responseAudios, listener);
             ExportPlayVoiceResponses(ref collection.responseVoices, listener);
+            ExportTeleportResponses(ref collection.responseTeleporter, listener);
         }
         return collection;
     }
@@ -229,6 +243,20 @@ public class ExportListener
             playVoiceData.voiceLine = (int)playVoice.voiceLine;
             // Debug.Log("Audio: " + playAudioData.soundEffect.ToString());
             collection.Add(playVoiceData);
+        }
+    }
+    private static void ExportTeleportResponses(ref List<ResponseTeleporterData> collection, Listener Response)
+    {
+        if (Response.TryGetComponent(out ActivationTeleporter teleporter))
+        {
+            ResponseTeleporterData teleporterData = new ResponseTeleporterData();
+            teleporterData.teleporterName = (int)teleporter.myName;
+            teleporterData.teleporterTarget = (int)teleporter.myTarget;
+            teleporterData.timeUntilTeleport = teleporter.myTeleportTimer;
+            teleporterData.teleportToPos = teleporter.onTeleportToMePosition;
+            teleporterData.teleportToRot = teleporter.onTeleportToMeRotation;
+            teleporterData.instanceID = teleporter.transform.GetInstanceID();
+            collection.Add(teleporterData);
         }
     }
 }
