@@ -16,13 +16,14 @@ public class AssetLabelEditor
         string[] assetPaths = AssetDatabase.GetAllAssetPaths();
         foreach (var path in assetPaths)
         {
-            if (path.Contains("CustomEvents/"))
+            if (path.Contains("Assets/"))
             {
                 if (!AssetDatabase.IsValidFolder(path))
                 {
-                    Object asset = AssetDatabase.LoadAssetAtPath<Object>(path);
+                    CustomEvent asset = AssetDatabase.LoadAssetAtPath<CustomEvent>(path);
                     if(asset != null)
                         AssetDatabase.SetLabels(asset, labels.ToArray());
+                        //if(asset.GetType() == typeof(CustomEvent))
                 }
             }
         }

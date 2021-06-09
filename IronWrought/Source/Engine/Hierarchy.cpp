@@ -11,6 +11,8 @@
 ImGui::CHierarchy::CHierarchy(const char* aName)
 	: CWindow(aName)
 	, myScene(nullptr)
+	, myFilteDeepFilterTypes(false)
+	, myFilterTypes(true)
 {
 	myComponentMap[typeid(CTransformComponent)] = [&](CComponent* aComponent) { Edit(dynamic_cast<CTransformComponent*>(aComponent)); };
 	myComponentMap[typeid(CPointLightComponent)] = [&](CComponent* aComponent) { Edit(dynamic_cast<CPointLightComponent*>(aComponent)); };
@@ -34,19 +36,22 @@ ImGui::CHierarchy::CHierarchy(const char* aName)
 	myComponentMap[typeid(CGravityGloveComponent)] = [&](CComponent* aComponent) { Edit(dynamic_cast<CGravityGloveComponent*>(aComponent)); };
 	myComponentMap[typeid(CHealthPickupComponent)] = [&](CComponent* aComponent) { Edit(dynamic_cast<CHealthPickupComponent*>(aComponent)); };
 	myComponentMap[typeid(CPlayerControllerComponent)] = [&](CComponent* aComponent) { Edit(dynamic_cast<CPlayerControllerComponent*>(aComponent)); };
-	
-	
+		
 	myComponentMap[typeid(CLeftClickDownLock)] = [&](CComponent* aComponent) { Edit(dynamic_cast<CLeftClickDownLock*>(aComponent)); };
 	myComponentMap[typeid(COnTriggerLock)] = [&](CComponent* aComponent) { Edit(dynamic_cast<COnTriggerLock*>(aComponent)); };
 	myComponentMap[typeid(CListenerBehavior)] = [&](CComponent* aComponent) { Edit(dynamic_cast<CListenerBehavior*>(aComponent)); };
 	myComponentMap[typeid(CKeyBehavior)] = [&](CComponent* aComponent) { Edit(dynamic_cast<CKeyBehavior*>(aComponent)); };
-
 		
 	myCurrentFilter.push_back(typeid(COnTriggerLock));
 	myCurrentFilter.push_back(typeid(CLeftClickDownLock));
 	myCurrentFilter.push_back(typeid(CPlayerComponent));	
 	myCurrentFilter.push_back(typeid(CListenerBehavior));
-	myCurrentFilter.push_back(typeid(CKeyBehavior));
+	myCurrentFilter.push_back(typeid(CKeyBehavior));	
+	myCurrentFilter.push_back(typeid(CMoveResponse));
+	myCurrentFilter.push_back(typeid(CMoveActivation));
+	myCurrentFilter.push_back(typeid(CRotateResponse));
+	myCurrentFilter.push_back(typeid(CRotateActivation));
+	myCurrentFilter.push_back(typeid(CToggleResponse));
 }
 
 ImGui::CHierarchy::~CHierarchy()
@@ -66,13 +71,20 @@ void ImGui::CHierarchy::OnInspectorGUI()
 	ImGui::Begin(Name(), Open());
 
 	//auto& gameObjects = myScene->ActiveGameObjects();
-	int index = 0;
 
-	std::vector<CGameObject*> gameObjects = Filter(myScene->ActiveGameObjects(), myCurrentFilter);
 
+	ImGui::BeginHorizontal("Filters");
+	ImGui::Checkbox("Type Filter", &myFilterTypes);
+	ImGui::Checkbox("Deep Type Filter", &myFilteDeepFilterTypes);
+	ImGui::EndHorizontal();
+
+	//int index = 0;
+
+
+	std::vector<CGameObject*> gameObjects = myFilterTypes ? Filter(myScene->ActiveGameObjects(), myCurrentFilter) : myScene->ActiveGameObjects();
 	for (auto& gameObject : gameObjects)
 	{
-		ImGui::PushID(index);
+		ImGui::PushID(gameObject->InstanceID());
 		bool treeNodeOpen = ImGui::TreeNodeEx(gameObject->Name().c_str(),
 			/*ImGuiTreeNodeFlags_DefaultOpen |*/
 			ImGuiTreeNodeFlags_FramePadding |
@@ -82,40 +94,57 @@ void ImGui::CHierarchy::OnInspectorGUI()
 
 		if (treeNodeOpen)
 		{
-			ImGui::Text("ID: %i", gameObject->InstanceID());
-			for (auto& component : gameObject->myComponents)
+			if (gameObject != nullptr)
 			{
-				const auto& type = typeid(*component);
-				if (myTypeNames.find(type) == myTypeNames.end())
-					SaveClassName(type);
-
-				const char* componentName = myTypeNames[type].c_str();
-				bool componentOpen = ImGui::TreeNodeEx(
-					componentName,
-					ImGuiTreeNodeFlags_FramePadding |
-					ImGuiTreeNodeFlags_OpenOnArrow |
-					ImGuiTreeNodeFlags_SpanAvailWidth,
-					componentName);
-
-				if (componentOpen)
+				ImGui::Text("ID: %i", gameObject->InstanceID());
+				for (auto& component : gameObject->myComponents)
 				{
-					bool isEnabled = component->Enabled();
-					ImGui::Checkbox("Enabled", &isEnabled);
-					if (component->Enabled() != isEnabled)
-						component->Enabled(isEnabled);
+					const auto& type = typeid(*component);
 
-					if (myComponentMap.find(type) != myComponentMap.end())
-						myComponentMap[type](component.get());
-					else
-						ImGui::Text("%s WIP", componentName);
+					if (myFilteDeepFilterTypes == true)
+					{
+						std::type_index typeIndex = typeid(*component);
+						if (std::find(myCurrentFilter.begin(), myCurrentFilter.end(), typeIndex) == myCurrentFilter.end())
+						{
+							continue;
+						}		
+					}
 
-					ImGui::TreePop();
+					if (myTypeNames.find(type) == myTypeNames.end())
+						SaveClassName(type);
+
+					const char* componentName = myTypeNames[type].c_str();
+					bool componentOpen = ImGui::TreeNodeEx(
+						componentName,
+						ImGuiTreeNodeFlags_FramePadding |
+						ImGuiTreeNodeFlags_OpenOnArrow |
+						ImGuiTreeNodeFlags_SpanAvailWidth,
+						componentName);
+
+					if (componentOpen)
+					{
+						bool isEnabled = component->Enabled();
+						ImGui::Checkbox("Enabled", &isEnabled);
+						if (component->Enabled() != isEnabled)
+							component->Enabled(isEnabled);
+
+						if (myComponentMap.find(type) != myComponentMap.end())
+							myComponentMap[type](component.get());
+						else
+							ImGui::Text("%s WIP", componentName);
+
+						ImGui::TreePop();
+					}
 				}
+				ImGui::TreePop();
 			}
-			ImGui::TreePop();
+			else
+			{
+				ImGui::Text("[ERROR] NULL GameObject");
+			}
 		}
 		ImGui::PopID();
-		index++;
+		//index++;
 	}
 	ImGui::End();
 }

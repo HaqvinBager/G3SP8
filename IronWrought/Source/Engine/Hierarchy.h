@@ -31,6 +31,11 @@ class CLeftClickDownLock;
 class COnTriggerLock;
 class CListenerBehavior;
 class CKeyBehavior;
+class CMoveResponse;
+class CRotateResponse;
+class CMoveActivation;
+class CMoveResponse;
+class CToggleResponse;
 
 namespace ImGui {
 	class CHierarchy : public CWindow
@@ -81,8 +86,10 @@ namespace ImGui {
 	private:
 		std::unordered_map<std::type_index, std::function<void(CComponent*)>> myComponentMap;
 		std::unordered_map<std::type_index, std::function<void(CComponent*)>> myEditorCallbackMap;
-
 		std::unordered_map<std::type_index, std::string> myTypeNames;
+
+		bool myFilterTypes;
+		bool myFilteDeepFilterTypes;
 
 		CScene* myScene;
 		std::vector<std::type_index> myCurrentFilter;
