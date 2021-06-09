@@ -244,8 +244,8 @@ void CInGameState::Receive(const SStringMessage& aMessage)
 		const PostMaster::SBoxColliderEvenTriggerData* data = static_cast<PostMaster::SBoxColliderEvenTriggerData*>(aMessage.data);
 		if (data->myState)
 			IRONWROUGHT->GetActiveScene().ToggleSections(data->mySceneSection);
-		else
-			IRONWROUGHT->GetActiveScene().DisableSection(data->mySceneSection);
+		//else
+		//	IRONWROUGHT->GetActiveScene().DisableSection(data->mySceneSection);
 		
 		std::cout << __FUNCTION__ << (data->myState == true ? "ToggledSections: " : "DisableSection: ") << data->mySceneSection << std::endl;
 	}

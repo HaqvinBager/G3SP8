@@ -3,22 +3,26 @@
 #include "TransformComponent.h"
 #define PI 3.141592f
 
-CRotateResponse::CRotateResponse(CGameObject& aParent, const SSettings& someSettings)
+CRotateResponse::CRotateResponse(CGameObject& aParent, const SSettings<Quaternion>& someSettings)
 	: IResponseBehavior(aParent)
 	, myTime(0.0f)
 	, mySettings(someSettings)
 {
-	mySettings.myStartRotation.x = (-mySettings.myStartRotation.x) - 360.0f;
-	mySettings.myStartRotation.y += 180.0f;
-	mySettings.myStartRotation.z = (-mySettings.myStartRotation.z) - 360.0f;
-	mySettings.myStartRotation *= (PI / 180.0f);
+	/*
+	
+	mySettings.myStart.x = (-mySettings.myStart.x) - 360.0f;
+	mySettings.myStart.y += 180.0f;
+	mySettings.myStart.z = (-mySettings.myStart.z) - 360.0f;
+	mySettings.myStart *= (PI / 180.0f);
 
-	mySettings.myEndRotation.x = (-mySettings.myEndRotation.x) - 360.0f;
-	mySettings.myEndRotation.y += 180.0f;
-	mySettings.myEndRotation.z = (-mySettings.myEndRotation.z) - 360.0f;
-	mySettings.myEndRotation *= (PI / 180.0f);
-	myStart = Quaternion::CreateFromYawPitchRoll(mySettings.myStartRotation.y, mySettings.myStartRotation.x, mySettings.myStartRotation.z);
-	myEnd = Quaternion::CreateFromYawPitchRoll(mySettings.myEndRotation.y, mySettings.myEndRotation.x, mySettings.myEndRotation.z);
+	mySettings.myEnd.x = (-mySettings.myEnd.x) - 360.0f;
+	mySettings.myEnd.y += 180.0f;
+	mySettings.myEnd.z = (-mySettings.myEnd.z) - 360.0f;
+	mySettings.myEnd *= (PI / 180.0f);
+	myStart = Quaternion::CreateFromYawPitchRoll(mySettings.myStart.y, mySettings.myStart.x, mySettings.myStart.z);
+	myEnd =	  Quaternion::CreateFromYawPitchRoll(mySettings.myEnd.y, mySettings.myEnd.x, mySettings.myEnd.z);
+	
+	*/
 
 	HasBeenActivated(false);
 }
@@ -39,7 +43,7 @@ void CRotateResponse::Update()
 		myTime -= mySettings.myDelay;
 	}
 
-	GameObject().myTransform->Rotation(Quaternion::Slerp(myStart, myEnd, myTime / mySettings.myDuration));
+	GameObject().myTransform->Rotation(Quaternion::Slerp(mySettings.myStart, mySettings.myEnd, myTime / mySettings.myDuration));
 
 	if (myTime >= mySettings.myDuration)
 		HasBeenActivated(false);

@@ -64,10 +64,16 @@ void CInteractionBehavior::UpdateEyes()
 							key->TriggerActivations();
 					}
 				}
+
 				CLeftClickDownLock* leftClickDownLock = nullptr;
 				if (hitTransform->GameObject().TryGetComponent(&leftClickDownLock))
 				{
-					leftClickDownLock->ActivateEvent();
+					CBoxColliderComponent* boxCollider = nullptr;
+					if (leftClickDownLock->GameObject().TryGetComponent(&boxCollider))
+					{
+						if(boxCollider->Enabled())
+							leftClickDownLock->ActivateEvent();
+					}
 				}
 			}
 		}

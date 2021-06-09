@@ -34,6 +34,7 @@ class CMaterialHandler
 public:
 
 
+	std::array<ID3D11ShaderResourceView*, 3> RequestMaterial(const int aMaterialID, const std::string& aModelPath);
 	std::array<ID3D11ShaderResourceView*, 3> RequestMaterial(const int aMaterialID);
 	std::array<ID3D11ShaderResourceView*, 3> RequestMaterial(const std::string& aMaterialName);
 
