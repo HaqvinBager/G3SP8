@@ -255,6 +255,8 @@ bool CSceneManager::AddToScene(CScene& aScene, Binary::SLevelData& aBinLevelData
 				AddPuzzleResponseAudio(aScene, sceneData["responseAudios"].GetArray());
 			if (sceneData.HasMember("responseVoices"))
 				AddPuzzleResponseVoice(aScene, sceneData["responseVoices"].GetArray());
+			if (sceneData.HasMember("responseTeleporters"))
+				AddPuzzleResponseTeleporter(aScene, sceneData["responseTeleporters"].GetArray());
 
 			AddDirectionalLights(aScene, sceneData["directionalLights"].GetArray());
 			SetVertexPaintedColors(aScene, sceneData["vertexColors"].GetArray(), vertexPaintData);
@@ -968,6 +970,34 @@ void CSceneManager::AddPuzzleResponseVoice(CScene& aScene, RapidArray someData)
 		settings.myMinimumVolume = response["minimumVolume"].GetFloat();
 		settings.myGameObjectID = gameObject->InstanceID();
 		gameObject->AddComponent<CVoiceResponse>(*gameObject, settings, is3D);
+	}
+}
+
+void CSceneManager::AddPuzzleResponseTeleporter(CScene& aScene, RapidArray someData)
+{
+	for (const auto& response : someData)
+	{
+		CGameObject* gameObject = aScene.FindObjectWithID(response["instanceID"].GetInt());
+		if (!gameObject)
+			continue;
+
+		PostMaster::ELevelName name = static_cast<PostMaster::ELevelName>(response["teleporterName"].GetInt());
+		PostMaster::ELevelName target = static_cast<PostMaster::ELevelName>(response["teleporterTarget"].GetInt());
+
+		Vector3 teleportToPos;
+		teleportToPos.x = response["teleportToPos"]["x"].GetFloat();
+		teleportToPos.y = response["teleportToPos"]["y"].GetFloat();
+		teleportToPos.z = response["teleportToPos"]["z"].GetFloat();
+
+		Vector3 teleportToRot;
+		teleportToRot.x = response["teleportToRot"]["x"].GetFloat();
+		teleportToRot.y = response["teleportToRot"]["y"].GetFloat();
+		teleportToRot.z = response["teleportToRot"]["z"].GetFloat();
+
+		float aTimeUntilTeleport = response["timeUntilTeleport"].GetFloat();
+		aTimeUntilTeleport = (aTimeUntilTeleport <= 0.0f ? 0.01f : aTimeUntilTeleport);
+
+		gameObject->AddComponent<CTeleportActivation>(*gameObject, name, target, teleportToPos, teleportToRot, aTimeUntilTeleport);
 	}
 }
 
