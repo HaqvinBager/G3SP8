@@ -245,18 +245,22 @@ void CAttack::ClearPath() {
 CAlerted::CAlerted(SNavMesh* aNavMesh)
 {
 	myNavMesh = aNavMesh;
+	myAlertedTimer = 0.0f;
 }
 
 void CAlerted::Enter(const Vector3& aPosition)
 {
-
 	myPath.clear();
 	SetPath(myNavMesh->CalculatePath(aPosition, myAlertedPosition, myNavMesh), myAlertedPosition);
 	aPosition;
+	myAlertedTimer = myAlertedTimerMax;
 }
 
 Vector3 CAlerted::Update(const Vector3& aPosition)
 {
+	myAlertedTimer -= CTimer::Dt();
+	if (myAlertedTimer > (myAlertedTimerMax * myAlertedFactor))
+		return Vector3();
 
 	//SetPath(myNavMesh->CalculatePath(aPosition, myAlertedPosition, myNavMesh), myAlertedPosition);
 
@@ -308,6 +312,16 @@ void CAlerted::SetPath(std::vector<Vector3> aPath, Vector3 aFinalPosition)
 			CDebug::GetInstance()->DrawLine(aPath[i - 1], aPath[i], 60.0f);
 		}
 	}
+}
+
+const float CAlerted::PercentileAlertedTimer() const
+{
+	if (myAlertedTimer <= 0.0f)
+		return 0.0f;
+
+	float percentile = myAlertedTimer / (myAlertedTimerMax  * myAlertedFactor);
+	percentile = std::clamp(percentile, 0.0f, 1.0f);
+	return percentile;
 }
 
 CIdle::CIdle()

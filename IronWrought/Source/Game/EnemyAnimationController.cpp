@@ -164,7 +164,7 @@ void CEnemyAnimationController::OnAlerted(CEnemyComponent* anEnemy)
 	if (!anim)
 		return;
 
-	anim->BlendLerpBetween(UINT_CAST(EEnemyAnimations::Walk), UINT_CAST(EEnemyAnimations::Alert), 1.0f);
+	anim->BlendLerpBetween(UINT_CAST(EEnemyAnimations::Chase), UINT_CAST(EEnemyAnimations::Alert), 1.0f);
 }
 
 void CEnemyAnimationController::UpdateCurrent(CEnemyComponent* anEnemy)
@@ -176,7 +176,7 @@ void CEnemyAnimationController::UpdateCurrent(CEnemyComponent* anEnemy)
 	if (!anim)
 		return;
 
-	float dist = anEnemy->PercentileDistanceToPlayer();
+	float blend = anEnemy->CurrentStateBlendValue();
 	//std::cout << __FUNCTION__ << " " << dist << std::endl;
-	anim->BlendLerp(dist);
+	anim->BlendLerp(blend);
 }

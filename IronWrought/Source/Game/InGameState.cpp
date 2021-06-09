@@ -381,6 +381,11 @@ void CInGameState::DEBUGFunctionality()
 		CMainSingleton::PostMaster().Send(msg2);
 	}
 
+	if (Input::GetInstance()->IsKeyPressed('0'))
+	{
+		CMainSingleton::PostMaster().Send({ EMessageType::PropCollided, IRONWROUGHT->GetActiveScene().Player() });
+	}
+
 #ifndef INGAME_USE_MENU
 	// TEMP
 	ToggleCanvas(EInGameCanvases_HUD);
