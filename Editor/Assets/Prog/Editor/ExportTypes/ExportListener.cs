@@ -58,6 +58,7 @@ public struct ResponsePlayAudioData
     public float minAttenuationDistance;
     public float maxAttenuationDistance;
     public float minimumVolume;
+    public float delay;
     public int instanceID;
 }
 
@@ -189,6 +190,7 @@ public class ExportListener
             playAudioData.minimumVolume = playAudio.myMinimumVolume;
             playAudioData.instanceID = playAudio.transform.GetInstanceID();
             playAudioData.soundEffect = (int)playAudio.soundEffect;
+            playAudioData.delay = playAudio.myDelay;
             // Debug.Log("Audio: " + playAudioData.soundEffect.ToString());
             collection.Add(playAudioData);
         }

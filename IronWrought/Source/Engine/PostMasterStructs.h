@@ -72,6 +72,7 @@ namespace PostMaster
 		float myMaxAttenuationDistance;
 		int mySoundIndex;
 		int myGameObjectID;
+		float myDelay;
 	};
 
 	struct SStepSoundData

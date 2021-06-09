@@ -13,6 +13,7 @@ public class ResponsePlayAudio : MonoBehaviour, IListener
     public float myMinAttenuationDistance = 1.0f;
     public float myMaxAttenuationDistance = 10000.0f;
     public float myMinimumVolume;
+    public float myDelay;
 
     public void Remove()
     {

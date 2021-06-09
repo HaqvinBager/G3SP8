@@ -725,6 +725,7 @@ void CSceneManager::AddPuzzleActivationAudio(CScene& aScene, RapidArray someData
 		settings.myMaxAttenuationDistance = activation["maxAttenuationDistance"].GetFloat();
 		settings.myMinimumVolume = activation["minimumVolume"].GetFloat();
 		settings.myGameObjectID = gameObject->InstanceID();
+		settings.myDelay = activation["delay"].GetFloat();
 		gameObject->AddComponent<CAudioActivation>(*gameObject, settings);
 	}
 }
@@ -905,6 +906,7 @@ void CSceneManager::AddPuzzleResponseAudio(CScene& aScene, RapidArray someData)
 		settings.myMaxAttenuationDistance = response["maxAttenuationDistance"].GetFloat();
 		settings.myMinimumVolume = response["minimumVolume"].GetFloat();
 		settings.myGameObjectID = gameObject->InstanceID();
+		settings.myDelay = response["delay"].GetFloat();
 		gameObject->AddComponent<CAudioResponse>(*gameObject, settings);
 	}
 }

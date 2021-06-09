@@ -12,6 +12,8 @@ public:
 	void OnEnable() override;
 	void OnDisable() override;
 	void SetHasLock(const bool aHasLock) { myHasLock = aHasLock; }
+	const bool HasBeenDelayed() const { return myHasBeenDelayed; }
+	void ToggleHasBeenDelayed() { myHasBeenDelayed = !myHasBeenDelayed; }
 
 	bool Complete(const bool aCompletePredicate);
 
@@ -25,4 +27,5 @@ public:
 protected:
 	bool myHasLock;
 	bool myIsInteracted;
+	bool myHasBeenDelayed;
 };

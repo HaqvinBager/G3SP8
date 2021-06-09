@@ -6,6 +6,7 @@
 CAudioActivation::CAudioActivation(CGameObject& aParent, const PostMaster::SAudioSourceInitData& someSettings)
 	: IActivationBehavior(aParent)
 	, mySettings(someSettings)
+	, myTime(0.0f)
 {
 	myAudioChannel = CEngine::GetInstance()->RequestAudioSource(mySettings);
 	myPlayMessage.myChannel = myAudioChannel;
@@ -22,6 +23,17 @@ void CAudioActivation::Start()
 
 void CAudioActivation::Update()
 {
+	myTime += CTimer::Dt();
+
+	if (!HasBeenDelayed())
+	{
+		if (mySettings.myDelay >= myTime)
+			return;
+
+		ToggleHasBeenDelayed();
+		myTime -= mySettings.myDelay;
+	}
+
 	if (myIsInteracted)
 	{
 		const Matrix& matrix = GameObject().myTransform->GetWorldMatrix();

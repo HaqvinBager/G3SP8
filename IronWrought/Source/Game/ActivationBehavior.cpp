@@ -6,6 +6,7 @@ IActivationBehavior::IActivationBehavior(CGameObject& aParent)
 	: CBehavior(aParent)
 	, myIsInteracted(false)
 	, myHasLock(true)
+	, myHasBeenDelayed(false)
 {
 }
 

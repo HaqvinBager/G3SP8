@@ -22,5 +22,6 @@ private:
 	PostMaster::SAudioSourceInitData mySettings;
 	PostMaster::SPlayDynamicAudioData myPlayMessage;
 	CAudioChannel* myAudioChannel;
+	float myTime;
 };
 
