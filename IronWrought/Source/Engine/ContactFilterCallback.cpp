@@ -5,13 +5,20 @@
 #include "RigidBodyComponent.h"
 #include "RigidDynamicBody.h"
 
-physx::PxFilterFlags CContactFilterCallback::pairFound(physx::PxU32 /*pairID*/, physx::PxFilterObjectAttributes /*attributes0*/, physx::PxFilterData /*filterData0*/, const physx::PxActor* a0, const physx::PxShape* /*s0*/, physx::PxFilterObjectAttributes /*attributes1*/, physx::PxFilterData /*filterData1*/, const physx::PxActor* /*a1*/, const physx::PxShape* /*s1*/, physx::PxPairFlags& /*pairFlags*/)
+physx::PxFilterFlags CContactFilterCallback::pairFound(physx::PxU32 /*pairID*/, physx::PxFilterObjectAttributes /*attributes0*/, physx::PxFilterData /*filterData0*/, const physx::PxActor* a0, const physx::PxShape* /*s0*/, physx::PxFilterObjectAttributes /*attributes1*/, physx::PxFilterData /*filterData1*/, const physx::PxActor* a1, const physx::PxShape* /*s1*/, physx::PxPairFlags& /*pairFlags*/)
 {
 	CTransformComponent* firstTransform = (CTransformComponent*)a0->userData;
+	CTransformComponent* secondTransform = (CTransformComponent*)a1->userData;
+
 	CPhysicsPropAudioComponent* audioComponent = nullptr;
 	if (firstTransform != nullptr)
 	{
-		if (firstTransform->GameObject().TryGetComponent(&audioComponent))
+		firstTransform->GameObject().TryGetComponent(&audioComponent);
+
+		if (!audioComponent && secondTransform)
+			secondTransform->GameObject().TryGetComponent(&audioComponent);
+
+		if (audioComponent)
 		{
 			float velocity = audioComponent->GetComponent<CRigidBodyComponent>()->GetLinearVelocityLengthSqr();// ->GetDynamicRigidBody()->GetLinearVelocity().LengthSquared();
 			if (velocity > 0.05f)
