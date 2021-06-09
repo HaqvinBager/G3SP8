@@ -135,18 +135,6 @@ PhysicMaterial:
   bounciness: 0
   frictionCombine: 0
   bounceCombine: 0
---- !u!134 &208999795
-PhysicMaterial:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_Name: ' (Instance) (Instance)'
-  dynamicFriction: 0.6
-  staticFriction: 0.6
-  bounciness: 0
-  frictionCombine: 0
-  bounceCombine: 0
 --- !u!1001 &281330361
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -205,7 +193,7 @@ PrefabInstance:
     - target: {fileID: 5870580155986294078, guid: 3f84232a6a8e3ea45ba5024dd0e18116, type: 3}
       propertyPath: m_Material
       value: 
-      objectReference: {fileID: 429720354}
+      objectReference: {fileID: 1298652519}
     - target: {fileID: 6422795178679717016, guid: 3f84232a6a8e3ea45ba5024dd0e18116, type: 3}
       propertyPath: audioIndex
       value: 2
@@ -220,25 +208,13 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3f84232a6a8e3ea45ba5024dd0e18116, type: 3}
---- !u!134 &429720354
+--- !u!134 &336261704
 PhysicMaterial:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: ' (Instance) (Instance)'
-  dynamicFriction: 0.6
-  staticFriction: 0.6
-  bounciness: 0
-  frictionCombine: 0
-  bounceCombine: 0
---- !u!134 &622621561
-PhysicMaterial:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_Name: ' (Instance) (Instance)'
+  m_Name: ' (Instance) (Instance) (Instance) (Instance)'
   dynamicFriction: 0.6
   staticFriction: 0.6
   bounciness: 0
@@ -306,7 +282,7 @@ PrefabInstance:
     - target: {fileID: 5870580155986294078, guid: 3f84232a6a8e3ea45ba5024dd0e18116, type: 3}
       propertyPath: m_Material
       value: 
-      objectReference: {fileID: 208999795}
+      objectReference: {fileID: 336261704}
     - target: {fileID: 6422795178679717016, guid: 3f84232a6a8e3ea45ba5024dd0e18116, type: 3}
       propertyPath: audioIndex
       value: 3
@@ -321,6 +297,30 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3f84232a6a8e3ea45ba5024dd0e18116, type: 3}
+--- !u!134 &1060372228
+PhysicMaterial:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: ' (Instance) (Instance) (Instance) (Instance)'
+  dynamicFriction: 0.6
+  staticFriction: 0.6
+  bounciness: 0
+  frictionCombine: 0
+  bounceCombine: 0
+--- !u!134 &1298652519
+PhysicMaterial:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: ' (Instance) (Instance) (Instance) (Instance)'
+  dynamicFriction: 0.6
+  staticFriction: 0.6
+  bounciness: 0
+  frictionCombine: 0
+  bounceCombine: 0
 --- !u!1001 &2064271691
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -452,7 +452,7 @@ PrefabInstance:
     - target: {fileID: 5870580155986294078, guid: 3f84232a6a8e3ea45ba5024dd0e18116, type: 3}
       propertyPath: m_Material
       value: 
-      objectReference: {fileID: 622621561}
+      objectReference: {fileID: 1060372228}
     - target: {fileID: 6422795178679717016, guid: 3f84232a6a8e3ea45ba5024dd0e18116, type: 3}
       propertyPath: audioIndex
       value: 1
