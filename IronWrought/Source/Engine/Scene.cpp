@@ -295,11 +295,6 @@ void CScene::Update()
 
 	if (myCanvas)
 		myCanvas->Update();
-
-	if (myPlayer && myEnvironmentLight)
-	{
-		myEnvironmentLight->SetPosition({ myPlayer->myTransform->WorldPosition().x, myPlayer->myTransform->WorldPosition().y + 20.0f, myPlayer->myTransform->WorldPosition().z });
-	}
 }
 
 void CScene::FixedUpdate()
