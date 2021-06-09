@@ -14,8 +14,20 @@ CLockBehavior::CLockBehavior(CGameObject& aParent, const SSettings someSettings)
 
 CLockBehavior::~CLockBehavior()
 {
-	CMainSingleton::PostMaster().Unsubscribe(mySettings.myOnKeyCreateNotify, this);
-	CMainSingleton::PostMaster().Unsubscribe(mySettings.myOnKeyInteractNotify, this);
+	
+}
+
+void CLockBehavior::OnEnable()
+{
+	//CMainSingleton::PostMaster().Subscribe(mySettings.myOnKeyCreateNotify, this);
+	//CMainSingleton::PostMaster().Subscribe(mySettings.myOnKeyInteractNotify, this);
+}
+
+void CLockBehavior::OnDisable()
+{
+	//CMainSingleton::PostMaster().Unsubscribe(mySettings.myOnKeyCreateNotify, this);
+	//CMainSingleton::PostMaster().Unsubscribe(mySettings.myOnKeyInteractNotify, this);
+	myAmountOfKeys = 0;
 }
 
 void CLockBehavior::RunEvent()

@@ -164,7 +164,7 @@ void CEnemyAnimationController::OnAlerted(CEnemyComponent* anEnemy)
 	if (!anim)
 		return;
 
-	anim->BlendLerpBetween(UINT_CAST(EEnemyAnimations::Alert), UINT_CAST(EEnemyAnimations::Alert), 0.0f);
+	anim->BlendLerpBetween(UINT_CAST(EEnemyAnimations::Walk), UINT_CAST(EEnemyAnimations::Alert), 1.0f);
 }
 
 void CEnemyAnimationController::UpdateCurrent(CEnemyComponent* anEnemy)

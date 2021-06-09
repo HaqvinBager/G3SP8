@@ -29,8 +29,8 @@ public:
 	void Start() override {}
 	virtual void Update() override {}
 
-	void OnEnable() override {}
-	void OnDisable() override {}
+	void OnEnable() override;
+	void OnDisable() override;
 
 	void RunEvent();
 	void RunEventEditor();
@@ -38,6 +38,9 @@ public:
 
 	const int MaxAmountOfKeys() const { return myMaxAmountOfKeys; }
 	const int AmountOfKeys() const { return myAmountOfKeys; }
+
+	const bool IsUnlocked() const { return myAmountOfKeys >= myMaxAmountOfKeys; }
+
 
 private:
 	void Receive(const SIDMessage& aMessage) override;
