@@ -123,25 +123,25 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 23800000, guid: d2438aebf88701647bdbbc9e6c7e6cab, type: 2}
---- !u!134 &798025530
+--- !u!134 &935703537
 PhysicMaterial:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: 
+  m_Name: ' (Instance)'
   dynamicFriction: 0.6
   staticFriction: 0.6
   bounciness: 0
   frictionCombine: 0
   bounceCombine: 0
---- !u!134 &2093645895
+--- !u!134 &2054065847
 PhysicMaterial:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: 
+  m_Name: ' (Instance)'
   dynamicFriction: 0.6
   staticFriction: 0.6
   bounciness: 0
@@ -180,8 +180,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e7ce7700dceebbb4682835e8a36c682f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  start: {x: 0.353, y: 0.957, z: -8.77}
-  end: {x: 13.09, y: 0.957, z: -8.77}
+  start: {x: -1.005, y: 0.822, z: 14.648}
+  end: {x: -1.005, y: -99.178, z: 14.648}
   duration: 0.001
   delay: 0
 --- !u!54 &1031876865513136767
@@ -207,7 +207,7 @@ BoxCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1031876865513136764}
-  m_Material: {fileID: 2093645895}
+  m_Material: {fileID: 2054065847}
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
@@ -321,7 +321,7 @@ BoxCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5339392776290667463}
-  m_Material: {fileID: 798025530}
+  m_Material: {fileID: 935703537}
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
@@ -340,15 +340,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2490421264551980843, guid: 2fc32dfebcd612b43811d426faf05ba5, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0.353
+      value: -1.005
       objectReference: {fileID: 0}
     - target: {fileID: 2490421264551980843, guid: 2fc32dfebcd612b43811d426faf05ba5, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.957
+      value: 0.822
       objectReference: {fileID: 0}
     - target: {fileID: 2490421264551980843, guid: 2fc32dfebcd612b43811d426faf05ba5, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -8.77
+      value: 14.648
       objectReference: {fileID: 0}
     - target: {fileID: 2490421264551980843, guid: 2fc32dfebcd612b43811d426faf05ba5, type: 3}
       propertyPath: m_LocalRotation.w

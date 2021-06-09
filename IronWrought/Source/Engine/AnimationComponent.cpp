@@ -82,10 +82,11 @@ void CAnimationComponent::BlendLerpBetween(int anAnimationIndex0, int anAnimatio
 
 	myAnimationBlend.myFirst		= index0;
 	myAnimationBlend.mySecond		= index1;
-	myAnimationBlend.myBlendLerp	= aBlendLerp;
+	float lerp = std::clamp(aBlendLerp, 0.0f, 1.0f);
+	myAnimationBlend.myBlendLerp	= lerp;
 	myController->Animation0Index(index0);
 	myController->Animation1Index(index1);
-	myController->SetBlendTime(aBlendLerp);
+	myController->SetBlendTime(lerp);
 	myShouldUseLerp = true;
 }
 
