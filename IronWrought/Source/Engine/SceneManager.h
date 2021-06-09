@@ -67,6 +67,7 @@ private:
 	static void AddPuzzleResponseToggle(CScene& aScene, RapidArray someData);
 	static void AddPuzzleResponseAudio(CScene& aScene, RapidArray someData);
 	static void AddPuzzleResponseVoice(CScene& aScene, RapidArray someData);
+	static void AddPuzzleResponseTeleporter(CScene& aScene, RapidArray someData);
 
 	static void AddCollider(CScene& aScene, RapidArray someData);
 	static void AddCollider(CScene& aScene, const std::vector<Binary::SCollider>& someData);
