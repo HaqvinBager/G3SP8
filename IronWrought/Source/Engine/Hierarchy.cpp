@@ -5,6 +5,7 @@
 #include "Scene.h"
 #include "GameObject.h"
 #include "Engine.h"
+#include "JsonReader.h"
 
 
 ImGui::CHierarchy::CHierarchy(const char* aName)
@@ -33,10 +34,19 @@ ImGui::CHierarchy::CHierarchy(const char* aName)
 	myComponentMap[typeid(CGravityGloveComponent)] = [&](CComponent* aComponent) { Edit(dynamic_cast<CGravityGloveComponent*>(aComponent)); };
 	myComponentMap[typeid(CHealthPickupComponent)] = [&](CComponent* aComponent) { Edit(dynamic_cast<CHealthPickupComponent*>(aComponent)); };
 	myComponentMap[typeid(CPlayerControllerComponent)] = [&](CComponent* aComponent) { Edit(dynamic_cast<CPlayerControllerComponent*>(aComponent)); };
-
+	
+	
 	myComponentMap[typeid(CLeftClickDownLock)] = [&](CComponent* aComponent) { Edit(dynamic_cast<CLeftClickDownLock*>(aComponent)); };
 	myComponentMap[typeid(COnTriggerLock)] = [&](CComponent* aComponent) { Edit(dynamic_cast<COnTriggerLock*>(aComponent)); };
+	myComponentMap[typeid(CListenerBehavior)] = [&](CComponent* aComponent) { Edit(dynamic_cast<CListenerBehavior*>(aComponent)); };
+	myComponentMap[typeid(CKeyBehavior)] = [&](CComponent* aComponent) { Edit(dynamic_cast<CKeyBehavior*>(aComponent)); };
 
+		
+	myCurrentFilter.push_back(typeid(COnTriggerLock));
+	myCurrentFilter.push_back(typeid(CLeftClickDownLock));
+	myCurrentFilter.push_back(typeid(CPlayerComponent));	
+	myCurrentFilter.push_back(typeid(CListenerBehavior));
+	myCurrentFilter.push_back(typeid(CKeyBehavior));
 }
 
 ImGui::CHierarchy::~CHierarchy()
@@ -55,8 +65,11 @@ void ImGui::CHierarchy::OnInspectorGUI()
 
 	ImGui::Begin(Name(), Open());
 
-	auto& gameObjects = myScene->ActiveGameObjects();
+	//auto& gameObjects = myScene->ActiveGameObjects();
 	int index = 0;
+
+	std::vector<CGameObject*> gameObjects = Filter(myScene->ActiveGameObjects(), myCurrentFilter);
+
 	for (auto& gameObject : gameObjects)
 	{
 		ImGui::PushID(index);
@@ -109,6 +122,22 @@ void ImGui::CHierarchy::OnInspectorGUI()
 
 void ImGui::CHierarchy::OnDisable()
 {
+}
+
+void ImGui::CHierarchy::EditGameObjects(std::vector<CGameObject*> someGameObjects)
+{
+
+}
+
+std::vector<CGameObject*> ImGui::CHierarchy::Filter(const std::vector<CGameObject*>& someGameObjects, const std::vector<std::type_index>& filterTypes)
+{
+	std::vector<CGameObject*> filteredGameObjects = {};
+	for (const auto& gameObject : someGameObjects)
+	{
+		if (gameObject->HasComponent(filterTypes))
+			filteredGameObjects.push_back(gameObject);
+	}
+	return filteredGameObjects;
 }
 
 void ImGui::CHierarchy::SubscribeToCallback(const std::type_index& aTypeIndex, std::function<void(CComponent*)> aCallback)
@@ -263,4 +292,24 @@ void ImGui::CHierarchy::Edit(COnTriggerLock* aComponent)
 	{
 		aComponent->RunEventEditor();
 	}
+}
+
+void ImGui::CHierarchy::Edit(CListenerBehavior* aComponent)
+{
+	//aComponent;
+	//ImGui::Text(" WIP CListenerBehavior");
+	const int id = aComponent->RecieveMessage();
+	ImGui::Text("Recieve Message: %i", id);
+	std::string messageName = {};
+	if (CJsonReader::Get()->TryGetAssetPath(id, messageName))
+	{
+		ImGui::Text("Name: %s", messageName.c_str());
+	}
+
+}
+
+void ImGui::CHierarchy::Edit(CKeyBehavior* aComponent)
+{
+	aComponent;
+	ImGui::Text(" WIP CKeyBehavior");
 }

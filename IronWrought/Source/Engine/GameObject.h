@@ -5,6 +5,7 @@
 #include <utility>
 #include "MainSingleton.h"
 #include "PostMaster.h"
+#include <typeindex>
 
 class CTransformComponent;
 class CComponent;
@@ -60,6 +61,9 @@ public:
 	//return bool if tag is correct with gameobject tag
 	//Is this game object tagged with tag ?
 	bool CompareTag(const std::string& aTag) const;
+
+	const bool HasComponent(const std::type_index& aType) const;
+	const bool HasComponent(const std::vector<std::type_index>& someTypes) const;
 
 	std::vector<std::unique_ptr<CComponent>> myComponents;
 private:

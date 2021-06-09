@@ -34,7 +34,7 @@ void CGameObject::Start()
 	{
 		if (!component->Enabled())
 			continue;
-		
+
 		component->Start();
 	}
 }
@@ -78,7 +78,7 @@ void CGameObject::Active(bool aActive)
 {
 	if (myIsActive != aActive)
 	{
-		for (const auto& component : myComponents)		
+		for (const auto& component : myComponents)
 			component->Enabled(aActive);
 
 		auto& children = myTransform->FetchChildren();
@@ -92,8 +92,34 @@ void CGameObject::Active(bool aActive)
 
 bool CGameObject::CompareTag(const std::string& aTag) const
 {
-	if (aTag == myTag) {
+	if (aTag == myTag)
+	{
 		return true;
+	}
+	return false;
+}
+
+const bool CGameObject::HasComponent(const std::type_index& aType) const
+{
+	for (const auto& component : myComponents)
+	{
+		const std::type_index index = typeid(*component.get());
+		if (index == aType)
+			return true;
+	}
+	return false;
+}
+
+const bool CGameObject::HasComponent(const std::vector<std::type_index>& someTypes) const
+{
+	for (const auto& component : myComponents)
+	{
+		const std::type_index index = typeid(*component.get());
+		for (const std::type_index& other : someTypes)
+		{
+			if (index == other)
+				return true;
+		}
 	}
 	return false;
 }
