@@ -62,7 +62,7 @@ void CCameraComponent::Start()
 }
 
 float LogEaseOut(float x) {
-	return 1 - (log(x) / log(0.01f));
+	return 1.f - (log(x) / log(0.01f));
 }
 
 float LogEaseIn(float x) {
