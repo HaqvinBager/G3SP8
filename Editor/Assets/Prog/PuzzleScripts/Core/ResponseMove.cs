@@ -10,7 +10,7 @@ public class ResponseMove : MonoBehaviour, IListener
 {
     [HideInInspector]
     public Vector3 start, end;
-    public float duration;
+    public float duration = 0.5f;
     public float delay;
 
     public void Remove()

@@ -1095,7 +1095,19 @@ void CSceneManager::AddAudioSources(CScene& aScene, RapidArray someData)
 		}
 		else
 		{
-			gameObject->AddComponent<CPhysicsPropAudioComponent>(*gameObject, static_cast<unsigned int>(m["soundIndex"].GetInt()));
+			PostMaster::SAudioSourceInitData data =
+			{
+				  gameObject->myTransform->Position()
+				, { 0.0f, 0.0f, 1.0f }
+				, 360.0f
+				, 360.0f
+				, 1.0f
+				, 1.5f
+				, 10000.0f
+				, m["soundIndex"].GetInt()
+				, instanceId
+			};
+			gameObject->AddComponent<CPhysicsPropAudioComponent>(*gameObject, data);
 		}
 	}
 }
