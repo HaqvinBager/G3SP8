@@ -27,3 +27,8 @@
 #include <PlayerControllerComponent.h>
 #include <ListenerBehavior.h>
 #include <KeyBehavior.h>
+#include <MoveActivation.h>
+#include <RotateActivation.h>
+#include <MoveResponse.h>
+#include <RotateResponse.h>
+#include <ToggleResponse.h>
