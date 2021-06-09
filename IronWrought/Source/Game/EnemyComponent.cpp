@@ -22,6 +22,7 @@
 #include <algorithm>
 #include "Debug.h"
 #include "PlayerControllerComponent.h"
+#include "CameraComponent.h"
 
 //EnemyComp
 
@@ -40,6 +41,8 @@ CEnemyComponent::CEnemyComponent(CGameObject& aParent, const SEnemySetting& some
 	, myIsIdle(false)
 	, mySqrdDistanceToPlayer(FLT_MAX)
 	, myCloseToPlayerThreshold(FLT_MAX)
+	, myAttackPlayerTimer(0.0f)
+	, myAttackPlayerTimerMax(3.0f)
 {
 	//myController = CEngine::GetInstance()->GetPhysx().CreateCharacterController(GameObject().myTransform->Position(), 0.6f * 0.5f, 1.8f * 0.5f, GameObject().myTransform, aHitReport);
 	//myController->GetController().getActor()->setRigidBodyFlag(PxRigidBodyFlag::eUSE_KINEMATIC_TARGET_FOR_SCENE_QUERIES, true);
@@ -109,10 +112,18 @@ void CEnemyComponent::Start()
 		myRigidBodyComponent->GetDynamicRigidBody()->GetBody().setRigidDynamicLockFlag(physx::PxRigidDynamicLockFlag::eLOCK_ANGULAR_Z, true);
 		myRigidBodyComponent->GetDynamicRigidBody()->GetBody().setMaxLinearVelocity(mySettings.mySpeed);
 	}
+
+	mySpawnPosition = GameObject().myTransform->Position();
 }
 
 void CEnemyComponent::Update()//får bestämma vilket behaviour vi vill köra i denna Update()!!!
 {
+	if (myCurrentState == EBehaviour::Attack)
+	{
+		UpdateAttackEvent();
+		return;
+	}
+
 	if (!myMovementLocked) {
 		mySqrdDistanceToPlayer = Vector3::DistanceSquared(myPlayer->myTransform->Position(), GameObject().myTransform->Position());
 
@@ -171,7 +182,7 @@ void CEnemyComponent::Update()//får bestämma vilket behaviour vi vill köra i 
 		}
 		else {
 
-			if (mySqrdDistanceToPlayer <= 1.0f) {
+			if (mySqrdDistanceToPlayer <= 2.0f) {
 				myHasFoundPlayer = false;
 				myHeardSound = false;
 				myIsIdle = false;
@@ -281,9 +292,28 @@ void CEnemyComponent::Receive(const SMessage& aMsg)
 {
 	if (aMsg.myMessageType == EMessageType::EnemyAttackedPlayer)
 	{
+		// Lock enemy movement
+		// Player copies enemies rotation + rotate 180
+		// Lock player movement for attack state time + some more
+		// ? Rotate player so it better sees the enemy (i.e up or down)?
+		// Set attack state timer to time of animation (2s?)
+		// Start camera fade at half time
+		// End of timer: enemy->spawn pos, fade camera in!
+
 		myMovementLocked = true;
-		GameObject().myTransform->Position({ -10.0f, 0.0f, -13.0f });
-		myPlayer->GetComponent<CPlayerControllerComponent>()->LockMovementFor(3.f);
+		bool lockCamera = true;
+		CMainSingleton::PostMaster().Send({ EMessageType::LockFPSCamera, &lockCamera });
+		CPlayerControllerComponent* plCtrl = myPlayer->GetComponent<CPlayerControllerComponent>();
+		plCtrl->ForceStand();
+		plCtrl->LockMovementFor(myAttackPlayerTimerMax + 0.75f);
+		myPlayer->myTransform->CopyRotation(this->GameObject().myTransform->Transform());
+		myPlayer->myTransform->Rotate({0.0f, DirectX::XMConvertToRadians(180.0f), 0.0f});
+		myPlayer->myTransform->FetchChildren()[0]->CopyRotation(myPlayer->myTransform->Transform()); // Camera rotates player, if not updated here camera will snap the player back to previous rotation on end of event.
+
+		IRONWROUGHT->GetActiveScene().MainCamera()->SetTrauma(4.0f);
+
+		myAttackPlayerTimer = myAttackPlayerTimerMax;
+		return;
 	}
 
 	if (aMsg.myMessageType == EMessageType::PropCollided) {
@@ -321,5 +351,32 @@ void CEnemyComponent::Receive(const SMessage& aMsg)
 const float CEnemyComponent::PercentileDistanceToPlayer() const
 {
 	return mySqrdDistanceToPlayer / (myCloseToPlayerThreshold * myCloseToPlayerThreshold);
+}
+
+void CEnemyComponent::UpdateAttackEvent()
+{
+	myAttackPlayerTimer -= CTimer::Dt();
+	if (myAttackPlayerTimer <= 0.0f)
+	{
+		CPlayerControllerComponent* plCtrl = myPlayer->GetComponent<CPlayerControllerComponent>();
+		plCtrl->Crouch();
+		//plCtrl->OnCrouch();
+		bool lockCamera = false;
+		CMainSingleton::PostMaster().Send({ EMessageType::LockFPSCamera, &lockCamera });
+		IRONWROUGHT->GetActiveScene().MainCamera()->Fade(true, 0.75f);
+		GameObject().myTransform->Position(mySpawnPosition);
+		myMovementLocked = false;
+		SetState(EBehaviour::Idle);
+		std::cout << __FUNCTION__ << " Attack event end." << std::endl;
+		return;
+	}
+
+	if (myAttackPlayerTimer <= myAttackPlayerTimerMax * 0.55f && myAttackPlayerTimer >= myAttackPlayerTimerMax * 0.5f)
+	{
+		// Fade out
+		std::cout << __FUNCTION__ << " Camera fade out." << std::endl;
+		IRONWROUGHT->GetActiveScene().MainCamera()->Fade(false, myAttackPlayerTimerMax * 0.4f, true);
+		IRONWROUGHT->GetActiveScene().MainCamera()->SetTrauma(2.0f);
+	}
 }
 

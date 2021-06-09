@@ -38,6 +38,8 @@ public:
 	void SetAngularVelocity(const Vector3& aVelocity);
 	void SetLinearVelocity(const Vector3& aVelocity);
 
+	const float GetLinearVelocityLengthSqr() const;
+
 	void SetPosition(const Vector3& aPos);
 	void SetRotation(const Quaternion& aRot);
 	void SetGlobalPose(const Vector3& aPos, const Quaternion& aRot);

@@ -21,9 +21,8 @@ void CEnemyAnimationController::Activate()
 	CMainSingleton::PostMaster().Subscribe(EMessageType::EnemyAttackState, this);
 	CMainSingleton::PostMaster().Subscribe(EMessageType::EnemyIdleState, this);
 	CMainSingleton::PostMaster().Subscribe(EMessageType::EnemyAttack, this);
-	CMainSingleton::PostMaster().Subscribe(EMessageType::EnemyTakeDamage, this);
-	CMainSingleton::PostMaster().Subscribe(EMessageType::EnemyDied, this);
 	CMainSingleton::PostMaster().Subscribe(EMessageType::EnemyDisabled, this);
+	CMainSingleton::PostMaster().Subscribe(EMessageType::EnemyAlertedState, this);
 	CMainSingleton::PostMaster().Subscribe(EMessageType::EnemyUpdateCurrentState, this);
 }
 
@@ -34,9 +33,8 @@ void CEnemyAnimationController::Deactivate()
 	CMainSingleton::PostMaster().Unsubscribe(EMessageType::EnemyAttackState, this);
 	CMainSingleton::PostMaster().Unsubscribe(EMessageType::EnemyIdleState, this);
 	CMainSingleton::PostMaster().Unsubscribe(EMessageType::EnemyAttack, this);
-	CMainSingleton::PostMaster().Unsubscribe(EMessageType::EnemyTakeDamage, this);
-	CMainSingleton::PostMaster().Unsubscribe(EMessageType::EnemyDied, this);
 	CMainSingleton::PostMaster().Unsubscribe(EMessageType::EnemyDisabled, this);
+	CMainSingleton::PostMaster().Unsubscribe(EMessageType::EnemyAlertedState, this);
 	CMainSingleton::PostMaster().Unsubscribe(EMessageType::EnemyUpdateCurrentState, this);
 }
 
@@ -59,7 +57,7 @@ void CEnemyAnimationController::Receive(const SMessage& aMessage)
 		case EMessageType::EnemyAttackState:
 		{
 			CEnemyComponent* enemy = reinterpret_cast<CEnemyComponent*>(aMessage.data);
-			OnSeek(enemy);
+			OnAttack(enemy);
 		}break;
 
 		case EMessageType::EnemyIdleState:
@@ -74,22 +72,16 @@ void CEnemyAnimationController::Receive(const SMessage& aMessage)
 			OnAttack(enemy);
 		}break;
 
-		case EMessageType::EnemyTakeDamage:
-		{
-			CEnemyComponent* enemy = reinterpret_cast<CEnemyComponent*>(aMessage.data);
-			OnTakeDamage(enemy);
-		}break;
-
-		case EMessageType::EnemyDied:
-		{
-			CEnemyComponent* enemy = static_cast<CEnemyComponent*>(aMessage.data);
-			OnDeath(enemy);
-		}break;
-
 		case EMessageType::EnemyDisabled:
 		{
 			CEnemyComponent* enemy = static_cast<CEnemyComponent*>(aMessage.data);
 			OnDisabled(enemy);
+		}break;
+
+		case EMessageType::EnemyAlertedState:
+		{
+			CEnemyComponent* enemy = static_cast<CEnemyComponent*>(aMessage.data);
+			OnAlerted(enemy);
 		}break;
 
 		case EMessageType::EnemyUpdateCurrentState:
@@ -122,6 +114,7 @@ void CEnemyAnimationController::OnSeek(CEnemyComponent* anEnemy)
 	CAnimationComponent* anim = anEnemy->GetComponent<CAnimationComponent>();
 	if (!anim)
 		return;
+
 	float dist = anEnemy->PercentileDistanceToPlayer();
 	anim->BlendLerpBetween(UINT_CAST(EEnemyAnimations::Attack), UINT_CAST(EEnemyAnimations::Chase), dist);
 }
@@ -135,7 +128,7 @@ void CEnemyAnimationController::OnAttack(CEnemyComponent* anEnemy)
 	if (!anim)
 		return;
 
-	anim->BlendToAnimation(UINT_CAST(EEnemyAnimations::Attack), 0.33f, true, true);
+	anim->BlendToAnimation(UINT_CAST(EEnemyAnimations::Grab), 0.33f, false, false);
 }
 
 void CEnemyAnimationController::OnIdle(CEnemyComponent* anEnemy)
@@ -150,30 +143,6 @@ void CEnemyAnimationController::OnIdle(CEnemyComponent* anEnemy)
 	anim->BlendLerpBetween(UINT_CAST(EEnemyAnimations::Idle), UINT_CAST(EEnemyAnimations::Idle), 0.0f);
 }
 
-void CEnemyAnimationController::OnTakeDamage(CEnemyComponent* anEnemy)
-{
-	if (!anEnemy)
-		return;
-
-	CAnimationComponent* anim = anEnemy->GetComponent<CAnimationComponent>();
-	if (!anim)
-		return;
-
-	//anim->BlendToAnimation(UINT_CAST(EEnemyAnimations::Damage), 0.25f, true, true);
-}
-
-void CEnemyAnimationController::OnDeath(CEnemyComponent* anEnemy)
-{
-	if (!anEnemy)
-		return;
-
-	CAnimationComponent* anim = anEnemy->GetComponent<CAnimationComponent>();
-	if (!anim)
-		return;
-
-	//anim->BlendLerpBetween(UINT_CAST(EEnemyAnimations::Death), UINT_CAST(EEnemyAnimations::Death), 0.0f);
-}
-
 void CEnemyAnimationController::OnDisabled(CEnemyComponent* anEnemy)
 {
 	if (!anEnemy)
@@ -184,6 +153,18 @@ void CEnemyAnimationController::OnDisabled(CEnemyComponent* anEnemy)
 		return;
 
 	anim->Enabled(false);
+}
+
+void CEnemyAnimationController::OnAlerted(CEnemyComponent* anEnemy)
+{
+	if (!anEnemy)
+		return;
+
+	CAnimationComponent* anim = anEnemy->GetComponent<CAnimationComponent>();
+	if (!anim)
+		return;
+
+	anim->BlendLerpBetween(UINT_CAST(EEnemyAnimations::Alert), UINT_CAST(EEnemyAnimations::Alert), 0.0f);
 }
 
 void CEnemyAnimationController::UpdateCurrent(CEnemyComponent* anEnemy)

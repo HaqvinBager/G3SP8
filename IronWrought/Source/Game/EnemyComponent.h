@@ -71,6 +71,9 @@ public:
 	}
 
 private:
+	void UpdateAttackEvent();
+
+private:
 	friend class CEnemyAnimationController;
 
 	CCharacterController* myController;
@@ -80,6 +83,7 @@ private:
 	SEnemySetting mySettings;
 	float myCurrentOrientation; 
 	CRigidBodyComponent* myRigidBodyComponent;
+	Vector3 mySpawnPosition;
 
 	bool myHasFoundPlayer;
 	bool myHasReachedLastPlayerPosition;
@@ -90,6 +94,8 @@ private:
 
 	float mySqrdDistanceToPlayer;
 	float myCloseToPlayerThreshold;
+	float myAttackPlayerTimer;
+	const float myAttackPlayerTimerMax;
 	//float myLastSeenDistanceToPlayer;// Confusing name? The distance to the player 
 	float myWakeUpTimer;
 	float myIdlingTimer;

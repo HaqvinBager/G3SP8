@@ -66,6 +66,7 @@ public:
 	void SetCurrentFloorMaterial(const std::string& anObjectTag);
 
 	void LockMovementFor(const float& someSeconds);
+	void ForceStand();
 private:
 	void RayCastWorld();
 	void UpdateMovementLock();
