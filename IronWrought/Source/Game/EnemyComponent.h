@@ -52,6 +52,9 @@ public:
 	void Receive(const SMessage& aMsg) override;
 	//CPatrolPointComponent* FindBestPatrolPoint();
 
+	// Based on threshold. 
+	const float PercentileDistanceToPlayer() const;
+
 public:
 	float WrapAngle(float anAngle)
 	{
@@ -85,6 +88,9 @@ private:
 	bool myHeardSound;
 	bool myIsIdle;
 
+	float mySqrdDistanceToPlayer;
+	float myCloseToPlayerThreshold;
+	//float myLastSeenDistanceToPlayer;// Confusing name? The distance to the player 
 	float myWakeUpTimer;
 	float myIdlingTimer;
 	SNavMesh* myNavMesh;

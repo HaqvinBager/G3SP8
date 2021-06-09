@@ -5,15 +5,13 @@
 #include "EnemyComponent.h"
 
 #define UINT_CAST(a) static_cast<unsigned int>(a)
+#define FUNCTION_PRINT std::cout << __FUNCTION__ << std::endl;
 
 CEnemyAnimationController::CEnemyAnimationController()
- : myAnimationComponent(nullptr)
-	//, myIsActive(true)
 {}
 
 CEnemyAnimationController::~CEnemyAnimationController()
 {
-	myAnimationComponent = nullptr;
 }
 
 void CEnemyAnimationController::Activate()
@@ -26,6 +24,7 @@ void CEnemyAnimationController::Activate()
 	CMainSingleton::PostMaster().Subscribe(EMessageType::EnemyTakeDamage, this);
 	CMainSingleton::PostMaster().Subscribe(EMessageType::EnemyDied, this);
 	CMainSingleton::PostMaster().Subscribe(EMessageType::EnemyDisabled, this);
+	CMainSingleton::PostMaster().Subscribe(EMessageType::EnemyUpdateCurrentState, this);
 }
 
 void CEnemyAnimationController::Deactivate()
@@ -38,6 +37,7 @@ void CEnemyAnimationController::Deactivate()
 	CMainSingleton::PostMaster().Unsubscribe(EMessageType::EnemyTakeDamage, this);
 	CMainSingleton::PostMaster().Unsubscribe(EMessageType::EnemyDied, this);
 	CMainSingleton::PostMaster().Unsubscribe(EMessageType::EnemyDisabled, this);
+	CMainSingleton::PostMaster().Unsubscribe(EMessageType::EnemyUpdateCurrentState, this);
 }
 
 void CEnemyAnimationController::Receive(const SMessage& aMessage)
@@ -92,6 +92,12 @@ void CEnemyAnimationController::Receive(const SMessage& aMessage)
 			OnDisabled(enemy);
 		}break;
 
+		case EMessageType::EnemyUpdateCurrentState:
+		{
+			CEnemyComponent* enemy = static_cast<CEnemyComponent*>(aMessage.data);
+			UpdateCurrent(enemy);
+		}break;
+
 		default:break;
 	}
 }
@@ -104,7 +110,7 @@ void CEnemyAnimationController::OnPatrol(CEnemyComponent* anEnemy)
 	CAnimationComponent* anim = anEnemy->GetComponent<CAnimationComponent>();
 	if (!anim)
 		return;
-
+	
 	anim->BlendLerpBetween(UINT_CAST(EEnemyAnimations::Walk), UINT_CAST(EEnemyAnimations::Walk), 0.0f);
 }
 
@@ -116,8 +122,8 @@ void CEnemyAnimationController::OnSeek(CEnemyComponent* anEnemy)
 	CAnimationComponent* anim = anEnemy->GetComponent<CAnimationComponent>();
 	if (!anim)
 		return;
-
-	anim->BlendLerpBetween(UINT_CAST(EEnemyAnimations::Chase), UINT_CAST(EEnemyAnimations::Chase), 0.0f);
+	float dist = anEnemy->PercentileDistanceToPlayer();
+	anim->BlendLerpBetween(UINT_CAST(EEnemyAnimations::Attack), UINT_CAST(EEnemyAnimations::Chase), dist);
 }
 
 void CEnemyAnimationController::OnAttack(CEnemyComponent* anEnemy)
@@ -178,4 +184,18 @@ void CEnemyAnimationController::OnDisabled(CEnemyComponent* anEnemy)
 		return;
 
 	anim->Enabled(false);
+}
+
+void CEnemyAnimationController::UpdateCurrent(CEnemyComponent* anEnemy)
+{
+	if (!anEnemy)
+		return;
+
+	CAnimationComponent* anim = anEnemy->GetComponent<CAnimationComponent>();
+	if (!anim)
+		return;
+
+	float dist = anEnemy->PercentileDistanceToPlayer();
+	//std::cout << __FUNCTION__ << " " << dist << std::endl;
+	anim->BlendLerp(dist);
 }
