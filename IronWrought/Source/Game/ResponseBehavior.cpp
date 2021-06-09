@@ -14,6 +14,7 @@ IResponseBehavior::~IResponseBehavior()
 
 void IResponseBehavior::OnEnable()
 {
+
 }
 
 void IResponseBehavior::OnDisable()
