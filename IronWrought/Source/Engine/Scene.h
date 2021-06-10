@@ -140,8 +140,8 @@ public:
 public:
 //CULLING START
 	std::vector<CEnvironmentLight*> CullSecondaryEnvironmentLights(CGameObject* aGameObject);
-	std::vector<CPointLight*> CullPointLights(CGameObject* aGameObject);
-	std::vector<CSpotLight*> CullSpotLights(CGameObject* aGameObject);
+	std::vector<CPointLight*> CullPointLights(std::vector<CGameObject*>& someCulledGameObjects);
+	std::vector<CSpotLight*> CullSpotLights(std::vector<CGameObject*>& someCulledGameObjects);
 	std::vector<CBoxLight*> CullBoxLights(CGameObject* aGameObject);
 	std::pair<unsigned int, std::array<CPointLight*, LIGHTCOUNT>> CullLights(CGameObject* aGameObject);
 	const std::vector<CLineInstance*>& CullLineInstances() const;

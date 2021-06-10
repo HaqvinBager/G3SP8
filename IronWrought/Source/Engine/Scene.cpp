@@ -20,7 +20,9 @@
 #include "LineFactory.h"
 
 #include "EnvironmentLight.h"
+#include "PointLightComponent.h"
 #include "PointLight.h"
+#include "SpotLightComponent.h"
 #include "SpotLight.h"
 #include "BoxLight.h"
 
@@ -531,15 +533,38 @@ std::vector<CEnvironmentLight*> CScene::CullSecondaryEnvironmentLights(CGameObje
 }
 //GETTERS END
 //CULLING START
-std::vector<CPointLight*> CScene::CullPointLights(CGameObject* /*aGameObject*/)
+std::vector<CPointLight*> CScene::CullPointLights(std::vector<CGameObject*>& someCulledGameObjects)
 {
-	//std::cout << __FUNCTION__ << " Reminde to add actual culling to this function!" << std::endl;
-	return myPointLights;
+	std::vector<CPointLight*> culledPointLights;
+	
+	CPointLightComponent* comp = nullptr;
+	for (auto& go : someCulledGameObjects)
+	{
+		comp = go->GetComponent<CPointLightComponent>();
+		if (comp)
+		{
+			culledPointLights.push_back(comp->GetPointLight());
+		}
+	}
+
+	return culledPointLights;
 }
 
-std::vector<CSpotLight*> CScene::CullSpotLights(CGameObject* /*aGameObject*/)
+std::vector<CSpotLight*> CScene::CullSpotLights(std::vector<CGameObject*>& someCulledGameObjects)
 {
-	return mySpotLights;
+	std::vector<CSpotLight*> culledSpotLights;
+
+	CSpotLightComponent* comp = nullptr;
+	for (auto& go : someCulledGameObjects)
+	{
+		comp = go->GetComponent<CSpotLightComponent>();
+		if (comp)
+		{
+			culledSpotLights.push_back(comp->GetSpotLight());
+		}
+	}
+
+	return culledSpotLights;
 }
 
 std::vector<CBoxLight*> CScene::CullBoxLights(CGameObject* /*aGameObject*/)
