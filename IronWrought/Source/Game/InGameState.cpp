@@ -288,20 +288,24 @@ void CInGameState::Receive(const SMessage& aMessage)
 		ToggleCanvas(EInGameCanvases_HUD);
 	}break;
 
-	case EMessageType::SetResolution1280x720:
-	{
-
-	}break;
-
 	case EMessageType::SetResolution1600x900:
 	{
-
-	}break;
-
+		CEngine::GetInstance()->SetResolution({ 1600.0f, 900.0f });
+		IRONWROUGHT->GetActiveScene().ReInitCanvas(ASSETPATH("Assets/IronWrought/UI/JSON/UI_MainMenu.json"), true);
+		myStateStack.PopTopAndPush(CStateStack::EState::MainMenu);
+	} break;
 	case EMessageType::SetResolution1920x1080:
 	{
-
-	}break;
+		CEngine::GetInstance()->SetResolution({ 1920.0f, 1080.0f });
+		IRONWROUGHT->GetActiveScene().ReInitCanvas(ASSETPATH("Assets/IronWrought/UI/JSON/UI_MainMenu.json"), true);
+		myStateStack.PopTopAndPush(CStateStack::EState::MainMenu);
+	} break;
+	case EMessageType::SetResolution2560x1440:
+	{
+		CEngine::GetInstance()->SetResolution({ 2560.0f, 1440.0f });
+		IRONWROUGHT->GetActiveScene().ReInitCanvas(ASSETPATH("Assets/IronWrought/UI/JSON/UI_MainMenu.json"), true);
+		myStateStack.PopTopAndPush(CStateStack::EState::MainMenu);
+	} break;
 
 	case EMessageType::MainMenu:
 	{
