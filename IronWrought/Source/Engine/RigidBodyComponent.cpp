@@ -18,6 +18,7 @@ CRigidBodyComponent::CRigidBodyComponent(CGameObject& aParent, const float& aMas
 	, myLocalCenterMass(aLocalCenterMass)
 	, myInertiaTensor(aInertiaTensor)
 	, myIsKinematic(aIsKinematic)
+	, myIsBeingHold(false)
 {
 }
 
@@ -67,6 +68,9 @@ void CRigidBodyComponent::Update()
 		}
 	}
 
+	if (myIsBeingHold) {
+		myIsBeingHold = false;
+	}
 
 }
 
@@ -108,12 +112,24 @@ void CRigidBodyComponent::AddForce(const physx::PxVec3& aDirectionAndForce, cons
 	myDynamicRigidBody->GetBody().addForce(aDirectionAndForce, (PxForceMode::Enum)aForceMode);
 }
 
+void CRigidBodyComponent::IsHeld(bool isHeld)
+{
+	myIsBeingHold = isHeld;
+}
+
 void CRigidBodyComponent::AttachShape(physx::PxShape* aShape)
 {
 	bool status = myDynamicRigidBody->GetBody().attachShape(*aShape);
 	if (status) {
 		//CEngine::GetInstance()->GetActiveScene().PXScene()->addActor(myDynamicRigidBody->GetBody());
 	}
+}
+
+physx::PxShape* CRigidBodyComponent::GetShape()
+{
+	PxShape* shape = nullptr;
+	myDynamicRigidBody->GetBody().getShapes(&shape, 1);
+	return shape;
 }
 
 const float CRigidBodyComponent::GetMass() const

@@ -66,6 +66,8 @@ public:
 
 	PxControllerManager* GetControllerManager();
 
+	physx::PxTransform ConvertToPxTransform(const Matrix& aTransform);
+
 	physx::PxUserControllerHitReport* GetPlayerReportBack() { return myPlayerReportCallback; }
 
 

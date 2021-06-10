@@ -66,6 +66,10 @@ private:
 	// USE EITHER InteractionLogicContinuous OR InteractionLogicOnInput. Not both!
 	void InteractionLogicOnInput();
 
+	//Actor0 and Actor1 is what the joint should be connected to
+	//Offest in forward (Z)
+	physx::PxD6Joint* CreateD6Joint(physx::PxRigidActor* actor0, physx::PxRigidActor* actor1, float aOffest = 0.f);
+
 	void Pull();
 	void Pull(CTransformComponent* aTransform, CRigidBodyComponent* aRigidBodyTarget);
 	void Release();
@@ -132,4 +136,5 @@ private:
 	physx::PxRigidStatic* myRigidStatic;
 	physx::PxD6Joint* myJoint;
 	PostMaster::SCrossHairData myCrosshairData;
+	bool myHoldingAItem;
 };
