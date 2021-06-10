@@ -40,42 +40,40 @@ const bool PostMaster::CompareStringMessage(const char* aCompareTo, const char* 
 }
 const int PostMaster::LevelNameToSection(const PostMaster::ELevelName& levelName)
 {
-	switch (levelName)
-	{
-		case ELevelName::Cottage_1:
-		return 0;
-		break;
+	levelName;
+	return 0;
+	//switch (levelName)
+	//{
+	//	case ELevelName::Cottage_1:
+	//	return 0;
+	//	break;
 
-		case ELevelName::Basement_1_1_A:
-		return 1;
-		break;
+	//	case ELevelName::Basement_1_1:
+	//	return 0;
+	//	break;
 
-		case ELevelName::Basement_1_1_B:
-		return 1;
-		break;
+	//	case ELevelName::Basement_2:
+	//	return 2;
+	//	break;
 
-		case ELevelName::Basement_2:
-		return 2;
-		break;
+	//	case ELevelName::Basement_1_2:
+	//	return 0;
+	//	break;
 
-		case ELevelName::Basement_1_2_A:
-		return 3;
-		break;
+	//	case ELevelName::Basement_1_2:
+	//	return 3;
+	//	break;
 
-		case ELevelName::Basement_1_2_B:
-		return 3;
-		break;
+	//	case ELevelName::Cottage_2:
+	//	return 4;
+	//	break;
 
-		case ELevelName::Cottage_2:
-		return 4;
-		break;
+	//	case ELevelName::Basement_1_3:
+	//	return 5;
+	//	break;
 
-		case ELevelName::Basement_1_3:
-		return 5;
-		break;
-
-		default:
-		return 0;
-		break;
-	};
+	//	default:
+	//	return 0;
+	//	break;
+	//};
 }
