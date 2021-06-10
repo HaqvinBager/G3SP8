@@ -28,5 +28,6 @@ private:
 	PostMaster::ELevelName myTeleportTo;// 4
 	float myTeleportTimer;// 4
 	bool myHasTeleported;
+	bool myActivated;
 };
 
