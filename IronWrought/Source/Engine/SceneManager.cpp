@@ -207,6 +207,9 @@ bool CSceneManager::AddToScene(CScene& aScene, Binary::SLevelData& aBinLevelData
 			if (sceneData.HasMember("parents"))
 				SetParents(aScene, sceneData["parents"].GetArray());
 
+			if (sceneData.HasMember("activationNextLevel"))
+				AddNextLevelActivation(aScene, sceneData["activationNextLevel"].GetArray());
+
 			if (sceneData.HasMember("locks"))
 				AddPuzzleLock(aScene, sceneData["locks"].GetArray());
 
@@ -226,7 +229,6 @@ bool CSceneManager::AddToScene(CScene& aScene, Binary::SLevelData& aBinLevelData
 				AddPuzzleActivationAudio(aScene, sceneData["activationAudios"].GetArray());
 			if (sceneData.HasMember("activationVoices"))
 				AddPuzzleActivationVoice(aScene, sceneData["activationVoices"].GetArray());
-
 
 			if (sceneData.HasMember("responseMoves"))
 				AddPuzzleResponseMove(aScene, sceneData["responseMoves"].GetArray());
@@ -1180,8 +1182,22 @@ void CSceneManager::AddVFX(CScene& aScene, RapidArray someData)
 	}
 }
 
-void CSceneManager::AddNextLevelActivation(CScene& /*aScene*/, RapidArray /*someData*/)
+void CSceneManager::AddNextLevelActivation(CScene& aScene, RapidArray someData)
 {
+
+	for (const auto& levelActivationData : someData)
+	{
+		const int instanceID = levelActivationData["instanceID"].GetInt();
+		CGameObject* gameObject = aScene.FindObjectWithID(instanceID);
+
+		if (!gameObject)
+			continue;
+
+		float delay = levelActivationData["delay"].GetFloat();
+		std::string target = levelActivationData["target"].GetString();
+
+		gameObject->AddComponent<CTeleportActivation>(*gameObject, delay, target);
+	}
 
 }
 
