@@ -32,6 +32,7 @@ private:
 	void OnIdle(CEnemyComponent* anEnemy);
 	void OnDisabled(CEnemyComponent* anEnemy);
 	void OnAlerted(CEnemyComponent* anEnemy);
+	void OnDetected(CEnemyComponent* anEnemy);
 	void UpdateCurrent(CEnemyComponent* anEnemy);
 };
 

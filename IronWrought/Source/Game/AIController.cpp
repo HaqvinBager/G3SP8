@@ -345,3 +345,32 @@ Vector3 CIdle::Update(const Vector3& /*aPosition*/)
 void CIdle::ClearPath()
 {
 }
+
+CDetection::CDetection()
+	: myDetectionTimer(myDetectionTimerMax)
+{}
+
+void CDetection::Enter(const Vector3 & /*aPosition*/)
+{
+	myDetectionTimer = myDetectionTimerMax;
+}
+
+Vector3 CDetection::Update(const Vector3 & /*aPosition*/)
+{
+	myDetectionTimer -= CTimer::Dt();
+
+	return Vector3();
+}
+
+void CDetection::ClearPath()
+{}
+
+const float CDetection::PercentileOfTimer() const
+{
+	if (myDetectionTimer <= 0.0f)
+		return 0.0f;
+
+	float percentile = myDetectionTimer / (myDetectionTimerMax  * myDetectionFactor);
+	percentile = std::clamp(percentile, 0.0f, 1.0f);
+	return percentile;
+}
