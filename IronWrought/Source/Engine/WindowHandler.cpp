@@ -136,6 +136,9 @@ bool CWindowHandler::Init(CWindowHandler::SWindowData someWindowData)
         borderless = document["Borderless Window"].GetBool();
     }
 
+    myMaxResX = GetSystemMetrics(SM_CXSCREEN);
+    myMaxResY = GetSystemMetrics(SM_CYSCREEN);
+
     if (borderless)
     {
 #ifdef _DEBUG
@@ -148,7 +151,7 @@ bool CWindowHandler::Init(CWindowHandler::SWindowData someWindowData)
         // Start in borderless
         myWindowHandle = CreateWindowA("3DEngine", gameName.c_str(),
             WS_POPUP | WS_VISIBLE,
-            0, 0, GetSystemMetrics(SM_CXSCREEN), GetSystemMetrics(SM_CYSCREEN),
+            0, 0, myMaxResX, myMaxResY,
             NULL, NULL, GetModuleHandle(nullptr), this);
 #endif
     }
@@ -192,15 +195,17 @@ DirectX::SimpleMath::Vector2 CWindowHandler::GetCenterPosition()
 
 DirectX::SimpleMath::Vector2 CWindowHandler::GetResolution()
 {
-
     return *myResolution;
 }
 
 void CWindowHandler::SetResolution(DirectX::SimpleMath::Vector2 aResolution)
 {
-    ::SetWindowPos(myWindowHandle, 0, 0, 0, (UINT)aResolution.x, (UINT)aResolution.y, SWP_NOMOVE | SWP_NOOWNERZORDER | SWP_NOZORDER);
+    if ((INT)aResolution.x <= myMaxResX && (INT)aResolution.y <= myMaxResY)
+    {
+        ::SetWindowPos(myWindowHandle, 0, 0, 0, (UINT)aResolution.x, (UINT)aResolution.y, SWP_NOMOVE | SWP_NOOWNERZORDER | SWP_NOZORDER);
     
-    SetInternalResolution();
+        SetInternalResolution();
+    }
 }
 
 const bool CWindowHandler::CursorLocked() const

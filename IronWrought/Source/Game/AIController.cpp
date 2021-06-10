@@ -178,12 +178,13 @@ Vector3 CSeek::Update(const Vector3& aPosition)//aPostion == EnemyRobot Position
 		Vector3 newPos;
 		Vector3 dir;
 
-		/*float*/ epsilon = 0.05f;
+		/*float*/ epsilon = 0.1f;
 
 		dir = (myPath[pathSize - 1] - aPosition);
 		dir.Normalize();
 
-		if (DirectX::SimpleMath::Vector3::DistanceSquared(aPosition, myPath[pathSize - 1]) < epsilon) {
+		float dist = DirectX::SimpleMath::Vector3::DistanceSquared(aPosition, myPath[pathSize - 1]);
+		if (dist < epsilon) {
 			myPath.pop_back();
 		}
 		return dir;
@@ -204,7 +205,9 @@ void CSeek::SetPath(std::vector<Vector3> aPath, Vector3 aFinalPosition)
 	myPath.clear();
 	myPath.push_back(aFinalPosition);
 	for (unsigned int i = 0; i < aPath.size(); ++i) {
-		myPath.push_back(aPath[i]);
+		if (aPath[i] != aFinalPosition) {
+			myPath.push_back(aPath[i]);
+		}
 	}
 }
 
@@ -307,7 +310,9 @@ void CAlerted::SetPath(std::vector<Vector3> aPath, Vector3 aFinalPosition)
 	myPath.clear();
 	myPath.push_back(aFinalPosition);
 	for (unsigned int i = 0; i < aPath.size(); ++i) {
-		myPath.push_back(aPath[i]);
+		if (aPath[i] != aFinalPosition) {
+			myPath.push_back(aPath[i]);
+		}
 		if (i > 0) {
 			CDebug::GetInstance()->DrawLine(aPath[i - 1], aPath[i], 60.0f);
 		}
