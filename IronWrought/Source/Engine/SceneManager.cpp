@@ -108,7 +108,6 @@ CScene* CSceneManager::CreateEmpty()
 CScene* CSceneManager::CreateScene(const std::string& aSceneName)
 {
 	CScene* scene = Instantiate();
-	//CScene* scene = CreateEmpty();
 
 	const auto doc = CJsonReader::Get()->LoadDocument(ASSETPATH("Assets/Generated/" + aSceneName + "/" + aSceneName + ".json"));
 	if (doc.HasParseError())
@@ -201,11 +200,6 @@ bool CSceneManager::AddToScene(CScene& aScene, Binary::SLevelData& aBinLevelData
 		AddCollider(aScene, aBinLevelData.myColliders);
 		AddSpotLights(aScene, aBinLevelData.mySpotLights);
 
-
-
-		//CreateCustomEvents(aScene);
-		//CreateCustomEventListeners(aScene);
-
 		for (const auto& sceneData : scenes)
 		{
 			std::string sceneName = sceneData["sceneName"].GetString();
@@ -222,8 +216,6 @@ bool CSceneManager::AddToScene(CScene& aScene, Binary::SLevelData& aBinLevelData
 			if (sceneData.HasMember("keys"))
 				AddPuzzleKey(aScene, sceneData["keys"].GetArray());
 
-
-
 			if (sceneData.HasMember("activationMoves"))
 				AddPuzzleActivationMove(aScene, sceneData["activationMoves"].GetArray());
 			if (sceneData.HasMember("activationRotates"))
@@ -234,8 +226,6 @@ bool CSceneManager::AddToScene(CScene& aScene, Binary::SLevelData& aBinLevelData
 				AddPuzzleActivationAudio(aScene, sceneData["activationAudios"].GetArray());
 			if (sceneData.HasMember("activationVoices"))
 				AddPuzzleActivationVoice(aScene, sceneData["activationVoices"].GetArray());
-			if (sceneData.HasMember("activationTeleporters"))
-				AddPuzzleActivationTeleporter(aScene, sceneData["activationTeleporters"].GetArray());
 
 
 			if (sceneData.HasMember("responseMoves"))
@@ -250,8 +240,6 @@ bool CSceneManager::AddToScene(CScene& aScene, Binary::SLevelData& aBinLevelData
 				AddPuzzleResponseAudio(aScene, sceneData["responseAudios"].GetArray());
 			if (sceneData.HasMember("responseVoices"))
 				AddPuzzleResponseVoice(aScene, sceneData["responseVoices"].GetArray());
-			if (sceneData.HasMember("responseTeleporters"))
-				AddPuzzleResponseTeleporter(aScene, sceneData["responseTeleporters"].GetArray());
 
 			AddDirectionalLights(aScene, sceneData["directionalLights"].GetArray());
 			SetVertexPaintedColors(aScene, sceneData["vertexColors"].GetArray(), vertexPaintData);
@@ -779,33 +767,34 @@ void CSceneManager::AddPuzzleActivationVoice(CScene& aScene, RapidArray someData
 	}
 }
 
-void CSceneManager::AddPuzzleActivationTeleporter(CScene& aScene, RapidArray someData)
-{
-	for (const auto& activation : someData)
-	{
-		CGameObject* gameObject = aScene.FindObjectWithID(activation["instanceID"].GetInt());
-		if (!gameObject)
-			continue;
-
-		PostMaster::ELevelName name = static_cast<PostMaster::ELevelName>(activation["teleporterName"].GetInt());
-		PostMaster::ELevelName target = static_cast<PostMaster::ELevelName>(activation["teleporterTarget"].GetInt());
-
-		Vector3 teleportToPos;
-		teleportToPos.x = activation["teleportToPos"]["x"].GetFloat();
-		teleportToPos.y = activation["teleportToPos"]["y"].GetFloat();
-		teleportToPos.z = activation["teleportToPos"]["z"].GetFloat();
-
-		Vector3 teleportToRot;
-		teleportToRot.x = activation["teleportToRot"]["x"].GetFloat();
-		teleportToRot.y = activation["teleportToRot"]["y"].GetFloat();
-		teleportToRot.z = activation["teleportToRot"]["z"].GetFloat();
-
-		float aTimeUntilTeleport = activation["timeUntilTeleport"].GetFloat();
-		aTimeUntilTeleport = (aTimeUntilTeleport <= 0.0f ? 0.01f : aTimeUntilTeleport);
-
-		gameObject->AddComponent<CTeleportActivation>(*gameObject, name, target, teleportToPos, teleportToRot, aTimeUntilTeleport);
-	}
-}
+// Removed due to causing too many issues - 2021 06 10 / Aki
+//void CSceneManager::AddPuzzleActivationTeleporter(CScene& aScene, RapidArray someData)
+//{
+//	for (const auto& activation : someData)
+//	{
+//		CGameObject* gameObject = aScene.FindObjectWithID(activation["instanceID"].GetInt());
+//		if (!gameObject)
+//			continue;
+//
+//		PostMaster::ELevelName name = static_cast<PostMaster::ELevelName>(activation["teleporterName"].GetInt());
+//		PostMaster::ELevelName target = static_cast<PostMaster::ELevelName>(activation["teleporterTarget"].GetInt());
+//
+//		Vector3 teleportToPos;
+//		teleportToPos.x = activation["teleportToPos"]["x"].GetFloat();
+//		teleportToPos.y = activation["teleportToPos"]["y"].GetFloat();
+//		teleportToPos.z = activation["teleportToPos"]["z"].GetFloat();
+//
+//		Vector3 teleportToRot;
+//		teleportToRot.x = activation["teleportToRot"]["x"].GetFloat();
+//		teleportToRot.y = activation["teleportToRot"]["y"].GetFloat();
+//		teleportToRot.z = activation["teleportToRot"]["z"].GetFloat();
+//
+//		float aTimeUntilTeleport = activation["timeUntilTeleport"].GetFloat();
+//		aTimeUntilTeleport = (aTimeUntilTeleport <= 0.0f ? 0.01f : aTimeUntilTeleport);
+//
+//		gameObject->AddComponent<CTeleportActivation>(*gameObject, name, target, teleportToPos, teleportToRot, aTimeUntilTeleport);
+//	}
+//}
 
 void CSceneManager::AddPuzzleLock(CScene& aScene, RapidArray someData)
 {
@@ -1003,33 +992,34 @@ void CSceneManager::AddPuzzleResponseVoice(CScene& aScene, RapidArray someData)
 	}
 }
 
-void CSceneManager::AddPuzzleResponseTeleporter(CScene& aScene, RapidArray someData)
-{
-	for (const auto& response : someData)
-	{
-		CGameObject* gameObject = aScene.FindObjectWithID(response["instanceID"].GetInt());
-		if (!gameObject)
-			continue;
-
-		PostMaster::ELevelName name = static_cast<PostMaster::ELevelName>(response["teleporterName"].GetInt());
-		PostMaster::ELevelName target = static_cast<PostMaster::ELevelName>(response["teleporterTarget"].GetInt());
-
-		Vector3 teleportToPos;
-		teleportToPos.x = response["teleportToPos"]["x"].GetFloat();
-		teleportToPos.y = response["teleportToPos"]["y"].GetFloat();
-		teleportToPos.z = response["teleportToPos"]["z"].GetFloat();
-
-		Vector3 teleportToRot;
-		teleportToRot.x = response["teleportToRot"]["x"].GetFloat();
-		teleportToRot.y = response["teleportToRot"]["y"].GetFloat();
-		teleportToRot.z = response["teleportToRot"]["z"].GetFloat();
-
-		float aTimeUntilTeleport = response["timeUntilTeleport"].GetFloat();
-		aTimeUntilTeleport = (aTimeUntilTeleport <= 0.0f ? 0.01f : aTimeUntilTeleport);
-
-		gameObject->AddComponent<CTeleportResponse>(*gameObject, name, target, teleportToPos, teleportToRot, aTimeUntilTeleport);
-	}
-}
+// Removed due to causing too many issues - 2021 06 10 / Aki
+//void CSceneManager::AddPuzzleResponseTeleporter(CScene& aScene, RapidArray someData)
+//{
+//	for (const auto& response : someData)
+//	{
+//		CGameObject* gameObject = aScene.FindObjectWithID(response["instanceID"].GetInt());
+//		if (!gameObject)
+//			continue;
+//
+//		PostMaster::ELevelName name = static_cast<PostMaster::ELevelName>(response["teleporterName"].GetInt());
+//		PostMaster::ELevelName target = static_cast<PostMaster::ELevelName>(response["teleporterTarget"].GetInt());
+//
+//		Vector3 teleportToPos;
+//		teleportToPos.x = response["teleportToPos"]["x"].GetFloat();
+//		teleportToPos.y = response["teleportToPos"]["y"].GetFloat();
+//		teleportToPos.z = response["teleportToPos"]["z"].GetFloat();
+//
+//		Vector3 teleportToRot;
+//		teleportToRot.x = response["teleportToRot"]["x"].GetFloat();
+//		teleportToRot.y = response["teleportToRot"]["y"].GetFloat();
+//		teleportToRot.z = response["teleportToRot"]["z"].GetFloat();
+//
+//		float aTimeUntilTeleport = response["timeUntilTeleport"].GetFloat();
+//		aTimeUntilTeleport = (aTimeUntilTeleport <= 0.0f ? 0.01f : aTimeUntilTeleport);
+//
+//		gameObject->AddComponent<CTeleportResponse>(*gameObject, name, target, teleportToPos, teleportToRot, aTimeUntilTeleport);
+//	}
+//}
 
 void CSceneManager::AddDecalComponents(CScene& aScene, RapidArray someData)
 {
@@ -1188,6 +1178,11 @@ void CSceneManager::AddVFX(CScene& aScene, RapidArray someData)
 
 		component->EnableEffect(0); // Temp
 	}
+}
+
+void CSceneManager::AddNextLevelActivation(CScene& /*aScene*/, RapidArray /*someData*/)
+{
+
 }
 
 void CSceneManager::AddCollider(CScene& aScene, RapidArray someData)
