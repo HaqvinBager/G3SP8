@@ -39,7 +39,7 @@ public:
 	};
 
 public:
-	CEnemyComponent(CGameObject& aParent, const SEnemySetting& someSettings);
+	CEnemyComponent(CGameObject& aParent, const SEnemySetting& someSettings, SNavMesh* aNavMesh);
 	~CEnemyComponent() override;
 
 	void Awake() override;

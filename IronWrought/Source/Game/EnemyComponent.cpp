@@ -26,7 +26,7 @@
 
 //EnemyComp
 
-CEnemyComponent::CEnemyComponent(CGameObject& aParent, const SEnemySetting& someSettings)
+CEnemyComponent::CEnemyComponent(CGameObject& aParent, const SEnemySetting& someSettings, SNavMesh* aNavMesh)
 	: CComponent(aParent)
 	, myPlayer(nullptr)
 	, myCurrentState(EBehaviour::Idle)
@@ -43,6 +43,7 @@ CEnemyComponent::CEnemyComponent(CGameObject& aParent, const SEnemySetting& some
 	, myCloseToPlayerThreshold(FLT_MAX)
 	, myAttackPlayerTimer(0.0f)
 	, myAttackPlayerTimerMax(3.0f)
+	, myNavMesh(aNavMesh)
 {
 	//myController = CEngine::GetInstance()->GetPhysx().CreateCharacterController(GameObject().myTransform->Position(), 0.6f * 0.5f, 1.8f * 0.5f, GameObject().myTransform, aHitReport);
 	//myController->GetController().getActor()->setRigidBodyFlag(PxRigidBodyFlag::eUSE_KINEMATIC_TARGET_FOR_SCENE_QUERIES, true);
@@ -64,6 +65,7 @@ CEnemyComponent::~CEnemyComponent()
 	CMainSingleton::PostMaster().Unsubscribe(EMessageType::PropCollided, this);
 	CMainSingleton::PostMaster().Unsubscribe(EMessageType::EnemyReachedTarget, this);
 	CMainSingleton::PostMaster().Unsubscribe(EMessageType::EnemyReachedLastPlayerPosition, this);
+	myNavMesh = nullptr;
 }
 
 void CEnemyComponent::Awake()
@@ -74,7 +76,26 @@ void CEnemyComponent::Start()
 {
 	myPlayer = CEngine::GetInstance()->GetActiveScene().Player();
 	CScene& scene = CEngine::GetInstance()->GetActiveScene();
-	myNavMesh = scene.NavMesh();
+
+#ifdef _DEBUG
+	std::vector<DirectX::SimpleMath::Vector3> positions;
+	UINT size = static_cast<UINT>(myNavMesh->myTriangles.size()) * 6;
+	positions.reserve(size);
+
+	for (UINT i = 0, j = 0; i < size && j < myNavMesh->myTriangles.size(); i += 6, j++)
+	{
+		positions.push_back(myNavMesh->myTriangles[j]->myVertexPositions[0]);
+		positions.push_back(myNavMesh->myTriangles[j]->myVertexPositions[1]);
+		positions.push_back(myNavMesh->myTriangles[j]->myVertexPositions[2]);
+		positions.push_back(myNavMesh->myTriangles[j]->myVertexPositions[0]);
+		positions.push_back(myNavMesh->myTriangles[j]->myVertexPositions[1]);
+		positions.push_back(myNavMesh->myTriangles[j]->myVertexPositions[2]);
+	}
+
+	CLineInstance* navMeshGrid = new CLineInstance();
+	navMeshGrid->Init(CLineFactory::GetInstance()->CreatePolygon(positions));
+	scene.AddInstance(navMeshGrid);
+#endif // _DEBUG
 
 	if (mySettings.myPatrolGameObjectIds.size() > 0) {
 		for (int i = 0; i < mySettings.myPatrolGameObjectIds.size(); ++i) {

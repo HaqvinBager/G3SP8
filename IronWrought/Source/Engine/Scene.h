@@ -21,7 +21,6 @@ class CAnimatedUIElement;
 class CTextInstance;
 class CCameraComponent;
 struct SLineTime;
-struct SNavMesh;
 class CModel;
 class IAIBehavior;
 class CInstancedModelComponent;
@@ -46,13 +45,12 @@ class CScene : public IObserver {
 	friend class CMainMenuState;
 	friend class CPauseMenuState;
 public:
-//SETUP START
+	//SETUP START
 	CScene(const int aNumberOfSections = 1, const unsigned int aGameObjectCount = 0);
 	~CScene();
 
 	//static CScene* GetInstance();
 	bool Init();
-	bool InitNavMesh(const std::string& aPath);
 
 	bool InitCanvas(const std::string& aPath);
 	bool InitCanvas();
@@ -64,9 +62,9 @@ public:
 	void SetCanvas(CCanvas* aCanvas);
 	void UpdateOnlyCanvas(const bool anUpdateOnlyCanvas);
 
-//SETUP END
+	//SETUP END
 
-//UPDATE
+	//UPDATE
 public:
 	void Awake();
 	void Start();
@@ -78,10 +76,10 @@ private:
 	void InitAnyNewComponents();
 	void CallStartOnNewComponents();
 	void CallAwakeOnNewComponents();
-//UPDATE END
+	//UPDATE END
 
 public:
-//SETTERS START
+	//SETTERS START
 	void AddCamera(CCameraComponent* aCamera, const ESceneCamera aCameraType);
 	void MainCamera(const ESceneCamera aCameraType);
 	void Player(CGameObject* aPlayerObject);
@@ -91,8 +89,8 @@ public:
 #ifdef _DEBUG
 	bool ShouldRenderLineInstance() { return myShouldRenderLineInstance; }
 #endif
-	
-//SETTERS END
+
+	//SETTERS END
 public:
 	template <class T>
 	T* FindFirstObjectWithComponent() {
@@ -119,13 +117,12 @@ public:
 		return nullptr;
 	}
 public:
-//GETTERS START
+	//GETTERS START
 	CCameraComponent* MainCamera();
 	CGameObject* Player();
 	CGameObject* GetEnemyInSection(const int aSection = 0);
 	CPlayerControllerComponent* PlayerController();
 	CEnvironmentLight* EnvironmentLight();
-	SNavMesh* NavMesh();
 	PxScene* PXScene();
 	std::vector<CGameObject*> ModelsToOutline() const;
 	std::vector<CPointLight*>& PointLights();
@@ -133,12 +130,12 @@ public:
 	std::vector<CGameObject*> AllGameObjects();
 	const std::vector<CGameObject*>& ActiveGameObjects() const;
 	const std::vector<CPatrolPointComponent*>& PatrolPoints() const;
-//GETTERS END
+	//GETTERS END
 public:
 	const bool Ready() const { return myIsReadyToRender; }
 	void Ready(bool aReady) { myIsReadyToRender = aReady; }
 public:
-//CULLING START
+	//CULLING START
 	std::vector<CEnvironmentLight*> CullSecondaryEnvironmentLights(CGameObject* aGameObject);
 	std::vector<CPointLight*> CullPointLights(std::vector<CGameObject*>& someCulledGameObjects);
 	std::vector<CSpotLight*> CullSpotLights(std::vector<CGameObject*>& someCulledGameObjects);
@@ -153,7 +150,7 @@ public:
 	std::vector<CGameObject*>* FindObjectsWithTag(const std::string aTag);
 	template<class T>
 	std::vector<CComponent*>* GetAllComponents();
-//CULLING END
+	//CULLING END
 public:
 	//POPULATE SCENE START
 
@@ -170,21 +167,21 @@ public:
 	bool AddPXScene(PxScene* aPXScene);
 	//POPULATE SCENE END
 public:
-//REMOVE SPECIFIC INSTANCE START
+	//REMOVE SPECIFIC INSTANCE START
 	bool RemoveInstance(CEnvironmentLight* aSecondaryEnvironmentLight);
 	bool RemoveInstance(CPointLight* aPointLight);
 	bool RemoveInstance(CSpotLight* aSpotLight);
 	bool RemoveInstance(CBoxLight* aBoxLight);
 	bool RemoveInstance(CGameObject* aGameObject);
-//REMOVE SPECIFIC INSTANCE END
-//CLEAR SCENE OF INSTANCES START
+	//REMOVE SPECIFIC INSTANCE END
+	//CLEAR SCENE OF INSTANCES START
 	bool ClearSecondaryEnvironmentLights();
 	bool ClearPointLights();
 	bool ClearSpotLights();
 	bool ClearBoxLights();
 	bool ClearLineInstances();
 	bool ClearGameObjects();
-//CLEAR SCENE OF INSTANCES START
+	//CLEAR SCENE OF INSTANCES START
 
 
 public:
@@ -205,7 +202,7 @@ public:
 
 private:
 	bool SectionBoundsCheck(const int aSection);
-	
+
 private:
 	//Struct left because it might be needed later
 	struct NearestPlayerComparer {
@@ -213,7 +210,7 @@ private:
 		bool operator()(const CPointLight* a, const CPointLight* b) const;
 	} ourNearestPlayerComparer;
 private:
-//CONTAINERS START
+	//CONTAINERS START
 	std::vector<CEnvironmentLight*> mySecondaryEnvironmentLights;
 	std::vector<CPointLight*> myPointLights;
 	std::vector<CSpotLight*> mySpotLights;
@@ -222,21 +219,18 @@ private:
 	std::vector<std::vector<CGameObject*>> myGameObjects;
 	std::vector<CGameObject*> myModelsToOutline;
 	std::vector<CPatrolPointComponent*> myPatrolPoints;
-	std::unordered_map<int, CGameObject*> myIDGameObjectMap; 
+	std::unordered_map<int, CGameObject*> myIDGameObjectMap;
 	std::unordered_map<std::string, std::vector<CGameObject*>> myGameObjectTagMap;
 	std::unordered_map<size_t, std::vector<CComponent*>> myComponentMap;
 	int myCurrentSection;//Used as index for myGameObjects, (more?)
 
 	std::queue<CComponent*> myAwakeComponents;
 	std::queue<CComponent*> myStartComponents;
-//CONTAINERS END
+	//CONTAINERS END
 
 private:
-//POINTERS START
+	//POINTERS START
 	CEnvironmentLight* myEnvironmentLight;
-	SNavMesh* myNavMesh;
-	CLineInstance* myNavMeshGrid;
-
 
 	ESceneCamera myActiveCamera;
 	CCameraComponent* myMainCamera;
@@ -248,9 +242,9 @@ private:
 	CCanvas* myCanvas;
 	bool myDeleteCanvas;
 	bool myUpdateOnlyCanvas;
-//POINTERS END
+	//POINTERS END
 
-// VFX EDITOR START
+	// VFX EDITOR START
 public:
 	void SetVFXTester(CGameObject* aGameObject)
 	{
@@ -262,7 +256,7 @@ public:
 	}
 private:
 	CGameObject* myVFXTester = nullptr;
-// VFX EDITOR END
+	// VFX EDITOR END
 
 	bool myIsReadyToRender;
 #ifdef  _DEBUG
