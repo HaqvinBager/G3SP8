@@ -6,6 +6,7 @@
 #include "PlayerControllerComponent.h"
 #include "MainSingleton.h"
 #include "Scene.h"
+#include "CameraComponent.h"
 
 #define PI 3.141592f
 
@@ -73,8 +74,8 @@ void CTeleportActivation::Receive(const SMessage & aMessage)
 			teleportData.Reset();
 			PostMaster::SBoxColliderEvenTriggerData data;
 			data.myState = true;
-			data.mySceneSection = (int)myName;
-			CMainSingleton::PostMaster().Send({ PostMaster::SMSG_TELEPORT, &data });
+			data.mySceneSection = PostMaster::LevelNameToSection(myName);
+			CMainSingleton::PostMaster().Send({ PostMaster::SMSG_SECTION, &data });
 			return;
 		}
 	}
@@ -95,6 +96,8 @@ void CTeleportActivation::HandleTeleport(CTransformComponent* aTargetToTeleport)
 	if (!aTargetToTeleport)
 		return;
 
+	IRONWROUGHT->GetActiveScene().MainCamera()->Fade(false, myTeleportTimer);
+	std::cout << __FUNCTION__ << " " << myTeleportTimer << std::endl;
 	aTargetToTeleport->Rotation(myOnTeleportToMeRotation);
 	aTargetToTeleport->Position(myOnTeleportToMePosition);
 	CPlayerControllerComponent* player = nullptr;

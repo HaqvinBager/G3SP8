@@ -1,4 +1,5 @@
 #pragma once
+#include "PostMasterStructs.h"
 
 namespace PostMaster
 {
@@ -28,5 +29,7 @@ namespace PostMaster
 	const bool EnableCanvas(const char* aStringMsg);
 	
 	const bool CompareStringMessage(const char* aCompareTo, const char* aReceived);
+
+	const int LevelNameToSection(const ELevelName& levelName);
 
 }
