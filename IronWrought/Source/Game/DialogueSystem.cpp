@@ -129,7 +129,7 @@ void CDialogueSystem::LoadDialogue(int aSceneIndex) {
 	myCurrentVoiceLine = -2;
 
 	FILE* fp;
-	fopen_s(&fp, "Json/DialogueTextLines.json", "rb");
+	fopen_s(&fp, "Json/Dialogue/DialogueTextLines.json", "rb");
 	char read_buffer[200];
 	rapidjson::FileReadStream is(fp, read_buffer, sizeof(read_buffer));
 
