@@ -296,14 +296,7 @@ void CPhysXWrapper::Simulate()
 CRigidDynamicBody* CPhysXWrapper::CreateDynamicRigidbody(const CTransformComponent& aTransform)
 {
 	Matrix ironTransform = aTransform.GetLocalMatrix();
-	Vector3 position;
-	Quaternion rotation;
-	Vector3 scale;
-	ironTransform.Decompose(scale, rotation, position);
-	PxTransform transform;
-	transform.p = { position.x, position.y, position.z };
-	transform.q = { rotation.x, rotation.y, rotation.z, rotation.w };
-	return CreateDynamicRigidbody(transform);
+	return CreateDynamicRigidbody(ConvertToPxTransform(ironTransform));
 }
 
 CRigidDynamicBody* CPhysXWrapper::CreateDynamicRigidbody(const PxTransform& aTransform)
@@ -322,6 +315,19 @@ CCharacterController* CPhysXWrapper::CreateCharacterController(const Vector3& aP
 PxControllerManager* CPhysXWrapper::GetControllerManager()
 {
 	return myControllerManager/*myControllerManagers[GetPXScene()]*/;
+}
+
+physx::PxTransform CPhysXWrapper::ConvertToPxTransform(const Matrix& aTransform)
+{
+	Matrix ironTransform = aTransform;
+	Vector3 position;
+	Quaternion rotation;
+	Vector3 scale;
+	ironTransform.Decompose(scale, rotation, position);
+	PxTransform transform;
+	transform.p = { position.x, position.y, position.z };
+	transform.q = { rotation.x, rotation.y, rotation.z, rotation.w };
+	return transform;
 }
 
 //void CPhysXWrapper::DebugLines()

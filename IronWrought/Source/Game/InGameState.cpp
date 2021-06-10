@@ -43,6 +43,8 @@
 //#define INGAME_USE_MENU
 #endif
 
+#define MENU_SCENE "Level_Cottage_1"
+
 #pragma warning( disable : 26812 )
 
 CInGameState::CInGameState(CStateStack& aStateStack, const CStateStack::EState aState)
@@ -116,36 +118,41 @@ void CInGameState::Start()
 	CMainSingleton::PostMaster().Subscribe(EMessageType::SetResolution1600x900, this);
 	CMainSingleton::PostMaster().Subscribe(EMessageType::SetResolution1920x1080, this);
 	CMainSingleton::PostMaster().Subscribe(EMessageType::SetResolution2560x1440, this);
+	
+	// Removed as of 2021 06 10 / Aki
+	/*
+		//std::string levelsPath = "Json/Settings/Levels.json";
+		//const auto doc = CJsonReader::Get()->LoadDocument(levelsPath);
+		//if (doc.HasParseError())
+		//{
+		//	levelsPath.append(" has a parse error.");
+		//	assert(false && levelsPath.c_str());
+		//	return;
+		//}
+		//if (!doc.HasMember("Levels"))
+		//{
+		//	levelsPath.append(" is missing Levels member!");
+		//	assert(false && levelsPath.c_str());
+		//	return;
+		//}
 
-	std::string levelsPath = "Json/Settings/Levels.json";
-	const auto doc = CJsonReader::Get()->LoadDocument(levelsPath);
-	if (doc.HasParseError())
-	{
-		levelsPath.append(" has a parse error.");
-		assert(false && levelsPath.c_str());
-		return;
-	}
-	if (!doc.HasMember("Levels"))
-	{
-		levelsPath.append(" is missing Levels member!");
-		assert(false && levelsPath.c_str());
-		return;
-	}
+		//auto levels = doc["Levels"].GetArray();
+		//std::vector<std::string> levelNames(levels.Size());
+		//for (auto i = 0; i < levelNames.size(); ++i)
+		//{
+		//	levelNames[i] = levels[i].GetString();
+		//}
+		//CSceneFactory::Get()->LoadSeveralScenesAsync("All", levelNames, myState, [this](std::string aMsg) { CInGameState::OnSceneLoadComplete(aMsg); });
+	*/
+	// ! Removed as of 2021 06 10 / Aki
 
-	auto levels = doc["Levels"].GetArray();
-	std::vector<std::string> levelNames(levels.Size());
-	for (auto i = 0; i < levelNames.size(); ++i)
-	{
-		levelNames[i] = levels[i].GetString();
-	}
-	CSceneFactory::Get()->LoadSeveralScenesAsync("All", levelNames, myState, [this](std::string aMsg) { CInGameState::OnSceneLoadComplete(aMsg); });
 
+	CSceneFactory::Get()->LoadSceneAsync(MENU_SCENE, myState, [this](std::string aMsg) { CInGameState::OnSceneLoadCompleteMenu(aMsg); });
 	myExitTo = EExitTo::None;
 
 	CMainSingleton::PostMaster().Subscribe(PostMaster::SMSG_DISABLE_CANVAS, this);
 	CMainSingleton::PostMaster().Subscribe(PostMaster::SMSG_ENABLE_CANVAS, this);
 	CMainSingleton::PostMaster().Subscribe(PostMaster::SMSG_TO_MAIN_MENU, this);
-	CMainSingleton::PostMaster().Subscribe(PostMaster::SMSG_SECTION, this);
 #else
 	IRONWROUGHT->ShowCursor(true);
 	myEnemyAnimationController->Activate();
@@ -169,7 +176,6 @@ void CInGameState::Stop()
 	CMainSingleton::PostMaster().Unsubscribe(PostMaster::SMSG_DISABLE_CANVAS, this);
 	CMainSingleton::PostMaster().Unsubscribe(PostMaster::SMSG_ENABLE_CANVAS, this);
 	CMainSingleton::PostMaster().Unsubscribe(PostMaster::SMSG_TO_MAIN_MENU, this);
-	CMainSingleton::PostMaster().Unsubscribe(PostMaster::SMSG_SECTION, this);
 #ifdef INGAME_USE_MENU
 	CMainSingleton::PostMaster().Unsubscribe(EMessageType::StartGame, this);
 	CMainSingleton::PostMaster().Unsubscribe(EMessageType::Credits, this);
@@ -245,10 +251,7 @@ void CInGameState::Receive(const SStringMessage& aMessage)
 	if (PostMaster::CompareStringMessage(aMessage.myMessageType, PostMaster::SMSG_SECTION))
 	{
 		const PostMaster::SBoxColliderEvenTriggerData* data = static_cast<PostMaster::SBoxColliderEvenTriggerData*>(aMessage.data);
-		if (data->myState)
-			IRONWROUGHT->GetActiveScene().ToggleSections(data->mySceneSection);
-		//else
-		//	IRONWROUGHT->GetActiveScene().DisableSection(data->mySceneSection);
+		IRONWROUGHT->GetActiveScene().ToggleSections(data->mySceneSection);
 		
 		std::cout << __FUNCTION__ << (data->myState == true ? "ToggledSections: " : "DisableSection: ") << data->mySceneSection << std::endl;
 	}
@@ -280,6 +283,13 @@ void CInGameState::Receive(const SMessage& aMessage)
 {
 	switch (aMessage.myMessageType)
 	{
+	case EMessageType::LoadLevel:
+	{
+		ToggleCanvas(EInGameCanvases_LoadingScreen);
+		std::string levelName = *static_cast<std::string*>(aMessage.data);
+		CSceneFactory::Get()->LoadSceneAsync(levelName, myState, [this](std::string aMsg) { CInGameState::OnSceneLoadCompleteInGame(aMsg); });
+	}break;
+
 	case EMessageType::StartGame:
 	{
 		IRONWROUGHT->GetActiveScene().ToggleSections(0);// Disable when single level loading.
@@ -318,7 +328,6 @@ void CInGameState::Receive(const SMessage& aMessage)
 
 	case EMessageType::MainMenu:
 	{
-		// Don't forget a loading screen.
 		myStateStack.PopTopAndPush(CStateStack::EState::InGame);
 	}break;
 
@@ -348,9 +357,9 @@ void CInGameState::Receive(const SMessage& aMessage)
 	}
 }
 
-void CInGameState::OnSceneLoadComplete(std::string /*aMsg*/)
+void CInGameState::OnSceneLoadCompleteMenu(std::string /*aMsg*/)
 {
-	std::cout << __FUNCTION__ << " All Scenes Loaded Succesfully." << std::endl;
+	std::cout << __FUNCTION__ << " Menu Load Complete!" << std::endl;
 	CScene& scene = IRONWROUGHT->GetActiveScene();
 	CreateMenuCamera(scene);
 
@@ -358,10 +367,23 @@ void CInGameState::OnSceneLoadComplete(std::string /*aMsg*/)
 	scene.SetCanvas(myCanvases[myCurrentCanvas]);
 	scene.UpdateOnlyCanvas(false);
 	scene.ToggleSections(0);
-
 	IRONWROUGHT->ShowCursor(true);
+
 	myEnemyAnimationController->Activate();
 	CEngine::GetInstance()->SetActiveScene(myState);// Might be redundant.
+
+	myExitTo = EExitTo::None;
+}
+
+void CInGameState::OnSceneLoadCompleteInGame(std::string aMsg)
+{
+	std::cout << __FUNCTION__ << " InGame Load Complete!" << std::endl;
+	/*CScene& scene = */IRONWROUGHT->GetActiveScene();
+	ToggleCanvas(EInGameCanvases_HUD);
+	IRONWROUGHT->ShowCursor(true);
+	
+	myEnemyAnimationController->Activate();
+	CEngine::GetInstance()->SetActiveScene(myState);
 
 	myExitTo = EExitTo::None;
 }
@@ -447,6 +469,12 @@ void CInGameState::ToggleCanvas(EInGameCanvases anEInGameCanvases)
 		scene.MainCamera(ESceneCamera::PlayerFirstPerson);
 		CMainSingleton::PostMaster().Unsubscribe(EMessageType::CanvasButtonIndex, this);
 		IRONWROUGHT->SetIsMenu(false);
+	}
+	else if (myCurrentCanvas == EInGameCanvases_LoadingScreen)
+	{
+		scene.SetCanvas(myCanvases[myCurrentCanvas]);
+		scene.UpdateOnlyCanvas(true);
+		IRONWROUGHT->ShowCursor(false);
 	}
 #else
 	if (myCurrentCanvas == EInGameCanvases_HUD)

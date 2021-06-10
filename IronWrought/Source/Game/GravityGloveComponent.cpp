@@ -16,13 +16,12 @@
 #include "CharacterController.h"
 #include "CameraComponent.h"
 #include "BoxColliderComponent.h"
-#include "KeyBehavior.h"
-#include "LeftClickDownLock.h"
 
 CGravityGloveComponent::CGravityGloveComponent(CGameObject& aParent, CTransformComponent* aGravitySlot)
 	: CBehavior(aParent)
 	, myGravitySlot(aGravitySlot)
 	, myRigidStatic(nullptr)
+	, myHoldingAItem(false)
 {
 	mySettings.myPushForce = 10.f;
 	//mySettings.myDistanceToMaxLinearVelocity = 2.5f;
@@ -30,7 +29,7 @@ CGravityGloveComponent::CGravityGloveComponent(CGameObject& aParent, CTransformC
 	mySettings.myMinPushForce = 10.0f;
 	mySettings.myMinPullForce = 200.0f;
 
-	mySettings.myMaxDistance = 2.0f;
+	mySettings.myMaxDistance = 3.0f;
 	mySettings.myCurrentDistanceInverseLerp = 0.0f;
 	myJoint = nullptr;
 }
@@ -65,62 +64,36 @@ void CGravityGloveComponent::Update()
 	// Use one at a time:
 	InteractionLogicContinuous();
 	//InteractionLogicOnInput();
-
+	myRigidStatic->setGlobalPose(CEngine::GetInstance()->GetPhysx().ConvertToPxTransform(GameObject().myTransform->GetWorldMatrix()));
 	if (myCurrentTarget.myRigidBodyPtr != nullptr)
 	{
-		Vector3 direction = -(myCurrentTarget.myRigidBodyPtr->GameObject().myTransform->WorldPosition() - myGravitySlot->WorldPosition());
-		float distance = direction.Length();
-		float maxDistance = mySettings.myMaxDistance;
+		myHoldingAItem = true;
+		myCurrentTarget.myRigidBodyPtr->IsHeld(true);
+		if (myJoint == nullptr) {
+			myJoint = CreateD6Joint(myRigidStatic, &myCurrentTarget.myRigidBodyPtr->GetDynamicRigidBody()->GetBody(), 3.f);
+		}
+		else {
 
-		mySettings.myCurrentDistanceInverseLerp = min(1.0f, InverseLerp(0.0f, maxDistance, distance));
-
-		if (mySettings.myCurrentDistanceInverseLerp < 0.5f)
-		{
-			//dont remove pls - Alexander Matth�i 2021-04-30
-			/*myJoint = PxD6JointCreate(*CEngine::GetInstance()->GetPhysx().GetPhysics(), myRigidStatic, myRigidStatic->getGlobalPose(), &myCurrentTarget->GetDynamicRigidBody()->GetBody(), myCurrentTarget->GetDynamicRigidBody()->GetBody().getGlobalPose());
-			myJoint->setMotion(PxD6Axis::eX, PxD6Motion::eFREE);
-			myJoint->setMotion(PxD6Axis::eTWIST, PxD6Motion::eFREE);
-
-			myJoint->setMotion(PxD6Axis::eY, PxD6Motion::eFREE);
-			myJoint->setMotion(PxD6Axis::eZ, PxD6Motion::eFREE);
-			myJoint->setMotion(PxD6Axis::eTWIST, PxD6Motion::eFREE);
-			myJoint->setMotion(PxD6Axis::eSWING1, PxD6Motion::eFREE);
-			myJoint->setMotion(PxD6Axis::eSWING2, PxD6Motion::eFREE);
-
-			myJoint->setMotion(PxD6Axis::eX, PxD6Motion::eFREE);
-			myJoint->setMotion(PxD6Axis::eTWIST, PxD6Motion::eFREE);
-			myJoint->setMotion(PxD6Axis::eSWING1, PxD6Motion::eFREE);
-			myJoint->setMotion(PxD6Axis::eSWING2, PxD6Motion::eFREE);
-
-			myJoint->setMotion(PxD6Axis::eX, PxD6Motion::eFREE);
-			myJoint->setMotion(PxD6Axis::eY, PxD6Motion::eLIMITED);
-			myJoint->setMotion(PxD6Axis::eZ, PxD6Motion::eLIMITED);*/
-
-			//myCurrentTarget->SetPosition(myGravitySlot->WorldPosition());
-			//myCurrentTarget->SetRotation(myCurrentTarget->GetComponent<CTransformComponent>()->Rotation());
-			myCurrentTarget.myRigidBodyPtr->SetGlobalPose(myGravitySlot->WorldPosition(), myCurrentTarget.myRigidBodyPtr->GetComponent<CTransformComponent>()->Rotation());
-			myCurrentTarget.myRigidBodyPtr->SetLinearVelocity({ 0.f, 0.f, 0.f });
-			myCurrentTarget.myRigidBodyPtr->SetAngularVelocity({ 0.f, 0.f, 0.f });
-
-			if (myCurrentTarget.myRigidBodyPtr->GetComponent<CHealthPickupComponent>()) {
-				if (GameObject().myTransform->GetParent()->GetComponent<CPlayerComponent>()->CurrentHealth() < 100.f) {
-					GameObject().myTransform->GetParent()->GetComponent<CPlayerComponent>()->IncreaseHealth(myCurrentTarget.myRigidBodyPtr->GetComponent<CHealthPickupComponent>()->GetHealthPickupAmount());
-					myCurrentTarget.myRigidBodyPtr->GetComponent<CHealthPickupComponent>()->Destroy();
-					myCurrentTarget.myRigidBodyPtr = nullptr;
-
-					bool released = true;
-					CMainSingleton::PostMaster().Send({ EMessageType::GravityGlovePull, &released });
-				}
+			float dist = Vector3::Distance(GameObject().myTransform->WorldPosition(), myCurrentTarget.myRigidBodyPtr->GameObject().myTransform->Position());
+			//std::cout << "DISTANCE: " << dist << std::endl;
+			if (myJoint->getConstraintFlags() == PxConstraintFlag::eBROKEN) {
+				myJoint->release();
+				myJoint = nullptr;
+				myCurrentTarget.myRigidBodyPtr = nullptr;
+			} else if (dist >= 4.f) {
+				myJoint->release();
+				myJoint = nullptr;
+				myCurrentTarget.myRigidBodyPtr = nullptr;
+				myHoldingAItem = false;
 			}
 		}
-		else
-		{
-			float force = Lerp(mySettings.myMaxPushForce, mySettings.myMinPullForce, mySettings.myCurrentDistanceInverseLerp);
-
-			//myCurrentTarget->GetDynamicRigidBody()->GetBody().setMaxLinearVelocity(max(mySettings.myDistanceToMaxLinearVelocity, distance));
-			direction.Normalize();
-			myCurrentTarget.myRigidBodyPtr->AddForce(direction, force, EForceMode::EForce);
+	}
+	else {
+		myHoldingAItem = false;
+		if (myJoint) {
+			myJoint->release();
 		}
+		myJoint = nullptr;
 	}
 }
 
@@ -185,14 +158,17 @@ void CGravityGloveComponent::Pull()
 
 void CGravityGloveComponent::Pull(CTransformComponent* aTransform, CRigidBodyComponent* aRigidBodyTarget)
 {
-	if (aTransform == nullptr || aTransform->GetComponent<CEnemyComponent>())
+	if (aTransform == nullptr || aTransform->GetComponent<CEnemyComponent>() && aRigidBodyTarget == nullptr)
 	{
 		return;
 	}
 
 	if (!aRigidBodyTarget->IsKinematic()) {
 		myCurrentTarget.Clear();
-
+		aRigidBodyTarget->GetDynamicRigidBody()->GetBody().clearForce();
+		aRigidBodyTarget->SetLinearVelocity({0.f, 0.f, 0.f});
+		aRigidBodyTarget->SetAngularVelocity({0.f, 0.f, 0.f});
+		aRigidBodyTarget->GetDynamicRigidBody()->GetBody().setMaxLinearVelocity(10.f);
 		myCurrentTarget.myRigidBodyPtr = aRigidBodyTarget;
 		myCurrentTarget.initialDistanceSquared = Vector3::DistanceSquared(myGravitySlot->WorldPosition(), aTransform->WorldPosition());
 
@@ -206,7 +182,6 @@ void CGravityGloveComponent::Release()
 	{
 		myCurrentTarget.myRigidBodyPtr->GetDynamicRigidBody()->GetBody().setMaxLinearVelocity(100.f);
 		myCurrentTarget.myRigidBodyPtr = nullptr;
-
 		bool released = true;
 		CMainSingleton::PostMaster().Send({ EMessageType::GravityGlovePull, &released });
 	}
@@ -323,50 +298,15 @@ void CGravityGloveComponent::InteractionLogicContinuous()
 			CRigidBodyComponent* rigidbody = nullptr;
 			if (transform->GameObject().TryGetComponent<CRigidBodyComponent>(&rigidbody))
 			{
-				if (Input::GetInstance()->IsMousePressed(Input::EMouseButton::Right))
-				{
-					// Wind down
-					//data.myIndex = 0;
-					//data.myShouldBeReversed = true;
-					Push(transform, rigidbody);
-				}
 				if (Input::GetInstance()->IsMousePressed(Input::EMouseButton::Left))
 				{
 					Pull(transform, rigidbody);
-				}
-				else if (Input::GetInstance()->IsMouseReleased(Input::EMouseButton::Left))
-				{
-					Release();
-				}
-			}
-
-			CKeyBehavior* key = nullptr;
-			if (transform->GameObject().TryGetComponent(&key))
-			{
-				if (key->Enabled())
-				{
-					CBoxColliderComponent* boxCollider = nullptr;
-					if (key->GameObject().TryGetComponent(&boxCollider))
-					{
-						if (boxCollider->Enabled())
-							myCrosshairData.myTargetStatus = PostMaster::SCrossHairData::ETargetStatus::Targeted;
-					}
-				}
-			}
-			CLeftClickDownLock* leftClickDownLock = nullptr;
-			if (transform->GameObject().TryGetComponent(&leftClickDownLock))
-			{
-				CBoxColliderComponent* boxCollider = nullptr;
-				if (leftClickDownLock->GameObject().TryGetComponent(&boxCollider))
-				{
-					if (boxCollider->Enabled() && leftClickDownLock->IsUnlocked() && !leftClickDownLock->IsTriggered())
-						myCrosshairData.myTargetStatus = PostMaster::SCrossHairData::ETargetStatus::Targeted;
-				}
+				} 
 			}
 
 			if (myCurrentTarget.myRigidBodyPtr)
 				myCrosshairData.myTargetStatus = PostMaster::SCrossHairData::ETargetStatus::Holding;
-			else if (!key && !leftClickDownLock)
+			else
 				myCrosshairData.myTargetStatus = PostMaster::SCrossHairData::ETargetStatus::Targeted;
 		}	
 		else
@@ -377,6 +317,19 @@ void CGravityGloveComponent::InteractionLogicContinuous()
 	else
 	{
 		myCrosshairData.myTargetStatus = PostMaster::SCrossHairData::ETargetStatus::None;
+	}
+	if (Input::GetInstance()->IsMousePressed(Input::EMouseButton::Right))
+	{
+		// Wind down
+		//data.myIndex = 0;
+		//data.myShouldBeReversed = true;
+		if (myCurrentTarget.myRigidBodyPtr) {
+			Push(myCurrentTarget.myRigidBodyPtr->GameObject().myTransform, myCurrentTarget.myRigidBodyPtr);
+		}
+	}
+	if (Input::GetInstance()->IsMouseReleased(Input::EMouseButton::Left))
+	{
+		Release();
 	}
 	CMainSingleton::PostMaster().SendLate({ EMessageType::UpdateCrosshair, &myCrosshairData });
 }
@@ -400,4 +353,37 @@ void CGravityGloveComponent::InteractionLogicOnInput()
 	{
 		Release();
 	}
+}
+
+physx::PxD6Joint* CGravityGloveComponent::CreateD6Joint(PxRigidActor* actor0, PxRigidActor* actor1, float aOffest)
+{
+	PxTransform transform0 = PxTransform(0,0,aOffest);
+	if (actor0->is<PxRigidDynamic>()) {
+		transform0 = actor0->is<PxRigidDynamic>()->getCMassLocalPose();
+	}
+	
+	PxTransform transform1 = PxTransform(PxIDENTITY());
+	if (actor1->is<PxRigidDynamic>()) {
+		transform1 = actor1->is<PxRigidDynamic>()->getCMassLocalPose();
+	}
+
+	PxD6Joint* d6Joint = PxD6JointCreate(CEngine::GetInstance()->GetActiveScene().PXScene()->getPhysics(), actor0, transform0, actor1, transform1);
+	d6Joint->setMotion(PxD6Axis::eX, PxD6Motion::eLIMITED);
+	d6Joint->setMotion(PxD6Axis::eY, PxD6Motion::eLIMITED);
+	d6Joint->setMotion(PxD6Axis::eZ, PxD6Motion::eLIMITED);
+	d6Joint->setLinearLimit(PxJointLinearLimit(1.0f, PxSpring(1.f, 1.f)));
+
+	d6Joint->setMotion(PxD6Axis::eSWING1, PxD6Motion::eLIMITED);
+	d6Joint->setMotion(PxD6Axis::eSWING2, PxD6Motion::eLIMITED);
+	d6Joint->setMotion(PxD6Axis::eTWIST, PxD6Motion::eLIMITED);
+
+	PxD6JointDrive drive(80.f, 30.f, PX_MAX_F32, false);
+	d6Joint->setDrive(PxD6Drive::eX, drive);
+	d6Joint->setDrive(PxD6Drive::eY, drive);
+	d6Joint->setDrive(PxD6Drive::eZ, drive);
+	d6Joint->setDrivePosition(PxTransform(0,0,0));
+	d6Joint->setDriveVelocity(PxVec3(0,0,0), PxVec3(0,0,0));
+	d6Joint->setBreakForce(100, 100);
+
+	return d6Joint;
 }

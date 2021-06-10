@@ -45,7 +45,7 @@ public:
 	void SetGlobalPose(const Vector3& aPos, const Quaternion& aRot);
 
 	void AttachShape(physx::PxShape* aShape);
-
+	physx::PxShape* GetShape();
 
 
 	const bool IsKinematic() const { return myIsKinematic; }
@@ -64,4 +64,12 @@ private:
 	Vector3 myLocalCenterMass;
 	Vector3 myInertiaTensor;
 	physx::PxShape* myShape;
+
+
+public:
+	void IsHeld(bool isHeld);
+	const bool IsHeld() const { return myIsBeingHold; }
+private:
+	//Only for object which can be held by player
+	bool myIsBeingHold;
 };
