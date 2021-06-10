@@ -16,6 +16,8 @@
 #include "CharacterController.h"
 #include "CameraComponent.h"
 #include "BoxColliderComponent.h"
+#include "KeyBehavior.h"
+#include "LeftClickDownLock.h"
 
 CGravityGloveComponent::CGravityGloveComponent(CGameObject& aParent, CTransformComponent* aGravitySlot)
 	: CBehavior(aParent)
@@ -338,9 +340,33 @@ void CGravityGloveComponent::InteractionLogicContinuous()
 				}
 			}
 
+			CKeyBehavior* key = nullptr;
+			if (transform->GameObject().TryGetComponent(&key))
+			{
+				if (key->Enabled())
+				{
+					CBoxColliderComponent* boxCollider = nullptr;
+					if (key->GameObject().TryGetComponent(&boxCollider))
+					{
+						if (boxCollider->Enabled())
+							myCrosshairData.myTargetStatus = PostMaster::SCrossHairData::ETargetStatus::Targeted;
+					}
+				}
+			}
+			CLeftClickDownLock* leftClickDownLock = nullptr;
+			if (transform->GameObject().TryGetComponent(&leftClickDownLock))
+			{
+				CBoxColliderComponent* boxCollider = nullptr;
+				if (leftClickDownLock->GameObject().TryGetComponent(&boxCollider))
+				{
+					if (boxCollider->Enabled() && leftClickDownLock->IsUnlocked() && !leftClickDownLock->IsTriggered())
+						myCrosshairData.myTargetStatus = PostMaster::SCrossHairData::ETargetStatus::Targeted;
+				}
+			}
+
 			if (myCurrentTarget.myRigidBodyPtr)
 				myCrosshairData.myTargetStatus = PostMaster::SCrossHairData::ETargetStatus::Holding;
-			else
+			else if (!key && !leftClickDownLock)
 				myCrosshairData.myTargetStatus = PostMaster::SCrossHairData::ETargetStatus::Targeted;
 		}	
 		else

@@ -55,6 +55,8 @@ public:
 	// Based on threshold. 
 	const float PercentileDistanceToPlayer() const;
 
+	const float CurrentStateBlendValue() const { return myCurrentStateBlend; };
+
 public:
 	float WrapAngle(float anAngle)
 	{
@@ -92,6 +94,7 @@ private:
 	bool myHeardSound;
 	bool myIsIdle;
 
+	float myCurrentStateBlend;
 	float mySqrdDistanceToPlayer;
 	float myCloseToPlayerThreshold;
 	float myAttackPlayerTimer;

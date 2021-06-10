@@ -2,7 +2,7 @@
 #include "MoveResponse.h"
 #include "TransformComponent.h"
 
-CMoveResponse::CMoveResponse(CGameObject& aParent, const SSettings& someSettings)
+CMoveResponse::CMoveResponse(CGameObject& aParent, const SSettings<Vector3>& someSettings)
 	: IResponseBehavior(aParent)
 	, myTime(0.0f)
 	, mySettings(someSettings)
@@ -27,10 +27,13 @@ void CMoveResponse::Update()
 		myTime -= mySettings.myDelay;
 	}
 
-	GameObject().myTransform->Position(Vector3::Lerp(mySettings.myStartPosition, mySettings.myEndPosition, myTime / mySettings.myDuration));
+	GameObject().myTransform->Position(Vector3::Lerp(mySettings.myStart, mySettings.myEnd, myTime / mySettings.myDuration));
 
 	if (myTime >= mySettings.myDuration)
+	{
+		myTime -= mySettings.myDuration;
 		HasBeenActivated(false);
+	}
 }
 
 void CMoveResponse::OnRespond()

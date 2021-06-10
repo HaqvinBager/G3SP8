@@ -201,6 +201,12 @@
     <ClInclude Include="VoiceResponse.h">
       <Filter>Puzzle\Listener\Response\Components</Filter>
     </ClInclude>
+    <ClInclude Include="PuzzleSetting.h">
+      <Filter>Puzzle</Filter>
+    </ClInclude>
+    <ClInclude Include="TeleportResponse.h">
+      <Filter>Puzzle\Listener\Response\Components</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Game.cpp">
@@ -342,6 +348,9 @@
       <Filter>Puzzle\Key\Activation\Components</Filter>
     </ClCompile>
     <ClCompile Include="VoiceResponse.cpp">
+      <Filter>Puzzle\Listener\Response\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="TeleportResponse.cpp">
       <Filter>Puzzle\Listener\Response\Components</Filter>
     </ClCompile>
   </ItemGroup>

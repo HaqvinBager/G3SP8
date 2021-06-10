@@ -20,7 +20,7 @@ CInstancedModelComponent::CInstancedModelComponent(CGameObject& aParent, const B
 	}
 	myModel = CModelFactory::GetInstance()->GetInstancedModel(ASSETPATH(myModelPath), static_cast<int>(aData.transforms.size()));
 	for (const auto& materialID : aData.materialIDs)
-		myModel->AddMaterial(CMainSingleton::MaterialHandler().RequestMaterial(materialID));
+		myModel->AddMaterial(CMainSingleton::MaterialHandler().RequestMaterial(materialID, myModelPath));
 
 	myMaterialIds = aData.materialIDs;
 

@@ -80,6 +80,10 @@ void CTeleportResponse::Receive(const SMessage& aMessage)
 		{
 			HandleTeleport(teleportData.myTransformToTeleport);
 			teleportData.Reset();
+			PostMaster::SBoxColliderEvenTriggerData data;
+			data.myState = true;
+			data.mySceneSection = (int)myName;
+			CMainSingleton::PostMaster().Send({ PostMaster::SMSG_TELEPORT, &data });
 			return;
 		}
 	}
