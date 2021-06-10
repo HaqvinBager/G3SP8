@@ -63,7 +63,7 @@ public class Listener : MonoBehaviour
                     AddType<ResponsePlayVoice>(gameObject);
                     break;
                 case ListenerType.Teleport:
-                    AddType<ResponseTeleporter>(gameObject);
+                    AddType<ResponseNextLevel>(gameObject);
                     break;
 
                 case ListenerType.Clear:

@@ -56,7 +56,7 @@ public class Key : MonoBehaviour
                     AddType<ActivationPlayVoice>(gameObject);
                     break;
                 case KeyType.Teleport:
-                    AddType<ActivationTeleporter>(gameObject);
+                    AddType<ActivationNextLevel>(gameObject);
                     break;
                 case KeyType.Clear:
                     {

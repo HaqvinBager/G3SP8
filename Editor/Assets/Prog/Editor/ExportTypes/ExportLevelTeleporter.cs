@@ -6,8 +6,8 @@ using UnityEngine;
 public struct TeleporterData
 {
     public Transform instanceID;
-    public ELevelName   myTeleporterName;
-    public ELevelName   teleportTo;
+    //public ELevelName   myTeleporterName;
+    //public ELevelName   teleportTo;
     public float teleportObjectToX;
     public float teleportObjectToY;
     public float teleportObjectToZ;
@@ -21,28 +21,28 @@ public struct TeleporterCollection
 
 public class ExportLevelTeleporter
 {
-    public static TeleporterCollection Export(string aScene)
-    {
-        TeleporterCollection collection = new TeleporterCollection();
-        collection.teleporters = new List<TeleporterData>();
+    //public static TeleporterCollection Export(string aScene)
+    //{
+    //    TeleporterCollection collection = new TeleporterCollection();
+    //    collection.teleporters = new List<TeleporterData>();
 
-        LevelTeleporter[] teleporters = GameObject.FindObjectsOfType<LevelTeleporter>();
-        foreach (LevelTeleporter teleporter in teleporters)
-        {
-            collection.teleporters.Add(
-                new TeleporterData
-                {
-                    instanceID = teleporter.transform,
-                    myTeleporterName = teleporter.myTeleporterName,
-                    teleportTo = teleporter.teleportTo,
-                    teleportObjectToX = teleporter.onTeleportToMePlaceOnPosition.x,
-                    teleportObjectToY = teleporter.onTeleportToMePlaceOnPosition.y,
-                    teleportObjectToZ = teleporter.onTeleportToMePlaceOnPosition.z
-                }
-            );
-        }
+    //    LevelTeleporter[] teleporters = GameObject.FindObjectsOfType<LevelTeleporter>();
+    //    foreach (LevelTeleporter teleporter in teleporters)
+    //    {
+    //        collection.teleporters.Add(
+    //            new TeleporterData
+    //            {
+    //                instanceID = teleporter.transform,
+    //                myTeleporterName = teleporter.myTeleporterName,
+    //                teleportTo = teleporter.teleportTo,
+    //                teleportObjectToX = teleporter.onTeleportToMePlaceOnPosition.x,
+    //                teleportObjectToY = teleporter.onTeleportToMePlaceOnPosition.y,
+    //                teleportObjectToZ = teleporter.onTeleportToMePlaceOnPosition.z
+    //            }
+    //        );
+    //    }
 
-        return collection;
-    }
+    //    return collection;
+    //}
 
 }
