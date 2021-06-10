@@ -82,7 +82,7 @@ void CRenderManager::InitRenderTextures(CWindowHandler* aWindowHandler)
 	myDepthCopy = myFullscreenTextureFactory.CreateTexture(aWindowHandler->GetResolution(), DXGI_FORMAT_R32_FLOAT);
 	myDownsampledDepth = myFullscreenTextureFactory.CreateTexture(aWindowHandler->GetResolution() / 2.0f, DXGI_FORMAT_R32_FLOAT);
 
-	myIntermediateTexture = myFullscreenTextureFactory.CreateTexture({ 2048.0f * 1.0f, 2048.0f * 1.0f }, DXGI_FORMAT_R8G8B8A8_UNORM);
+	myIntermediateTexture = myFullscreenTextureFactory.CreateTexture({ 2048.0f * 1.0f, 2048.0f * 1.0f }, DXGI_FORMAT_R16G16B16A16_FLOAT);
 	myLuminanceTexture = myFullscreenTextureFactory.CreateTexture(aWindowHandler->GetResolution(), DXGI_FORMAT_R16G16B16A16_FLOAT);
 	myHalfSizeTexture = myFullscreenTextureFactory.CreateTexture(aWindowHandler->GetResolution() / 2.0f, DXGI_FORMAT_R16G16B16A16_FLOAT);
 	myQuarterSizeTexture = myFullscreenTextureFactory.CreateTexture(aWindowHandler->GetResolution() / 4.0f, DXGI_FORMAT_R16G16B16A16_FLOAT);
@@ -160,6 +160,8 @@ void CRenderManager::Render(CScene& aScene)
 			//	continue;
 			//}
 			instancedGameObjects.emplace_back(instance);
+			std::swap(gameObjects[i], gameObjects.back());
+			gameObjects.pop_back();
 		}
 		else if (instance->GetComponent<CModelComponent>()) 
 		{
@@ -179,21 +181,18 @@ void CRenderManager::Render(CScene& aScene)
 		gameObjects.pop_back();
 	}
 
-	//std::sort(indicesOfOutlineModels.begin(), indicesOfOutlineModels.end(), [](UINT a, UINT b) { return a > b; });
-	//for (auto index : indicesOfOutlineModels)
-	//{
-	//	std::swap(gameObjects[index], gameObjects.back());
-	//	gameObjects.pop_back();
-	//}
-
 	// GBuffer
 	myGBuffer.SetAsActiveTarget(&myIntermediateDepth);
 	myDeferredRenderer.GenerateGBuffer(maincamera, gameObjects, instancedGameObjects);
 	
 	// Shadows
 	myEnvironmentShadowDepth.SetAsDepthTarget(&myIntermediateTexture);
-	myShadowRenderer.Render(environmentlight, gameObjects, instancedGameObjects);
-	myShadowRenderer.Render(environmentlight, gameObjectsWithAlpha, instancedGameObjectsWithAlpha);
+	
+	// If no shadowmap, don't do this
+	//myShadowRenderer.Render(environmentlight, gameObjects, instancedGameObjects);
+	
+	// All relevant objects are run in deferred now
+	//myShadowRenderer.Render(environmentlight, gameObjectsWithAlpha, instancedGameObjectsWithAlpha);
 	
 	// Decals
 	myDepthCopy.SetAsActiveTarget();
