@@ -99,6 +99,8 @@ public:
 
 	void SetAudioListener(CGameObject* aGameObject);
 
+	void SetIsMenu(bool aMenuIsOpen);
+
 private:
 	void AllScenesToInactive();
 

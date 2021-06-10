@@ -401,7 +401,7 @@ void CEngine::CheckIfMenuState(const CStateStack::EState& aState)
 			break;
 
 		case CStateStack::EState::InGame:
-			isInMenu = false;
+			isInMenu = true;
 			break;
 
 		case CStateStack::EState::MainMenu:
@@ -435,4 +435,9 @@ void CEngine::SetPostProcessingBufferData(const CFullscreenRenderer::SPostProces
 void CEngine::SetAudioListener(CGameObject* aGameObject)
 {
 	myAudioManager->SetListener(aGameObject);
+}
+
+void CEngine::SetIsMenu(bool aMenuIsOpen)
+{
+	myWindowHandler->GameIsInMenu(aMenuIsOpen);
 }

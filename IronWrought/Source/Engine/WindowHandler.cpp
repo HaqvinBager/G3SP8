@@ -138,11 +138,19 @@ bool CWindowHandler::Init(CWindowHandler::SWindowData someWindowData)
 
     if (borderless)
     {
+#ifdef _DEBUG
         // Start in borderless
         myWindowHandle = CreateWindowA("3DEngine", gameName.c_str(), 
             WS_POPUP | WS_VISIBLE,
-            0, 0, /*GetSystemMetrics(SM_CXSCREEN)*/myWindowData.myWidth, /*GetSystemMetrics(SM_CYSCREEN)*/myWindowData.myHeight,
+            0, 0, myWindowData.myWidth, myWindowData.myHeight,
             NULL, NULL, GetModuleHandle(nullptr), this);
+#else
+        // Start in borderless
+        myWindowHandle = CreateWindowA("3DEngine", gameName.c_str(),
+            WS_POPUP | WS_VISIBLE,
+            0, 0, GetSystemMetrics(SM_CXSCREEN), GetSystemMetrics(SM_CYSCREEN),
+            NULL, NULL, GetModuleHandle(nullptr), this);
+#endif
     }
     else 
     {
@@ -242,6 +250,11 @@ void CWindowHandler::ShowAndUnlockCursor(const bool& anIsInEditorMode)
 void CWindowHandler::GameIsInMenu(const bool& aIsInMenu)
 {
     myGameIsInMenu = aIsInMenu;
+    if (myGameIsInMenu)
+        ShowAndUnlockCursor();
+    else
+        HideAndLockCursor();
+
 }
 
 void CWindowHandler::SetInternalResolution()
