@@ -39,8 +39,8 @@
 #endif
 
 // This is a temporary define. Its current use is so that we don't have to deal with the WIP menu. // Aki 2021 05 25
-#ifdef NDEBUG
 #define INGAME_USE_MENU
+#ifdef NDEBUG
 #else
 //#define INGAME_USE_MENU
 #endif // NDEBUG
@@ -116,6 +116,9 @@ void CInGameState::Start()
 	CMainSingleton::PostMaster().Subscribe(EMessageType::CanvasButtonIndex, this);
 	CMainSingleton::PostMaster().Subscribe(EMessageType::MainMenu, this);
 	CMainSingleton::PostMaster().Subscribe(EMessageType::Resume, this);
+	CMainSingleton::PostMaster().Subscribe(EMessageType::SetResolution1600x900, this);
+	CMainSingleton::PostMaster().Subscribe(EMessageType::SetResolution1920x1080, this);
+	CMainSingleton::PostMaster().Subscribe(EMessageType::SetResolution2560x1440, this);
 
 	std::string levelsPath = "Json/Settings/Levels.json";
 	const auto doc = CJsonReader::Get()->LoadDocument(levelsPath);
@@ -177,6 +180,9 @@ void CInGameState::Stop()
 	CMainSingleton::PostMaster().Unsubscribe(EMessageType::CanvasButtonIndex, this);
 	CMainSingleton::PostMaster().Unsubscribe(EMessageType::MainMenu, this);
 	CMainSingleton::PostMaster().Unsubscribe(EMessageType::Resume, this);
+	CMainSingleton::PostMaster().Unsubscribe(EMessageType::SetResolution1600x900, this);
+	CMainSingleton::PostMaster().Unsubscribe(EMessageType::SetResolution1920x1080, this);
+	CMainSingleton::PostMaster().Unsubscribe(EMessageType::SetResolution2560x1440, this);
 #endif
 
 	myMenuCamera = nullptr; // Has been deleted by Scene when IRONWROUGHT->RemoveScene(..) was called, as it is added as a gameobject.
@@ -291,20 +297,26 @@ void CInGameState::Receive(const SMessage& aMessage)
 	case EMessageType::SetResolution1600x900:
 	{
 		CEngine::GetInstance()->SetResolution({ 1600.0f, 900.0f });
-		IRONWROUGHT->GetActiveScene().ReInitCanvas(ASSETPATH("Assets/IronWrought/UI/JSON/UI_MainMenu.json"), true);
-		myStateStack.PopTopAndPush(CStateStack::EState::MainMenu);
+		myCanvases[EInGameCanvases_MainMenu]->Init(ASSETPATH("Assets/IronWrought/UI/JSON/UI_MainMenu.json"));
+		myCanvases[EInGameCanvases_HUD]->Init(ASSETPATH("Assets/IronWrought/UI/JSON/UI_HUD.json"));
+		myCanvases[EInGameCanvases_PauseMenu]->Init(ASSETPATH("Assets/IronWrought/UI/JSON/UI_PauseMenu.json"));
+		myCanvases[EInGameCanvases_LoadingScreen]->Init(ASSETPATH("Assets/IronWrought/UI/JSON/UI_LoadingScreen.json"));
 	} break;
 	case EMessageType::SetResolution1920x1080:
 	{
 		CEngine::GetInstance()->SetResolution({ 1920.0f, 1080.0f });
-		IRONWROUGHT->GetActiveScene().ReInitCanvas(ASSETPATH("Assets/IronWrought/UI/JSON/UI_MainMenu.json"), true);
-		myStateStack.PopTopAndPush(CStateStack::EState::MainMenu);
+		myCanvases[EInGameCanvases_MainMenu]->Init(ASSETPATH("Assets/IronWrought/UI/JSON/UI_MainMenu.json"));
+		myCanvases[EInGameCanvases_HUD]->Init(ASSETPATH("Assets/IronWrought/UI/JSON/UI_HUD.json"));
+		myCanvases[EInGameCanvases_PauseMenu]->Init(ASSETPATH("Assets/IronWrought/UI/JSON/UI_PauseMenu.json"));
+		myCanvases[EInGameCanvases_LoadingScreen]->Init(ASSETPATH("Assets/IronWrought/UI/JSON/UI_LoadingScreen.json"));
 	} break;
 	case EMessageType::SetResolution2560x1440:
 	{
 		CEngine::GetInstance()->SetResolution({ 2560.0f, 1440.0f });
-		IRONWROUGHT->GetActiveScene().ReInitCanvas(ASSETPATH("Assets/IronWrought/UI/JSON/UI_MainMenu.json"), true);
-		myStateStack.PopTopAndPush(CStateStack::EState::MainMenu);
+		myCanvases[EInGameCanvases_MainMenu]->Init(ASSETPATH("Assets/IronWrought/UI/JSON/UI_MainMenu.json"));
+		myCanvases[EInGameCanvases_HUD]->Init(ASSETPATH("Assets/IronWrought/UI/JSON/UI_HUD.json"));
+		myCanvases[EInGameCanvases_PauseMenu]->Init(ASSETPATH("Assets/IronWrought/UI/JSON/UI_PauseMenu.json"));
+		myCanvases[EInGameCanvases_LoadingScreen]->Init(ASSETPATH("Assets/IronWrought/UI/JSON/UI_LoadingScreen.json"));
 	} break;
 
 	case EMessageType::MainMenu:
