@@ -58,6 +58,7 @@
 #include <AudioActivation.h>
 #include <VoiceActivation.h>
 #include <TeleportActivation.h>
+#include <TeleportResponse.h>
 
 #include "PuzzleSetting.h"
 
@@ -1024,7 +1025,7 @@ void CSceneManager::AddPuzzleResponseTeleporter(CScene& aScene, RapidArray someD
 		float aTimeUntilTeleport = response["timeUntilTeleport"].GetFloat();
 		aTimeUntilTeleport = (aTimeUntilTeleport <= 0.0f ? 0.01f : aTimeUntilTeleport);
 
-		gameObject->AddComponent<CTeleportActivation>(*gameObject, name, target, teleportToPos, teleportToRot, aTimeUntilTeleport);
+		gameObject->AddComponent<CTeleportResponse>(*gameObject, name, target, teleportToPos, teleportToRot, aTimeUntilTeleport);
 	}
 }
 
