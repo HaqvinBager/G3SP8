@@ -88,8 +88,10 @@ namespace ImGui {
 		std::unordered_map<std::type_index, std::function<void(CComponent*)>> myEditorCallbackMap;
 		std::unordered_map<std::type_index, std::string> myTypeNames;
 
+		bool mySearchFilterActive;
 		bool myFilterTypes;
 		bool myFilteDeepFilterTypes;
+		char mySearchFilter[256];
 
 		CScene* myScene;
 		std::vector<std::type_index> myCurrentFilter;
