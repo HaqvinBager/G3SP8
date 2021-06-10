@@ -22,15 +22,15 @@ public:
 	{
 		if (/*CEngine::GetInstance()->GetActiveScene().GetNavMesh()*/true) {
 			DirectX::SimpleMath::Ray ray = MouseTracker::WorldSpacePick();
-			STriangle* triangle = nullptr;
-			for (unsigned int i = 0; i < CEngine::GetInstance()->GetActiveScene().NavMesh()->myTriangles.size(); ++i) {
-				triangle = CEngine::GetInstance()->GetActiveScene().NavMesh()->myTriangles[i];
-				float dist = 0;
-				if (ray.Intersects(triangle->myVertexPositions[0], triangle->myVertexPositions[1], triangle->myVertexPositions[2], dist)) {
-					DirectX::SimpleMath::Vector3 finalPosition = ray.position + ray.direction * dist;
-					return finalPosition;
-				}
-			}
+			//STriangle* triangle = nullptr;
+			//for (unsigned int i = 0; i < CEngine::GetInstance()->GetActiveScene().NavMesh()->myTriangles.size(); ++i) {
+			//	triangle = CEngine::GetInstance()->GetActiveScene().NavMesh()->myTriangles[i];
+			//	float dist = 0;
+			//	if (ray.Intersects(triangle->myVertexPositions[0], triangle->myVertexPositions[1], triangle->myVertexPositions[2], dist)) {
+			//		DirectX::SimpleMath::Vector3 finalPosition = ray.position + ray.direction * dist;
+			//		return finalPosition;
+			//	}
+			//}
 
 			//The picking ray is checked against the floor of the world, **ASSUMING Y TO BE 0**
 			DirectX::SimpleMath::Plane worldPlane = DirectX::SimpleMath::Plane(DirectX::SimpleMath::Vector3::Zero, DirectX::SimpleMath::Vector3::Up);

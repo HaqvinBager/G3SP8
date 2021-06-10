@@ -8,7 +8,7 @@
 #include "MouseTracker.h"
 
 
-CNavMeshComponent::CNavMeshComponent(CGameObject& aParent) 
+CNavMeshComponent::CNavMeshComponent(CGameObject& aParent)
 	: CBehavior(aParent)
 {
 	myEnabled = true;
@@ -21,7 +21,7 @@ CNavMeshComponent::~CNavMeshComponent()
 
 void CNavMeshComponent::Awake()
 {
-	myNavMesh = CEngine::GetInstance()->GetActiveScene().NavMesh();
+	/*myNavMesh = CEngine::GetInstance()->GetActiveScene().NavMesh();*/
 }
 
 void CNavMeshComponent::Start()
@@ -85,16 +85,16 @@ void CNavMeshComponent::CalculatePath()
 			if (startTriangle == nullptr)
 			{
 				ResolveStuck(startTriangle, startPosition, finalPosition);
-				if (startTriangle == nullptr) 
+				if (startTriangle == nullptr)
 				{
 					// Return closest triangle if ResolveStuck doesn't work
 					startTriangle = ReturnClosestTriangle(startPosition);
 				}
 			}
 
-			std::vector<DirectX::SimpleMath::Vector3> path = 
+			std::vector<DirectX::SimpleMath::Vector3> path =
 				CAStar::GetInstance()->GetPath(startPosition, finalPosition, myNavMesh, startTriangle, triangle);
-			
+
 			//2020-01-12 "Set Path" Refactor into a NavMeshComponent (Like this one!)
 			//this->GameObject().myTransform->SetPath(path, finalPosition);
 			break;
@@ -103,7 +103,7 @@ void CNavMeshComponent::CalculatePath()
 }
 
 STriangle* CNavMeshComponent::ReturnClosestTriangle(const DirectX::SimpleMath::Vector3& aStartPosition)
-{	
+{
 	STriangle* closestTriangle = nullptr;
 	float lastDistance = FLT_MAX;
 	for (unsigned int i = 0; i < myNavMesh->myTriangles.size(); ++i)
