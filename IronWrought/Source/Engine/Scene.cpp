@@ -426,6 +426,15 @@ void CScene::AddEnemyShortcut(CGameObject* anEnemyObject, const int aSection)
 bool CScene::EnvironmentLight(CEnvironmentLight* anEnvironmentLight)
 {
 	myEnvironmentLight = anEnvironmentLight;
+
+	// Keep for now, for multiple cubemaps on same light Nico 2021-06-10
+	//if (!myEnvironmentLight)
+	//	myEnvironmentLight = anEnvironmentLight;
+	//else
+	//{
+	//	myEnvironmentLight->AddCubemap(anEnvironmentLight->GetFirstCubemapReference(), CEngine::GetInstance()->myFramework);
+	//}
+
 	return true;
 }
 

@@ -4,6 +4,7 @@
 
 
 CEnvironmentLight::CEnvironmentLight()
+	: myCurrentCubemapIndex(-1)
 {
 }
 
@@ -13,21 +14,8 @@ CEnvironmentLight::~CEnvironmentLight()
 
 bool CEnvironmentLight::Init(CDirectXFramework* aFramework, std::string aFilePath)
 {
-	wchar_t* cubeMapPathWide = new wchar_t[aFilePath.length() + 1];
-	std::copy(aFilePath.begin(), aFilePath.end(), cubeMapPathWide);
-	cubeMapPathWide[aFilePath.length()] = 0;
-
-	ENGINE_HR_BOOL_MESSAGE(DirectX::CreateDDSTextureFromFile(aFramework->GetDevice(), cubeMapPathWide, nullptr, &myCubeShaderResourceView), "Cubemap Texture could not be created.");
-
-	delete[] cubeMapPathWide;
-
-	ID3D11Resource* cubeResource;
-	myCubeShaderResourceView->GetResource(&cubeResource);
-	ID3D11Texture2D* cubeTexture = reinterpret_cast<ID3D11Texture2D*>(cubeResource);
-	D3D11_TEXTURE2D_DESC cubeDescription = { 0 };
-	cubeTexture->GetDesc(&cubeDescription);
-
-	ENGINE_BOOL_POPUP((cubeDescription.MiscFlags & D3D11_RESOURCE_MISC_TEXTURECUBE), "Cubemap texture could not be read as a cubemap! Is loaded as a Texture2D instead of TextureCube.")
+	AddCubemap(aFilePath, aFramework);
+	myCurrentCubemapIndex = 0;
 
 	myDirection = { 0.0f, 1.0f, 0.0f, 0.0f };
 	myShadowmapViewMatrix = DirectX::XMMatrixLookAtLH(myPosition, myPosition - myDirection, Vector3::Up);
@@ -50,7 +38,7 @@ bool CEnvironmentLight::Init(CDirectXFramework* aFramework, std::string aFilePat
 
 ID3D11ShaderResourceView* const* CEnvironmentLight::GetCubeMap()
 {
-	return &myCubeShaderResourceView;
+	return &myCubemaps[myCurrentCubemapIndex];
 }
 
 DirectX::SimpleMath::Matrix CEnvironmentLight::GetShadowTransform() const
@@ -63,6 +51,27 @@ DirectX::SimpleMath::Matrix CEnvironmentLight::GetShadowTransform() const
 	matrix *= DirectX::SimpleMath::Matrix::CreateFromAxisAngle(matrix.Right(), radiansX);
 
 	return matrix;
+}
+
+bool CEnvironmentLight::LoadCubemap(const std::string& aFilePath, CDirectXFramework* aFramework, ID3D11ShaderResourceView** aCubemapSRV)
+{
+	wchar_t* cubeMapPathWide = new wchar_t[aFilePath.length() + 1];
+	std::copy(aFilePath.begin(), aFilePath.end(), cubeMapPathWide);
+	cubeMapPathWide[aFilePath.length()] = 0;
+
+	ENGINE_HR_BOOL_MESSAGE(DirectX::CreateDDSTextureFromFile(aFramework->GetDevice(), cubeMapPathWide, nullptr, aCubemapSRV), "Cubemap Texture could not be created.");
+
+	delete[] cubeMapPathWide;
+
+	ID3D11Resource* cubeResource;
+	(*aCubemapSRV)->GetResource(&cubeResource);
+	ID3D11Texture2D* cubeTexture = reinterpret_cast<ID3D11Texture2D*>(cubeResource);
+	D3D11_TEXTURE2D_DESC cubeDescription = { 0 };
+	cubeTexture->GetDesc(&cubeDescription);
+
+	ENGINE_BOOL_POPUP((cubeDescription.MiscFlags & D3D11_RESOURCE_MISC_TEXTURECUBE), "Cubemap texture could not be read as a cubemap! Is loaded as a Texture2D instead of TextureCube.")
+
+	return true;
 }
 
 void CEnvironmentLight::SetDirection(DirectX::SimpleMath::Vector3 aDirection)
@@ -210,4 +219,24 @@ const bool& CEnvironmentLight::GetIsVolumetric() const
 const bool& CEnvironmentLight::GetIsFog() const
 {
 	return myIsFog;
+}
+
+const std::string& CEnvironmentLight::GetFirstCubemapReference() const
+{
+	return myCubemapReferences[0];
+}
+
+void CEnvironmentLight::AddCubemap(const std::string& aCubemapReference, CDirectXFramework* aFramework)
+{
+	if (std::find(myCubemapReferences.begin(), myCubemapReferences.end(), aCubemapReference) == myCubemapReferences.end())
+	{
+		myCubemaps.emplace_back();
+		LoadCubemap(aCubemapReference, aFramework, &myCubemaps.back());
+		myCubemapReferences.push_back(aCubemapReference);
+	}
+}
+
+void CEnvironmentLight::SetCubemapIndex(unsigned int anIndex)
+{
+	myCurrentCubemapIndex = anIndex;
 }
