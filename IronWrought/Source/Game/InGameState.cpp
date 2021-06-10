@@ -417,7 +417,7 @@ void CInGameState::ToggleCanvas(EInGameCanvases anEInGameCanvases)
 		scene.UpdateOnlyCanvas(true);
 		scene.MainCamera(ESceneCamera::MenuCam);
 		myMenuCamera->myTransform->Position(myMenuCameraPositions[0]);
-		IRONWROUGHT->ShowCursor();
+		IRONWROUGHT->SetIsMenu(true);
 	}
 	else if (myCurrentCanvas == EInGameCanvases_PauseMenu)
 	{
@@ -425,7 +425,7 @@ void CInGameState::ToggleCanvas(EInGameCanvases anEInGameCanvases)
 		scene.CanvasIsHUD(false);
 		scene.MainCamera(ESceneCamera::PlayerFirstPerson);
 		CMainSingleton::PostMaster().SendLate({ EMessageType::PauseMenu, nullptr });
-		IRONWROUGHT->ShowCursor();
+		IRONWROUGHT->SetIsMenu(true);
 	}
 	else if (myCurrentCanvas == EInGameCanvases_HUD)
 	{
@@ -433,7 +433,7 @@ void CInGameState::ToggleCanvas(EInGameCanvases anEInGameCanvases)
 		scene.CanvasIsHUD(true);
 		scene.MainCamera(ESceneCamera::PlayerFirstPerson);
 		CMainSingleton::PostMaster().Unsubscribe(EMessageType::CanvasButtonIndex, this);
-		IRONWROUGHT->HideCursor();
+		IRONWROUGHT->SetIsMenu(false);
 	}
 #else
 	if (myCurrentCanvas == EInGameCanvases_HUD)
