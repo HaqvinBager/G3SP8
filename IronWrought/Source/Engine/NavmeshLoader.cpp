@@ -221,14 +221,19 @@ std::vector<Vector3> SNavMesh::CalculatePath(Vector3 aStartPosition, DirectX::Si
 			endTriangle = ReturnClosestTriangle(aDestination, aNavMesh);
 		}
 	}	
-	Vector3 closestPoint = aDestination;
+	Vector3 closestStartPoint = aStartPosition;
+	if (aNavMesh->GetTriangleAtPoint(aStartPosition) == nullptr) {
+		closestStartPoint = GetClosestPointInsideTriangle(startTriangle, aStartPosition);
+	}
+	
+	Vector3 closestEndPoint = aDestination;
 	if (aNavMesh->GetTriangleAtPoint(aDestination) == nullptr) {
-		closestPoint = GetClosestPointInsideTriangle(endTriangle, aDestination);
+		closestEndPoint = GetClosestPointInsideTriangle(endTriangle, aDestination);
 	}
 
-	path = CAStar::GetInstance()->GetPath(startPosition, closestPoint, aNavMesh, startTriangle, endTriangle);
+	path = CAStar::GetInstance()->GetPath(closestStartPoint, closestEndPoint, aNavMesh, startTriangle, endTriangle);
 	//if (aNavMesh->GetTriangleAtPoint(aDestination)) {
-		path = ReversePath(path, closestPoint);
+		path = ReversePath(path, closestEndPoint);
 	//}
 	//else {
 	//	path = ReversePath(path);

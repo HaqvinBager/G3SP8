@@ -53,6 +53,8 @@ private:
 	float myResolutionScale;
 	bool myCursorIsLocked;
 	bool myWindowIsInEditingMode;
+	int myMaxResX;
+	int myMaxResY;
 
 	// More or less a temp fix for SP7. Aki 2021 04 15
 	bool myGameIsInMenu;

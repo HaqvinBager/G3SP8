@@ -6,6 +6,7 @@
 #include "PlayerControllerComponent.h"
 #include "MainSingleton.h"
 #include "Scene.h"
+#include "CameraComponent.h"
 
 #define PI 3.141592f
 
@@ -23,6 +24,7 @@ CTeleportResponse::CTeleportResponse(
 	, myOnTeleportToMePosition(aPosOnTeleportTo)
 	, myTeleportTimer(aTimeUntilTeleport)
 	, myHasTeleported(false)
+	, myActivated(false)
 
 {
 	myOnTeleportToMeRotation = aRotOnTeleportTo;
@@ -54,9 +56,12 @@ void CTeleportResponse::Update()
 		return;
 
 	myTeleportTimer -= CTimer::Dt();
-	// Do once:
-		// Fade Camera
-		// Lock Player Movement (could be made to support transform component. But is not needed atm so support won't be added.)
+	if (!myActivated)
+	{
+		IRONWROUGHT->GetActiveScene().MainCamera()->Fade(false, myTeleportTimer);
+		IRONWROUGHT->GetActiveScene().PlayerController()->LockMovementFor(myTeleportTimer);
+		myActivated = true;
+	}
 
 	if (myTeleportTimer <= 0.0f)
 	{
@@ -80,6 +85,10 @@ void CTeleportResponse::Receive(const SMessage& aMessage)
 		{
 			HandleTeleport(teleportData.myTransformToTeleport);
 			teleportData.Reset();
+			PostMaster::SBoxColliderEvenTriggerData data;
+			data.myState = true;
+			data.mySceneSection = PostMaster::LevelNameToSection(myName);
+			CMainSingleton::PostMaster().Send({ PostMaster::SMSG_SECTION, &data });
 			return;
 		}
 	}

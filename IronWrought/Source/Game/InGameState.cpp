@@ -37,14 +37,11 @@
 
 	void TEMP_VFX(CScene* aScene);
 #endif
-
-// This is a temporary define. Its current use is so that we don't have to deal with the WIP menu. // Aki 2021 05 25
 #ifdef NDEBUG
 #define INGAME_USE_MENU
 #else
 //#define INGAME_USE_MENU
-#endif // NDEBUG
-
+#endif
 
 #pragma warning( disable : 26812 )
 
@@ -53,8 +50,8 @@ CInGameState::CInGameState(CStateStack& aStateStack, const CStateStack::EState a
 	, myEnemyAnimationController(nullptr)
 	, myExitTo(EExitTo::None)
 	, myMenuCamera(nullptr)
-	, myMenuCameraPositions({ Vector3(10.3f, -0.47f, -37.5f), Vector3(15.59f, -0.64f, -37.5f), Vector3(17.36f, -1.04f, -27.89f), Vector3(17.03f, -0.464f, -33.78f) })
-	, myMenuCameraRotations({ Vector3(0.964f, -89.4f, 1.04f) , Vector3(0.0f, 85.221f, 0.0f) , Vector3(-20.59f, -30.739f, 0.119f) , Vector3(-1.614f, 80.0f, 1.018f) })
+	, myMenuCameraPositions({ Vector3(10.3f, -0.47f, -37.5f), Vector3(16.63f, -0.24f, -37.5f), Vector3(10.93f, -1.246f, -34.6f), Vector3(17.03f, -0.464f, -33.78f) })
+	, myMenuCameraRotations({ Vector3(0.964f, -89.4f, 1.04f) , Vector3(-1.613f, 91.4f, 1.045f) , Vector3(-0.243f, 130.45f, 1.042f) , Vector3(-1.614f, 80.0f, 1.018f) })
 	, myCanvases({ nullptr, nullptr, nullptr })
 	, myCurrentCanvas(EInGameCanvases_Count)
 	, myMenuCameraSpeed(2.0f)
@@ -116,6 +113,9 @@ void CInGameState::Start()
 	CMainSingleton::PostMaster().Subscribe(EMessageType::CanvasButtonIndex, this);
 	CMainSingleton::PostMaster().Subscribe(EMessageType::MainMenu, this);
 	CMainSingleton::PostMaster().Subscribe(EMessageType::Resume, this);
+	CMainSingleton::PostMaster().Subscribe(EMessageType::SetResolution1600x900, this);
+	CMainSingleton::PostMaster().Subscribe(EMessageType::SetResolution1920x1080, this);
+	CMainSingleton::PostMaster().Subscribe(EMessageType::SetResolution2560x1440, this);
 
 	std::string levelsPath = "Json/Settings/Levels.json";
 	const auto doc = CJsonReader::Get()->LoadDocument(levelsPath);
@@ -177,6 +177,9 @@ void CInGameState::Stop()
 	CMainSingleton::PostMaster().Unsubscribe(EMessageType::CanvasButtonIndex, this);
 	CMainSingleton::PostMaster().Unsubscribe(EMessageType::MainMenu, this);
 	CMainSingleton::PostMaster().Unsubscribe(EMessageType::Resume, this);
+	CMainSingleton::PostMaster().Unsubscribe(EMessageType::SetResolution1600x900, this);
+	CMainSingleton::PostMaster().Unsubscribe(EMessageType::SetResolution1920x1080, this);
+	CMainSingleton::PostMaster().Unsubscribe(EMessageType::SetResolution2560x1440, this);
 #endif
 
 	myMenuCamera = nullptr; // Has been deleted by Scene when IRONWROUGHT->RemoveScene(..) was called, as it is added as a gameobject.
@@ -291,20 +294,26 @@ void CInGameState::Receive(const SMessage& aMessage)
 	case EMessageType::SetResolution1600x900:
 	{
 		CEngine::GetInstance()->SetResolution({ 1600.0f, 900.0f });
-		IRONWROUGHT->GetActiveScene().ReInitCanvas(ASSETPATH("Assets/IronWrought/UI/JSON/UI_MainMenu.json"), true);
-		myStateStack.PopTopAndPush(CStateStack::EState::MainMenu);
+		myCanvases[EInGameCanvases_MainMenu]->Init(ASSETPATH("Assets/IronWrought/UI/JSON/UI_MainMenu.json"));
+		myCanvases[EInGameCanvases_HUD]->Init(ASSETPATH("Assets/IronWrought/UI/JSON/UI_HUD.json"));
+		myCanvases[EInGameCanvases_PauseMenu]->Init(ASSETPATH("Assets/IronWrought/UI/JSON/UI_PauseMenu.json"));
+		myCanvases[EInGameCanvases_LoadingScreen]->Init(ASSETPATH("Assets/IronWrought/UI/JSON/UI_LoadingScreen.json"));
 	} break;
 	case EMessageType::SetResolution1920x1080:
 	{
 		CEngine::GetInstance()->SetResolution({ 1920.0f, 1080.0f });
-		IRONWROUGHT->GetActiveScene().ReInitCanvas(ASSETPATH("Assets/IronWrought/UI/JSON/UI_MainMenu.json"), true);
-		myStateStack.PopTopAndPush(CStateStack::EState::MainMenu);
+		myCanvases[EInGameCanvases_MainMenu]->Init(ASSETPATH("Assets/IronWrought/UI/JSON/UI_MainMenu.json"));
+		myCanvases[EInGameCanvases_HUD]->Init(ASSETPATH("Assets/IronWrought/UI/JSON/UI_HUD.json"));
+		myCanvases[EInGameCanvases_PauseMenu]->Init(ASSETPATH("Assets/IronWrought/UI/JSON/UI_PauseMenu.json"));
+		myCanvases[EInGameCanvases_LoadingScreen]->Init(ASSETPATH("Assets/IronWrought/UI/JSON/UI_LoadingScreen.json"));
 	} break;
 	case EMessageType::SetResolution2560x1440:
 	{
 		CEngine::GetInstance()->SetResolution({ 2560.0f, 1440.0f });
-		IRONWROUGHT->GetActiveScene().ReInitCanvas(ASSETPATH("Assets/IronWrought/UI/JSON/UI_MainMenu.json"), true);
-		myStateStack.PopTopAndPush(CStateStack::EState::MainMenu);
+		myCanvases[EInGameCanvases_MainMenu]->Init(ASSETPATH("Assets/IronWrought/UI/JSON/UI_MainMenu.json"));
+		myCanvases[EInGameCanvases_HUD]->Init(ASSETPATH("Assets/IronWrought/UI/JSON/UI_HUD.json"));
+		myCanvases[EInGameCanvases_PauseMenu]->Init(ASSETPATH("Assets/IronWrought/UI/JSON/UI_PauseMenu.json"));
+		myCanvases[EInGameCanvases_LoadingScreen]->Init(ASSETPATH("Assets/IronWrought/UI/JSON/UI_LoadingScreen.json"));
 	} break;
 
 	case EMessageType::MainMenu:

@@ -408,7 +408,8 @@ void CCanvas::MenuUpdate()
 		{
 			if (myButtons[i]->Click(true, &myLevelToLoad))
 			{
-				CMainSingleton::PostMaster().Send({ EMessageType::CanvasButtonIndex, &i });
+				if (!myWidgets.empty())
+					CMainSingleton::PostMaster().Send({ EMessageType::CanvasButtonIndex, &i });
 			}
 		}
 	}
@@ -419,7 +420,8 @@ void CCanvas::MenuUpdate()
 		{
 			if(myButtons[i]->Click(false, &myLevelToLoad))			
 			{
-				CMainSingleton::PostMaster().Send({ EMessageType::CanvasButtonIndex, &i });
+				if (!myWidgets.empty())
+					CMainSingleton::PostMaster().Send({ EMessageType::CanvasButtonIndex, &i });
 			}
 		}
 	}
@@ -726,6 +728,27 @@ void CCanvas::Init(const std::string& aFilePath, const Vector2& aParentPivot, co
 				myButtons.back()->SetRenderLayer(static_cast<ERenderOrder>(2 + myCurrentRenderLayer));
 			}
 		}
+		else
+		{
+			for (int i = currentSize - 1; i >= 0; --i)
+			{
+				delete myButtons[i];
+				myButtons[i] = nullptr;
+				myButtons.pop_back();
+
+				delete myButtonTexts[i];
+				myButtonTexts[i] = nullptr;
+				myButtonTexts.pop_back();
+			}
+
+			for (int i = 0; i < newSize; ++i)
+			{
+				myButtonTexts.emplace_back(new CTextInstance());
+				myButtons.emplace_back(new CButton());
+				InitButton(buttonDataArray[i].GetObjectW(), i);
+				myButtons.back()->SetRenderLayer(static_cast<ERenderOrder>(2 + myCurrentRenderLayer));
+			}
+		}
 	}
 
 	if (document.HasMember("Texts"))
@@ -754,6 +777,21 @@ void CCanvas::Init(const std::string& aFilePath, const Vector2& aParentPivot, co
 				InitText(textDataArray[i].GetObjectW(), i);
 			}
 		}
+		else
+		{
+			for (int i = currentSize - 1; i >= 0; --i)
+			{
+				delete myTexts[i];
+				myTexts[i] = nullptr;
+				myTexts.pop_back();
+			}
+
+			for (int i = 0; i < newSize; ++i)
+			{
+				myTexts.emplace_back(new CTextInstance());
+				InitText(textDataArray[i].GetObjectW(), i);
+			}
+		}
 	}
 
 	if (document.HasMember("Animated UI Elements"))
@@ -776,6 +814,22 @@ void CCanvas::Init(const std::string& aFilePath, const Vector2& aParentPivot, co
 		else if (difference < 0)// There are more items than before.
 		{
 			for (int i = currentSize; i < newSize; ++i)
+			{
+				myAnimatedUIs.emplace_back(new CAnimatedUIElement());
+				InitAnimatedElement(animatedDataArray[i].GetObjectW(), i);
+				myAnimatedUIs.back()->SetRenderLayer(static_cast<ERenderOrder>(2 + myCurrentRenderLayer));
+			}
+		}
+		else
+		{
+			for (int i = currentSize - 1; i >= 0; --i)
+			{
+				delete myAnimatedUIs[i];
+				myAnimatedUIs[i] = nullptr;
+				myAnimatedUIs.pop_back();
+			}
+
+			for (int i = 0; i < newSize; ++i)
 			{
 				myAnimatedUIs.emplace_back(new CAnimatedUIElement());
 				InitAnimatedElement(animatedDataArray[i].GetObjectW(), i);
@@ -821,6 +875,22 @@ void CCanvas::Init(const std::string& aFilePath, const Vector2& aParentPivot, co
 				mySprites.back()->SetRenderOrder(static_cast<ERenderOrder>(2 + myCurrentRenderLayer));
 			}
 		}
+		else
+		{
+			for (int i = currentSize - 1; i >= 0; --i)
+			{
+				delete mySprites[i];
+				mySprites[i] = nullptr;
+				mySprites.pop_back();
+			}
+
+			for (int i = 0; i < newSize; ++i)
+			{
+				mySprites.emplace_back(new CSpriteInstance());
+				InitSprite(spriteDataArray[i].GetObjectW(), i);
+				mySprites.back()->SetRenderOrder(static_cast<ERenderOrder>(2 + myCurrentRenderLayer));
+			}
+		}
 	}
 
 	if (document.HasMember("PostmasterEvents"))
@@ -848,6 +918,22 @@ void CCanvas::Init(const std::string& aFilePath, const Vector2& aParentPivot, co
 		else if (difference < 0)// There are more items than before.
 		{
 			for (int i = currentSize; i < newSize; ++i)
+			{
+				myWidgets.push_back(new CCanvas());
+				myWidgets[i]->Init(ASSETPATH(widgetsArray[i]["Path"].GetString()), myPivot, myPosition, 3);
+				myWidgets[i]->SetEnabled(false);
+			}
+		}
+		else
+		{
+			for (int i = currentSize - 1; i >= 0; --i)
+			{
+				delete myWidgets[i];
+				myWidgets[i] = nullptr;
+				myWidgets.pop_back();
+			}
+
+			for (int i = 0; i < newSize; ++i)
 			{
 				myWidgets.push_back(new CCanvas());
 				myWidgets[i]->Init(ASSETPATH(widgetsArray[i]["Path"].GetString()), myPivot, myPosition, 3);
