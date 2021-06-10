@@ -288,20 +288,24 @@ void CInGameState::Receive(const SMessage& aMessage)
 		ToggleCanvas(EInGameCanvases_HUD);
 	}break;
 
-	case EMessageType::SetResolution1280x720:
-	{
-
-	}break;
-
 	case EMessageType::SetResolution1600x900:
 	{
-
-	}break;
-
+		CEngine::GetInstance()->SetResolution({ 1600.0f, 900.0f });
+		IRONWROUGHT->GetActiveScene().ReInitCanvas(ASSETPATH("Assets/IronWrought/UI/JSON/UI_MainMenu.json"), true);
+		myStateStack.PopTopAndPush(CStateStack::EState::MainMenu);
+	} break;
 	case EMessageType::SetResolution1920x1080:
 	{
-
-	}break;
+		CEngine::GetInstance()->SetResolution({ 1920.0f, 1080.0f });
+		IRONWROUGHT->GetActiveScene().ReInitCanvas(ASSETPATH("Assets/IronWrought/UI/JSON/UI_MainMenu.json"), true);
+		myStateStack.PopTopAndPush(CStateStack::EState::MainMenu);
+	} break;
+	case EMessageType::SetResolution2560x1440:
+	{
+		CEngine::GetInstance()->SetResolution({ 2560.0f, 1440.0f });
+		IRONWROUGHT->GetActiveScene().ReInitCanvas(ASSETPATH("Assets/IronWrought/UI/JSON/UI_MainMenu.json"), true);
+		myStateStack.PopTopAndPush(CStateStack::EState::MainMenu);
+	} break;
 
 	case EMessageType::MainMenu:
 	{
@@ -381,6 +385,11 @@ void CInGameState::DEBUGFunctionality()
 		CMainSingleton::PostMaster().Send(msg2);
 	}
 
+	if (Input::GetInstance()->IsKeyPressed('0'))
+	{
+		CMainSingleton::PostMaster().Send({ EMessageType::PropCollided, IRONWROUGHT->GetActiveScene().Player() });
+	}
+
 #ifndef INGAME_USE_MENU
 	// TEMP
 	ToggleCanvas(EInGameCanvases_HUD);
@@ -412,7 +421,7 @@ void CInGameState::ToggleCanvas(EInGameCanvases anEInGameCanvases)
 		scene.UpdateOnlyCanvas(true);
 		scene.MainCamera(ESceneCamera::MenuCam);
 		myMenuCamera->myTransform->Position(myMenuCameraPositions[0]);
-		IRONWROUGHT->ShowCursor();
+		IRONWROUGHT->SetIsMenu(true);
 	}
 	else if (myCurrentCanvas == EInGameCanvases_PauseMenu)
 	{
@@ -420,7 +429,7 @@ void CInGameState::ToggleCanvas(EInGameCanvases anEInGameCanvases)
 		scene.CanvasIsHUD(false);
 		scene.MainCamera(ESceneCamera::PlayerFirstPerson);
 		CMainSingleton::PostMaster().SendLate({ EMessageType::PauseMenu, nullptr });
-		IRONWROUGHT->ShowCursor();
+		IRONWROUGHT->SetIsMenu(true);
 	}
 	else if (myCurrentCanvas == EInGameCanvases_HUD)
 	{
@@ -428,7 +437,7 @@ void CInGameState::ToggleCanvas(EInGameCanvases anEInGameCanvases)
 		scene.CanvasIsHUD(true);
 		scene.MainCamera(ESceneCamera::PlayerFirstPerson);
 		CMainSingleton::PostMaster().Unsubscribe(EMessageType::CanvasButtonIndex, this);
-		IRONWROUGHT->HideCursor();
+		IRONWROUGHT->SetIsMenu(false);
 	}
 #else
 	if (myCurrentCanvas == EInGameCanvases_HUD)

@@ -78,11 +78,16 @@ public:
 	void ClearPath() override;
 	void SetAlertedPosition(const Vector3& aAlertedPosition);
 	void SetPath(std::vector<Vector3> aPath, Vector3 aFinalPosition);
+
+	const float PercentileAlertedTimer() const;
 private:
 	Vector3 myAlertedPosition;
 	std::vector<Vector3> myPath;
 	Vector3 myResetPosition;
 	SNavMesh* myNavMesh;
+	float myAlertedTimer;
+	const float myAlertedTimerMax = 1.733f;// either 2.167 or 1.733
+	const float myAlertedFactor = 0.4f;// Roughly half of the alerted-animation time? (It is roughly 2.0s @ 2021 06 09)
 };
 
 class CIdle : public CAIController

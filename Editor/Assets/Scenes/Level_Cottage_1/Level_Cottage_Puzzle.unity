@@ -271,18 +271,6 @@ PhysicMaterial:
   bounciness: 0
   frictionCombine: 0
   bounceCombine: 0
---- !u!134 &626391857
-PhysicMaterial:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_Name: 
-  dynamicFriction: 0.6
-  staticFriction: 0.6
-  bounciness: 0
-  frictionCombine: 0
-  bounceCombine: 0
 --- !u!134 &693531793
 PhysicMaterial:
   m_ObjectHideFlags: 0
@@ -316,6 +304,18 @@ PhysicMaterial:
   m_Name: ' (Instance) (Instance) (Instance) (Instance) (Instance) (Instance) (Instance)
     (Instance) (Instance) (Instance) (Instance) (Instance) (Instance) (Instance)
     (Instance) (Instance) (Instance)'
+  dynamicFriction: 0.6
+  staticFriction: 0.6
+  bounciness: 0
+  frictionCombine: 0
+  bounceCombine: 0
+--- !u!134 &902677751
+PhysicMaterial:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: ' (Instance)'
   dynamicFriction: 0.6
   staticFriction: 0.6
   bounciness: 0
@@ -460,7 +460,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2455971936203990226, guid: 704fd6c3ab4c5e5448bf392a47ec30f7, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 20.205
+      value: 14.758
       objectReference: {fileID: 0}
     - target: {fileID: 2455971936203990226, guid: 704fd6c3ab4c5e5448bf392a47ec30f7, type: 3}
       propertyPath: m_LocalPosition.y
@@ -468,7 +468,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2455971936203990226, guid: 704fd6c3ab4c5e5448bf392a47ec30f7, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -28.025
+      value: -27.662
       objectReference: {fileID: 0}
     - target: {fileID: 2455971936203990226, guid: 704fd6c3ab4c5e5448bf392a47ec30f7, type: 3}
       propertyPath: m_LocalRotation.w
@@ -508,7 +508,7 @@ PrefabInstance:
       objectReference: {fileID: 521175003}
     - target: {fileID: 5562758874163853445, guid: 704fd6c3ab4c5e5448bf392a47ec30f7, type: 3}
       propertyPath: m_Name
-      value: DorrhandtagPropp
+      value: DorrhandtagLas
       objectReference: {fileID: 0}
     - target: {fileID: 5562758874163853445, guid: 704fd6c3ab4c5e5448bf392a47ec30f7, type: 3}
       propertyPath: m_StaticEditorFlags
@@ -557,8 +557,37 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8093bf0719793424d8e82fd738dba18d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  myLock: {fileID: 1277614804869211015}
+  myLock: {fileID: 1657121992}
   responseType: 1
+--- !u!65 &1657121991
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1657121988}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1, y: 0.3, z: 2}
+  m_Center: {x: 0, y: 1, z: 0}
+--- !u!114 &1657121992
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1657121988}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 237cfffbe2748d74cb3f937f17147ce5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  onKeyCreateNotify: {fileID: 11400000, guid: b07720b874de6a44f8534369714ed280, type: 2}
+  onKeyInteractNotify: {fileID: 11400000, guid: a019464d15e001d4e91ebf9b7993b619, type: 2}
+  onLockNotify: {fileID: 11400000, guid: bf963b51b287a75438e7a024cbd897f6, type: 2}
+  interactionType: 1
 --- !u!134 &1674814527
 PhysicMaterial:
   m_ObjectHideFlags: 0
@@ -616,7 +645,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1758246749}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 3.83, y: 0, z: -0.092}
+  m_LocalPosition: {x: 3.83, y: 0, z: 0.04}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1821684225093121145}
@@ -730,18 +759,6 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!134 &1769431382
-PhysicMaterial:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_Name: ' (Instance) (Instance)'
-  dynamicFriction: 0.6
-  staticFriction: 0.6
-  bounciness: 0
-  frictionCombine: 0
-  bounceCombine: 0
 --- !u!65 &1827178324 stripped
 BoxCollider:
   m_CorrespondingSourceObject: {fileID: 184930710390048763, guid: 77aca74521b9da64fbe71cfb79b383db, type: 3}
@@ -771,6 +788,18 @@ PhysicMaterial:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: ' (Instance)'
+  dynamicFriction: 0.6
+  staticFriction: 0.6
+  bounciness: 0
+  frictionCombine: 0
+  bounceCombine: 0
+--- !u!134 &2141793166
+PhysicMaterial:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: ' (Instance) (Instance) (Instance)'
   dynamicFriction: 0.6
   staticFriction: 0.6
   bounciness: 0
@@ -995,7 +1024,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 147784994726880131, guid: 37732feaecf67d24fa037a9f8a7c788b, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 13.02
+      value: 12.969
       objectReference: {fileID: 0}
     - target: {fileID: 147784994726880131, guid: 37732feaecf67d24fa037a9f8a7c788b, type: 3}
       propertyPath: m_LocalPosition.y
@@ -1003,7 +1032,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 147784994726880131, guid: 37732feaecf67d24fa037a9f8a7c788b, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -38.989
+      value: -39.122
       objectReference: {fileID: 0}
     - target: {fileID: 147784994726880131, guid: 37732feaecf67d24fa037a9f8a7c788b, type: 3}
       propertyPath: m_LocalRotation.w
@@ -1067,7 +1096,7 @@ PrefabInstance:
     - target: {fileID: 4846140283301416587, guid: c40358ddbec7c2a499b572d45c5dd26c, type: 3}
       propertyPath: m_Material
       value: 
-      objectReference: {fileID: 626391857}
+      objectReference: {fileID: 902677751}
     - target: {fileID: 6961823472382010437, guid: c40358ddbec7c2a499b572d45c5dd26c, type: 3}
       propertyPath: m_RootOrder
       value: 0
@@ -1156,24 +1185,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8093bf0719793424d8e82fd738dba18d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  myLock: {fileID: 1277614804869211015}
+  myLock: {fileID: 1657121992}
   responseType: 1
---- !u!114 &1277614804869211015
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1277614804869211011}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 237cfffbe2748d74cb3f937f17147ce5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  onKeyCreateNotify: {fileID: 11400000, guid: b07720b874de6a44f8534369714ed280, type: 2}
-  onKeyInteractNotify: {fileID: 11400000, guid: a019464d15e001d4e91ebf9b7993b619, type: 2}
-  onLockNotify: {fileID: 11400000, guid: bf963b51b287a75438e7a024cbd897f6, type: 2}
-  interactionType: 1
 --- !u!114 &1277614804869211016
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1363,6 +1376,22 @@ MonoBehaviour:
   myMaxAttenuationDistance: 10000
   myMinimumVolume: 10
   myDelay: 0
+--- !u!54 &1793320032866368598
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1793320032866368594}
+  serializedVersion: 2
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 0
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
 --- !u!1 &1793320034472316157 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 3804458668805840402, guid: a233b1d4d4742794b88a8d807be05e53, type: 3}
@@ -1818,7 +1847,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 612d23f628453ef479b54a4a0238406c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  myLock: {fileID: 1277614804869211015}
+  myLock: {fileID: 1657121992}
   activationType: 1
 --- !u!114 &3845085275272583980
 MonoBehaviour:
@@ -2362,7 +2391,7 @@ PrefabInstance:
     - target: {fileID: 7150407094802327469, guid: be777537c4610e3409b40ac358bb7918, type: 3}
       propertyPath: m_Material
       value: 
-      objectReference: {fileID: 1769431382}
+      objectReference: {fileID: 2141793166}
     - target: {fileID: 8551602669142087556, guid: be777537c4610e3409b40ac358bb7918, type: 3}
       propertyPath: m_RootOrder
       value: 1

@@ -41,6 +41,8 @@ public:
 
 	const bool IsUnlocked() const { return myAmountOfKeys >= myMaxAmountOfKeys; }
 
+	const bool IsTriggered() const { return myHasTriggered; }
+
 
 private:
 	void Receive(const SIDMessage& aMessage) override;

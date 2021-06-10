@@ -10,6 +10,59 @@
 #include "FolderUtility.h"
 #include <BinReader.h>
 
+std::array<ID3D11ShaderResourceView*, 3> CMaterialHandler::RequestMaterial(const int aMaterialID, const std::string& aModelPath)
+{
+	std::string materialName = "";
+	if (!CJsonReader::Get()->TryGetMaterialName(aMaterialID, materialName))
+	{
+		ENGINE_BOOL_POPUP(false, "Missing material on FBX: %s", aModelPath.c_str());
+		return std::array<ID3D11ShaderResourceView*, 3>();
+	}
+	//TODO
+	//Maybe the Textures Path thing should be Made into some kind of Material Struct with a _C, _M & _N strings.
+	//This could make life a little bit easier!<3
+
+	if (myMaterials.find(materialName) == myMaterials.end()) //Setup Material
+	{
+		std::array<std::string, 3> texturePaths = {};
+		if (!CJsonReader::Get()->TryGetMaterialsPath(aMaterialID, texturePaths))
+			return std::array<ID3D11ShaderResourceView*, 3>();
+
+		std::cout << "Loading Material: " << materialName << "\n";
+		std::array<Microsoft::WRL::ComPtr<ID3D11ShaderResourceView>, 3> newTextures;
+
+		if (!texturePaths[0].empty())
+			newTextures[0] = Graphics::GetShaderResourceView(myDevice, ASSETPATH(texturePaths[0]));
+		else
+			newTextures[0] = Graphics::GetShaderResourceView(myDevice, ASSETPATH("Assets/IronWrought/Texture/ErrorTextures/Checkboard_128x128_c"));
+
+		if (!texturePaths[1].empty())
+			newTextures[1] = Graphics::GetShaderResourceView(myDevice, ASSETPATH(texturePaths[1]));
+		else
+			newTextures[1] = Graphics::GetShaderResourceView(myDevice, ASSETPATH("Assets/IronWrought/Texture/ErrorTextures/Checkboard_128x128_m"));
+
+		if (!texturePaths[2].empty())
+			newTextures[2] = Graphics::GetShaderResourceView(myDevice, ASSETPATH(texturePaths[2]));
+		else
+			newTextures[2] = Graphics::GetShaderResourceView(myDevice, ASSETPATH("Assets/IronWrought/Texture/ErrorTextures/Checkboard_128x128_n"));
+
+		myMaterials.emplace(materialName, std::move(newTextures));
+		myMaterialReferences.emplace(materialName, 0);
+		myMaterialIsAlphaMap.emplace(aMaterialID, MaterialIsAlpha(texturePaths));
+
+	}
+
+	myMaterialReferences[materialName] += 1;
+	std::array<ID3D11ShaderResourceView*, 3> textures;
+	textures[0] = myMaterials[materialName][0].Get();
+	textures[1] = myMaterials[materialName][1].Get();
+	textures[2] = myMaterials[materialName][2].Get();
+	return textures;
+
+	//std::cout << "No Material Found! " << std::endl;
+
+}
+
 std::array<ID3D11ShaderResourceView*, 3> CMaterialHandler::RequestMaterial(const int aMaterialID)
 {
 	std::string materialName = "";
@@ -20,7 +73,6 @@ std::array<ID3D11ShaderResourceView*, 3> CMaterialHandler::RequestMaterial(const
 	//TODO
 	//Maybe the Textures Path thing should be Made into some kind of Material Struct with a _C, _M & _N strings.
 	//This could make life a little bit easier!<3
-
 
 	if (myMaterials.find(materialName) == myMaterials.end()) //Setup Material
 	{
