@@ -77,6 +77,14 @@ public struct ResponsePlayVoiceData
 }
 
 [System.Serializable]
+public struct ResponseNextLevelData
+{
+    public string target;
+    public float delay;
+    public int instanceID;
+}
+
+[System.Serializable]
 public struct ListenerCollection
 {
     public List<ListenerData> listeners;
@@ -86,18 +94,7 @@ public struct ListenerCollection
     public List<ResponseToggleData> responseToggles;
     public List<ResponsePlayAudioData> responseAudios;
     public List<ResponsePlayVoiceData> responseVoices;
-    public List<ResponseTeleporterData> responseTeleporter;
-}
-
-[System.Serializable]
-public struct ResponseTeleporterData
-{
-    public Vector3 teleportToPos;
-    public Vector3 teleportToRot;
-    public int teleporterName;
-    public int teleporterTarget;
-    public float timeUntilTeleport;
-    public int instanceID;
+    public List<ResponseNextLevelData> responseNextLevel;
 }
 
 public class ExportListener
@@ -112,7 +109,7 @@ public class ExportListener
         collection.responseToggles = new List<ResponseToggleData>();
         collection.responseAudios = new List<ResponsePlayAudioData>();
         collection.responseVoices = new List<ResponsePlayVoiceData>();
-        collection.responseTeleporter = new List<ResponseTeleporterData>();
+        collection.responseNextLevel = new List<ResponseNextLevelData>();
 
         Listener[] listeners = GameObject.FindObjectsOfType<Listener>();
         foreach (Listener listener in listeners)
@@ -140,7 +137,7 @@ public class ExportListener
             ExportToggleResponses(ref collection.responseToggles, listener);
             ExportPlayAudioResponses(ref collection.responseAudios, listener);
             ExportPlayVoiceResponses(ref collection.responseVoices, listener);
-            ExportTeleportResponses(ref collection.responseTeleporter, listener);
+            ExportNextLevelResponses(ref collection.responseNextLevel, listener);
         }
         return collection;
     }
@@ -245,18 +242,15 @@ public class ExportListener
             collection.Add(playVoiceData);
         }
     }
-    private static void ExportTeleportResponses(ref List<ResponseTeleporterData> collection, Listener Response)
+    private static void ExportNextLevelResponses(ref List<ResponseNextLevelData> collection, Listener Response)
     {
-        if (Response.TryGetComponent(out ActivationTeleporter teleporter))
+        if (Response.TryGetComponent(out ResponseNextLevel nextLevel))
         {
-            ResponseTeleporterData teleporterData = new ResponseTeleporterData();
-            teleporterData.teleporterName = (int)teleporter.myName;
-            teleporterData.teleporterTarget = (int)teleporter.myTarget;
-            teleporterData.timeUntilTeleport = teleporter.myTeleportTimer;
-            teleporterData.teleportToPos = teleporter.onTeleportToMePosition;
-            teleporterData.teleportToRot = teleporter.onTeleportToMeRotation;
-            teleporterData.instanceID = teleporter.transform.GetInstanceID();
-            collection.Add(teleporterData);
+            ResponseNextLevelData nextLevelData = new ResponseNextLevelData();
+            nextLevelData.target = nextLevel.myTarget.name.Substring(0, nextLevel.myTarget.name.LastIndexOf("_Scenes"));
+            nextLevelData.delay = nextLevel.myDelay;
+            nextLevelData.instanceID = nextLevel.transform.GetInstanceID();
+            collection.Add(nextLevelData);
         }
     }
 }

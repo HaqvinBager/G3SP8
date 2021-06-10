@@ -46,8 +46,6 @@ CScene::CScene(const int aNumberOfSections, const unsigned int aGameObjectCount)
 	: myIsReadyToRender(false)
 	, myMainCamera(nullptr)
 	, myEnvironmentLight(nullptr)
-	, myNavMesh(nullptr)
-	, myNavMeshGrid(nullptr)
 	, myPXScene(nullptr)
 	, myPlayer(nullptr)
 	, myCanvas(nullptr)
@@ -92,7 +90,7 @@ CScene::~CScene()
 	delete myEnvironmentLight;
 	myEnvironmentLight = nullptr;
 
-	if(myDeleteCanvas)
+	if (myDeleteCanvas)
 		delete myCanvas;
 	myCanvas = nullptr;
 
@@ -115,54 +113,12 @@ CScene::~CScene()
 	}
 
 	// Any CScene that is not InGame's scene will not hold a NavMesh
-	if (myNavMesh)
-	{
-		delete myNavMesh;
-		myNavMesh = nullptr;
-	}
-	if (myNavMeshGrid)// -||-
-	{
-		delete myNavMeshGrid;
-		myNavMeshGrid = nullptr;
-	}
+
 	// Even with this the memory still increases on every load!
 }
 
 bool CScene::Init()
 {
-	return true;
-}
-
-bool CScene::InitNavMesh(const std::string& aPath)
-{
-	CNavmeshLoader loader;
-	myNavMesh = loader.LoadNavmesh(aPath);
-
-	if (!myNavMesh)
-	{
-		return false;
-	}
-
-#ifdef _DEBUG
-	std::vector<DirectX::SimpleMath::Vector3> positions;
-	UINT size = static_cast<UINT>(myNavMesh->myTriangles.size()) * 6;
-	positions.reserve(size);
-
-	for (UINT i = 0, j = 0; i < size && j < myNavMesh->myTriangles.size(); i += 6, j++)
-	{
-		positions.push_back(myNavMesh->myTriangles[j]->myVertexPositions[0]);
-		positions.push_back(myNavMesh->myTriangles[j]->myVertexPositions[1]);
-		positions.push_back(myNavMesh->myTriangles[j]->myVertexPositions[2]);
-		positions.push_back(myNavMesh->myTriangles[j]->myVertexPositions[0]);
-		positions.push_back(myNavMesh->myTriangles[j]->myVertexPositions[1]);
-		positions.push_back(myNavMesh->myTriangles[j]->myVertexPositions[2]);
-	}
-
-	myNavMeshGrid = new CLineInstance();
-	myNavMeshGrid->Init(CLineFactory::GetInstance()->CreatePolygon(positions));
-	this->AddInstance(myNavMeshGrid);
-#endif // _DEBUG
-
 	return true;
 }
 
@@ -252,10 +208,10 @@ void CScene::Awake()
 }
 
 void CScene::Start()
-{	
+{
 	IRONWROUGHT->SetAudioListener(myPlayer);
-	
-	for (int i = 0; i < myGameObjects.size(); ++i) 
+
+	for (int i = 0; i < myGameObjects.size(); ++i)
 	{
 		auto enemyComponent = FindFirstObjectWithComponentInSection<CEnemyComponent>(i);
 		if (enemyComponent)
@@ -333,15 +289,15 @@ void CScene::CallAwakeOnNewComponents()
 	while (!myAwakeComponents.empty())
 	{
 		CComponent* component = myAwakeComponents.front();
-		
+
 		const auto& hashCode = typeid(*component).hash_code();
-		if (myComponentMap.find(hashCode) == myComponentMap.end())		
+		if (myComponentMap.find(hashCode) == myComponentMap.end())
 			myComponentMap[hashCode].push_back(component);
 		else
 		{
 			auto& componentVector = myComponentMap.at(hashCode);
 			if (std::find(componentVector.begin(), componentVector.end(), component) == componentVector.end())
-				componentVector.push_back(component);		
+				componentVector.push_back(component);
 		}
 
 		myAwakeComponents.pop();
@@ -412,7 +368,7 @@ void CScene::AddEnemyShortcut(CGameObject* anEnemyObject, const int aSection)
 {
 	if (SectionBoundsCheck(aSection))
 	{
-		if(myEnemies.find(aSection) == myEnemies.end())
+		if (myEnemies.find(aSection) == myEnemies.end())
 			myEnemies.emplace(aSection, anEnemyObject);
 		else
 			std::cout << __FUNCTION__ << " Enemy was not added to myEnemies due to one already existing in the requested section." << std::endl;
@@ -426,6 +382,15 @@ void CScene::AddEnemyShortcut(CGameObject* anEnemyObject, const int aSection)
 bool CScene::EnvironmentLight(CEnvironmentLight* anEnvironmentLight)
 {
 	myEnvironmentLight = anEnvironmentLight;
+
+	// Keep for now, for multiple cubemaps on same light Nico 2021-06-10
+	//if (!myEnvironmentLight)
+	//	myEnvironmentLight = anEnvironmentLight;
+	//else
+	//{
+	//	myEnvironmentLight->AddCubemap(anEnvironmentLight->GetFirstCubemapReference(), CEngine::GetInstance()->myFramework);
+	//}
+
 	return true;
 }
 
@@ -472,10 +437,6 @@ CEnvironmentLight* CScene::EnvironmentLight()
 	return myEnvironmentLight;
 }
 
-SNavMesh* CScene::NavMesh()
-{
-	return myNavMesh;
-}
 
 PxScene* CScene::PXScene()
 {
@@ -499,7 +460,7 @@ CCanvas* CScene::Canvas()
 
 std::vector<CGameObject*> CScene::AllGameObjects()
 {
-	std::vector<CGameObject*> go; 
+	std::vector<CGameObject*> go;
 	size_t numberOfGameObjects = 0;
 	for (auto& gameObjectList : myGameObjects)
 	{
@@ -536,7 +497,7 @@ std::vector<CEnvironmentLight*> CScene::CullSecondaryEnvironmentLights(CGameObje
 std::vector<CPointLight*> CScene::CullPointLights(std::vector<CGameObject*>& someCulledGameObjects)
 {
 	std::vector<CPointLight*> culledPointLights;
-	
+
 	CPointLightComponent* comp = nullptr;
 	for (auto& go : someCulledGameObjects)
 	{
@@ -646,12 +607,12 @@ std::vector<CGameObject*> CScene::CullGameObjects(CCameraComponent* aMainCamera)
 	DirectX::BoundingSphere currentSphere;
 	std::vector<CGameObject*> culledGameObjects;
 	// Test to see if this speeds it up a bit:
-		size_t gameObjectsTotalSize = 0;
-		for (auto& gameObjectsInSection : myGameObjects)
-		{
-			gameObjectsTotalSize += gameObjectsInSection.size();
-		}
-		culledGameObjects.reserve(gameObjectsTotalSize);
+	size_t gameObjectsTotalSize = 0;
+	for (auto& gameObjectsInSection : myGameObjects)
+	{
+		gameObjectsTotalSize += gameObjectsInSection.size();
+	}
+	culledGameObjects.reserve(gameObjectsTotalSize);
 	// !Test 
 // Render only current section.
 	//for (auto& gameObject : myGameObjects[myCurrentSection])
@@ -689,16 +650,16 @@ std::vector<CGameObject*> CScene::CullGameObjects(CCameraComponent* aMainCamera)
 				culledGameObjects.push_back(gameObject);
 				continue;
 			}
-	
+
 			if (gameObject->GetComponent<CInstancedModelComponent>())
 			{
 				culledGameObjects.push_back(gameObject);
 				continue;
 			}
-	
+
 			if (!gameObject->Active())// Might cause issues, time will tell. Remove if it does harm. // Aki 2021 05 28
 				continue;
-	
+
 			currentSphere = DirectX::BoundingSphere(gameObject->myTransform->Position(), 24.0f);
 			if (viewFrustum.Intersects(currentSphere))
 			{
@@ -706,7 +667,7 @@ std::vector<CGameObject*> CScene::CullGameObjects(CCameraComponent* aMainCamera)
 			}
 		}
 	}
-// ! Render all sections
+	// ! Render all sections
 	return culledGameObjects;
 }
 
@@ -1056,7 +1017,7 @@ void CScene::EnableSection(const int aSection)
 		gameObject->Active(false);
 	}
 	myCurrentSection = aSection;
-	if(myPlayer)
+	if (myPlayer)
 		myPlayer->Active(true);
 
 	auto enemyComponent = FindFirstObjectWithComponentInSection<CEnemyComponent>(aSection);
@@ -1083,7 +1044,7 @@ void CScene::DisableSection(const int aSection)
 	{
 		gameObject->Active(false);
 	}
-	if(myPlayer)
+	if (myPlayer)
 		myPlayer->Active(true);
 }
 void CScene::EnableCurrent()

@@ -61,13 +61,10 @@ public struct ActivationPlayVoiceData
 }
 
 [System.Serializable]
-public struct ActivationTeleporterData
+public struct ActivationNextLevelData
 {
-    public Vector3 teleportToPos;
-    public Vector3 teleportToRot;
-    public int teleporterName;
-    public int teleporterTarget;
-    public float timeUntilTeleport;
+    public string target;
+    public float delay;
     public int instanceID;
 }
 
@@ -79,7 +76,7 @@ public struct KeyCollection
     public List<ActivationRotateData> activationRotates;
     public List<ActivationPlayAudioData> activationAudios;
     public List<ActivationPlayVoiceData> activationVoices;
-    public List<ActivationTeleporterData> activationTeleporters;
+    public List<ActivationNextLevelData> activationNextLevel;
 }
 
 public class ExportKey
@@ -92,7 +89,7 @@ public class ExportKey
         collection.activationRotates = new List<ActivationRotateData>();
         collection.activationAudios = new List<ActivationPlayAudioData>();
         collection.activationVoices = new List<ActivationPlayVoiceData>();
-        collection.activationTeleporters = new List<ActivationTeleporterData>();
+        collection.activationNextLevel = new List<ActivationNextLevelData>();
 
         Key[] keys = GameObject.FindObjectsOfType<Key>();
         foreach (Key key in keys)
@@ -115,7 +112,7 @@ public class ExportKey
             ExportMoveActivations(ref collection.activationMoves, key);
             ExportPlayAudioActivations(ref collection.activationAudios, key);
             ExportPlayVoiceActivations(ref collection.activationVoices, key);
-            ExportTeleportActivations(ref collection.activationTeleporters, key);
+            ExportNextLevelActivations(ref collection.activationNextLevel, key);
         }
         return collection;
     }
@@ -183,59 +180,15 @@ public class ExportKey
         }
     }
 
-    private static void ExportTeleportActivations(ref List<ActivationTeleporterData> collection, Key key)
+    private static void ExportNextLevelActivations(ref List<ActivationNextLevelData> collection, Key key)
     {
-        if (key.TryGetComponent(out ActivationTeleporter teleporter))
+        if (key.TryGetComponent(out ActivationNextLevel nextLevel))
         {
-            ActivationTeleporterData teleporterData = new ActivationTeleporterData();
-            teleporterData.teleporterName = (int)teleporter.myName;
-            teleporterData.teleporterTarget = (int)teleporter.myTarget;
-            teleporterData.timeUntilTeleport = teleporter.myTeleportTimer;
-            teleporterData.teleportToPos = teleporter.onTeleportToMePosition;
-            teleporterData.teleportToRot = teleporter.onTeleportToMeRotation;
-            teleporterData.instanceID = teleporter.transform.GetInstanceID();
-            collection.Add(teleporterData);
+            ActivationNextLevelData nextLevelData = new ActivationNextLevelData();
+            nextLevelData.target = nextLevel.myTarget.name.Substring(0, nextLevel.myTarget.name.LastIndexOf("_Scenes"));
+            nextLevelData.delay = nextLevel.myDelay;
+            nextLevelData.instanceID = nextLevel.transform.GetInstanceID();
+            collection.Add(nextLevelData);
         }
     }
 }
-
-//[System.Serializable]
-//public struct KeyData
-//{
-//    public string onCreateNotify;
-//    public string onInteractNotify;
-//    public int interactionType;
-//    public int instanceID;
-//}
-
-//[System.Serializable]
-//public struct KeyCollection
-//{
-//    public List<KeyData> keys;
-//}
-
-//public class ExportKey 
-//{
-
-//    public static KeyCollection Export()
-//    {
-//        KeyCollection collection = new KeyCollection();
-//        collection.keys = new List<KeyData>();
-
-//        Key[] keys = GameObject.FindObjectsOfType<Key>();
-//        foreach(Key key in keys)
-//        {
-//            if (key.myLock == null)
-//                continue;
-
-//            KeyData data = new KeyData();
-//            data.onCreateNotify = key.myLock.onKeyCreateNotify.name;
-//            data.onInteractNotify = key.myLock.onKeyInteractNotify.name;
-//            data.interactionType = (int)key.interactionType;
-//            data.instanceID = key.transform.GetInstanceID();
-//            collection.keys.Add(data);
-//        }
-//        return collection;
-//    }
-
-//}
