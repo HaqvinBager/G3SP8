@@ -101,7 +101,6 @@ std::array<ID3D11ShaderResourceView*, 3> CMaterialHandler::RequestMaterial(const
 		myMaterials.emplace(materialName, std::move(newTextures));
 		myMaterialReferences.emplace(materialName, 0);
 		myMaterialIsAlphaMap.emplace(aMaterialID, MaterialIsAlpha(texturePaths));
-
 	}
 
 	myMaterialReferences[materialName] += 1;
@@ -367,7 +366,10 @@ bool CMaterialHandler::Init(CDirectXFramework* aFramwork)
 	{
 		return false;
 	}
-
+	material defaultMatInit = RequestMaterial("DefaultMaterial");
+	defaultMatInit[0] = nullptr;
+	defaultMatInit[1] = nullptr;
+	defaultMatInit[2] = nullptr;
 	return true;
 }
 
