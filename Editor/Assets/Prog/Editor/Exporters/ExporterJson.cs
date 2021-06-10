@@ -110,8 +110,8 @@ public class ExporterJson
         
         Json.AddToExport(ExportLock.Export());
         Json.AddToExport(ExportKey.Export());
-        Json.AddToExport(ExportListener.Export());
-        Json.AddToExport(ExportLevelTeleporter.Export(aSceneName), true);
+        Json.AddToExport(ExportListener.Export(), true);
+        //Json.AddToExport(ExportLevelTeleporter.Export(aSceneName), true);
     }
 
     public static Player ExportPlayer(string aSceneName)

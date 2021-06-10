@@ -8,6 +8,7 @@
 #include <concurrent_unordered_map.h>
 #include <concurrent_vector.h>
 
+struct SNavMesh;
 struct SVertexPaintCollection;
 class CBinReader;
 
@@ -58,7 +59,7 @@ private:
 	static void AddPuzzleActivationDestroy(CScene& aScene, RapidArray someData);
 	static void AddPuzzleActivationAudio(CScene& aScene, RapidArray someData);
 	static void AddPuzzleActivationVoice(CScene& aScene, RapidArray someData);
-	static void AddPuzzleActivationTeleporter(CScene& aScene, RapidArray someData);
+	//static void AddPuzzleActivationTeleporter(CScene& aScene, RapidArray someData);
 	static void AddPuzzleLock(CScene& aScene, RapidArray someData);
 	static void AddPuzzleListener(CScene& aScene, RapidArray someData);
 	static void AddPuzzleResponseMove(CScene& aScene, RapidArray someData);
@@ -67,7 +68,9 @@ private:
 	static void AddPuzzleResponseToggle(CScene& aScene, RapidArray someData);
 	static void AddPuzzleResponseAudio(CScene& aScene, RapidArray someData);
 	static void AddPuzzleResponseVoice(CScene& aScene, RapidArray someData);
-	static void AddPuzzleResponseTeleporter(CScene& aScene, RapidArray someData);
+	//static void AddPuzzleResponseTeleporter(CScene& aScene, RapidArray someData);
+
+	static void AddNextLevelActivation(CScene& aScene, RapidArray someData);
 
 	static void AddCollider(CScene& aScene, RapidArray someData);
 	static void AddCollider(CScene& aScene, const std::vector<Binary::SCollider>& someData);
@@ -83,7 +86,7 @@ private:
 	static void CreateCustomEventListeners(CScene& aScene);
 
 	static void SetParents(CScene& aScene, RapidArray someData);
-	
+
 	static void SetVertexPaintedColors(CScene& aScene, RapidArray someData, const SVertexPaintCollection& vertexColorData);
 
 
@@ -91,17 +94,18 @@ private:
 	static void AddDirectionalLights(CScene& aScene, RapidArray someData);
 	static void AddDecalComponents(CScene& aScene, RapidArray someData);
 	static void AddPlayer(CScene& aScene, RapidObject someData);
-	static void AddEnemyComponents(CScene& aScene, RapidArray someData);
+	static void AddEnemyComponents(CScene& aScene, RapidArray someData, const std::string& aPath);
 	static void AddPickups(CScene& aScene, RapidArray someData);
 	static void AddAudioSources(CScene& aScene, RapidArray someData);
 	static void AddVFX(CScene& aScene, RapidArray someData);
+	static SNavMesh* InitNavMesh(const std::string& aPath);
 	static CScene* ourLastInstantiatedScene;
 };
 
 
 #include <future>
 class CSceneFactory {
-	
+
 	friend class CEngine;
 public:
 	static CSceneFactory* Get();

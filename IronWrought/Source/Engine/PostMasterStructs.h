@@ -7,11 +7,9 @@ namespace PostMaster
 	enum class ELevelName
 	{
 		Cottage_1,
-		Basement_1_1_A,
-		Basement_1_1_B,
+		Basement_1_1,
 		Basement_2,
-		Basement_1_2_A,
-		Basement_1_2_B,
+		Basement_1_2,
 		Cottage_2,
 		Basement_1_3,
 		None

@@ -30,6 +30,10 @@ public:
 	const bool& GetIsVolumetric() const;
 	const bool& GetIsFog() const;
 
+	const std::string& GetFirstCubemapReference() const;
+	void AddCubemap(const std::string& aCubemapReference, CDirectXFramework* aFramework);
+	void SetCubemapIndex(unsigned int anIndex);
+
 	void SetDirection(DirectX::SimpleMath::Vector3 aDirection);
 	void SetColor(DirectX::SimpleMath::Vector3 aColor);
 	void SetIntensity(float anIntensity);
@@ -45,6 +49,7 @@ public:
 
 private:
 	DirectX::SimpleMath::Matrix GetShadowTransform() const; // Used for shadow position calculation
+	bool LoadCubemap(const std::string& aFilePath, CDirectXFramework* aFramework, ID3D11ShaderResourceView** aCubemapSRV);
 
 private:
 	Matrix myShadowmapViewMatrix;
@@ -52,10 +57,13 @@ private:
 	DirectX::SimpleMath::Vector2 myShadowcastSize;
 	DirectX::SimpleMath::Vector2 myShadowmapResolution;
 
-	ID3D11ShaderResourceView* myCubeShaderResourceView = nullptr;
+	ID3D11ShaderResourceView* myCubeShaderResourceView;
+	std::vector<ID3D11ShaderResourceView*> myCubemaps;
 	DirectX::SimpleMath::Vector4 myPosition;
 	DirectX::SimpleMath::Vector4 myDirection; //Points towards the Light
 	DirectX::SimpleMath::Vector4 myColor; //Color (XYZ) and Intensity (W)
+
+	std::vector<std::string> myCubemapReferences;
 
 	float myNumberOfSamples;
 	float myLightPower;
@@ -64,4 +72,6 @@ private:
 
 	bool myIsVolumetric;
 	bool myIsFog;
+
+	int myCurrentCubemapIndex;
 };

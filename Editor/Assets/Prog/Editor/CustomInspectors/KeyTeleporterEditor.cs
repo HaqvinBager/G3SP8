@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEditor;
 #endif
 
-[CustomEditor(typeof(ActivationTeleporter))]
+[CustomEditor(typeof(ActivationNextLevel))]
 public class KeyTeleporterEditor : Editor
 {
     public override void OnInspectorGUI()
@@ -13,20 +13,20 @@ public class KeyTeleporterEditor : Editor
         serializedObject.Update();
         base.OnInspectorGUI();
 
-        this.ShowValueAndButton<ActivationTeleporter>("onTeleportToMePosition", "Teleport to Position", SavePosition);
-        this.ShowValueAndButton<ActivationTeleporter>("onTeleportToMeRotation", "Rotate to", SaveRotation);
-
-        GUI.backgroundColor = Color.green;
-        this.SetValueButtonCallback<ActivationTeleporter>("onTeleportToMePosition", "Move To: Teleport to", SetPosition);
-        GUI.backgroundColor = Color.cyan;
-        this.SetValueButtonCallback<ActivationTeleporter>("onTeleportToMeRotation", "Rotate to: Rotate to", SetRotation);
+        //this.ShowValueAndButton<ActivationNextLevel>("onTeleportToMePosition", "Teleport to Position", SavePosition);
+        //this.ShowValueAndButton<ActivationNextLevel>("onTeleportToMeRotation", "Rotate to", SaveRotation);
+        //
+        //GUI.backgroundColor = Color.green;
+        //this.SetValueButtonCallback<ActivationNextLevel>("onTeleportToMePosition", "Move To: Teleport to", SetPosition);
+        //GUI.backgroundColor = Color.cyan;
+        //this.SetValueButtonCallback<ActivationNextLevel>("onTeleportToMeRotation", "Rotate to: Rotate to", SetRotation);
 
         serializedObject.ApplyModifiedProperties();
     }
 
      void SetPosition(Vector3 aValue)
      {
-         var move = (ActivationTeleporter)target;
+         var move = (ActivationNextLevel)target;
          move.transform.position = aValue;
      }
      void SavePosition(SerializedProperty aProperty, Vector3 aValue)
@@ -36,7 +36,7 @@ public class KeyTeleporterEditor : Editor
 
     private void SetRotation(Quaternion quat)
     {
-        var rotate = (ActivationTeleporter)target;
+        var rotate = (ActivationNextLevel)target;
         rotate.transform.rotation = quat;
     }
     private void SaveRotation(SerializedProperty aProperty, Quaternion aValue)

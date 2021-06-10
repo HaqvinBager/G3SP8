@@ -25,7 +25,8 @@ public:
 	void Receive(const SStringMessage& aMessage) override;
 	void Receive(const SMessage& aMessage) override;
 
-	void OnSceneLoadComplete(std::string aMsg);
+	void OnSceneLoadCompleteMenu(std::string aMsg);
+	void OnSceneLoadCompleteInGame(std::string aMsg);
 
 private:
 	enum EInGameCanvases
@@ -64,5 +65,4 @@ private:
 	std::array<CCanvas*, EInGameCanvases_Count> myCanvases;
 	EInGameCanvases myCurrentCanvas;
 	float myMenuCameraSpeed;
-
 };
