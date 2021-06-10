@@ -37,8 +37,11 @@
 
 	void TEMP_VFX(CScene* aScene);
 #endif
-
+#ifdef NDEBUG
 #define INGAME_USE_MENU
+#else
+//#define INGAME_USE_MENU
+#endif
 
 #pragma warning( disable : 26812 )
 
