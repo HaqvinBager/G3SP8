@@ -47,6 +47,7 @@ public:
 	void SetPath(std::vector<Vector3> aPath, Vector3 aFinalPosition);
 	void SetTarget(CTransformComponent* aTarget);
 	void Receive(const SMessage& aMsg) override;
+
 private:
 	int myPathTarget;
 	CTransformComponent* myTarget;
