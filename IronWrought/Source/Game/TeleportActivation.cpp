@@ -24,7 +24,7 @@ CTeleportActivation::CTeleportActivation(
 	,	myOnTeleportToMePosition(aPosOnTeleportTo)
 	,	myTeleportTimer(aTimeUntilTeleport)
 	,	myHasTeleported(false)
-
+	,   myActivated(false)
 {
 	myOnTeleportToMeRotation = aRotOnTeleportTo;
 	myOnTeleportToMeRotation.x = (-myOnTeleportToMeRotation.x) - 360.0f;
@@ -45,9 +45,12 @@ void CTeleportActivation::Update()
 	if (myIsInteracted)
 	{	
 		myTeleportTimer -= CTimer::Dt();
-		// Do once:
-			// Fade Camera
-			// Lock Player Movement (could be made to support transform component. But is not needed atm so support won't be added.)
+		if (!myActivated)
+		{
+			IRONWROUGHT->GetActiveScene().MainCamera()->Fade(false, myTeleportTimer);
+			IRONWROUGHT->GetActiveScene().PlayerController()->LockMovementFor(myTeleportTimer);
+			myActivated = true;
+		}
 	}
 
 	if (Complete(myTeleportTimer <= 0.0f))
@@ -96,7 +99,6 @@ void CTeleportActivation::HandleTeleport(CTransformComponent* aTargetToTeleport)
 	if (!aTargetToTeleport)
 		return;
 
-	IRONWROUGHT->GetActiveScene().MainCamera()->Fade(false, myTeleportTimer);
 	std::cout << __FUNCTION__ << " " << myTeleportTimer << std::endl;
 	aTargetToTeleport->Rotation(myOnTeleportToMeRotation);
 	aTargetToTeleport->Position(myOnTeleportToMePosition);
