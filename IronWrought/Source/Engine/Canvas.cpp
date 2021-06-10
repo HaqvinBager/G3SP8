@@ -408,7 +408,8 @@ void CCanvas::MenuUpdate()
 		{
 			if (myButtons[i]->Click(true, &myLevelToLoad))
 			{
-				CMainSingleton::PostMaster().Send({ EMessageType::CanvasButtonIndex, &i });
+				if (!myWidgets.empty())
+					CMainSingleton::PostMaster().Send({ EMessageType::CanvasButtonIndex, &i });
 			}
 		}
 	}
@@ -419,7 +420,8 @@ void CCanvas::MenuUpdate()
 		{
 			if(myButtons[i]->Click(false, &myLevelToLoad))			
 			{
-				CMainSingleton::PostMaster().Send({ EMessageType::CanvasButtonIndex, &i });
+				if (!myWidgets.empty())
+					CMainSingleton::PostMaster().Send({ EMessageType::CanvasButtonIndex, &i });
 			}
 		}
 	}

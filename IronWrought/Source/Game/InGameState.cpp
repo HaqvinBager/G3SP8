@@ -38,13 +38,7 @@
 	void TEMP_VFX(CScene* aScene);
 #endif
 
-// This is a temporary define. Its current use is so that we don't have to deal with the WIP menu. // Aki 2021 05 25
 #define INGAME_USE_MENU
-#ifdef NDEBUG
-#else
-//#define INGAME_USE_MENU
-#endif // NDEBUG
-
 
 #pragma warning( disable : 26812 )
 
