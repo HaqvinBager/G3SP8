@@ -402,7 +402,7 @@ void CInGameState::OnSceneLoadCompleteInGame(std::string aMsg)
 	std::cout << __FUNCTION__ << " InGame Load Complete!" << std::endl;
 	/*CScene& scene = */IRONWROUGHT->GetActiveScene();
 	ToggleCanvas(EInGameCanvases_HUD);
-	IRONWROUGHT->ShowCursor(true);
+	IRONWROUGHT->ShowCursor(false);
 	
 	myEnemyAnimationController->Activate();
 	CEngine::GetInstance()->SetActiveScene(myState);
