@@ -134,6 +134,8 @@ void CEnemyComponent::Start()
 		myRigidBodyComponent->GetDynamicRigidBody()->GetBody().setMaxLinearVelocity(mySettings.mySpeed);
 	}
 
+	myBehaviours.push_back(new CDetection());
+
 	mySpawnPosition = GameObject().myTransform->Position();
 }
 
@@ -212,8 +214,11 @@ void CEnemyComponent::Update()//får bestämma vilket behaviour vi vill köra i 
 				SetState(EBehaviour::Attack);
 			}
 			else if (myHasFoundPlayer) {
-				mySettings.mySpeed = 3.0f;
-				SetState(EBehaviour::Seek);
+
+				if(myCurrentState != EBehaviour::Detection && myCurrentState != EBehaviour::Seek)
+					SetState(EBehaviour::Detection);
+				//mySettings.mySpeed = 3.0f;
+				//SetState(EBehaviour::Seek);
 			}
 			else if (!myHasFoundPlayer && !myHasReachedLastPlayerPosition /*&& !myHeardSound && myHasReachedAlertedTarget*/) {
 				mySettings.mySpeed = 3.0f;
@@ -239,16 +244,35 @@ void CEnemyComponent::Update()//får bestämma vilket behaviour vi vill köra i 
 		myCurrentOrientation = Lerp(myCurrentOrientation, targetOrientation, 10.0f * CTimer::Dt());
 		GameObject().myTransform->Rotation({ 0, DirectX::XMConvertToDegrees(myCurrentOrientation) + 180.f, 0 });
 
-		if(myCurrentState == EBehaviour::Seek)
-			myCurrentStateBlend = PercentileDistanceToPlayer();
-		else if (myCurrentState == EBehaviour::Alerted)
+		switch (myCurrentState)
 		{
-			CAlerted* alertedBehaviour = static_cast<CAlerted*>(myBehaviours[static_cast<int>(EBehaviour::Alerted)]);
-			myCurrentStateBlend = alertedBehaviour->PercentileAlertedTimer();
-		}
-		else
-		{
-			myCurrentStateBlend = 0.0f;
+			case EBehaviour::Seek:
+			{
+				myCurrentStateBlend = PercentileDistanceToPlayer();
+			}break;
+
+			case EBehaviour::Alerted:
+			{
+				CAlerted* alertedBehaviour = static_cast<CAlerted*>(myBehaviours[static_cast<int>(EBehaviour::Alerted)]);
+				myCurrentStateBlend = alertedBehaviour->PercentileAlertedTimer();
+			}break;
+
+			case EBehaviour::Detection:
+			{
+				CDetection* detectedBehaviour = static_cast<CDetection*>(myBehaviours[static_cast<int>(EBehaviour::Detection)]);
+				myCurrentStateBlend = detectedBehaviour->PercentileOfTimer();
+				if (myCurrentStateBlend <= 0.0f)
+				{
+					mySettings.mySpeed = 3.0f;
+					SetState(EBehaviour::Seek);
+					myCurrentStateBlend = 1.0f;
+				}
+			}break;
+
+			default:
+			{
+				myCurrentStateBlend = 0.0f;
+			}break;
 		}
 
 		CMainSingleton::PostMaster().SendLate({ EMessageType::EnemyUpdateCurrentState, this });
@@ -300,6 +324,11 @@ void CEnemyComponent::SetState(EBehaviour aState)
 	case EBehaviour::Idle:
 	{
 		msgType = EMessageType::EnemyIdleState;
+	}break;
+
+	case EBehaviour::Detection:
+	{
+		msgType = EMessageType::EnemyDetectionState;
 	}break;
 
 	default:

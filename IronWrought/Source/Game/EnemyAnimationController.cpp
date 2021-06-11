@@ -16,25 +16,28 @@ CEnemyAnimationController::~CEnemyAnimationController()
 
 void CEnemyAnimationController::Activate()
 {
-	CMainSingleton::PostMaster().Subscribe(EMessageType::EnemyPatrolState, this);
+																					// Shape of an R! :D
 	CMainSingleton::PostMaster().Subscribe(EMessageType::EnemySeekState, this);
+	CMainSingleton::PostMaster().Subscribe(EMessageType::EnemyPatrolState, this);
 	CMainSingleton::PostMaster().Subscribe(EMessageType::EnemyAttackState, this);
 	CMainSingleton::PostMaster().Subscribe(EMessageType::EnemyIdleState, this);
 	CMainSingleton::PostMaster().Subscribe(EMessageType::EnemyAttack, this);
 	CMainSingleton::PostMaster().Subscribe(EMessageType::EnemyDisabled, this);
 	CMainSingleton::PostMaster().Subscribe(EMessageType::EnemyAlertedState, this);
+	CMainSingleton::PostMaster().Subscribe(EMessageType::EnemyDetectionState, this);
 	CMainSingleton::PostMaster().Subscribe(EMessageType::EnemyUpdateCurrentState, this);
 }
 
 void CEnemyAnimationController::Deactivate()
 {
-	CMainSingleton::PostMaster().Unsubscribe(EMessageType::EnemyPatrolState, this);
 	CMainSingleton::PostMaster().Unsubscribe(EMessageType::EnemySeekState, this);
+	CMainSingleton::PostMaster().Unsubscribe(EMessageType::EnemyPatrolState, this);
 	CMainSingleton::PostMaster().Unsubscribe(EMessageType::EnemyAttackState, this);
 	CMainSingleton::PostMaster().Unsubscribe(EMessageType::EnemyIdleState, this);
 	CMainSingleton::PostMaster().Unsubscribe(EMessageType::EnemyAttack, this);
 	CMainSingleton::PostMaster().Unsubscribe(EMessageType::EnemyDisabled, this);
 	CMainSingleton::PostMaster().Unsubscribe(EMessageType::EnemyAlertedState, this);
+	CMainSingleton::PostMaster().Unsubscribe(EMessageType::EnemyDetectionState, this);
 	CMainSingleton::PostMaster().Unsubscribe(EMessageType::EnemyUpdateCurrentState, this);
 }
 
@@ -82,6 +85,12 @@ void CEnemyAnimationController::Receive(const SMessage& aMessage)
 		{
 			CEnemyComponent* enemy = static_cast<CEnemyComponent*>(aMessage.data);
 			OnAlerted(enemy);
+		}break;
+
+		case EMessageType::EnemyDetectionState:
+		{
+			CEnemyComponent* enemy = static_cast<CEnemyComponent*>(aMessage.data);
+			OnDetected(enemy);
 		}break;
 
 		case EMessageType::EnemyUpdateCurrentState:
@@ -164,6 +173,18 @@ void CEnemyAnimationController::OnAlerted(CEnemyComponent* anEnemy)
 	if (!anim)
 		return;
 
+	anim->BlendLerpBetween(UINT_CAST(EEnemyAnimations::Chase), UINT_CAST(EEnemyAnimations::Idle), 1.0f);
+}
+
+void CEnemyAnimationController::OnDetected(CEnemyComponent* anEnemy)
+{
+	if (!anEnemy)
+		return;
+
+	CAnimationComponent* anim = anEnemy->GetComponent<CAnimationComponent>();
+	if (!anim)
+		return;
+
 	anim->BlendLerpBetween(UINT_CAST(EEnemyAnimations::Chase), UINT_CAST(EEnemyAnimations::Alert), 1.0f);
 }
 
@@ -177,6 +198,5 @@ void CEnemyAnimationController::UpdateCurrent(CEnemyComponent* anEnemy)
 		return;
 
 	float blend = anEnemy->CurrentStateBlendValue();
-	//std::cout << __FUNCTION__ << " " << dist << std::endl;
 	anim->BlendLerp(blend);
 }

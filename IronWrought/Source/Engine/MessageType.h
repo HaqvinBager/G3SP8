@@ -116,6 +116,7 @@ enum class EMessageType
 	Play2DVoiceLine,
 
 	EnemyUpdateCurrentState,
+	EnemyDetectionState,
 
 	Count
 };

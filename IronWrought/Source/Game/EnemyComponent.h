@@ -35,6 +35,7 @@ public:
 		Alerted,
 		Idle,
 		Attack,
+		Detection,
 		Count
 	};
 
