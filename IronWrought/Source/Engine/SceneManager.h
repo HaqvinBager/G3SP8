@@ -71,6 +71,7 @@ private:
 	//static void AddPuzzleResponseTeleporter(CScene& aScene, RapidArray someData);
 
 	static void AddNextLevelActivation(CScene& aScene, RapidArray someData);
+	static void AddNextLevelResponse(CScene& aScene, RapidArray someData);
 
 	static void AddCollider(CScene& aScene, RapidArray someData);
 	static void AddCollider(CScene& aScene, const std::vector<Binary::SCollider>& someData);
