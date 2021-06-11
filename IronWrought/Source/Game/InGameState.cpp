@@ -165,6 +165,8 @@ void CInGameState::Start()
 	CMainSingleton::PostMaster().Subscribe(PostMaster::SMSG_TO_MAIN_MENU, this);
 	CMainSingleton::PostMaster().Subscribe(PostMaster::SMSG_SECTION, this);
 #endif
+
+	CMainSingleton::PostMaster().Subscribe(EMessageType::LoadLevel, this);
 }
 
 void CInGameState::Stop()
