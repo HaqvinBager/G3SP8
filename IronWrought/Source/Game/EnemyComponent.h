@@ -62,7 +62,7 @@ public:
 public:
 	float WrapAngle(float anAngle)
 	{
-		return fmodf(anAngle, 360.0f);
+		return fmodf(DirectX::XMConvertToDegrees(anAngle), 360.0f);
 	}
 
 	float ToDegrees(float anAngleInRadians)

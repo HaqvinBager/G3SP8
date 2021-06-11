@@ -42,7 +42,7 @@ CEnemyComponent::CEnemyComponent(CGameObject& aParent, const SEnemySetting& some
 	, mySqrdDistanceToPlayer(FLT_MAX)
 	, myCloseToPlayerThreshold(FLT_MAX)
 	, myAttackPlayerTimer(0.0f)
-	, myAttackPlayerTimerMax(3.0f)
+	, myAttackPlayerTimerMax(2.0f)
 	, myNavMesh(aNavMesh)
 	, myDetectionTimer(0.0f)
 	, myHasScreamed(false)
@@ -262,37 +262,37 @@ void CEnemyComponent::Update()//får bestämma vilket behaviour vi vill köra i 
 
 		float targetOrientation = WrapAngle(atan2f(targetDirection.x, targetDirection.z));
 		myCurrentOrientation = Lerp(myCurrentOrientation, targetOrientation, 10.0f * CTimer::Dt());
-		GameObject().myTransform->Rotation({ 0, DirectX::XMConvertToDegrees(myCurrentOrientation) + 180.f, 0 });
+		GameObject().myTransform->Rotation({ 0, myCurrentOrientation + 180.f, 0 });
 
 		switch (myCurrentState)
 		{
-		case EBehaviour::Seek:
-		{
-			myCurrentStateBlend = PercentileDistanceToPlayer();
-		}break;
-
-		case EBehaviour::Alerted:
-		{
-			CAlerted* alertedBehaviour = static_cast<CAlerted*>(myBehaviours[static_cast<int>(EBehaviour::Alerted)]);
-			myCurrentStateBlend = alertedBehaviour->PercentileAlertedTimer();
-		}break;
-
-		case EBehaviour::Detection:
-		{
-			CDetection* detectedBehaviour = static_cast<CDetection*>(myBehaviours[static_cast<int>(EBehaviour::Detection)]);
-			myCurrentStateBlend = detectedBehaviour->PercentileOfTimer();
-			if (myCurrentStateBlend <= 0.0f)
+			case EBehaviour::Seek:
 			{
-				mySettings.mySpeed = 3.0f;
-				SetState(EBehaviour::Seek);
-				myCurrentStateBlend = 1.0f;
-			}
-		}break;
+				myCurrentStateBlend = PercentileDistanceToPlayer();
+			}break;
 
-		default:
-		{
-			myCurrentStateBlend = 0.0f;
-		}break;
+			case EBehaviour::Alerted:
+			{
+				CAlerted* alertedBehaviour = static_cast<CAlerted*>(myBehaviours[static_cast<int>(EBehaviour::Alerted)]);
+				myCurrentStateBlend = alertedBehaviour->PercentileAlertedTimer();
+			}break;
+
+			case EBehaviour::Detection:
+			{
+				CDetection* detectedBehaviour = static_cast<CDetection*>(myBehaviours[static_cast<int>(EBehaviour::Detection)]);
+				myCurrentStateBlend = detectedBehaviour->PercentileOfTimer();
+				if (myCurrentStateBlend <= 0.0f)
+				{
+					mySettings.mySpeed = 3.0f;
+					SetState(EBehaviour::Seek);
+					myCurrentStateBlend = 1.0f;
+				}
+			}break;
+
+			default:
+			{
+				myCurrentStateBlend = 0.0f;
+			}break;
 		}
 
 		CMainSingleton::PostMaster().Send({ EMessageType::EnemyUpdateCurrentState, this });
@@ -368,7 +368,7 @@ const CEnemyComponent::EBehaviour CEnemyComponent::GetState() const
 void CEnemyComponent::Receive(const SStringMessage& /*aMsg*/)
 {
 }
-
+CTransformComponent* gcamera = nullptr;
 void CEnemyComponent::Receive(const SMessage& aMsg)
 {
 	if (aMsg.myMessageType == EMessageType::EnemyAttackedPlayer)
@@ -387,12 +387,21 @@ void CEnemyComponent::Receive(const SMessage& aMsg)
 		CPlayerControllerComponent* plCtrl = myPlayer->GetComponent<CPlayerControllerComponent>();
 		plCtrl->ForceStand();
 		plCtrl->LockMovementFor(myAttackPlayerTimerMax + 0.75f);
-		myPlayer->myTransform->CopyRotation(this->GameObject().myTransform->Transform());
-		//myPlayer->myTransform->Rotate({0.0f, DirectX::XMConvertToRadians(180.0f), 0.0f});
-		myPlayer->myTransform->Rotation({ 0.0f, 180.0f, 0.0f });
-		myPlayer->myTransform->FetchChildren()[0]->CopyRotation(myPlayer->myTransform->Transform()); // Camera rotates player, if not updated here camera will snap the player back to previous rotation on end of event.
 
-		IRONWROUGHT->GetActiveScene().MainCamera()->SetTrauma(4.0f);
+		// Face player
+		Vector3 targetDirection = myPlayer->myTransform->Position() - this->GameObject().myTransform->Position();
+		targetDirection.Normalize();
+		float targetOrientation = WrapAngle(atan2f(targetDirection.x, targetDirection.z));
+		GameObject().myTransform->Rotation({ 0, targetOrientation + 180.f, 0 });
+		//myPlayer->myTransform->FetchChildren()[0]->Rotation({ 25.0f, 0.0f, 0.0f });
+		
+		// Detach player face
+		gcamera = myPlayer->myTransform->FetchChildren()[0];
+		gcamera->RemoveParent();
+		// adding height of camera
+		gcamera->Position({ gcamera->Position().x, GameObject().myTransform->Position().y + 1.5f, gcamera->Position().z });
+
+		IRONWROUGHT->GetActiveScene().MainCamera()->SetTrauma(1.0f);
 
 		myAttackPlayerTimer = myAttackPlayerTimerMax;
 		return;
@@ -448,6 +457,7 @@ void CEnemyComponent::UpdateAttackEvent()
 	if (myAttackPlayerTimer <= 0.0f)
 	{
 		CPlayerControllerComponent* plCtrl = myPlayer->GetComponent<CPlayerControllerComponent>();
+		gcamera->SetParent(myPlayer->myTransform);
 		plCtrl->Crouch();
 		//plCtrl->OnCrouch();
 		bool lockCamera = false;
@@ -456,14 +466,22 @@ void CEnemyComponent::UpdateAttackEvent()
 		GameObject().myTransform->Position(mySpawnPosition);
 		myMovementLocked = false;
 		SetState(EBehaviour::Idle);
-		std::cout << __FUNCTION__ << " Attack event end." << std::endl;
+		//std::cout << __FUNCTION__ << " Attack event end." << std::endl;
 		return;
 	}
+
+	//Quaternion targetRotCamera = Quaternion::CreateFromYawPitchRoll(DirectX::XMConvertToRadians(25.0f), 0.0f, 0.0f);
+	Quaternion targetRotPlayer = this->GameObject().myTransform->Rotation();
+
+	//Quaternion slerp = Quaternion::Slerp(myPlayer->myTransform->FetchChildren()[0]->Rotation(), targetRotCamera, 0.4f);
+	//myPlayer->myTransform->FetchChildren()[0]->Rotation(slerp);
+	Quaternion slerp = Quaternion::Slerp(gcamera->Rotation(), targetRotPlayer, 0.4f);
+	gcamera->Rotation(slerp);
 
 	if (myAttackPlayerTimer <= myAttackPlayerTimerMax * 0.55f && myAttackPlayerTimer >= myAttackPlayerTimerMax * 0.5f)
 	{
 		// Fade out
-		std::cout << __FUNCTION__ << " Camera fade out." << std::endl;
+		//std::cout << __FUNCTION__ << " Camera fade out." << std::endl;
 		IRONWROUGHT->GetActiveScene().MainCamera()->Fade(false, myAttackPlayerTimerMax * 0.4f, true);
 		IRONWROUGHT->GetActiveScene().MainCamera()->SetTrauma(2.0f);
 	}

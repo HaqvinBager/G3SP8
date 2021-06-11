@@ -96,7 +96,6 @@ void CCameraControllerComponent::Update()
 			break;
 
 		case ECameraMode::PlayerFirstPerson:
-			if(!myLimitFirstPerson)
 				//CEngine::GetInstance()->GetActiveScene().MainCamera(ESceneCamera::PlayerFirstPerson);
 				UpdatePlayerFirstPerson();
 			break;
@@ -147,6 +146,9 @@ void CCameraControllerComponent::UpdateFreeCam()
 
 void CCameraControllerComponent::RotateTransformWithYawAndPitch(const Vector2& someInput)
 {
+	if (myLimitFirstPerson)
+		return;
+
 	float sensitivity = 0.075f;//was 0.25f //TestV�rde, K�ndes  okej p� min Dator! Bra � testa p� andras datorer! /Axel Savage 2021-04-09 14:00
 	myYaw = WrapAngle(myYaw + (someInput.x * sensitivity));
 	myPitch = std::clamp(myPitch + (someInput.y * sensitivity), ToDegrees(-PI / 2.0f)+0.1f, ToDegrees(PI / 2.0f)-0.1f);
