@@ -22,22 +22,16 @@ namespace SM = DirectX::SimpleMath;
 
 CDialogueSystem::CDialogueSystem()
 {
-	myCurrentSpeakerName = nullptr;
 	myAnimatedDialogue = nullptr;
-	myAnimatedNarration = nullptr;
 	myDialogueBox = nullptr;
-	myCurrentSpeakerPortrait = nullptr;
 }
 
-CDialogueSystem::~CDialogueSystem() {
-	delete myCurrentSpeakerName;
-	myCurrentSpeakerName = nullptr;
+CDialogueSystem::~CDialogueSystem() 
+{
 	delete myAnimatedDialogue;
 	myAnimatedDialogue = nullptr;
 	delete myDialogueBox;
 	myDialogueBox = nullptr;
-	delete myCurrentSpeakerPortrait;
-	myCurrentSpeakerPortrait = nullptr;
 
 	// For some reason we always seem to destroy the postmaster before the dialogue system
 	//CMainSingleton::PostMaster().Unsubscribe(EMessageType::LoadDialogue, this);
@@ -57,40 +51,21 @@ bool CDialogueSystem::Init()
 	CSpriteFactory* factory = CSpriteFactory::GetInstance();
 	CTextFactory* textFactory = CTextFactory::GetInstance();
 
-	myDialogueBox = new CSpriteInstance();
 	std::string dialogueBoxPath = document["Dialogue Box Path"].GetString();
 	if(!dialogueBoxPath.empty())
-		myDialogueBox->Init(factory->GetSprite(dialogueBoxPath));
-	myDialogueBox->SetPosition({0.0f, 0.4f});
-
-	auto iconArray = document["Speaker Icon Paths"].GetArray();
-	for (unsigned int i = 0; i < iconArray.Size(); ++i)
 	{
-		mySpeakerPortraits.emplace_back(new CSpriteInstance());
-		mySpeakerPortraits.back()->Init(factory->GetSprite(iconArray[i]["Path"].GetString()));
-		mySpeakerPortraits.back()->SetPosition({document["Speaker Icon Position X"].GetFloat(), document["Speaker Icon Position Y"].GetFloat()});
-
-		mySpeakerNames.emplace_back(new CTextInstance());
-		mySpeakerNames.back()->Init(textFactory->GetText(document["Speaker Names Font and Size"].GetString()));
-		mySpeakerNames.back()->SetPivot({0.0f, 0.5f});
-		mySpeakerNames.back()->SetPosition({document["Speaker Name Position X"].GetFloat(), document["Speaker Name Position Y"].GetFloat()});
-		mySpeakerNames.back()->SetColor({document["Speaker Name Color R"].GetFloat(), document["Speaker Name Color G"].GetFloat(), document["Speaker Name Color B"].GetFloat(), 1.0f});
+		myDialogueBox = new CSpriteInstance();
+		myDialogueBox->Init(factory->GetSprite(dialogueBoxPath));
+		myDialogueBox->SetPosition({0.0f, 0.4f});
 	}
 
 	myAnimatedDialogue = new CTextInstance();
 	myAnimatedDialogue->Init(textFactory->GetText(document["Dialogue Text Font and Size"].GetString()));
-	myAnimatedDialogue->SetPivot({0.0f, 0.5f});
+	myAnimatedDialogue->SetPivot({0.5f, 0.5f});
 	myAnimatedDialogue->SetPosition({document["Dialogue Text Position X"].GetFloat(), document["Dialogue Text Position Y"].GetFloat()});
 	myAnimatedDialogue->SetColor({document["Dialogue Text Color R"].GetFloat(), document["Dialogue Text Color G"].GetFloat(), document["Dialogue Text Color B"].GetFloat(), 1.0f});
 
-	myAnimatedNarration = new CTextInstance();
-	myAnimatedNarration->Init(textFactory->GetText(document["Narration Font and Size"].GetString()));
-	myAnimatedNarration->SetPivot({ 0.0f, 0.5f });
-	myAnimatedNarration->SetPosition({ document["Narration Text Position X"].GetFloat(), document["Narration Text Position Y"].GetFloat() });
-	myAnimatedNarration->SetColor({ document["Narration Text Color R"].GetFloat(), document["Narration Text Color G"].GetFloat(), document["Narration Text Color B"].GetFloat(), 1.0f });
-
 	myLineBreakDialogue = document["Dialogue Line Break After Characters"].GetInt();
-	myLineBreakNarration = document["Narration Line Break After Characters"].GetInt();
 
 	return true;
 }
@@ -100,10 +75,8 @@ void CDialogueSystem::Receive(const SMessage& aMessage)
 	switch (aMessage.myMessageType)
 	{
 	case EMessageType::LoadDialogue:
-		LoadDialogue(*static_cast<int*>(aMessage.data));
-		break;
-	case EMessageType::IntroStarted:
-		LoadNarration();
+		PostMaster::SPlayDynamicAudioData data = *static_cast<PostMaster::SPlayDynamicAudioData*>(aMessage.data);
+		LoadDialogue(data.mySoundIndex, data.myChannel);
 		break;
 	default:
 		break;
@@ -117,13 +90,13 @@ void CDialogueSystem::Receive(const SStringMessage& aMessage)
 	{
 		if (dialogueScenes[i] == std::string(aMessage.myMessageType))
 		{
-			LoadDialogue(static_cast<int>(i));
+			LoadDialogue(static_cast<int>(i), nullptr);
 			break;
 		}
 	}
 }
 
-void CDialogueSystem::LoadDialogue(int aSceneIndex) {
+void CDialogueSystem::LoadDialogue(int aSceneIndex, CAudioChannel* a3DChannel) {
 	ExitDialogue();
 	myDialogueBuffer.clear();
 	myCurrentVoiceLine = -2;
@@ -138,107 +111,87 @@ void CDialogueSystem::LoadDialogue(int aSceneIndex) {
 
 	fclose(fp);
 
-	if (doc.HasMember("Scenes")) {
+	if (doc.HasMember("Scenes")) 
+	{
 		const rapidjson::Value& object = doc["Scenes"][aSceneIndex]["Lines"].GetArray();
 		assert(object.IsArray());
-		for (unsigned int i = 0; i < object.Size(); ++i) {
-			myDialogueBuffer.emplace_back(object[i]["Text"].GetString(), object[i]["Speaker Index"].GetInt(), object[i]["Speaker Name"].GetString(), object[i]["Voiceline Index"].GetInt());
+		for (unsigned int i = 0; i < object.Size(); ++i) 
+		{
+			myDialogueBuffer.emplace_back(object[i]["Text"].GetString(), object[i]["Duration"].GetFloat(), object[i]["Voiceline Index"].GetInt());
+			if (object[i]["3DChannel"].GetBool() && a3DChannel)
+			{
+				myDialogueBuffer.back().myChannel = a3DChannel;
+			}
 		}
 	}
 
 	myIsActive = !myDialogueBuffer.empty();
-}
-
-void CDialogueSystem::LoadNarration()
-{
-	ExitDialogue();
-	myDialogueBuffer.clear();
-	myCurrentVoiceLine = -2;
-
-	FILE* fp;
-	fopen_s(&fp, "Json/DialogueTextLines.json", "rb");
-	char read_buffer[200];
-	rapidjson::FileReadStream is(fp, read_buffer, sizeof(read_buffer));
-
-	rapidjson::Document doc;
-	doc.ParseStream(is);
-
-	fclose(fp);
-
-	if (doc.HasMember("Narration")) {
-		const rapidjson::Value& object = doc["Narration"].GetArray();
-		assert(object.IsArray());
-		for (unsigned int i = 0; i < object.Size(); ++i) {
-			myDialogueBuffer.emplace_back(object[i]["Text"].GetString(), 0, "", object[i]["Voiceline Index"].GetInt());
-		}
-	}
-
-	myIsActive = !myDialogueBuffer.empty();
-	myIsNarration = myIsActive;
 }
 
 void CDialogueSystem::ExitDialogue() {
 	myIsActive = false;
 	myCurrentDialogueIndex = 0;
-	myLastSpeakerIndex = -1;
 	myLastDialogueIndex = -1;
 	myHeldButtonTimer = 0.0f;
 	myDialogueTimer = 0.0f;
 	myLineBreakCounter = 0;
 
 	myAnimatedDialogue->SetText("");
-	myCurrentSpeakerName = nullptr;
-	myCurrentSpeakerPortrait = nullptr;
 
 	myEnabled = true;
-
-	if (myIsNarration) {
-		myIsNarration = false;
-	}
 }
 
-void CDialogueSystem::Update() {
-	//if (!myEnabled) {
-	//	return;
-	//}
-	
+void CDialogueSystem::Update() 
+{
 	if (!myIsActive) {
 		return;
 	}
 
-	if (myCurrentDialogueIndex < myDialogueBuffer.size()) {
-		if (myDialogueBuffer[myCurrentDialogueIndex].mySpeakerNumber != myLastSpeakerIndex) {
-			myLastSpeakerIndex = myDialogueBuffer[myCurrentDialogueIndex].mySpeakerNumber;
-			myCurrentSpeakerPortrait = mySpeakerPortraits[myLastSpeakerIndex];
-			myCurrentSpeakerName = mySpeakerNames[myLastSpeakerIndex];
-			myCurrentSpeakerName->SetText(myDialogueBuffer[myCurrentDialogueIndex].mySpeakerName);
+	//HandleInput();
+	
+	myDialogueTimer += CTimer::Dt();
+	if (myDialogueTimer >= myDialogueBuffer[myCurrentDialogueIndex].myDuration)
+	{
+		myCurrentDialogueIndex = static_cast<size_t>(myCurrentDialogueIndex + 1) % myDialogueBuffer.size();
+		myDialogueTimer = 0.0f;
+		myLineBreakCounter = 0;
+		myCurrentLine = "";
+
+		if (myCurrentDialogueIndex == 0) {
+			CMainSingleton::PostMaster().SendLate({ EMessageType::StopDialogue, NULL });
+			ExitDialogue();
 		}
 	}
 
-	HandleInput();
-	
 	if (myIsActive && (myCurrentDialogueIndex != myLastDialogueIndex))
 	{
-		CMainSingleton::PostMaster().SendLate({ EMessageType::PlayVoiceLine, &myDialogueBuffer[myCurrentDialogueIndex].myVoiceLine });
+		if (myDialogueBuffer[myCurrentDialogueIndex].myChannel)
+		{
+			PostMaster::SPlayDynamicAudioData playData = 
+			{
+				myDialogueBuffer[myCurrentDialogueIndex].myVoiceLine,
+				myDialogueBuffer[myCurrentDialogueIndex].myChannel
+			};
+			CMainSingleton::PostMaster().Send({ EMessageType::Play3DVoiceLine, &playData });
+		}
+		else
+		{
+			CMainSingleton::PostMaster().SendLate({ EMessageType::Play2DVoiceLine, &myDialogueBuffer[myCurrentDialogueIndex].myVoiceLine });
+		}
 		ProcessLineBreaks();
+		myDialogueTimer = 0.0f;
 	}
 
-	if (myIsActive && (myCurrentDialogueIndex < myDialogueBuffer.size())) {
+	if (myIsActive && (myCurrentDialogueIndex < myDialogueBuffer.size())) 
+	{
+		//myDialogueTimer += CTimer::Dt();
+		//int length = static_cast<int>(myDialogueBuffer[myCurrentDialogueIndex].myText.length());
+		//float percentage = myDialogueTimer / (myDialogueSpeed * length);
+		//int numberOfLetters = static_cast<int>(percentage * length);
 
-		myDialogueTimer += CTimer::Dt();
-		int length = static_cast<int>(myDialogueBuffer[myCurrentDialogueIndex].myText.length());
-		float percentage = myDialogueTimer / (myDialogueSpeed * length);
-		int numberOfLetters = static_cast<int>(percentage * length);
+		myCurrentLine.assign(myDialogueBuffer[myCurrentDialogueIndex].myText, 0, myDialogueBuffer[myCurrentDialogueIndex].myText.size());
 
-		myCurrentLine.assign(myDialogueBuffer[myCurrentDialogueIndex].myText, 0, numberOfLetters);
-
-		if (myIsNarration)
-		{
-			myAnimatedNarration->SetText(myCurrentLine);
-		}
-		else {
-			myAnimatedDialogue->SetText(myCurrentLine);
-		}
+		myAnimatedDialogue->SetText(myCurrentLine);
 
 		myLastDialogueIndex = myCurrentDialogueIndex;
 	}
@@ -250,14 +203,8 @@ void CDialogueSystem::EmplaceSprites(std::vector<CSpriteInstance*>& someSprites)
 		return;
 	}
 
-	if (!myIsNarration)
-	{
-		if (myDialogueBox)
-			someSprites.emplace_back(myDialogueBox);
-
-		if (myCurrentSpeakerPortrait)
-			someSprites.emplace_back(myCurrentSpeakerPortrait);
-	}
+	if (myDialogueBox)
+		someSprites.emplace_back(myDialogueBox);
 }
 
 void CDialogueSystem::EmplaceTexts(std::vector<CTextInstance*>& someText) const
@@ -266,17 +213,8 @@ void CDialogueSystem::EmplaceTexts(std::vector<CTextInstance*>& someText) const
 		return;
 	}
 
-	if (myIsNarration) {
-		if (myAnimatedNarration)
-			someText.emplace_back(myAnimatedNarration);
-	}
-	else {
-		if (myAnimatedDialogue)
-			someText.emplace_back(myAnimatedDialogue);
-
-		if (myCurrentSpeakerName)
-			someText.emplace_back(myCurrentSpeakerName);
-	}
+	if (myAnimatedDialogue)
+		someText.emplace_back(myAnimatedDialogue);
 }
 
 void CDialogueSystem::HandleInput() {
@@ -326,7 +264,7 @@ void CDialogueSystem::SetDialogueSpeed(float aSpeed, int aLineLength)
 
 void CDialogueSystem::ProcessLineBreaks()
 {
-	int lineBreak = (myIsNarration ? myLineBreakNarration : myLineBreakDialogue);
+	int lineBreak = myLineBreakDialogue;
 	myLineBreakCounter = 0;
 	for (unsigned int i = 0; i < myDialogueBuffer[myCurrentDialogueIndex].myText.size(); ++i)
 	{

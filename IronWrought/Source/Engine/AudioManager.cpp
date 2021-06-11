@@ -257,6 +257,8 @@ void CAudioManager::Receive(const SMessage& aMessage) {
 		int index = *static_cast<int*>(aMessage.data);
 		myChannels[CAST(EChannel::VOX)]->Stop();
 		myWrapper.Play(myVoiceEventSounds[index], myChannels[CAST(EChannel::VOX)]);
+	
+		CMainSingleton::PostMaster().Send({ EMessageType::LoadDialogue, &index });
 	}
 	break;
 
@@ -1057,6 +1059,10 @@ std::string CAudioManager::TranslateEnum(EVOX enumerator) const
 		return "37";
 	case EVOX::Line38:
 		return "38";
+	case EVOX::Line39:
+		return "39";
+	case EVOX::Line40:
+		return "40";
 	case EVOX::Heal1:
 		return "Heal1";
 	case EVOX::Heal2:
