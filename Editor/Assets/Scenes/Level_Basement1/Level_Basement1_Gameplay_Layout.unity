@@ -122,7 +122,7 @@ NavMeshSettings:
     preserveTilesOutsideBounds: 0
     debug:
       m_Flags: 0
-  m_NavMeshData: {fileID: 23800000, guid: 8d3cb99ad5a12b84f8f6ab7988df75a1, type: 2}
+  m_NavMeshData: {fileID: 23800000, guid: 0ccd5022a5f985442839694a3b4daa8d, type: 2}
 --- !u!1001 &94914053
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -5512,7 +5512,7 @@ PrefabInstance:
     - target: {fileID: 561798480929507129, guid: 24dc741bd847f244aa1ecec19fd14017, type: 3}
       propertyPath: m_Material
       value: 
-      objectReference: {fileID: 1790662664}
+      objectReference: {fileID: 1621332491}
     - target: {fileID: 3512818939265636537, guid: 24dc741bd847f244aa1ecec19fd14017, type: 3}
       propertyPath: m_Name
       value: LevelTeleporter
@@ -5587,6 +5587,20 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 24dc741bd847f244aa1ecec19fd14017, type: 3}
+--- !u!134 &1621332491
+PhysicMaterial:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: ' (Instance) (Instance) (Instance) (Instance) (Instance) (Instance) (Instance)
+    (Instance) (Instance) (Instance) (Instance) (Instance) (Instance) (Instance)
+    (Instance) (Instance)'
+  dynamicFriction: 0.6
+  staticFriction: 0.6
+  bounciness: 0
+  frictionCombine: 0
+  bounceCombine: 0
 --- !u!1001 &1653177717
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -6161,20 +6175,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 4108131478240307542, guid: 12d848a820bb263489cc8261ee74c551, type: 3}
   m_PrefabInstance: {fileID: 1780460242}
   m_PrefabAsset: {fileID: 0}
---- !u!134 &1790662664
-PhysicMaterial:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_Name: ' (Instance) (Instance) (Instance) (Instance) (Instance) (Instance) (Instance)
-    (Instance) (Instance) (Instance) (Instance) (Instance) (Instance) (Instance)
-    (Instance)'
-  dynamicFriction: 0.6
-  staticFriction: 0.6
-  bounciness: 0
-  frictionCombine: 0
-  bounceCombine: 0
 --- !u!1001 &1818526141
 PrefabInstance:
   m_ObjectHideFlags: 0
