@@ -357,7 +357,7 @@ void CEnemyComponent::SetState(EBehaviour aState)
 	if (msgType == EMessageType::Count)
 		return;
 
-	CMainSingleton::PostMaster().SendLate({ msgType, this });
+	CMainSingleton::PostMaster().Send({ msgType, this });
 }
 
 const CEnemyComponent::EBehaviour CEnemyComponent::GetState() const
