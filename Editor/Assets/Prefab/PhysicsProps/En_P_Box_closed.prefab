@@ -31,7 +31,7 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
-  - {fileID: 4828980416647152371}
+  - {fileID: 9036151607897417081}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -93,8 +93,10 @@ MonoBehaviour:
   myConeDirection: {x: 0, y: 0, z: 0}
   myMinAttenuationAngle: 0
   myMaxAttenuationAngle: 0
+  myMinAttenuationDistance: 1
+  myMaxAttenuationDistance: 10000
   myMinimumVolume: 0
---- !u!1001 &4938554778951034136
+--- !u!1001 &8857566161050632850
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
@@ -145,22 +147,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: -7511558181221131132, guid: 6a8a60424b4538248ab2be41e1cffea5, type: 3}
-      propertyPath: m_Materials.Array.data[0]
-      value: 
-      objectReference: {fileID: 2100000, guid: 82930798ff3eac94daf17fc38224857b, type: 2}
     - target: {fileID: 919132149155446097, guid: 6a8a60424b4538248ab2be41e1cffea5, type: 3}
       propertyPath: m_Name
-      value: En_P_Box_closed
-      objectReference: {fileID: 0}
-    - target: {fileID: 919132149155446097, guid: 6a8a60424b4538248ab2be41e1cffea5, type: 3}
-      propertyPath: m_Layer
-      value: 7
+      value: En_P_Box_closed (1)
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6a8a60424b4538248ab2be41e1cffea5, type: 3}
---- !u!4 &4828980416647152371 stripped
+--- !u!4 &9036151607897417081 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 6a8a60424b4538248ab2be41e1cffea5, type: 3}
-  m_PrefabInstance: {fileID: 4938554778951034136}
+  m_PrefabInstance: {fileID: 8857566161050632850}
   m_PrefabAsset: {fileID: 0}

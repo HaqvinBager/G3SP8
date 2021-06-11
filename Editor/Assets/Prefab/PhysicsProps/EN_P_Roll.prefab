@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: -13141221774746766}
   - component: {fileID: -2354626134211662476}
   - component: {fileID: 7850631260661250762}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: EN_P_Roll
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -30,7 +30,7 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
-  - {fileID: 7783603176600053328}
+  - {fileID: 5067818818349976837}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -70,12 +70,12 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 997236637449024877}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fcacea507542a2d47be01cfec7f83296, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mySoundIndex: 0
+  mySoundIndex: 20
   myIs3D: 0
   myConeDirection: {x: 0, y: 0, z: 0}
   myMinAttenuationAngle: 0
@@ -83,7 +83,7 @@ MonoBehaviour:
   myMinAttenuationDistance: 1
   myMaxAttenuationDistance: 10000
   myMinimumVolume: 0
---- !u!1001 &7750220678139494843
+--- !u!1001 &4746296066380868334
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
@@ -96,7 +96,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: e174534cbe36d4a40bd51aa82896028d, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0
+      value: -0.000000021457671
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: e174534cbe36d4a40bd51aa82896028d, type: 3}
       propertyPath: m_LocalPosition.y
@@ -112,7 +112,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: e174534cbe36d4a40bd51aa82896028d, type: 3}
       propertyPath: m_LocalRotation.x
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: e174534cbe36d4a40bd51aa82896028d, type: 3}
       propertyPath: m_LocalRotation.y
@@ -140,12 +140,12 @@ PrefabInstance:
       objectReference: {fileID: 2100000, guid: d2b088da6b499a44c87f00a83d2eaa8b, type: 2}
     - target: {fileID: 919132149155446097, guid: e174534cbe36d4a40bd51aa82896028d, type: 3}
       propertyPath: m_Name
-      value: EN_P_Roll
+      value: EN_P_Roll (1)
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e174534cbe36d4a40bd51aa82896028d, type: 3}
---- !u!4 &7783603176600053328 stripped
+--- !u!4 &5067818818349976837 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: e174534cbe36d4a40bd51aa82896028d, type: 3}
-  m_PrefabInstance: {fileID: 7750220678139494843}
+  m_PrefabInstance: {fileID: 4746296066380868334}
   m_PrefabAsset: {fileID: 0}
