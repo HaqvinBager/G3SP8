@@ -19,6 +19,7 @@ enum class EVOX { Line0, Line1, Line2, Line3, Line4, Line5, Line6, Line7, Line8,
 enum class EEnemyVoiceLine { EnemyDamagePlayer, EnemyHeardNoise, EnemyLostPlayer, EnemyBackToPatrol, EnemyPatrol, EnemyFoundPlayer, EnemyChasing, Count };
 enum class EChannel { Music, Ambience, SFX, UI, VOX, DynamicChannel1, DynamicChannel2, DynamicChannel3, Count };
 enum class EGroundType { Concrete, AirVent, Count };
+enum class EDialogueScene { EnterCottage1, BasementNoHandle, HouseSitting, Lee1, ChestSymbols, Lee2, DoorHandle, Lee3, EnterBasement1, EnemyIntroduction, NoticeElectricalMechanism, NoticeExit, NoticeExit2, EnterBasement2, FindKey, EnterCottage2, ShoutingForLee, EnterBedroom, TryingMainExit, UsingFuse, EnterBasement1Final, Outro, Heal1, Heal2, Heal3, TryLeaveCottage1, PickupPhone, WakeUpAfterDamage1, WakeUpAfterDamage2, WakeUpAfterDamage3, Count};
 
 //STOP
 

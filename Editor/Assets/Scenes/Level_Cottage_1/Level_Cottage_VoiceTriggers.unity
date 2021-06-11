@@ -185,9 +185,13 @@ PrefabInstance:
     - target: {fileID: 5870580155986294078, guid: 3f84232a6a8e3ea45ba5024dd0e18116, type: 3}
       propertyPath: m_Material
       value: 
-      objectReference: {fileID: 2107396318}
+      objectReference: {fileID: 994854753}
     - target: {fileID: 6422795178679717016, guid: 3f84232a6a8e3ea45ba5024dd0e18116, type: 3}
       propertyPath: audioIndex
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 6422795178679717016, guid: 3f84232a6a8e3ea45ba5024dd0e18116, type: 3}
+      propertyPath: dialogueScene
       value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 6738539357066539599, guid: 3f84232a6a8e3ea45ba5024dd0e18116, type: 3}
@@ -200,25 +204,25 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3f84232a6a8e3ea45ba5024dd0e18116, type: 3}
---- !u!134 &1050403911
+--- !u!134 &994854753
 PhysicMaterial:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: ' (Instance) (Instance) (Instance) (Instance) (Instance) (Instance)'
+  m_Name: ' (Instance) (Instance) (Instance) (Instance) (Instance) (Instance) (Instance)'
   dynamicFriction: 0.6
   staticFriction: 0.6
   bounciness: 0
   frictionCombine: 0
   bounceCombine: 0
---- !u!134 &2107396318
+--- !u!134 &1080593664
 PhysicMaterial:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: ' (Instance) (Instance) (Instance) (Instance) (Instance) (Instance)'
+  m_Name: ' (Instance) (Instance) (Instance) (Instance) (Instance) (Instance) (Instance)'
   dynamicFriction: 0.6
   staticFriction: 0.6
   bounciness: 0
@@ -278,9 +282,13 @@ PrefabInstance:
     - target: {fileID: 5870580155986294078, guid: 3f84232a6a8e3ea45ba5024dd0e18116, type: 3}
       propertyPath: m_Material
       value: 
-      objectReference: {fileID: 1050403911}
+      objectReference: {fileID: 1080593664}
     - target: {fileID: 6422795178679717016, guid: 3f84232a6a8e3ea45ba5024dd0e18116, type: 3}
       propertyPath: audioIndex
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6422795178679717016, guid: 3f84232a6a8e3ea45ba5024dd0e18116, type: 3}
+      propertyPath: dialogueScene
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6738539357066539599, guid: 3f84232a6a8e3ea45ba5024dd0e18116, type: 3}

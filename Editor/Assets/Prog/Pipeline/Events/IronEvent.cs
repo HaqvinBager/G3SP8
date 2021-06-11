@@ -23,7 +23,7 @@ public class IronEvent : MonoBehaviour
     public IronEventType eventType;
     public GameEvent eventObject;
     public EEventFilter eventFilter = EEventFilter.Any;
-    public int audioIndex = -1;
+    public EDialogueScene dialogueScene = EDialogueScene.Count;
     public bool triggerOnce = false;
 }
 

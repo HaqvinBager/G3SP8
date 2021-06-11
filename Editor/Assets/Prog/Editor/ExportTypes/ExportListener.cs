@@ -237,7 +237,7 @@ public class ExportListener
             playVoiceData.maxAttenuationDistance = playVoice.myMaxAttenuationDistance;
             playVoiceData.minimumVolume = playVoice.myMinimumVolume;
             playVoiceData.instanceID = playVoice.transform.GetInstanceID();
-            playVoiceData.voiceLine = (int)playVoice.voiceLine;
+            playVoiceData.voiceLine = (int)playVoice.dialogueScene;
             // Debug.Log("Audio: " + playAudioData.soundEffect.ToString());
             collection.Add(playVoiceData);
         }

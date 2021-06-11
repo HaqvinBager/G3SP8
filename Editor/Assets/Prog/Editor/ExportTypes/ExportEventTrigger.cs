@@ -33,7 +33,7 @@ public class ExportEventTrigger
                 instanceID = ironEvent.transform,
                 gameEvent = (ironEvent.eventObject == null) ? "" : ironEvent.eventObject.name,
                 eventFilter = ironEvent.eventFilter,
-                audioIndex = ironEvent.audioIndex,
+                audioIndex = (int)ironEvent.dialogueScene,
                 triggerOnce = ironEvent.triggerOnce
             });
         }

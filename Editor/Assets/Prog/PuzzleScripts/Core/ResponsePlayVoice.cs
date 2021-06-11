@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class ResponsePlayVoice : MonoBehaviour, IListener
 {
-    public EVOX voiceLine;
+    public EDialogueScene dialogueScene;
     public bool myIs3D;
     [Header("!Only Applicable for 3D sources!")]
     public Vector3 myConeDirection;

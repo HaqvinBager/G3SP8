@@ -49,7 +49,7 @@ public struct ActivationPlayAudioData
 [System.Serializable]
 public struct ActivationPlayVoiceData
 {
-    public int voiceLine;
+    public int voiceLine; //sceneIndex
     public bool is3D;
     public Vector3 coneDirection;
     public float minAttenuationAngle;
@@ -175,7 +175,7 @@ public class ExportKey
             playVoiceData.maxAttenuationDistance = playVoice.myMaxAttenuationDistance;
             playVoiceData.minimumVolume = playVoice.myMinimumVolume;
             playVoiceData.instanceID = playVoice.transform.GetInstanceID();
-            playVoiceData.voiceLine = (int)playVoice.voiceLine;
+            playVoiceData.voiceLine = (int)playVoice.dialogueScene;
             collection.Add(playVoiceData);
         }
     }
