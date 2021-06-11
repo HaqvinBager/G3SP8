@@ -23,6 +23,7 @@ public class EnemyExporter
         {
             enemy.settings.instanceID = enemy.transform.GetInstanceID();
             List<InterestPoint> points = new List<InterestPoint>();
+            List<SpawnPoint> transforms = new List<SpawnPoint>();
             for(int i = 0; i < enemy.settings.points.Count; ++i)
             {
                 if (enemy.settings.points[i].GetComponent<PatrolPoint>())
@@ -33,7 +34,17 @@ public class EnemyExporter
                     points.Add(interest);
                 }
             }
+            for(int i = 0; i < enemy.settings.spawnPoints.Count; ++i)
+            {
+                if (enemy.settings.spawnPoints[i].GetComponent<PatrolPoint>())
+                {
+                    SpawnPoint spawnPoint = new SpawnPoint();
+                    spawnPoint.transform = enemy.settings.spawnPoints[i].transform;
+                    transforms.Add(spawnPoint);
+                }
+            }
             enemy.settings.interestPoints = points;
+            enemy.settings.spawnPointTransforms = transforms;
             collection.enemies.Add(enemy.settings);
         }
 

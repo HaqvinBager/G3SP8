@@ -20,6 +20,7 @@ struct SEnemySetting {
 	float myAttackDistance; 
 
 	std::vector<int> myPatrolGameObjectIds;
+	std::vector<Vector3> mySpawnPoints;
 	std::vector<float> myPatrolIntrestValue;
 };
 
