@@ -40,7 +40,7 @@ void CTextInstance::SetPosition(DirectX::SimpleMath::Vector2 aPosition)
     aPosition.x += 0.5f;
     aPosition.y += 0.5f;
     DirectX::SimpleMath::Vector2 standardRes = { 1920.0f, 1080.0f };
-    myPosition = aPosition* standardRes /*CEngine::GetInstance()->GetWindowHandler()->GetResolution()*/;
+    myPosition = aPosition* /*standardRes */CEngine::GetInstance()->GetWindowHandler()->GetResolution();
 }
 
 void CTextInstance::SetGameObjectPosition(DirectX::SimpleMath::Vector2 aPosition)

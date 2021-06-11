@@ -8,17 +8,18 @@
 class CSpriteInstance;
 class CTextInstance;
 class CScene;
+class CAudioChannel;
 
 struct SSpeakerLine {
-	SSpeakerLine(std::string aString, int aSpeaker, std::string aSpeakerName, int aLine)
+	SSpeakerLine(std::string aString, float aDuration, int aLine)
 		: myText(aString)
-		, mySpeakerNumber(aSpeaker)
-		, mySpeakerName(aSpeakerName)
+		, myDuration(aDuration)
+		, myChannel(nullptr)
 		, myVoiceLine(aLine) {}
 
+	CAudioChannel* myChannel;
 	std::string myText;
-	std::string mySpeakerName;
-	int mySpeakerNumber;
+	float myDuration;
 	int myVoiceLine;
 };
 
@@ -47,39 +48,27 @@ private:
 		myIsActive = isActive;
 	}
 
-	void LoadDialogue(int aSceneIndex);
-	void LoadNarration();
+	void LoadDialogue(int aSceneIndex, CAudioChannel* a3DChannel);
 
 	void HandleInput();
 	void SetDialogueSpeed(float aSpeed, int aLineLength);
 	void ProcessLineBreaks();
 
-	
-
 private:
 	CSpriteInstance* myDialogueBox;
-	CSpriteInstance* myCurrentSpeakerPortrait;
-	std::vector<CSpriteInstance*> mySpeakerPortraits;
-
-	CTextInstance* myCurrentSpeakerName;
-	std::vector<CTextInstance*> mySpeakerNames;
 
 	CTextInstance* myAnimatedDialogue;
-	CTextInstance* myAnimatedNarration;
 
 	std::vector<SSpeakerLine> myDialogueBuffer;
 	std::string myCurrentLine = "";
 
 	bool myIsActive = false;
-	bool myIsNarration = false;
 	bool myEnabled = true;
 	int myCurrentDialogueIndex = 0;
 	int myLastDialogueIndex = -1;
-	int myLastSpeakerIndex = -1;
 	int myCurrentVoiceLine = -2;
 	int myLineBreakCounter = 0;
 	int myLineBreakDialogue = 0;
-	int myLineBreakNarration = 0;
 	float myHeldButtonTimer = 0.0f;
 	float myDialogueTimer = 0.0f;
 	float myDialogueSpeed = 0.05f;
