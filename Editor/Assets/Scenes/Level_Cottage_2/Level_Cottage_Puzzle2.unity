@@ -1337,11 +1337,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0c8be42bcf5a796429d2bbcad7f3858d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  myName: 6
-  myTarget: 7
-  myTeleportTimer: 2
-  onTeleportToMePosition: {x: 16.453, y: 64.122, z: -27.741}
-  onTeleportToMeRotation: {x: -0, y: 89.99999, z: 0}
+  myTarget: {fileID: 11400000, guid: ceb345a3d4ceefd4abd91e98c2e37147, type: 2}
+  myDelay: 0.001
 --- !u!1001 &7583396419264505221
 PrefabInstance:
   m_ObjectHideFlags: 0
