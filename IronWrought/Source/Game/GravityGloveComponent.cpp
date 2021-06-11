@@ -61,6 +61,9 @@ void CGravityGloveComponent::Start()
 
 void CGravityGloveComponent::Update()
 {
+	int wheel = Input::GetInstance()->MouseWheel();
+	std::cout <<
+		wheel << std::endl;
 	// Use one at a time:
 	InteractionLogicContinuous();
 	//InteractionLogicOnInput();
@@ -82,7 +85,7 @@ void CGravityGloveComponent::Update()
 		else {
 
 			float dist = Vector3::Distance(GameObject().myTransform->WorldPosition(), myCurrentTarget.myRigidBodyPtr->GameObject().myTransform->Position());
-			if (dist >= mySettings.myMaxDistance + 1.f) {
+			if (dist >= mySettings.myMaxDistance + 3.f) {
 				myJoint->release();
 				myJoint = nullptr;
 				myCurrentTarget.myRigidBodyPtr->GetDynamicRigidBody()->GetBody().setRigidDynamicLockFlag(PxRigidDynamicLockFlag::eLOCK_ANGULAR_X, false);
@@ -297,7 +300,7 @@ void CGravityGloveComponent::InteractionLogicContinuous()
 	Vector3 start = GameObject().myTransform->GetWorldMatrix().Translation();
 	Vector3 dir = -GameObject().myTransform->GetWorldMatrix().Forward();
 
-	PxRaycastBuffer hit = CEngine::GetInstance()->GetPhysx().Raycast(start, dir, mySettings.myMaxDistance + 1.f, CPhysXWrapper::ELayerMask::DYNAMIC_OBJECTS);// ELayerMask could be changed to ::DYNAMIC only? // Aki 2021 05 26
+	PxRaycastBuffer hit = CEngine::GetInstance()->GetPhysx().Raycast(start, dir, mySettings.myMaxDistance + 2.f, CPhysXWrapper::ELayerMask::DYNAMIC_OBJECTS);// ELayerMask could be changed to ::DYNAMIC only? // Aki 2021 05 26
 	if (hit.getNbAnyHits() > 0)
 	{
 		CTransformComponent* transform = static_cast<CTransformComponent*>(hit.getAnyHit(0).actor->userData);
