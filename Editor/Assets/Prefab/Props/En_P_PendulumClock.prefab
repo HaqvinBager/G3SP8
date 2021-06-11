@@ -30,7 +30,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 5853259892417439921}
-  m_RootOrder: 1
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!54 &458398049233053616
 Rigidbody:
@@ -90,8 +90,8 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
-  - {fileID: 1243452014310243872}
   - {fileID: 980345596647092189}
+  - {fileID: 8486295569026768776}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -127,7 +127,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5c562e108cc65394cb59634177042694, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!1001 &1642433399870839243
+--- !u!1001 &8237041554438666339
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
@@ -136,7 +136,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: -8679921383154817045, guid: 2e7608e184d9a8d4d99b46cff04504bc, type: 3}
       propertyPath: m_RootOrder
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 2e7608e184d9a8d4d99b46cff04504bc, type: 3}
       propertyPath: m_LocalPosition.x
@@ -188,16 +188,12 @@ PrefabInstance:
       objectReference: {fileID: 2100000, guid: e802c6d7e7518d742b2e38e8c9ee3425, type: 2}
     - target: {fileID: 919132149155446097, guid: 2e7608e184d9a8d4d99b46cff04504bc, type: 3}
       propertyPath: m_Name
-      value: En_P_PendulumClock
-      objectReference: {fileID: 0}
-    - target: {fileID: 919132149155446097, guid: 2e7608e184d9a8d4d99b46cff04504bc, type: 3}
-      propertyPath: m_StaticEditorFlags
-      value: 0
+      value: En_P_PendulumClock (1)
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2e7608e184d9a8d4d99b46cff04504bc, type: 3}
---- !u!4 &1243452014310243872 stripped
+--- !u!4 &8486295569026768776 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 2e7608e184d9a8d4d99b46cff04504bc, type: 3}
-  m_PrefabInstance: {fileID: 1642433399870839243}
+  m_PrefabInstance: {fileID: 8237041554438666339}
   m_PrefabAsset: {fileID: 0}
