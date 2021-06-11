@@ -295,7 +295,7 @@ void CEnemyComponent::Update()//får bestämma vilket behaviour vi vill köra i 
 		}break;
 		}
 
-		CMainSingleton::PostMaster().SendLate({ EMessageType::EnemyUpdateCurrentState, this });
+		CMainSingleton::PostMaster().Send({ EMessageType::EnemyUpdateCurrentState, this });
 	}
 	else {
 		myWakeUpTimer += CTimer::Dt();
