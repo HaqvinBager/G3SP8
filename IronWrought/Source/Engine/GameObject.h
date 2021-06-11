@@ -62,8 +62,8 @@ public:
 	//Is this game object tagged with tag ?
 	bool CompareTag(const std::string& aTag) const;
 
-	const bool HasComponent(const std::type_index& aType) const;
-	const bool HasComponent(const std::vector<std::type_index>& someTypes) const;
+	const bool HasComponent(const size_t aOtherHashCode) const;
+	const bool HasComponent(const std::vector<size_t>& someOtherHashCodes) const;
 
 	std::vector<std::unique_ptr<CComponent>> myComponents;
 private:
@@ -132,15 +132,9 @@ inline std::vector<T*> CGameObject::GetComponents() const
 	return components;
 }
 
-
-
 template<class T>
 inline bool CGameObject::TryGetComponent(T** outComponent) const
 {
 	*outComponent = GetComponent<T>();
 	return *outComponent != nullptr;
-	//if (component != nullptr) 
-	//	outComponent = component;
-	//
-	//return outComponent != nullptr;
 }

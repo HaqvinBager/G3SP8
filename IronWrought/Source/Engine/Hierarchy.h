@@ -52,7 +52,7 @@ namespace ImGui {
 		
 
 		void EditGameObjects(std::vector<CGameObject*> someGameObjects);
-		std::vector<CGameObject*> Filter(const std::vector<CGameObject*>& someGameObjects, const std::vector<std::type_index>& filterTypes);
+		std::vector<CGameObject*> Filter(const std::vector<CGameObject*>& someGameObjects, const std::vector<size_t>& filterTypes);
 
 		void SubscribeToCallback(const std::type_index& aTypeIndex, std::function<void(CComponent*)> aCallback);
 
@@ -86,25 +86,30 @@ namespace ImGui {
 	private:
 		std::unordered_map<std::type_index, std::function<void(CComponent*)>> myComponentMap;
 		std::unordered_map<std::type_index, std::function<void(CComponent*)>> myEditorCallbackMap;
-		std::unordered_map<std::type_index, std::string> myTypeNames;
+		
+		std::unordered_map<std::type_index, std::string> myTypeToNameMap;
+		std::unordered_map<std::string, const std::type_index> myNameToTypeMap;
+		std::vector<std::string> myTypeNames;
 
 		bool mySearchFilterActive;
 		bool myFilterTypes;
 		bool myFilteDeepFilterTypes;
 		char mySearchFilter[256];
 
+		int mySelectedTypeNameIndex;
 		CScene* myScene;
-		std::vector<std::type_index> myCurrentFilter;
+		std::vector<size_t> myCurrentFilter;
 
 	private:
-		void SaveClassName(std::type_index aType)
+		void SaveClassName(const std::type_index& aType)
 		{
 			std::string name = aType.name();
-
 			size_t startIndex = 6; //class *space* (6 chars)
 			size_t count = name.size() - startIndex;
 			name = name.substr(startIndex, count);
-			myTypeNames[aType] = name;
+			myTypeToNameMap[aType] = name;
+			myNameToTypeMap.insert({ name, aType });
+			myTypeNames.push_back(name);
 		}
 	};
 }

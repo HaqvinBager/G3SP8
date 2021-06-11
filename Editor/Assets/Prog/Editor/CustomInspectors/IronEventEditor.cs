@@ -17,7 +17,7 @@ public class IronEventEditor : Editor
     SerializedProperty eventProperty = null;
     string eventName = string.Empty;
     SerializedProperty eventFilter = null;
-    SerializedProperty audioIndex = null;
+    SerializedProperty dialogueEnum = null;
     SerializedProperty triggerOnce = null;
 
     private void OnEnable()
@@ -54,8 +54,10 @@ public class IronEventEditor : Editor
             //    break;
         }
 
-        audioIndex = serializedObject.FindProperty("audioIndex");
-        EditorGUILayout.PropertyField(audioIndex);
+        
+        dialogueEnum = serializedObject.FindProperty("dialogueScene");
+        if(dialogueEnum != null)
+            EditorGUILayout.PropertyField(dialogueEnum);
 
         triggerOnce = serializedObject.FindProperty("triggerOnce");
         EditorGUILayout.PropertyField(triggerOnce);

@@ -99,25 +99,25 @@ bool CGameObject::CompareTag(const std::string& aTag) const
 	return false;
 }
 
-const bool CGameObject::HasComponent(const std::type_index& aType) const
+const bool CGameObject::HasComponent(const size_t aOtherHashCode) const
 {
 	for (const auto& component : myComponents)
 	{
-		const std::type_index index = typeid(*component.get());
-		if (index == aType)
+		const size_t hashCode = typeid(*component.get()).hash_code();
+		if (hashCode == aOtherHashCode)
 			return true;
 	}
 	return false;
 }
 
-const bool CGameObject::HasComponent(const std::vector<std::type_index>& someTypes) const
+const bool CGameObject::HasComponent(const std::vector<size_t>& someOtherHashCodes) const
 {
 	for (const auto& component : myComponents)
 	{
-		const std::type_index index = typeid(*component.get());
-		for (const std::type_index& other : someTypes)
+		const size_t hashCode = typeid(*component.get()).hash_code();
+		for (const auto& otherHashCode : someOtherHashCodes)
 		{
-			if (index == other)
+			if (hashCode == otherHashCode)
 				return true;
 		}
 	}
