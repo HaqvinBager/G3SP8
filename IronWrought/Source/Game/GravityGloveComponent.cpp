@@ -29,7 +29,7 @@ CGravityGloveComponent::CGravityGloveComponent(CGameObject& aParent, CTransformC
 	mySettings.myMinPushForce = 10.0f;
 	mySettings.myMinPullForce = 200.0f;
 
-	mySettings.myMaxDistance = 3.0f;
+	mySettings.myMaxDistance = 2.0f;
 	mySettings.myCurrentDistanceInverseLerp = 0.0f;
 	myJoint = nullptr;
 }
@@ -69,18 +69,17 @@ void CGravityGloveComponent::Update()
 	{
 		myHoldingAItem = true;
 		myCurrentTarget.myRigidBodyPtr->IsHeld(true);
+		myCurrentTarget.myRigidBodyPtr->GetDynamicRigidBody()->GetBody().setRigidBodyFlag(PxRigidBodyFlag::eRETAIN_ACCELERATIONS, false);
+		myCurrentTarget.myRigidBodyPtr->GetDynamicRigidBody()->GetBody().setRigidDynamicLockFlag(PxRigidDynamicLockFlag::eLOCK_ANGULAR_X, true);
+		myCurrentTarget.myRigidBodyPtr->GetDynamicRigidBody()->GetBody().setRigidDynamicLockFlag(PxRigidDynamicLockFlag::eLOCK_ANGULAR_Y, true);
+		myCurrentTarget.myRigidBodyPtr->GetDynamicRigidBody()->GetBody().setRigidDynamicLockFlag(PxRigidDynamicLockFlag::eLOCK_ANGULAR_Z, true);
 		if (myJoint == nullptr) {
-			myJoint = CreateD6Joint(myRigidStatic, &myCurrentTarget.myRigidBodyPtr->GetDynamicRigidBody()->GetBody(), 3.f);
+			myJoint = CreateD6Joint(myRigidStatic, &myCurrentTarget.myRigidBodyPtr->GetDynamicRigidBody()->GetBody(), mySettings.myMaxDistance);
 		}
 		else {
 
 			float dist = Vector3::Distance(GameObject().myTransform->WorldPosition(), myCurrentTarget.myRigidBodyPtr->GameObject().myTransform->Position());
-			//std::cout << "DISTANCE: " << dist << std::endl;
-			if (myJoint->getConstraintFlags() == PxConstraintFlag::eBROKEN) {
-				myJoint->release();
-				myJoint = nullptr;
-				myCurrentTarget.myRigidBodyPtr = nullptr;
-			} else if (dist >= 4.f) {
+			if (dist >= mySettings.myMaxDistance + 1.f) {
 				myJoint->release();
 				myJoint = nullptr;
 				myCurrentTarget.myRigidBodyPtr = nullptr;
@@ -377,13 +376,12 @@ physx::PxD6Joint* CGravityGloveComponent::CreateD6Joint(PxRigidActor* actor0, Px
 	d6Joint->setMotion(PxD6Axis::eSWING2, PxD6Motion::eLIMITED);
 	d6Joint->setMotion(PxD6Axis::eTWIST, PxD6Motion::eLIMITED);
 
-	PxD6JointDrive drive(80.f, 30.f, PX_MAX_F32, false);
+	PxD6JointDrive drive(100.f, 15.f, PX_MAX_F32, false);
 	d6Joint->setDrive(PxD6Drive::eX, drive);
 	d6Joint->setDrive(PxD6Drive::eY, drive);
 	d6Joint->setDrive(PxD6Drive::eZ, drive);
 	d6Joint->setDrivePosition(PxTransform(0,0,0));
 	d6Joint->setDriveVelocity(PxVec3(0,0,0), PxVec3(0,0,0));
-	d6Joint->setBreakForce(100, 100);
 
 	return d6Joint;
 }
