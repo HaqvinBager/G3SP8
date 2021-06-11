@@ -288,6 +288,7 @@ void CInGameState::Receive(const SMessage& aMessage)
 	case EMessageType::LoadLevel:
 	{
 		ToggleCanvas(EInGameCanvases_LoadingScreen);
+		myMenuCamera = nullptr;
 		std::string levelName = *static_cast<std::string*>(aMessage.data);
 		CSceneFactory::Get()->LoadSceneAsync(levelName, myState, [this](std::string aMsg) { CInGameState::OnSceneLoadCompleteInGame(aMsg); });
 	}break;
