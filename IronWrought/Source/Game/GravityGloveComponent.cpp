@@ -29,7 +29,7 @@ CGravityGloveComponent::CGravityGloveComponent(CGameObject& aParent, CTransformC
 	mySettings.myMinPushForce = 10.0f;
 	mySettings.myMinPullForce = 200.0f;
 
-	mySettings.myMaxDistance = 3.0f;
+	mySettings.myMaxDistance = 2.0f;
 	mySettings.myCurrentDistanceInverseLerp = 0.0f;
 	myJoint = nullptr;
 }
