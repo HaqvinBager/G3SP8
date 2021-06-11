@@ -145,6 +145,7 @@ public:
 	const std::vector<SLineTime>& CullLines() const;
 	LightPair CullLightInstanced(CInstancedModelComponent* aModelType);
 	std::vector<CGameObject*> CullGameObjects(CCameraComponent* aMainCamera);
+	void CullGameObjects(CCameraComponent* aMainCamera, std::vector<CGameObject*>& someGameObjects, std::vector<CGameObject*>& someInstancedGameObjects);
 	CGameObject* FindObjectWithID(const int aGameObjectInstanceID);
 	CGameObject* FindObjectWithTag(const std::string aTag);
 	std::vector<CGameObject*>* FindObjectsWithTag(const std::string aTag);
