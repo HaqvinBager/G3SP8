@@ -55,6 +55,7 @@ private:
 	std::vector<Vector3> myPath;
 	bool myFoundPlayer;
 	Vector3 myLastPlayerPosition;
+	int amount = 0;
 };
 
 class CAttack : public CAIController
@@ -99,8 +100,9 @@ public:
 	void Enter(const Vector3& aPosition) override;
 	Vector3 Update(const Vector3& aPosition) override;
 	void ClearPath() override;
+	void SetTarget(CTransformComponent* aTarget);
 private:
-
+	CTransformComponent* myTarget;
 };
 
 class CDetection : public CAIController {

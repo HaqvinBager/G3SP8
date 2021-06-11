@@ -217,12 +217,15 @@ void CSeek::SetTarget(CTransformComponent* aTarget) {
 
 void CSeek::Receive(const SMessage& aMsg)
 {
+
 	if (aMsg.myMessageType == EMessageType::EnemyFoundPlayer) {
 		myFoundPlayer = true;
+		std::cout << "Amount Seen Player: " << ++amount << std::endl;
 	}
 
 	if (aMsg.myMessageType == EMessageType::EnemyLostPlayer) {
 		myFoundPlayer = false;
+		amount = 0;
 		myLastPlayerPosition = *static_cast<Vector3*>(aMsg.data);
 	}
 }
@@ -337,13 +340,19 @@ void CIdle::Enter(const Vector3& /*aPosition*/)
 {
 }
 
-Vector3 CIdle::Update(const Vector3& /*aPosition*/)
+Vector3 CIdle::Update(const Vector3& aPosition)
 {
-	return Vector3::Zero;
+	Vector3 dir =  myTarget->Position() - aPosition ;
+	return dir;
 }
 
 void CIdle::ClearPath()
 {
+}
+
+void CIdle::SetTarget(CTransformComponent* aTarget)
+{
+	myTarget = aTarget;
 }
 
 CDetection::CDetection()
