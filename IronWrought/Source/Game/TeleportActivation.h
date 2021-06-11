@@ -19,7 +19,7 @@ private:
 private:
 
 	float myDelay;
-	const std::string myTarget;
+	std::string myTarget;
 
 	//Vector3	myOnTeleportToMePosition;// 12
 	//PostMaster::ELevelName myName;// 4
