@@ -43,7 +43,8 @@ void CRotateResponse::Update()
 		myTime -= mySettings.myDelay;
 	}
 
-	GameObject().myTransform->Rotation(Quaternion::Slerp(mySettings.myStart, mySettings.myEnd, myTime / mySettings.myDuration));
+	float t = std::clamp((myTime / mySettings.myDuration), 0.0f, 1.0f);
+	GameObject().myTransform->Rotation(Quaternion::Slerp(mySettings.myStart, mySettings.myEnd, t));
 
 	if (myTime >= mySettings.myDuration)
 		HasBeenActivated(false);

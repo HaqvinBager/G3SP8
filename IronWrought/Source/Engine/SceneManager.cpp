@@ -753,6 +753,9 @@ void CSceneManager::AddPuzzleActivationVoice(CScene& aScene, RapidArray someData
 		PostMaster::SAudioSourceInitData settings = {};
 		settings.mySoundIndex = activation["voiceLine"].GetInt();
 		bool is3D = activation["is3D"].GetBool()/* ? 1 : 0*/;
+		
+		const Matrix& matrix = gameObject->myTransform->GetLocalMatrix();
+		settings.myPosition = matrix.Translation();
 		settings.myForward = Vector3
 		{
 			activation["coneDirection"]["x"].GetFloat(),
@@ -978,6 +981,9 @@ void CSceneManager::AddPuzzleResponseVoice(CScene& aScene, RapidArray someData)
 		PostMaster::SAudioSourceInitData settings = {};
 		settings.mySoundIndex = response["voiceLine"].GetInt();
 		bool is3D = response["is3D"].GetBool()/* ? 1 : 0*/;
+		
+		const Matrix& matrix = gameObject->myTransform->GetLocalMatrix();
+		settings.myPosition = matrix.Translation();
 		settings.myForward = Vector3
 		{
 			response["coneDirection"]["x"].GetFloat(),

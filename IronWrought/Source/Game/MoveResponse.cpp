@@ -27,7 +27,8 @@ void CMoveResponse::Update()
 		myTime -= mySettings.myDelay;
 	}
 
-	GameObject().myTransform->Position(Vector3::Lerp(mySettings.myStart, mySettings.myEnd, myTime / mySettings.myDuration));
+	float t = std::clamp((myTime / mySettings.myDuration), 0.0f, 1.0f);
+	GameObject().myTransform->Position(Vector3::Lerp(mySettings.myStart, mySettings.myEnd, t));
 
 	if (myTime >= mySettings.myDuration)
 	{
