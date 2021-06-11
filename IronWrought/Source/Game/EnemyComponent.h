@@ -95,6 +95,7 @@ private:
 	bool myHasReachedAlertedTarget;
 	bool myHeardSound;
 	bool myIsIdle;
+	bool myHasScreamed;
 
 	float myCurrentStateBlend;
 	float mySqrdDistanceToPlayer;

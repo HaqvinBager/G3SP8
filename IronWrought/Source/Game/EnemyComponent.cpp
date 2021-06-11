@@ -45,6 +45,8 @@ CEnemyComponent::CEnemyComponent(CGameObject& aParent, const SEnemySetting& some
 	, myAttackPlayerTimerMax(3.0f)
 	, myNavMesh(aNavMesh)
 	, myDetectionTimer(0.0f)
+	, myHasScreamed(false)
+
 {
 	//myController = CEngine::GetInstance()->GetPhysx().CreateCharacterController(GameObject().myTransform->Position(), 0.6f * 0.5f, 1.8f * 0.5f, GameObject().myTransform, aHitReport);
 	//myController->GetController().getActor()->setRigidBodyFlag(PxRigidBodyFlag::eUSE_KINEMATIC_TARGET_FOR_SCENE_QUERIES, true);
@@ -190,16 +192,21 @@ void CEnemyComponent::Update()//får bestämma vilket behaviour vi vill köra i 
 					myHasReachedLastPlayerPosition = false;
 					/*myDetectionTimer += CTimer::Dt();
 					if (myDetectionTimer >= 0.1f) {*/
-						CMainSingleton::PostMaster().Send({ EMessageType::EnemyFoundPlayer });
+					if (!myHasScreamed) {
+						myHasScreamed = true;
+						CMainSingleton::PostMaster().Send({ EMessageType::EnemyFoundPlayerScream });
+					}
+					CMainSingleton::PostMaster().Send({ EMessageType::EnemyFoundPlayer });
 					//}
 				}
 			}
 		}
-		else if (myHasFoundPlayer)
+		else if (myHasFoundPlayer)//Out of View
 		{
 			myIdlingTimer = 0.0f;
 			myDetectionTimer = 0.0f;
 			myHasFoundPlayer = false;
+			myHasReachedLastPlayerPosition = false;
 			SMessage msg;
 			msg.data = static_cast<void*>(&playerPos);
 			msg.myMessageType = EMessageType::EnemyLostPlayer;
@@ -288,7 +295,7 @@ void CEnemyComponent::Update()//får bestämma vilket behaviour vi vill köra i 
 		}break;
 		}
 
-		CMainSingleton::PostMaster().SendLate({ EMessageType::EnemyUpdateCurrentState, this });
+		CMainSingleton::PostMaster().Send({ EMessageType::EnemyUpdateCurrentState, this });
 	}
 	else {
 		myWakeUpTimer += CTimer::Dt();
@@ -414,6 +421,7 @@ void CEnemyComponent::Receive(const SMessage& aMsg)
 
 	if (aMsg.myMessageType == EMessageType::EnemyReachedLastPlayerPosition) {
 		//std::cout << " REACHED " << std::endl;
+		myHasScreamed = false;
 		myHasReachedLastPlayerPosition = true;
 		myIsIdle = true;
 		SetState(EBehaviour::Idle);
