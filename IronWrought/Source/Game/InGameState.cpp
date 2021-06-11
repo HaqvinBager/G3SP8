@@ -19,6 +19,7 @@
 #include <SceneManager.h>
 
 #include "EnemyAnimationController.h"
+#include "PlayerControllerComponent.h"
 
 #ifndef NDEBUG
 	#include <VFXSystemComponent.h>
@@ -288,6 +289,10 @@ void CInGameState::Receive(const SMessage& aMessage)
 	case EMessageType::LoadLevel:
 	{
 		ToggleCanvas(EInGameCanvases_LoadingScreen);
+		IRONWROUGHT->GetActiveScene().MainCamera()->Fade(false, 0.5f);
+		IRONWROUGHT->GetActiveScene().PlayerController()->LockMovementFor(0.5f);
+		CMainSingleton::PostMaster().Send({ PostMaster::SMSG_DISABLE_GLOVE, nullptr });
+		myMenuCamera = nullptr;
 		std::string levelName = *static_cast<std::string*>(aMessage.data);
 		CSceneFactory::Get()->LoadSceneAsync(levelName, myState, [this](std::string aMsg) { CInGameState::OnSceneLoadCompleteInGame(aMsg); });
 	}break;

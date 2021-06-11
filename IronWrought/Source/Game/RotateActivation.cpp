@@ -33,7 +33,8 @@ void CRotateActivation::Update()
 	if (myIsInteracted)
 	{
 		myTime += CTimer::Dt();		
-		Quaternion rotation = Quaternion::Slerp(myStart, myEnd, myTime / mySettings.myDuration);
+		float t = std::clamp((myTime / mySettings.myDuration), 0.0f, 1.0f);
+		Quaternion rotation = Quaternion::Slerp(myStart, myEnd, t);
 		GameObject().myTransform->Rotation(rotation);	
 	}
 

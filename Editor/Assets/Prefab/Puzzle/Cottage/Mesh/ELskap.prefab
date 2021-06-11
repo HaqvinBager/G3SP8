@@ -16,8 +16,8 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 4294967295
-  m_IsActive: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
 --- !u!4 &1582534968700464973
 Transform:
   m_ObjectHideFlags: 0
@@ -30,7 +30,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 2564332376947693096}
-  m_RootOrder: 1
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!54 &3158735527646353372
 Rigidbody:
@@ -71,13 +71,12 @@ GameObject:
   m_Component:
   - component: {fileID: 2564332376947693096}
   - component: {fileID: 7946701493305607157}
-  - component: {fileID: 8827716550624573481}
   m_Layer: 7
   m_Name: ELskap
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 4294967295
+  m_StaticEditorFlags: 0
   m_IsActive: 1
 --- !u!4 &2564332376947693096
 Transform:
@@ -90,8 +89,8 @@ Transform:
   m_LocalPosition: {x: 14.39, y: -2.0070004, z: -36.239}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
-  - {fileID: 7335950727453965020}
   - {fileID: 1582534968700464973}
+  - {fileID: 6599420430408756224}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
@@ -115,20 +114,7 @@ MonoBehaviour:
   myMinAttenuationDistance: 1
   myMaxAttenuationDistance: 10000
   myMinimumVolume: 0
---- !u!65 &8827716550624573481
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8092389423271038377}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 0.40589634, y: 1.1205024, z: 0.1556757}
-  m_Center: {x: 0, y: 1.9197319, z: 0.07783785}
---- !u!1001 &7080838582689340727
+--- !u!1001 &6638130581505133547
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
@@ -137,11 +123,11 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: -8679921383154817045, guid: cad288f1a6005a04fb8eb6cae94b4f24, type: 3}
       propertyPath: m_RootOrder
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: cad288f1a6005a04fb8eb6cae94b4f24, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0
+      value: 0.000000019073486
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: cad288f1a6005a04fb8eb6cae94b4f24, type: 3}
       propertyPath: m_LocalPosition.y
@@ -161,11 +147,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: cad288f1a6005a04fb8eb6cae94b4f24, type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: cad288f1a6005a04fb8eb6cae94b4f24, type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: cad288f1a6005a04fb8eb6cae94b4f24, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -179,26 +165,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: -7511558181221131132, guid: cad288f1a6005a04fb8eb6cae94b4f24, type: 3}
-      propertyPath: m_Materials.Array.data[0]
-      value: 
-      objectReference: {fileID: 2100000, guid: cbaff902baf84d744b4a40fb79f80383, type: 2}
     - target: {fileID: 919132149155446097, guid: cad288f1a6005a04fb8eb6cae94b4f24, type: 3}
       propertyPath: m_Name
-      value: En_P_electricalCabinet
-      objectReference: {fileID: 0}
-    - target: {fileID: 919132149155446097, guid: cad288f1a6005a04fb8eb6cae94b4f24, type: 3}
-      propertyPath: m_Layer
-      value: 7
-      objectReference: {fileID: 0}
-    - target: {fileID: 919132149155446097, guid: cad288f1a6005a04fb8eb6cae94b4f24, type: 3}
-      propertyPath: m_StaticEditorFlags
-      value: 4294967295
+      value: En_P_electricalCabinet (1)
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: cad288f1a6005a04fb8eb6cae94b4f24, type: 3}
---- !u!4 &7335950727453965020 stripped
+--- !u!4 &6599420430408756224 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: cad288f1a6005a04fb8eb6cae94b4f24, type: 3}
-  m_PrefabInstance: {fileID: 7080838582689340727}
+  m_PrefabInstance: {fileID: 6638130581505133547}
   m_PrefabAsset: {fileID: 0}

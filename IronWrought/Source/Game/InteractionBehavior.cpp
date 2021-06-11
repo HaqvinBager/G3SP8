@@ -13,11 +13,14 @@
 
 CInteractionBehavior::CInteractionBehavior(CGameObject& aParent)
 	: CBehavior(aParent)
+	, myUpdateEyes(true)
 {
 }
 
 CInteractionBehavior::~CInteractionBehavior()
 {
+	CMainSingleton::PostMaster().Unsubscribe(PostMaster::SMSG_DISABLE_GLOVE, this);
+	CMainSingleton::PostMaster().Unsubscribe(PostMaster::SMSG_ENABLE_GLOVE, this);
 }
 
 void CInteractionBehavior::OnEnable()
@@ -30,6 +33,8 @@ void CInteractionBehavior::Awake()
 
 void CInteractionBehavior::Start()
 {
+	CMainSingleton::PostMaster().Subscribe(PostMaster::SMSG_DISABLE_GLOVE, this);
+	CMainSingleton::PostMaster().Subscribe(PostMaster::SMSG_ENABLE_GLOVE, this);
 }
 
 void CInteractionBehavior::Update()
@@ -41,8 +46,27 @@ void CInteractionBehavior::OnDisable()
 {
 }
 
+void CInteractionBehavior::Receive(const SStringMessage& aMsg)
+{
+	if (PostMaster::CompareStringMessage(PostMaster::SMSG_DISABLE_GLOVE, aMsg.myMessageType))
+	{
+		myUpdateEyes = false;
+		return;
+	}
+	if (PostMaster::CompareStringMessage(PostMaster::SMSG_ENABLE_GLOVE, aMsg.myMessageType))
+	{
+		myUpdateEyes = true;
+		return;
+	}
+}
+
 void CInteractionBehavior::UpdateEyes()
 {
+	if (!myUpdateEyes)
+	{
+		return;
+	}
+
 	Vector3 origin = GameObject().myTransform->WorldPosition();
 	Vector3 direction = -GameObject().myTransform->GetWorldMatrix().Forward();
 	auto hit = CEngine::GetInstance()->GetPhysx().Raycast(origin, direction, 2.0f, CPhysXWrapper::ELayerMask::DYNAMIC_OBJECTS);
