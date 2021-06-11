@@ -22,6 +22,7 @@ CAudioManager::CAudioManager()
 	, myListener(nullptr)
 	, myDynamicObject(nullptr)
 	, myDynamicSource(nullptr)
+	, my3DVoiceSource(nullptr)
 {
 	SubscribeToMessages();
 
@@ -448,11 +449,22 @@ void CAudioManager::Receive(const SMessage& aMessage) {
 	case EMessageType::Play3DVoiceLine:
 	{
 		PostMaster::SPlayDynamicAudioData data = *static_cast<PostMaster::SPlayDynamicAudioData*>(aMessage.data);
+
+		if (my3DVoiceSource != data.myChannel)
+			my3DVoiceSource = data.myChannel;
+
+		if (my3DVoiceSource)
+			my3DVoiceSource->Stop();
+
 		myWrapper.Play(myVoiceEventSounds[data.mySoundIndex], data.myChannel);
 	}break;
 
 	case EMessageType::Play2DVoiceLine:
 	{
+		if (my3DVoiceSource)
+			my3DVoiceSource->Stop();
+
+		myChannels[CAST(EChannel::VOX)]->Stop();
 		int data = *static_cast<int*>(aMessage.data);
 		myWrapper.Play(myVoiceEventSounds[data], myChannels[CAST(EChannel::VOX)]);
 	}break;

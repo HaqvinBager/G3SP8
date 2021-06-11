@@ -132,6 +132,8 @@ private:
 	CAudioChannel* myDynamicSource;
 	std::vector<CAudioChannel*> myDynamicSources;
 
+	CAudioChannel* my3DVoiceSource;
+
 	float myDynamicChannel1;
 	float myDynamicChannel2;
 	float myDynamicChannel3;
