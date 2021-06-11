@@ -14,6 +14,7 @@ struct SButtonData {
 	DirectX::SimpleMath::Vector2 myDimensions;
 	std::string myText;
 	int myWidgetToToggleIndex;
+	std::string myMessageData;
 };
 
 struct SUIRect {
@@ -36,7 +37,7 @@ public:
 	void OnLeave();
 
 	// Returns true if OnClickUp has fired.
-	bool Click(bool anIsPressed, void* someData);
+	bool Click(bool anIsPressed, void* someData = nullptr);
 	void CheckMouseCollision(DirectX::SimpleMath::Vector2 aScreenSpacePosition);
 
 	const std::vector<EMessageType>& GetMessagesToSend() { return myMessagesToSend; }
@@ -56,13 +57,13 @@ private:
 
 private:
 	std::vector<EMessageType> myMessagesToSend;
-	std::vector<std::string> myMessageData;
 	std::array<CSpriteInstance*, 3> mySprites = { nullptr, nullptr, nullptr };
 	SUIRect myRect;
 	EButtonState myState;
 	bool myEnabled;
 	bool myIsMouseHover;
 	int myWidgetToToggleIndex;
-	
+	std::string myMessageData;
+	//std::vector<std::string> myMessageData;
 };
 

@@ -41,7 +41,7 @@
 #ifdef NDEBUG
 #define INGAME_USE_MENU
 #else
-//#define INGAME_USE_MENU
+#define INGAME_USE_MENU
 #endif
 
 #define MENU_SCENE "Level_Cottage_1"
@@ -168,6 +168,7 @@ void CInGameState::Start()
 #endif
 
 	CMainSingleton::PostMaster().Subscribe(EMessageType::LoadLevel, this);
+	CMainSingleton::PostMaster().Subscribe(EMessageType::LevelSelectLoadLevel, this);
 }
 
 void CInGameState::Stop()
@@ -190,6 +191,9 @@ void CInGameState::Stop()
 	CMainSingleton::PostMaster().Unsubscribe(EMessageType::SetResolution1920x1080, this);
 	CMainSingleton::PostMaster().Unsubscribe(EMessageType::SetResolution2560x1440, this);
 #endif
+
+	CMainSingleton::PostMaster().Unsubscribe(EMessageType::LoadLevel, this);
+	CMainSingleton::PostMaster().Unsubscribe(EMessageType::LevelSelectLoadLevel, this);
 
 	myMenuCamera = nullptr; // Has been deleted by Scene when IRONWROUGHT->RemoveScene(..) was called, as it is added as a gameobject.
 }
@@ -293,6 +297,17 @@ void CInGameState::Receive(const SMessage& aMessage)
 		IRONWROUGHT->GetActiveScene().PlayerController()->LockMovementFor(0.5f);
 		CMainSingleton::PostMaster().Send({ PostMaster::SMSG_DISABLE_GLOVE, nullptr });
 		myMenuCamera = nullptr;
+		std::string levelName = *static_cast<std::string*>(aMessage.data);
+		CSceneFactory::Get()->LoadSceneAsync(levelName, myState, [this](std::string aMsg) { CInGameState::OnSceneLoadCompleteInGame(aMsg); });
+	}break;
+
+	case EMessageType::LevelSelectLoadLevel:
+	{
+		if (!aMessage.data)
+			return;
+		ToggleCanvas(EInGameCanvases_LoadingScreen);
+		myMenuCamera = nullptr;
+		
 		std::string levelName = *static_cast<std::string*>(aMessage.data);
 		CSceneFactory::Get()->LoadSceneAsync(levelName, myState, [this](std::string aMsg) { CInGameState::OnSceneLoadCompleteInGame(aMsg); });
 	}break;

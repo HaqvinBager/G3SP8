@@ -24,11 +24,6 @@ CCanvas::CCanvas() :
 	, myIsEnabled(true)
 	, myIsHUDCanvas(false)
 	, myCurrentRenderLayer(0)
-#ifdef VERTICAL_SLICE
-	, myLevelToLoad("VerticalSlice")
-#else
-	, myLevelToLoad("Level_1-1")
-#endif
 	, myCurrentWidgetIndex(-1)
 {
 }
@@ -353,49 +348,6 @@ void CCanvas::MenuUpdate()
 	if (myIsHUDCanvas)
 		return;
 
-	if (myWidgets.size() > 0)// This is a quick solution. Nothing to keep.
-	{
-		for (unsigned short i = 0; i < myWidgets.size(); ++i)
-		{
-			switch (i)
-			{
-				case 0:
-				myLevelToLoad = "Level_1-1";
-				break;
-
-				case 1:
-				if(myWidgets[i]->GetEnabled())
-					myLevelToLoad = "Level_1-2";
-				break;
-
-				case 2:
-				if(myWidgets[i]->GetEnabled())
-					myLevelToLoad = "Level_2-1";
-				break;
-
-				case 3:
-				if(myWidgets[i]->GetEnabled())
-					myLevelToLoad = "Level_2-2";
-				break;
-
-				case 7:
-				{
-					if (!myWidgets[i]->GetEnabled())
-						continue;
-
-					for (auto& button : myButtons)
-					{
-						button->Enabled(false);
-					}
-				}	
-				break;
-				default:
-				break;
-
-			}
-		}
-	}
-
 	DirectX::SimpleMath::Vector2 mousePos = { static_cast<float>(Input::GetInstance()->MouseX()), static_cast<float>(Input::GetInstance()->MouseY()) };
 	for (unsigned int i = 0; i < myButtons.size(); ++i)
 	{
@@ -406,7 +358,7 @@ void CCanvas::MenuUpdate()
 	{
 		for (unsigned int i = 0; i < myButtons.size(); ++i)
 		{
-			if (myButtons[i]->Click(true, &myLevelToLoad))
+			if (myButtons[i]->Click(true))
 			{
 				if (!myWidgets.empty())
 					CMainSingleton::PostMaster().Send({ EMessageType::CanvasButtonIndex, &i });
@@ -418,7 +370,7 @@ void CCanvas::MenuUpdate()
 	{
 		for (unsigned int i = 0; i < myButtons.size(); ++i)
 		{
-			if(myButtons[i]->Click(false, &myLevelToLoad))			
+			if(myButtons[i]->Click(false))			
 			{
 				if (!myWidgets.empty())
 					CMainSingleton::PostMaster().Send({ EMessageType::CanvasButtonIndex, &i });
@@ -489,6 +441,9 @@ bool CCanvas::InitButton(const rapidjson::GenericObject<false, rapidjson::Value>
 	data.myWidgetToToggleIndex = -1;
 	if (aRapidObject.HasMember("Sub Canvas Toggle Index"))
 		data.myWidgetToToggleIndex = aRapidObject["Sub Canvas Toggle Index"].GetInt();
+
+	if (aRapidObject.HasMember("Message Data"))
+		data.myMessageData = aRapidObject["Message Data"].GetString();
 
  	myButtons[anIndex]->Init(data);
 

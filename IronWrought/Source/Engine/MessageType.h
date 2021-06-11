@@ -119,5 +119,7 @@ enum class EMessageType
 	EnemyUpdateCurrentState,
 	EnemyDetectionState,
 
+	LevelSelectLoadLevel,
+
 	Count
 };

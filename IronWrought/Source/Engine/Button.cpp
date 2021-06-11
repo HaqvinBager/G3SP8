@@ -34,7 +34,12 @@ void CButton::OnClickUp(void* someData)
 
 	for (unsigned int i = 0; i < myMessagesToSend.size(); ++i)
 	{
-		CMainSingleton::PostMaster().SendLate({ myMessagesToSend[i], someData });
+		if(someData)
+			CMainSingleton::PostMaster().SendLate({ myMessagesToSend[i], someData });
+		else if(myMessageData.empty() == false)
+			CMainSingleton::PostMaster().SendLate({ myMessagesToSend[i], &myMessageData });
+		else
+			CMainSingleton::PostMaster().SendLate({ myMessagesToSend[i], nullptr });
 	}
 
 	if (myWidgetToToggleIndex > -1)
@@ -207,4 +212,6 @@ void CButton::Init(SButtonData& someData)
 	myRect.myRight = normalizedPosition.x * windowWidth + spriteDimensions.x;
 
 	myWidgetToToggleIndex = someData.myWidgetToToggleIndex;
+
+	myMessageData = someData.myMessageData;
 }

@@ -85,8 +85,6 @@ private:
 	std::vector<EMessageType>		 myMessageTypes;
 	std::vector<CCanvas*>			 myWidgets;
 
-	std::string myLevelToLoad = ""; // Button - toggle sends level to load
-
 	unsigned int myCurrentRenderLayer;
 
 	bool myIsHUDCanvas;
