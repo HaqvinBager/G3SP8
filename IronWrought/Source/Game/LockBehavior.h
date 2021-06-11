@@ -48,7 +48,7 @@ private:
 	void Receive(const SIDMessage& aMessage) override;
 
 	SSettings mySettings;
-
+	bool myHasSubscribed;
 	int myMaxAmountOfKeys;
 	int myAmountOfKeys;
 

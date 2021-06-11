@@ -11,10 +11,10 @@ GameObject:
   - component: {fileID: 7992335146010570420}
   m_Layer: 0
   m_Name: En_G_Floor400x300_V2
-  m_TagString: Untagged
+  m_TagString: Carpet
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 4294967295
   m_IsActive: 1
 --- !u!4 &7992335146010570420
 Transform:
@@ -85,6 +85,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 090d88d58bba7434a898d01b46b12628, type: 3}
       propertyPath: m_Name
       value: En_G_Floor400x300_V2
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 090d88d58bba7434a898d01b46b12628, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 4294967295
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 090d88d58bba7434a898d01b46b12628, type: 3}

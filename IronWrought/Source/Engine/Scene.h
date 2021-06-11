@@ -25,6 +25,7 @@ class CModel;
 class IAIBehavior;
 class CInstancedModelComponent;
 class CPatrolPointComponent;
+//class CPointLightComponent;
 
 class CPlayerControllerComponent;
 
@@ -151,6 +152,7 @@ public:
 	std::vector<CGameObject*>* FindObjectsWithTag(const std::string aTag);
 	template<class T>
 	std::vector<CComponent*>* GetAllComponents();
+
 	//CULLING END
 public:
 	//POPULATE SCENE START
@@ -265,6 +267,11 @@ private:
 	bool myShouldRenderLineInstance;
 	CLineInstance* myGrid;
 #endif //  _DEBUG
+
+
+public:
+		template<class T>
+		inline bool TryGetAllComponents(std::vector<T*>& outComponents);
 };
 
 template<class T>
@@ -273,5 +280,22 @@ inline std::vector<CComponent*>* CScene::GetAllComponents()
 	size_t hashCode = typeid(T).hash_code();
 	if (myComponentMap.find(hashCode) == myComponentMap.end())
 		return nullptr;
+
 	return &myComponentMap[hashCode];
+}
+
+template<class T>
+inline bool CScene::TryGetAllComponents(std::vector<T*>& outComponents)
+{
+	size_t hashCode = typeid(T).hash_code();
+	if (myComponentMap.find(hashCode) == myComponentMap.end())
+		return false;
+
+	for (int i = 0; i < myComponentMap[hashCode].size(); ++i)
+	{
+		CComponent* component = myComponentMap[hashCode][i];
+		T* castComponent = dynamic_cast<T*>(component);
+		outComponents.push_back(castComponent);	
+	}
+	return true;
 }

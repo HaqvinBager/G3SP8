@@ -13,6 +13,7 @@ ImGui::CHierarchy::CHierarchy(const char* aName)
 	, myScene(nullptr)
 	, myFilteDeepFilterTypes(false)
 	, myFilterTypes(false)
+	, mySelectedTypeNameIndex(0)
 {
 	myComponentMap[typeid(CTransformComponent)] = [&](CComponent* aComponent) { Edit(dynamic_cast<CTransformComponent*>(aComponent)); };
 	myComponentMap[typeid(CPointLightComponent)] = [&](CComponent* aComponent) { Edit(dynamic_cast<CPointLightComponent*>(aComponent)); };
@@ -42,16 +43,16 @@ ImGui::CHierarchy::CHierarchy(const char* aName)
 	myComponentMap[typeid(CListenerBehavior)] = [&](CComponent* aComponent) { Edit(dynamic_cast<CListenerBehavior*>(aComponent)); };
 	myComponentMap[typeid(CKeyBehavior)] = [&](CComponent* aComponent) { Edit(dynamic_cast<CKeyBehavior*>(aComponent)); };
 		
-	myCurrentFilter.push_back(typeid(COnTriggerLock));
-	myCurrentFilter.push_back(typeid(CLeftClickDownLock));
-	myCurrentFilter.push_back(typeid(CPlayerComponent));	
-	myCurrentFilter.push_back(typeid(CListenerBehavior));
-	myCurrentFilter.push_back(typeid(CKeyBehavior));	
-	myCurrentFilter.push_back(typeid(CMoveResponse));
-	myCurrentFilter.push_back(typeid(CMoveActivation));
-	myCurrentFilter.push_back(typeid(CRotateResponse));
-	myCurrentFilter.push_back(typeid(CRotateActivation));
-	myCurrentFilter.push_back(typeid(CToggleResponse));
+	//myCurrentFilter.push_back(typeid(CTransformComponent).hash_code());
+	//myCurrentFilter.push_back(typeid(CLeftClickDownLock));
+	//myCurrentFilter.push_back(typeid(CPlayerComponent));	
+	//myCurrentFilter.push_back(typeid(CListenerBehavior));
+	//myCurrentFilter.push_back(typeid(CKeyBehavior));	
+	//myCurrentFilter.push_back(typeid(CMoveResponse));
+	//myCurrentFilter.push_back(typeid(CMoveActivation));
+	//myCurrentFilter.push_back(typeid(CRotateResponse));
+	//myCurrentFilter.push_back(typeid(CRotateActivation));
+	//myCurrentFilter.push_back(typeid(CToggleResponse));
 }
 
 ImGui::CHierarchy::~CHierarchy()
@@ -70,9 +71,6 @@ void ImGui::CHierarchy::OnInspectorGUI()
 
 	ImGui::Begin(Name(), Open());
 
-	//auto& gameObjects = myScene->ActiveGameObjects();
-
-
 	ImGui::BeginHorizontal("Search");
 	ImGui::Checkbox("Search Filter:", &mySearchFilterActive);
 	ImGui::InputText(" ", mySearchFilter, 256);
@@ -82,11 +80,36 @@ void ImGui::CHierarchy::OnInspectorGUI()
 	ImGui::Checkbox("Deep Type Filter", &myFilteDeepFilterTypes);
 	ImGui::EndHorizontal();
 
-
-	//int index = 0;
-
+	if (ImGui::BeginCombo("Filter By Type", myTypeNames.size() == 0 ? "NoTypes" : myTypeNames[mySelectedTypeNameIndex].c_str()))
+	{
+		for (int i = 0; i < myTypeNames.size(); ++i)
+		{
+			if (ImGui::Selectable(myTypeNames[i].c_str(), mySelectedTypeNameIndex == i))
+			{
+				if (i != mySelectedTypeNameIndex)
+				{
+					myCurrentFilter.clear();
+				}
+				mySelectedTypeNameIndex = i;
+				myFilterTypes = true;
+				myCurrentFilter.push_back(myNameToTypeMap.at(myTypeNames[i]).hash_code());
+			}
+		}
+		ImGui::EndCombo();
+	}
 
 	std::vector<CGameObject*> gameObjects = myFilterTypes ? Filter(myScene->ActiveGameObjects(), myCurrentFilter) : myScene->ActiveGameObjects();
+
+	for (const auto& gameObject : gameObjects)
+	{
+		for (const auto& component : gameObject->myComponents)
+		{
+			const std::type_index& typeIndex = typeid(*component);
+			if (myTypeToNameMap.find(typeIndex) == myTypeToNameMap.end())
+				SaveClassName(typeIndex);
+		}
+	}
+
 	for (auto& gameObject : gameObjects)
 	{
 		if (mySearchFilterActive)
@@ -96,7 +119,6 @@ void ImGui::CHierarchy::OnInspectorGUI()
 				continue;
 			}
 		}
-
 
 		ImGui::PushID(gameObject->InstanceID());
 		bool treeNodeOpen = ImGui::TreeNodeEx(gameObject->Name().c_str(),
@@ -113,21 +135,21 @@ void ImGui::CHierarchy::OnInspectorGUI()
 				ImGui::Text("ID: %i", gameObject->InstanceID());
 				for (auto& component : gameObject->myComponents)
 				{
-					const auto& type = typeid(*component);
+					const std::type_index& typeIndex = typeid(*component);
 
 					if (myFilteDeepFilterTypes == true)
 					{
-						std::type_index typeIndex = typeid(*component);
-						if (std::find(myCurrentFilter.begin(), myCurrentFilter.end(), typeIndex) == myCurrentFilter.end())
+						size_t hashCode = typeIndex.hash_code();
+						if (std::find(myCurrentFilter.begin(), myCurrentFilter.end(), hashCode) == myCurrentFilter.end())
 						{
 							continue;
 						}		
 					}
 
-					if (myTypeNames.find(type) == myTypeNames.end())
-						SaveClassName(type);
+					if (myTypeToNameMap.find(typeIndex) == myTypeToNameMap.end())
+						SaveClassName(typeIndex);
 
-					const char* componentName = myTypeNames[type].c_str();
+					const char* componentName = myTypeToNameMap[typeIndex].c_str();
 					bool componentOpen = ImGui::TreeNodeEx(
 						componentName,
 						ImGuiTreeNodeFlags_FramePadding |
@@ -142,8 +164,8 @@ void ImGui::CHierarchy::OnInspectorGUI()
 						if (component->Enabled() != isEnabled)
 							component->Enabled(isEnabled);
 
-						if (myComponentMap.find(type) != myComponentMap.end())
-							myComponentMap[type](component.get());
+						if (myComponentMap.find(typeIndex) != myComponentMap.end())
+							myComponentMap[typeIndex](component.get());
 						else
 							ImGui::Text("%s WIP", componentName);
 
@@ -158,7 +180,6 @@ void ImGui::CHierarchy::OnInspectorGUI()
 			}
 		}
 		ImGui::PopID();
-		//index++;
 	}
 	ImGui::End();
 }
@@ -172,7 +193,7 @@ void ImGui::CHierarchy::EditGameObjects(std::vector<CGameObject*> someGameObject
 
 }
 
-std::vector<CGameObject*> ImGui::CHierarchy::Filter(const std::vector<CGameObject*>& someGameObjects, const std::vector<std::type_index>& filterTypes)
+std::vector<CGameObject*> ImGui::CHierarchy::Filter(const std::vector<CGameObject*>& someGameObjects, const std::vector<size_t>& filterTypes)
 {
 	std::vector<CGameObject*> filteredGameObjects = {};
 	for (const auto& gameObject : someGameObjects)
@@ -356,3 +377,27 @@ void ImGui::CHierarchy::Edit(CKeyBehavior* aComponent)
 	aComponent;
 	ImGui::Text(" WIP CKeyBehavior");
 }
+
+	//static bool plState = false;
+
+	//ImGui::Checkbox("Test PL", &plState);
+	//if (plState)
+	//{
+	//	std::vector<CPointLightComponent*> pointLights = {};
+	//	if (myScene->TryGetAllComponents(pointLights))
+	//	{
+	//		gameObjects.clear();
+
+	//		for (auto& pl : pointLights)
+	//		{
+	//			gameObjects.push_back(&pl->GameObject());
+	//		}
+	//	}
+
+	//	if (ImGui::Button("Test Add Pl"))
+	//	{
+	//		auto player = myScene->FindFirstObjectWithComponent<CPlayerControllerComponent>();
+	//		auto testPl = player->GameObject().AddComponent<CPointLightComponent>(player->GameObject(), 300.0f, Vector3(0.0f, 0.0f, 1.0f), 100.0f);
+	//		myScene->AddInstance(testPl->GetPointLight());
+	//	}
+	//}
