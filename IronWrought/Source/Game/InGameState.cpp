@@ -488,6 +488,13 @@ void CInGameState::ToggleCanvas(EInGameCanvases anEInGameCanvases)
 		myCanvases[myCurrentCanvas]->SetEnabled(true);
 		CMainSingleton::PostMaster().Unsubscribe(EMessageType::CanvasButtonIndex, this);
 	}
+	else if (myCurrentCanvas == EInGameCanvases_LoadingScreen)
+	{
+		CScene& scene = IRONWROUGHT->GetActiveScene();
+		scene.SetCanvas(myCanvases[myCurrentCanvas]);
+		scene.UpdateOnlyCanvas(true);
+		IRONWROUGHT->ShowCursor(false);
+	}
 #endif
 }
 

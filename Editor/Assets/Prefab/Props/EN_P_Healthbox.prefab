@@ -30,7 +30,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 467075587612041854}
-  m_RootOrder: 1
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!65 &2356368621172357621
 BoxCollider:
@@ -89,8 +89,8 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
-  - {fileID: 962649502692300687}
   - {fileID: 6215665004322588864}
+  - {fileID: 8303060414298959944}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -106,7 +106,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5c562e108cc65394cb59634177042694, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!1001 &781020364520239204
+--- !u!1001 &8408462439545886627
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
@@ -115,7 +115,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: -8679921383154817045, guid: ade719a06c3fd63429e768e56f21b45a, type: 3}
       propertyPath: m_RootOrder
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: ade719a06c3fd63429e768e56f21b45a, type: 3}
       propertyPath: m_LocalPosition.x
@@ -157,22 +157,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: -7511558181221131132, guid: ade719a06c3fd63429e768e56f21b45a, type: 3}
-      propertyPath: m_Materials.Array.data[0]
-      value: 
-      objectReference: {fileID: 2100000, guid: 587df690d12066b4792961b2dc66ebeb, type: 2}
     - target: {fileID: 919132149155446097, guid: ade719a06c3fd63429e768e56f21b45a, type: 3}
       propertyPath: m_Name
-      value: EN_P_Healthbox
-      objectReference: {fileID: 0}
-    - target: {fileID: 919132149155446097, guid: ade719a06c3fd63429e768e56f21b45a, type: 3}
-      propertyPath: m_StaticEditorFlags
-      value: 4294967295
+      value: EN_P_Healthbox (1)
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ade719a06c3fd63429e768e56f21b45a, type: 3}
---- !u!4 &962649502692300687 stripped
+--- !u!4 &8303060414298959944 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: ade719a06c3fd63429e768e56f21b45a, type: 3}
-  m_PrefabInstance: {fileID: 781020364520239204}
+  m_PrefabInstance: {fileID: 8408462439545886627}
   m_PrefabAsset: {fileID: 0}
