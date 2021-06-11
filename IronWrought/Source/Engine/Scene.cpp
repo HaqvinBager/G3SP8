@@ -671,6 +671,49 @@ std::vector<CGameObject*> CScene::CullGameObjects(CCameraComponent* aMainCamera)
 	return culledGameObjects;
 }
 
+void CScene::CullGameObjects(CCameraComponent* aMainCamera, std::vector<CGameObject*>& someGameObjects, std::vector<CGameObject*>& someInstancedGameObjects)
+{
+	auto& viewFrustum = aMainCamera->GetViewFrustum();
+	DirectX::BoundingSphere currentSphere;
+	//std::vector<CGameObject*> culledGameObjects;
+	// Test to see if this speeds it up a bit:
+	size_t gameObjectsTotalSize = 0;
+	for (auto& gameObjectsInSection : myGameObjects)
+	{
+		gameObjectsTotalSize += gameObjectsInSection.size();
+	}
+	someGameObjects.reserve(gameObjectsTotalSize);
+	someInstancedGameObjects.reserve(gameObjectsTotalSize);
+
+	// Render all sections
+	for (auto& gameObjectsInSection : myGameObjects)
+	{
+		for (auto& gameObject : gameObjectsInSection)
+		{
+			if (gameObject->InstanceID() == PLAYER_CAMERA_ID)
+			{
+				someGameObjects.push_back(gameObject);
+				continue;
+			}
+
+			if (gameObject->GetComponent<CInstancedModelComponent>())
+			{
+				someInstancedGameObjects.push_back(gameObject);
+				continue;
+			}
+
+			if (!gameObject->Active())// Might cause issues, time will tell. Remove if it does harm. // Aki 2021 05 28
+				continue;
+
+			currentSphere = DirectX::BoundingSphere(gameObject->myTransform->Position(), 24.0f);
+			if (viewFrustum.Intersects(currentSphere))
+			{
+				someGameObjects.push_back(gameObject);
+			}
+		}
+	}
+}
+
 CGameObject* CScene::FindObjectWithID(const int aGameObjectInstanceID)
 {
 	if (myIDGameObjectMap.find(aGameObjectInstanceID) == myIDGameObjectMap.end())

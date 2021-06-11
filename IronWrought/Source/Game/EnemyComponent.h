@@ -8,6 +8,7 @@ class CRigidBodyComponent;
 class CGameObject;
 class CPatrolPointComponent;
 struct SNavMesh;
+class CIdle;
 
 namespace physx {
 	class PxShape;
@@ -104,4 +105,6 @@ private:
 	float myWakeUpTimer;
 	float myIdlingTimer;
 	SNavMesh* myNavMesh;
+	CIdle* myIdleState;
+	float myDetectionTimer;
 };
