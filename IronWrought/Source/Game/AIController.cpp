@@ -217,12 +217,15 @@ void CSeek::SetTarget(CTransformComponent* aTarget) {
 
 void CSeek::Receive(const SMessage& aMsg)
 {
+
 	if (aMsg.myMessageType == EMessageType::EnemyFoundPlayer) {
 		myFoundPlayer = true;
+		std::cout << "Amount Seen Player: " << ++amount << std::endl;
 	}
 
 	if (aMsg.myMessageType == EMessageType::EnemyLostPlayer) {
 		myFoundPlayer = false;
+		amount = 0;
 		myLastPlayerPosition = *static_cast<Vector3*>(aMsg.data);
 	}
 }
@@ -337,11 +340,46 @@ void CIdle::Enter(const Vector3& /*aPosition*/)
 {
 }
 
-Vector3 CIdle::Update(const Vector3& /*aPosition*/)
+Vector3 CIdle::Update(const Vector3& aPosition)
 {
-	return Vector3::Zero;
+	Vector3 dir =  myTarget->Position() - aPosition ;
+	return dir;
 }
 
 void CIdle::ClearPath()
 {
+}
+
+void CIdle::SetTarget(CTransformComponent* aTarget)
+{
+	myTarget = aTarget;
+}
+
+CDetection::CDetection()
+	: myDetectionTimer(myDetectionTimerMax)
+{}
+
+void CDetection::Enter(const Vector3 & /*aPosition*/)
+{
+	myDetectionTimer = myDetectionTimerMax;
+}
+
+Vector3 CDetection::Update(const Vector3 & /*aPosition*/)
+{
+	myDetectionTimer -= CTimer::Dt();
+
+	return Vector3();
+}
+
+void CDetection::ClearPath()
+{}
+
+const float CDetection::PercentileOfTimer() const
+{
+	if (myDetectionTimer <= 0.0f)
+		return 0.0f;
+
+	float percentile = myDetectionTimer / (myDetectionTimerMax  * myDetectionFactor);
+	percentile = std::clamp(percentile, 0.0f, 1.0f);
+	return percentile;
 }

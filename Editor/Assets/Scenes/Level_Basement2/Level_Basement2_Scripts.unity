@@ -123,25 +123,25 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 23800000, guid: d2438aebf88701647bdbbc9e6c7e6cab, type: 2}
---- !u!134 &747873343
+--- !u!134 &479826613
 PhysicMaterial:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: ' (Instance) (Instance)'
+  m_Name: ' (Instance) (Instance) (Instance) (Instance)'
   dynamicFriction: 0.6
   staticFriction: 0.6
   bounciness: 0
   frictionCombine: 0
   bounceCombine: 0
---- !u!134 &1674982179
+--- !u!134 &2015062702
 PhysicMaterial:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: ' (Instance) (Instance)'
+  m_Name: ' (Instance) (Instance) (Instance) (Instance)'
   dynamicFriction: 0.6
   staticFriction: 0.6
   bounciness: 0
@@ -207,7 +207,7 @@ BoxCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1031876865513136764}
-  m_Material: {fileID: 1674982179}
+  m_Material: {fileID: 479826613}
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
@@ -249,11 +249,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0c8be42bcf5a796429d2bbcad7f3858d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  myName: 3
-  myTarget: 6
-  myTeleportTimer: 1
-  onTeleportToMePosition: {x: -1.082, y: 0, z: -11.489}
-  onTeleportToMeRotation: {x: -0, y: 0.000040981133, z: 0}
+  myTarget: {fileID: 11400000, guid: d2ab2ee0b2f2e7f45aa83a9837c6c405, type: 2}
+  myDelay: 0.001
 --- !u!114 &5339392776290667465
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -321,7 +318,7 @@ BoxCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5339392776290667463}
-  m_Material: {fileID: 747873343}
+  m_Material: {fileID: 2015062702}
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2

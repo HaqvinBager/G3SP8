@@ -12,7 +12,7 @@ ImGui::CHierarchy::CHierarchy(const char* aName)
 	: CWindow(aName)
 	, myScene(nullptr)
 	, myFilteDeepFilterTypes(false)
-	, myFilterTypes(true)
+	, myFilterTypes(false)
 {
 	myComponentMap[typeid(CTransformComponent)] = [&](CComponent* aComponent) { Edit(dynamic_cast<CTransformComponent*>(aComponent)); };
 	myComponentMap[typeid(CPointLightComponent)] = [&](CComponent* aComponent) { Edit(dynamic_cast<CPointLightComponent*>(aComponent)); };
@@ -73,10 +73,15 @@ void ImGui::CHierarchy::OnInspectorGUI()
 	//auto& gameObjects = myScene->ActiveGameObjects();
 
 
-	ImGui::BeginHorizontal("Filters");
+	ImGui::BeginHorizontal("Search");
+	ImGui::Checkbox("Search Filter:", &mySearchFilterActive);
+	ImGui::InputText(" ", mySearchFilter, 256);
+	ImGui::EndHorizontal();
+	ImGui::BeginHorizontal("Type Filters");
 	ImGui::Checkbox("Type Filter", &myFilterTypes);
 	ImGui::Checkbox("Deep Type Filter", &myFilteDeepFilterTypes);
 	ImGui::EndHorizontal();
+
 
 	//int index = 0;
 
@@ -84,6 +89,15 @@ void ImGui::CHierarchy::OnInspectorGUI()
 	std::vector<CGameObject*> gameObjects = myFilterTypes ? Filter(myScene->ActiveGameObjects(), myCurrentFilter) : myScene->ActiveGameObjects();
 	for (auto& gameObject : gameObjects)
 	{
+		if (mySearchFilterActive)
+		{
+			if (gameObject->Name().find(mySearchFilter) == std::string::npos)
+			{
+				continue;
+			}
+		}
+
+
 		ImGui::PushID(gameObject->InstanceID());
 		bool treeNodeOpen = ImGui::TreeNodeEx(gameObject->Name().c_str(),
 			/*ImGuiTreeNodeFlags_DefaultOpen |*/

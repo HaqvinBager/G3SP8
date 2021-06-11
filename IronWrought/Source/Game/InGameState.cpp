@@ -19,6 +19,7 @@
 #include <SceneManager.h>
 
 #include "EnemyAnimationController.h"
+#include "PlayerControllerComponent.h"
 
 #ifndef NDEBUG
 	#include <VFXSystemComponent.h>
@@ -165,6 +166,8 @@ void CInGameState::Start()
 	CMainSingleton::PostMaster().Subscribe(PostMaster::SMSG_TO_MAIN_MENU, this);
 	CMainSingleton::PostMaster().Subscribe(PostMaster::SMSG_SECTION, this);
 #endif
+
+	CMainSingleton::PostMaster().Subscribe(EMessageType::LoadLevel, this);
 }
 
 void CInGameState::Stop()
@@ -286,6 +289,10 @@ void CInGameState::Receive(const SMessage& aMessage)
 	case EMessageType::LoadLevel:
 	{
 		ToggleCanvas(EInGameCanvases_LoadingScreen);
+		IRONWROUGHT->GetActiveScene().MainCamera()->Fade(false, 0.5f);
+		IRONWROUGHT->GetActiveScene().PlayerController()->LockMovementFor(0.5f);
+		CMainSingleton::PostMaster().Send({ PostMaster::SMSG_DISABLE_GLOVE, nullptr });
+		myMenuCamera = nullptr;
 		std::string levelName = *static_cast<std::string*>(aMessage.data);
 		CSceneFactory::Get()->LoadSceneAsync(levelName, myState, [this](std::string aMsg) { CInGameState::OnSceneLoadCompleteInGame(aMsg); });
 	}break;
@@ -485,6 +492,13 @@ void CInGameState::ToggleCanvas(EInGameCanvases anEInGameCanvases)
 		scene.CanvasIsHUD(true);
 		myCanvases[myCurrentCanvas]->SetEnabled(true);
 		CMainSingleton::PostMaster().Unsubscribe(EMessageType::CanvasButtonIndex, this);
+	}
+	else if (myCurrentCanvas == EInGameCanvases_LoadingScreen)
+	{
+		CScene& scene = IRONWROUGHT->GetActiveScene();
+		scene.SetCanvas(myCanvases[myCurrentCanvas]);
+		scene.UpdateOnlyCanvas(true);
+		IRONWROUGHT->ShowCursor(false);
 	}
 #endif
 }

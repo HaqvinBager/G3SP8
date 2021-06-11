@@ -135,46 +135,48 @@ void CRenderManager::Render(CScene& aScene)
 	if (maincamera == nullptr)
 		return;
 
-	std::vector<CGameObject*> gameObjects = aScene.CullGameObjects(maincamera);
+	std::vector<CGameObject*> gameObjects /*= aScene.CullGameObjects(maincamera)*/;
 	std::vector<CGameObject*> instancedGameObjects;
 	std::vector<CGameObject*> instancedGameObjectsWithAlpha;
 	std::vector<CGameObject*> gameObjectsWithAlpha;
 	std::vector<int> indicesOfOutlineModels;
 	std::vector<int> indicesOfAlphaGameObjects;
 
-	for (unsigned int i = 0; i < gameObjects.size(); ++i)
-	{
-		auto instance = gameObjects[i];
-		//for (auto gameObjectToOutline : aScene.ModelsToOutline()) {
-		//	if (instance == gameObjectToOutline) {
-		//		indicesOfOutlineModels.emplace_back(i);
-		//	}
-		//}
+	aScene.CullGameObjects(maincamera, gameObjects, instancedGameObjects);
 
-		if (instance->GetComponent<CInstancedModelComponent>()) 
-		{
-			//if (instance->GetComponent<CInstancedModelComponent>()->RenderWithAlpha())
-			//{
-			//	instancedGameObjectsWithAlpha.emplace_back(instance);
-			//	indicesOfAlphaGameObjects.emplace_back(i);
-			//	continue;
-			//}
-			instancedGameObjects.emplace_back(instance);
-			std::swap(gameObjects[i], gameObjects.back());
-			gameObjects.pop_back();
-		}
+	//for (unsigned int i = 0; i < gameObjects.size(); ++i)
+	//{
+	//	auto instance = gameObjects[i];
+	//	//for (auto gameObjectToOutline : aScene.ModelsToOutline()) {
+	//	//	if (instance == gameObjectToOutline) {
+	//	//		indicesOfOutlineModels.emplace_back(i);
+	//	//	}
+	//	//}
 
-		// All relevant objects are run in deferred now
-		//else if (instance->GetComponent<CModelComponent>()) 
-		//{
-		//	//if (instance->GetComponent<CModelComponent>()->RenderWithAlpha())
-		//	//{
-		//	//	gameObjectsWithAlpha.emplace_back(instance);
-		//	//	indicesOfAlphaGameObjects.emplace_back(i);
-		//	//	continue;
-		//	//}
-		//}
-	}
+	//	if (instance->GetComponent<CInstancedModelComponent>()) 
+	//	{
+	//		//if (instance->GetComponent<CInstancedModelComponent>()->RenderWithAlpha())
+	//		//{
+	//		//	instancedGameObjectsWithAlpha.emplace_back(instance);
+	//		//	indicesOfAlphaGameObjects.emplace_back(i);
+	//		//	continue;
+	//		//}
+	//		instancedGameObjects.emplace_back(instance);
+	//		std::swap(gameObjects[i], gameObjects.back());
+	//		gameObjects.pop_back();
+	//	}
+
+	//	// All relevant objects are run in deferred now
+	//	//else if (instance->GetComponent<CModelComponent>()) 
+	//	//{
+	//	//	//if (instance->GetComponent<CModelComponent>()->RenderWithAlpha())
+	//	//	//{
+	//	//	//	gameObjectsWithAlpha.emplace_back(instance);
+	//	//	//	indicesOfAlphaGameObjects.emplace_back(i);
+	//	//	//	continue;
+	//	//	//}
+	//	//}
+	//}
 
 	std::sort(indicesOfAlphaGameObjects.begin(), indicesOfAlphaGameObjects.end(), [](UINT a, UINT b) { return a > b; });
 	for (auto index : indicesOfAlphaGameObjects)

@@ -257,6 +257,8 @@ void CAudioManager::Receive(const SMessage& aMessage) {
 		int index = *static_cast<int*>(aMessage.data);
 		myChannels[CAST(EChannel::VOX)]->Stop();
 		myWrapper.Play(myVoiceEventSounds[index], myChannels[CAST(EChannel::VOX)]);
+	
+		CMainSingleton::PostMaster().Send({ EMessageType::LoadDialogue, &index });
 	}
 	break;
 
@@ -325,9 +327,15 @@ void CAudioManager::Receive(const SMessage& aMessage) {
 	{
 		myDynamicSource->Stop();
 		myWrapper.Play(myEnemyVoiceSounds[CAST(EEnemyVoiceLine::EnemyFoundPlayer)], myDynamicSource);
-		myDelayedAudio.push_back({myEnemyVoiceSounds[CAST(EEnemyVoiceLine::EnemyChasing)], myDynamicSource, 4.0f});
+		myDelayedAudio.push_back({ myEnemyVoiceSounds[CAST(EEnemyVoiceLine::EnemyChasing)], myDynamicSource, 4.0f });
 		FadeChannelOverSeconds(EChannel::DynamicChannel2, 4.0f);
 		FadeChannelOverSeconds(EChannel::DynamicChannel3, 4.0f, false);
+	}break;
+
+	case EMessageType::EnemyFoundPlayerScream:
+	{
+		//myDynamicSource->Stop();
+		
 	}break;
 
 	case EMessageType::EnemyLostPlayer:
@@ -676,6 +684,7 @@ void CAudioManager::SubscribeToMessages()
 	CMainSingleton::PostMaster().Subscribe(EMessageType::EnemyAttack, this);
 	CMainSingleton::PostMaster().Subscribe(EMessageType::EnemyTakeDamage, this);
 	CMainSingleton::PostMaster().Subscribe(EMessageType::EnemyFoundPlayer, this);
+	CMainSingleton::PostMaster().Subscribe(EMessageType::EnemyFoundPlayerScream, this);
 	CMainSingleton::PostMaster().Subscribe(EMessageType::EnemyLostPlayer, this);
 
 	//CMainSingleton::PostMaster().Subscribe(EMessageType::PlayVoiceLine, this);
@@ -740,6 +749,7 @@ void CAudioManager::UnsubscribeToMessages()
 	CMainSingleton::PostMaster().Unsubscribe(EMessageType::EnemyAttack, this);
 	CMainSingleton::PostMaster().Unsubscribe(EMessageType::EnemyTakeDamage, this);
 	CMainSingleton::PostMaster().Unsubscribe(EMessageType::EnemyFoundPlayer, this);
+	CMainSingleton::PostMaster().Unsubscribe(EMessageType::EnemyFoundPlayerScream, this);
 	CMainSingleton::PostMaster().Unsubscribe(EMessageType::EnemyLostPlayer, this);
 
 	//CMainSingleton::PostMaster().Unsubscribe(EMessageType::PlayVoiceLine, this);
@@ -1057,6 +1067,10 @@ std::string CAudioManager::TranslateEnum(EVOX enumerator) const
 		return "37";
 	case EVOX::Line38:
 		return "38";
+	case EVOX::Line39:
+		return "39";
+	case EVOX::Line40:
+		return "40";
 	case EVOX::Heal1:
 		return "Heal1";
 	case EVOX::Heal2:

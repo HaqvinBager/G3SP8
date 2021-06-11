@@ -44,6 +44,9 @@ CEnemyComponent::CEnemyComponent(CGameObject& aParent, const SEnemySetting& some
 	, myAttackPlayerTimer(0.0f)
 	, myAttackPlayerTimerMax(3.0f)
 	, myNavMesh(aNavMesh)
+	, myDetectionTimer(0.0f)
+	, myHasScreamed(false)
+
 {
 	//myController = CEngine::GetInstance()->GetPhysx().CreateCharacterController(GameObject().myTransform->Position(), 0.6f * 0.5f, 1.8f * 0.5f, GameObject().myTransform, aHitReport);
 	//myController->GetController().getActor()->setRigidBodyFlag(PxRigidBodyFlag::eUSE_KINEMATIC_TARGET_FOR_SCENE_QUERIES, true);
@@ -121,7 +124,8 @@ void CEnemyComponent::Start()
 	}
 
 	myBehaviours.push_back(new CAlerted(myNavMesh));
-	myBehaviours.push_back(new CIdle());
+	myIdleState = new CIdle();
+	myBehaviours.push_back(myIdleState);
 
 	CAttack* attack = new CAttack();
 	myBehaviours.push_back(attack);
@@ -133,6 +137,8 @@ void CEnemyComponent::Start()
 		myRigidBodyComponent->GetDynamicRigidBody()->GetBody().setRigidDynamicLockFlag(physx::PxRigidDynamicLockFlag::eLOCK_ANGULAR_Z, true);
 		myRigidBodyComponent->GetDynamicRigidBody()->GetBody().setMaxLinearVelocity(mySettings.mySpeed);
 	}
+
+	myBehaviours.push_back(new CDetection());
 
 	mySpawnPosition = GameObject().myTransform->Position();
 }
@@ -171,27 +177,40 @@ void CEnemyComponent::Update()//får bestämma vilket behaviour vi vill köra i 
 				if (!transform && !myHasFoundPlayer) {
 					if (myHasReachedLastPlayerPosition == true) {
 						myIsIdle = true;
+						if (myPlayer != nullptr)
+						{
+							myIdleState->SetTarget(myPlayer->myTransform);
+						}
 						SetState(EBehaviour::Idle);
 					}
 					else {
-						myIsIdle = false;	
+						myIsIdle = false;
 					}
 					myHeardSound = false;
 					myHasReachedAlertedTarget = true;
 					myHasFoundPlayer = true;
 					myHasReachedLastPlayerPosition = false;
+					/*myDetectionTimer += CTimer::Dt();
+					if (myDetectionTimer >= 0.1f) {*/
+					if (!myHasScreamed) {
+						myHasScreamed = true;
+						CMainSingleton::PostMaster().Send({ EMessageType::EnemyFoundPlayerScream });
+					}
 					CMainSingleton::PostMaster().Send({ EMessageType::EnemyFoundPlayer });
+					//}
 				}
 			}
 		}
-		else if (myHasFoundPlayer)
+		else if (myHasFoundPlayer)//Out of View
 		{
+			myIdlingTimer = 0.0f;
+			myDetectionTimer = 0.0f;
 			myHasFoundPlayer = false;
+			myHasReachedLastPlayerPosition = false;
 			SMessage msg;
 			msg.data = static_cast<void*>(&playerPos);
 			msg.myMessageType = EMessageType::EnemyLostPlayer;
 			CMainSingleton::PostMaster().Send(msg);
-			myIdlingTimer = 0.0f;
 		}
 
 		if (myIsIdle) {
@@ -212,8 +231,11 @@ void CEnemyComponent::Update()//får bestämma vilket behaviour vi vill köra i 
 				SetState(EBehaviour::Attack);
 			}
 			else if (myHasFoundPlayer) {
-				mySettings.mySpeed = 3.0f;
-				SetState(EBehaviour::Seek);
+
+				if (myCurrentState != EBehaviour::Detection && myCurrentState != EBehaviour::Seek)
+					SetState(EBehaviour::Detection);
+				//mySettings.mySpeed = 3.0f;
+				//SetState(EBehaviour::Seek);
 			}
 			else if (!myHasFoundPlayer && !myHasReachedLastPlayerPosition /*&& !myHeardSound && myHasReachedAlertedTarget*/) {
 				mySettings.mySpeed = 3.0f;
@@ -234,24 +256,46 @@ void CEnemyComponent::Update()//får bestämma vilket behaviour vi vill köra i 
 
 		Vector3 targetDirection = myBehaviours[static_cast<int>(myCurrentState)]->Update(GameObject().myTransform->Position());
 		targetDirection.y = 0;
-		GameObject().myTransform->Move(targetDirection * mySettings.mySpeed * CTimer::Dt());
+		if (myCurrentState != EBehaviour::Idle) {
+			GameObject().myTransform->Move(targetDirection * mySettings.mySpeed * CTimer::Dt());
+		}
+
 		float targetOrientation = WrapAngle(atan2f(targetDirection.x, targetDirection.z));
 		myCurrentOrientation = Lerp(myCurrentOrientation, targetOrientation, 10.0f * CTimer::Dt());
 		GameObject().myTransform->Rotation({ 0, DirectX::XMConvertToDegrees(myCurrentOrientation) + 180.f, 0 });
 
-		if(myCurrentState == EBehaviour::Seek)
+		switch (myCurrentState)
+		{
+		case EBehaviour::Seek:
+		{
 			myCurrentStateBlend = PercentileDistanceToPlayer();
-		else if (myCurrentState == EBehaviour::Alerted)
+		}break;
+
+		case EBehaviour::Alerted:
 		{
 			CAlerted* alertedBehaviour = static_cast<CAlerted*>(myBehaviours[static_cast<int>(EBehaviour::Alerted)]);
 			myCurrentStateBlend = alertedBehaviour->PercentileAlertedTimer();
-		}
-		else
+		}break;
+
+		case EBehaviour::Detection:
+		{
+			CDetection* detectedBehaviour = static_cast<CDetection*>(myBehaviours[static_cast<int>(EBehaviour::Detection)]);
+			myCurrentStateBlend = detectedBehaviour->PercentileOfTimer();
+			if (myCurrentStateBlend <= 0.0f)
+			{
+				mySettings.mySpeed = 3.0f;
+				SetState(EBehaviour::Seek);
+				myCurrentStateBlend = 1.0f;
+			}
+		}break;
+
+		default:
 		{
 			myCurrentStateBlend = 0.0f;
+		}break;
 		}
 
-		CMainSingleton::PostMaster().SendLate({ EMessageType::EnemyUpdateCurrentState, this });
+		CMainSingleton::PostMaster().Send({ EMessageType::EnemyUpdateCurrentState, this });
 	}
 	else {
 		myWakeUpTimer += CTimer::Dt();
@@ -302,6 +346,11 @@ void CEnemyComponent::SetState(EBehaviour aState)
 		msgType = EMessageType::EnemyIdleState;
 	}break;
 
+	case EBehaviour::Detection:
+	{
+		msgType = EMessageType::EnemyDetectionState;
+	}break;
+
 	default:
 		break;
 	}
@@ -340,7 +389,7 @@ void CEnemyComponent::Receive(const SMessage& aMsg)
 		plCtrl->LockMovementFor(myAttackPlayerTimerMax + 0.75f);
 		myPlayer->myTransform->CopyRotation(this->GameObject().myTransform->Transform());
 		//myPlayer->myTransform->Rotate({0.0f, DirectX::XMConvertToRadians(180.0f), 0.0f});
-		myPlayer->myTransform->Rotation({0.0f, 180.0f, 0.0f});
+		myPlayer->myTransform->Rotation({ 0.0f, 180.0f, 0.0f });
 		myPlayer->myTransform->FetchChildren()[0]->CopyRotation(myPlayer->myTransform->Transform()); // Camera rotates player, if not updated here camera will snap the player back to previous rotation on end of event.
 
 		IRONWROUGHT->GetActiveScene().MainCamera()->SetTrauma(4.0f);
@@ -372,6 +421,7 @@ void CEnemyComponent::Receive(const SMessage& aMsg)
 
 	if (aMsg.myMessageType == EMessageType::EnemyReachedLastPlayerPosition) {
 		//std::cout << " REACHED " << std::endl;
+		myHasScreamed = false;
 		myHasReachedLastPlayerPosition = true;
 		myIsIdle = true;
 		SetState(EBehaviour::Idle);

@@ -8,6 +8,7 @@ class CRigidBodyComponent;
 class CGameObject;
 class CPatrolPointComponent;
 struct SNavMesh;
+class CIdle;
 
 namespace physx {
 	class PxShape;
@@ -35,6 +36,7 @@ public:
 		Alerted,
 		Idle,
 		Attack,
+		Detection,
 		Count
 	};
 
@@ -93,6 +95,7 @@ private:
 	bool myHasReachedAlertedTarget;
 	bool myHeardSound;
 	bool myIsIdle;
+	bool myHasScreamed;
 
 	float myCurrentStateBlend;
 	float mySqrdDistanceToPlayer;
@@ -103,4 +106,6 @@ private:
 	float myWakeUpTimer;
 	float myIdlingTimer;
 	SNavMesh* myNavMesh;
+	CIdle* myIdleState;
+	float myDetectionTimer;
 };

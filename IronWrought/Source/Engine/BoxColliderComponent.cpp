@@ -141,7 +141,13 @@ void CBoxColliderComponent::OnTriggerEnter(CTransformComponent* aOther)
 
 			if (myAudioEventIndex > -1)
 			{
-				CMainSingleton::PostMaster().SendLate({ EMessageType::PlayVoiceEvent, &myAudioEventIndex });
+				PostMaster::SPlayDynamicAudioData data =
+				{
+					myAudioEventIndex,
+					nullptr
+				};
+				CMainSingleton::PostMaster().Send({ EMessageType::LoadDialogue, &data });
+				//CMainSingleton::PostMaster().SendLate({ EMessageType::PlayVoiceEvent, &myAudioEventIndex });
 			}
 
 			CTeleporterComponent* teleporter = nullptr;

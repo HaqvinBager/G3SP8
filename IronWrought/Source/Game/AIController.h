@@ -55,6 +55,7 @@ private:
 	std::vector<Vector3> myPath;
 	bool myFoundPlayer;
 	Vector3 myLastPlayerPosition;
+	int amount = 0;
 };
 
 class CAttack : public CAIController
@@ -99,6 +100,22 @@ public:
 	void Enter(const Vector3& aPosition) override;
 	Vector3 Update(const Vector3& aPosition) override;
 	void ClearPath() override;
+	void SetTarget(CTransformComponent* aTarget);
 private:
+	CTransformComponent* myTarget;
+};
 
+class CDetection : public CAIController {
+public:
+	CDetection();
+	~CDetection() override {}
+	void Enter(const Vector3& aPosition) override;
+	Vector3 Update(const Vector3& aPosition) override;
+	void ClearPath() override;
+
+	const float PercentileOfTimer() const;
+private:
+	float myDetectionTimer;
+	const float myDetectionTimerMax = 1.733f;// either 2.167 or 1.733
+	const float myDetectionFactor = 0.95f;// Roughly half of the alerted-animation time? (It is roughly 2.0s @ 2021 06 09)
 };

@@ -38,7 +38,7 @@ void CAudioResponse::Update()
 		myTime -= mySettings.myDelay;
 	}
 
-	const Matrix& matrix = GameObject().myTransform->GetWorldMatrix();
+	const Matrix& matrix = GameObject().myTransform->GetLocalMatrix();
 	myAudioChannel->Set3DAttributes(matrix.Translation());
 	myAudioChannel->Set3DConeAttributes(matrix.Forward(), mySettings.myStartAttenuationAngle, mySettings.myMaxAttenuationAngle, mySettings.myMinimumVolume);
 }
