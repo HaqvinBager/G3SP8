@@ -220,8 +220,8 @@ void CInGameState::Update()
 	}
 	if (myMenuCamera)
 	{
-		myMenuCamera->myTransform->Position(Vector3::Lerp(myMenuCamera->myTransform->Position(), myMenuCameraTargetPosition, myMenuCameraSpeed * CTimer::Dt()));
-		myMenuCamera->myTransform->Rotation(Quaternion::Slerp(myMenuCamera->myTransform->Rotation(), myMenuCameraTargetRotation, myMenuCameraSpeed * CTimer::Dt()));
+		//myMenuCamera->myTransform->Position(Vector3::Lerp(myMenuCamera->myTransform->Position(), myMenuCameraTargetPosition, myMenuCameraSpeed * CTimer::Dt()));
+		//myMenuCamera->myTransform->Rotation(Quaternion::Slerp(myMenuCamera->myTransform->Rotation(), myMenuCameraTargetRotation, myMenuCameraSpeed * CTimer::Dt()));
 	}
 #else
 #endif

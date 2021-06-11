@@ -453,6 +453,16 @@ void CEnemyComponent::UpdateAttackEvent()
 		bool lockCamera = false;
 		CMainSingleton::PostMaster().Send({ EMessageType::LockFPSCamera, &lockCamera });
 		IRONWROUGHT->GetActiveScene().MainCamera()->Fade(true, 0.75f);
+		float previousDistance = 0.0f;
+		for (auto& spawnPosition : mySettings.mySpawnPoints)
+		{
+			float distance = Vector3::Distance(GameObject().myTransform->Position(), spawnPosition);
+			if (distance > previousDistance)
+			{
+				mySpawnPosition = { spawnPosition.x, GameObject().myTransform->Position().y, spawnPosition.z };
+			}
+			previousDistance = distance;
+		}
 		GameObject().myTransform->Position(mySpawnPosition);
 		myMovementLocked = false;
 		SetState(EBehaviour::Idle);
