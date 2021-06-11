@@ -98,10 +98,13 @@ void CPatrol::SetPath(std::vector<Vector3> aPath, Vector3 aFinalPosition)
 
 	myPath.clear();
 	myPath.push_back(aFinalPosition);
+
 	for (unsigned int i = 1; i < aPath.size(); ++i) {
 		if (aPath[i] != aFinalPosition) {
 			myPath.push_back(aPath[i]);
+#ifdef _DEBUG
 			CDebug::GetInstance()->DrawLine(aPath[i - 1], aPath[i], 60.0f);
+#endif
 		}
 	}
 }
