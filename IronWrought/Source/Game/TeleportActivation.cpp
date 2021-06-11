@@ -25,8 +25,8 @@ void CTeleportActivation::Update()
 }
 
 void CTeleportActivation::OnActivation()
-{
-	CMainSingleton::PostMaster().Send({ myTarget.c_str(), nullptr});
+{		
+	CMainSingleton::PostMaster().Send({ EMessageType::LoadLevel, &myTarget });
 }
 
 //void CTeleportActivation::Receive(const SMessage & aMessage)

@@ -8,8 +8,8 @@ CLockBehavior::CLockBehavior(CGameObject& aParent, const SSettings someSettings)
 	myAmountOfKeys(0),
 	myHasTriggered(false)
 {
-	CMainSingleton::PostMaster().Subscribe(mySettings.myOnKeyCreateNotify, this);
-	CMainSingleton::PostMaster().Subscribe(mySettings.myOnKeyInteractNotify, this);
+	//CMainSingleton::PostMaster().Subscribe(mySettings.myOnKeyCreateNotify, this);
+	//CMainSingleton::PostMaster().Subscribe(mySettings.myOnKeyInteractNotify, this);
 }
 
 CLockBehavior::~CLockBehavior()
@@ -19,14 +19,14 @@ CLockBehavior::~CLockBehavior()
 
 void CLockBehavior::OnEnable()
 {
-	//CMainSingleton::PostMaster().Subscribe(mySettings.myOnKeyCreateNotify, this);
-	//CMainSingleton::PostMaster().Subscribe(mySettings.myOnKeyInteractNotify, this);
+	CMainSingleton::PostMaster().Subscribe(mySettings.myOnKeyCreateNotify, this);
+	CMainSingleton::PostMaster().Subscribe(mySettings.myOnKeyInteractNotify, this);
 }
 
 void CLockBehavior::OnDisable()
 {
-	//CMainSingleton::PostMaster().Unsubscribe(mySettings.myOnKeyCreateNotify, this);
-	//CMainSingleton::PostMaster().Unsubscribe(mySettings.myOnKeyInteractNotify, this);
+	CMainSingleton::PostMaster().Unsubscribe(mySettings.myOnKeyCreateNotify, this);
+	CMainSingleton::PostMaster().Unsubscribe(mySettings.myOnKeyInteractNotify, this);
 	myAmountOfKeys = 0;
 }
 
