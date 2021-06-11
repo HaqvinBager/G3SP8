@@ -1,7 +1,8 @@
 #pragma once
 #include "Behavior.h"
+#include "Observer.h"
 
-class CInteractionBehavior : public CBehavior
+class CInteractionBehavior : public CBehavior, public IStringObserver
 {
 public:
 	CInteractionBehavior(CGameObject& aParent);
@@ -12,9 +13,13 @@ public:
 	void Start() override;
 	void Update() override;
 	void OnDisable() override;
+
+	void Receive(const SStringMessage& aMsg) override;
+
 private:
 	void UpdateEyes();
 
+	bool myUpdateEyes;
 
 };
 
