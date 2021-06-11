@@ -29,7 +29,7 @@ CGravityGloveComponent::CGravityGloveComponent(CGameObject& aParent, CTransformC
 	mySettings.myMinPushForce = 10.0f;
 	mySettings.myMinPullForce = 200.0f;
 
-	mySettings.myMaxDistance = 2.0f;
+	mySettings.myMaxDistance = 0.75f;
 	mySettings.myCurrentDistanceInverseLerp = 0.0f;
 	myJoint = nullptr;
 }
@@ -67,9 +67,12 @@ void CGravityGloveComponent::Update()
 	myRigidStatic->setGlobalPose(CEngine::GetInstance()->GetPhysx().ConvertToPxTransform(GameObject().myTransform->GetWorldMatrix()));
 	if (myCurrentTarget.myRigidBodyPtr != nullptr)
 	{
+		if (myCurrentTarget.myRigidBodyPtr->GetDynamicRigidBody()->GetBody().isSleeping()) {
+			myCurrentTarget.myRigidBodyPtr->GetDynamicRigidBody()->GetBody().wakeUp();
+		}
 		myHoldingAItem = true;
 		myCurrentTarget.myRigidBodyPtr->IsHeld(true);
-		myCurrentTarget.myRigidBodyPtr->GetDynamicRigidBody()->GetBody().setRigidBodyFlag(PxRigidBodyFlag::eRETAIN_ACCELERATIONS, false);
+		//myCurrentTarget.myRigidBodyPtr->GetDynamicRigidBody()->GetBody().setRigidBodyFlag(PxRigidBodyFlag::eRETAIN_ACCELERATIONS, false);
 		myCurrentTarget.myRigidBodyPtr->GetDynamicRigidBody()->GetBody().setRigidDynamicLockFlag(PxRigidDynamicLockFlag::eLOCK_ANGULAR_X, true);
 		myCurrentTarget.myRigidBodyPtr->GetDynamicRigidBody()->GetBody().setRigidDynamicLockFlag(PxRigidDynamicLockFlag::eLOCK_ANGULAR_Y, true);
 		myCurrentTarget.myRigidBodyPtr->GetDynamicRigidBody()->GetBody().setRigidDynamicLockFlag(PxRigidDynamicLockFlag::eLOCK_ANGULAR_Z, true);
@@ -82,6 +85,9 @@ void CGravityGloveComponent::Update()
 			if (dist >= mySettings.myMaxDistance + 1.f) {
 				myJoint->release();
 				myJoint = nullptr;
+				myCurrentTarget.myRigidBodyPtr->GetDynamicRigidBody()->GetBody().setRigidDynamicLockFlag(PxRigidDynamicLockFlag::eLOCK_ANGULAR_X, false);
+				myCurrentTarget.myRigidBodyPtr->GetDynamicRigidBody()->GetBody().setRigidDynamicLockFlag(PxRigidDynamicLockFlag::eLOCK_ANGULAR_Y, false);
+				myCurrentTarget.myRigidBodyPtr->GetDynamicRigidBody()->GetBody().setRigidDynamicLockFlag(PxRigidDynamicLockFlag::eLOCK_ANGULAR_Z, false);
 				myCurrentTarget.myRigidBodyPtr = nullptr;
 				myHoldingAItem = false;
 			}
@@ -180,6 +186,9 @@ void CGravityGloveComponent::Release()
 	if (myCurrentTarget.myRigidBodyPtr != nullptr)
 	{
 		myCurrentTarget.myRigidBodyPtr->GetDynamicRigidBody()->GetBody().setMaxLinearVelocity(100.f);
+		myCurrentTarget.myRigidBodyPtr->GetDynamicRigidBody()->GetBody().setRigidDynamicLockFlag(PxRigidDynamicLockFlag::eLOCK_ANGULAR_X, false);
+		myCurrentTarget.myRigidBodyPtr->GetDynamicRigidBody()->GetBody().setRigidDynamicLockFlag(PxRigidDynamicLockFlag::eLOCK_ANGULAR_Y, false);
+		myCurrentTarget.myRigidBodyPtr->GetDynamicRigidBody()->GetBody().setRigidDynamicLockFlag(PxRigidDynamicLockFlag::eLOCK_ANGULAR_Z, false);
 		myCurrentTarget.myRigidBodyPtr = nullptr;
 		bool released = true;
 		CMainSingleton::PostMaster().Send({ EMessageType::GravityGlovePull, &released });
@@ -288,7 +297,7 @@ void CGravityGloveComponent::InteractionLogicContinuous()
 	Vector3 start = GameObject().myTransform->GetWorldMatrix().Translation();
 	Vector3 dir = -GameObject().myTransform->GetWorldMatrix().Forward();
 
-	PxRaycastBuffer hit = CEngine::GetInstance()->GetPhysx().Raycast(start, dir, mySettings.myMaxDistance, CPhysXWrapper::ELayerMask::DYNAMIC_OBJECTS);// ELayerMask could be changed to ::DYNAMIC only? // Aki 2021 05 26
+	PxRaycastBuffer hit = CEngine::GetInstance()->GetPhysx().Raycast(start, dir, mySettings.myMaxDistance + 1.f, CPhysXWrapper::ELayerMask::DYNAMIC_OBJECTS);// ELayerMask could be changed to ::DYNAMIC only? // Aki 2021 05 26
 	if (hit.getNbAnyHits() > 0)
 	{
 		CTransformComponent* transform = static_cast<CTransformComponent*>(hit.getAnyHit(0).actor->userData);
@@ -367,9 +376,9 @@ physx::PxD6Joint* CGravityGloveComponent::CreateD6Joint(PxRigidActor* actor0, Px
 	}
 
 	PxD6Joint* d6Joint = PxD6JointCreate(CEngine::GetInstance()->GetActiveScene().PXScene()->getPhysics(), actor0, transform0, actor1, transform1);
-	d6Joint->setMotion(PxD6Axis::eX, PxD6Motion::eLIMITED);
-	d6Joint->setMotion(PxD6Axis::eY, PxD6Motion::eLIMITED);
-	d6Joint->setMotion(PxD6Axis::eZ, PxD6Motion::eLIMITED);
+	d6Joint->setMotion(PxD6Axis::eX, PxD6Motion::eLOCKED);
+	d6Joint->setMotion(PxD6Axis::eY, PxD6Motion::eLOCKED);
+	d6Joint->setMotion(PxD6Axis::eZ, PxD6Motion::eLOCKED);
 	d6Joint->setLinearLimit(PxJointLinearLimit(1.0f, PxSpring(1.f, 1.f)));
 
 	d6Joint->setMotion(PxD6Axis::eSWING1, PxD6Motion::eLIMITED);
