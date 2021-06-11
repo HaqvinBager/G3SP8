@@ -61,9 +61,9 @@ public:
 	const float CurrentStateBlendValue() const { return myCurrentStateBlend; };
 
 public:
-	float WrapAngle(float anAngle)
+	float WrapAngle(float anAngleRadians)
 	{
-		return fmodf(DirectX::XMConvertToDegrees(anAngle), 360.0f);
+		return fmodf(DirectX::XMConvertToDegrees(anAngleRadians), 360.0f);
 	}
 
 	float ToDegrees(float anAngleInRadians)
