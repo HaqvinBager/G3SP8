@@ -1106,6 +1106,15 @@ void CSceneManager::AddEnemyComponents(CScene& aScene, RapidArray someData, cons
 				aScene.AddInstance(patrolComponent);
 			}
 		}
+		if (m.HasMember("spawnPointTransforms"))
+		{
+			for (const auto& point : m["spawnPointTransforms"].GetArray())
+			{
+				int id = point["transform"]["instanceID"].GetInt();
+				CGameObject* spawnPoint = aScene.FindObjectWithID(id);
+				settings.mySpawnPoints.push_back(spawnPoint->GetComponent<CTransformComponent>()->GameObject().myTransform->Position());
+			}
+		}
 		gameObject->AddComponent<CEnemyComponent>(*gameObject, settings, InitNavMesh(aNavMeshPath));
 		gameObject->GetComponent<CAnimationComponent>()->BlendLerpBetween(1, 2, 0.2f);
 		//gameObject->AddComponent<CModelComponent>(*gameObject, ASSETPATH("Assets/IronWrought/Mesh/Enemy/CH_Enemy_SK.fbx"));

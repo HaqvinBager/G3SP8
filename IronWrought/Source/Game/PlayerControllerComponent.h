@@ -67,6 +67,9 @@ public:
 
 	void LockMovementFor(const float& someSeconds);
 	void ForceStand();
+
+	inline const float GetCameraPosYStanding() const { return myCameraPosYStanding; }
+
 private:
 	void RayCastWorld();
 	void UpdateMovementLock();

@@ -190,7 +190,10 @@ void CTransformComponent::MoveLocal(const DirectX::SimpleMath::Vector3& aMovemen
 void CTransformComponent::Rotate(const DirectX::SimpleMath::Vector3& aRotation)
 {
 	Vector3 tempTranslation = myLocalTransform.Translation();
-	Matrix tempRotation = Matrix::CreateFromYawPitchRoll(aRotation.y, aRotation.x, aRotation.z);
+	Matrix tempRotation = Matrix::CreateFromYawPitchRoll(
+		DirectX::XMConvertToRadians(aRotation.y)
+		, DirectX::XMConvertToRadians(aRotation.x)
+		, DirectX::XMConvertToRadians(aRotation.z));
 	myLocalTransform *= tempRotation;
 	myLocalTransform.Translation(tempTranslation);
 }

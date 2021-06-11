@@ -41,7 +41,7 @@
 #ifdef NDEBUG
 #define INGAME_USE_MENU
 #else
-#define INGAME_USE_MENU
+//#define INGAME_USE_MENU
 #endif
 
 #define MENU_SCENE "Level_Cottage_1"
@@ -220,8 +220,8 @@ void CInGameState::Update()
 	}
 	if (myMenuCamera)
 	{
-		myMenuCamera->myTransform->Position(Vector3::Lerp(myMenuCamera->myTransform->Position(), myMenuCameraTargetPosition, myMenuCameraSpeed * CTimer::Dt()));
-		myMenuCamera->myTransform->Rotation(Quaternion::Slerp(myMenuCamera->myTransform->Rotation(), myMenuCameraTargetRotation, myMenuCameraSpeed * CTimer::Dt()));
+		//myMenuCamera->myTransform->Position(Vector3::Lerp(myMenuCamera->myTransform->Position(), myMenuCameraTargetPosition, myMenuCameraSpeed * CTimer::Dt()));
+		//myMenuCamera->myTransform->Rotation(Quaternion::Slerp(myMenuCamera->myTransform->Rotation(), myMenuCameraTargetRotation, myMenuCameraSpeed * CTimer::Dt()));
 	}
 #else
 #endif

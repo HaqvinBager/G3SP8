@@ -14,14 +14,23 @@ public struct Enemy //Unity Interface for LD
     public float radius;
     public float attackDistance;
     public List<GameObject> points;
+    public List<GameObject> spawnPoints;
     [HideInInspector]
     public List<InterestPoint> interestPoints;
+    [HideInInspector]
+    public List<SpawnPoint> spawnPointTransforms;
 }
 
 [System.Serializable]
 public struct InterestPoint
 {
     public float interestValue;
+    public Transform transform;
+}
+
+[System.Serializable]
+public struct SpawnPoint
+{
     public Transform transform;
 }
 

@@ -20,6 +20,7 @@ struct SEnemySetting {
 	float myAttackDistance; 
 
 	std::vector<int> myPatrolGameObjectIds;
+	std::vector<Vector3> mySpawnPoints;
 	std::vector<float> myPatrolIntrestValue;
 };
 
@@ -60,9 +61,9 @@ public:
 	const float CurrentStateBlendValue() const { return myCurrentStateBlend; };
 
 public:
-	float WrapAngle(float anAngle)
+	float WrapAngle(float anAngleRadians)
 	{
-		return fmodf(anAngle, 360.0f);
+		return fmodf(DirectX::XMConvertToDegrees(anAngleRadians), 360.0f);
 	}
 
 	float ToDegrees(float anAngleInRadians)
