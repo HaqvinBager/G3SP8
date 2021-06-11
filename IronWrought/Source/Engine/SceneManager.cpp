@@ -242,6 +242,8 @@ bool CSceneManager::AddToScene(CScene& aScene, Binary::SLevelData& aBinLevelData
 				AddPuzzleResponseAudio(aScene, sceneData["responseAudios"].GetArray());
 			if (sceneData.HasMember("responseVoices"))
 				AddPuzzleResponseVoice(aScene, sceneData["responseVoices"].GetArray());
+			if (sceneData.HasMember("responseNextLevel"))
+				AddNextLevelResponse(aScene, sceneData["responseNextLevel"].GetArray());
 
 			AddDirectionalLights(aScene, sceneData["directionalLights"].GetArray());
 			SetVertexPaintedColors(aScene, sceneData["vertexColors"].GetArray(), vertexPaintData);
@@ -252,9 +254,9 @@ bool CSceneManager::AddToScene(CScene& aScene, Binary::SLevelData& aBinLevelData
 				AddVFX(aScene, sceneData["myVFXLinks"].GetArray());
 
 			if (sceneData.HasMember("triggerEvents"))
-				AddTriggerEvents(aScene, sceneData["triggerEvents"].GetArray(), aSceneSection);
+				AddTriggerEvents(aScene, sceneData["triggerEvents"].GetArray(), aSceneSection);/*
 			if (sceneData.HasMember("teleporters"))
-				AddTeleporters(aScene, sceneData["teleporters"].GetArray());
+				AddTeleporters(aScene, sceneData["teleporters"].GetArray());*/
 
 			if (sceneName.find("Gameplay") != std::string::npos)//Om Unity Scene Namnet inneh�ller nyckelordet "Layout"
 				AddPlayer(aScene, sceneData["player"].GetObjectW());
@@ -753,6 +755,9 @@ void CSceneManager::AddPuzzleActivationVoice(CScene& aScene, RapidArray someData
 		PostMaster::SAudioSourceInitData settings = {};
 		settings.mySoundIndex = activation["voiceLine"].GetInt();
 		bool is3D = activation["is3D"].GetBool()/* ? 1 : 0*/;
+		
+		const Matrix& matrix = gameObject->myTransform->GetLocalMatrix();
+		settings.myPosition = matrix.Translation();
 		settings.myForward = Vector3
 		{
 			activation["coneDirection"]["x"].GetFloat(),
@@ -978,6 +983,9 @@ void CSceneManager::AddPuzzleResponseVoice(CScene& aScene, RapidArray someData)
 		PostMaster::SAudioSourceInitData settings = {};
 		settings.mySoundIndex = response["voiceLine"].GetInt();
 		bool is3D = response["is3D"].GetBool()/* ? 1 : 0*/;
+		
+		const Matrix& matrix = gameObject->myTransform->GetLocalMatrix();
+		settings.myPosition = matrix.Translation();
 		settings.myForward = Vector3
 		{
 			response["coneDirection"]["x"].GetFloat(),
@@ -1199,6 +1207,23 @@ void CSceneManager::AddNextLevelActivation(CScene& aScene, RapidArray someData)
 		gameObject->AddComponent<CTeleportActivation>(*gameObject, delay, target);
 	}
 
+}
+
+void CSceneManager::AddNextLevelResponse(CScene& aScene, RapidArray someData)
+{
+	for (const auto& levelResponseData : someData)
+	{
+		const int instanceID = levelResponseData["instanceID"].GetInt();
+		CGameObject* gameObject = aScene.FindObjectWithID(instanceID);
+
+		if (!gameObject)
+			continue;
+
+		float delay = levelResponseData["delay"].GetFloat();
+		std::string target = levelResponseData["target"].GetString();
+
+		gameObject->AddComponent<CTeleportResponse>(*gameObject, delay, target);
+	}
 }
 
 void CSceneManager::AddCollider(CScene& aScene, RapidArray someData)

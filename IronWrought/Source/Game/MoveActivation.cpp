@@ -21,7 +21,8 @@ void CMoveActivation::Update()
 	if (myIsInteracted)
 	{
 		myTime += CTimer::Dt();
-		Vector3 position = Vector3::Lerp(mySettings.myStartPosition, mySettings.myEndPosition, myTime / mySettings.myDuration);
+		float t = std::clamp((myTime / mySettings.myDuration), 0.0f, 1.0f);
+		Vector3 position = Vector3::Lerp(mySettings.myStartPosition, mySettings.myEndPosition, t);
 		GameObject().myTransform->Position(position);
 	}
 
