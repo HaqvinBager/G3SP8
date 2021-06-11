@@ -6,21 +6,27 @@ CLockBehavior::CLockBehavior(CGameObject& aParent, const SSettings someSettings)
 	mySettings(someSettings),
 	myMaxAmountOfKeys(0),
 	myAmountOfKeys(0),
-	myHasTriggered(false)
+	myHasTriggered(false),
+	myHasSubscribed(false)
 {
 	CMainSingleton::PostMaster().Subscribe(mySettings.myOnKeyCreateNotify, this);
 	CMainSingleton::PostMaster().Subscribe(mySettings.myOnKeyInteractNotify, this);
+	myHasSubscribed = true;
 }
 
 CLockBehavior::~CLockBehavior()
 {
-	
+
 }
 
 void CLockBehavior::OnEnable()
 {
-	//CMainSingleton::PostMaster().Subscribe(mySettings.myOnKeyCreateNotify, this);
-	//CMainSingleton::PostMaster().Subscribe(mySettings.myOnKeyInteractNotify, this);
+	if (!myHasSubscribed)
+	{
+		CMainSingleton::PostMaster().Subscribe(mySettings.myOnKeyCreateNotify, this);
+		CMainSingleton::PostMaster().Subscribe(mySettings.myOnKeyInteractNotify, this);
+		myHasSubscribed = true;
+	}
 }
 
 void CLockBehavior::OnDisable()
@@ -28,6 +34,7 @@ void CLockBehavior::OnDisable()
 	CMainSingleton::PostMaster().Unsubscribe(mySettings.myOnKeyCreateNotify, this);
 	CMainSingleton::PostMaster().Unsubscribe(mySettings.myOnKeyInteractNotify, this);
 	myAmountOfKeys = 0;
+	myHasSubscribed = false;
 }
 
 void CLockBehavior::RunEvent()
