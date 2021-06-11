@@ -61,9 +61,6 @@ void CGravityGloveComponent::Start()
 
 void CGravityGloveComponent::Update()
 {
-	int wheel = Input::GetInstance()->MouseWheel();
-	std::cout <<
-		wheel << std::endl;
 	// Use one at a time:
 	InteractionLogicContinuous();
 	//InteractionLogicOnInput();
