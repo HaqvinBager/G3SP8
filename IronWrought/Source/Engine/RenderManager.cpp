@@ -422,7 +422,7 @@ void CRenderManager::Render(CScene& aScene)
 	}
 
 	// Gamma correction
-	myBackbuffer.SetAsActiveTarget();
+	myVignetteTexture.SetAsActiveTarget(); // For vignetting
 	myAntiAliasedTexture.SetAsResourceOnSlot(0);
 	
 	if (myRenderPassIndex == 7)
@@ -445,7 +445,12 @@ void CRenderManager::Render(CScene& aScene)
 		myFullscreenRenderer.Render(CFullscreenRenderer::FullscreenShader::GammaCorrectionRenderPass);
 	}
 
+	// Vignette
 	myBackbuffer.SetAsActiveTarget();
+	myVignetteTexture.SetAsResourceOnSlot(0);
+	myFullscreenRenderer.Render(CFullscreenRenderer::FullscreenShader::Vignette);
+
+	//myBackbuffer.SetAsActiveTarget();
 
 	myRenderStateManager.SetBlendState(CRenderStateManager::BlendStates::BLENDSTATE_ALPHABLEND);
 	myRenderStateManager.SetDepthStencilState(CRenderStateManager::DepthStencilStates::DEPTHSTENCILSTATE_ONLYREAD);
@@ -572,7 +577,7 @@ void CRenderManager::RenderBloom()
 
 	myVignetteTexture.SetAsActiveTarget();
 	myDeferredLightingTexture.SetAsResourceOnSlot(0);
-	myFullscreenRenderer.Render(CFullscreenRenderer::FullscreenShader::Vignette);
+	myFullscreenRenderer.Render(CFullscreenRenderer::FullscreenShader::Copy); // No vignette at this step
 
 	myDeferredLightingTexture.SetAsActiveTarget();
 	myVignetteTexture.SetAsResourceOnSlot(0);
