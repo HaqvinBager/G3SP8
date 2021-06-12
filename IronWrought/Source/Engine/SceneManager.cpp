@@ -61,6 +61,7 @@
 #include <TeleportResponse.h>
 
 #include "PuzzleSetting.h"
+#include <LightActivation.h>
 
 
 
@@ -229,6 +230,8 @@ bool CSceneManager::AddToScene(CScene& aScene, Binary::SLevelData& aBinLevelData
 				AddPuzzleActivationAudio(aScene, sceneData["activationAudios"].GetArray());
 			if (sceneData.HasMember("activationVoices"))
 				AddPuzzleActivationVoice(aScene, sceneData["activationVoices"].GetArray());
+			if (sceneData.HasMember("activationLights"))
+				AddPuzzleActivationLight(aScene, sceneData["activationLights"].GetArray());
 
 			if (sceneData.HasMember("responseMoves"))
 				AddPuzzleResponseMove(aScene, sceneData["responseMoves"].GetArray());
@@ -771,6 +774,26 @@ void CSceneManager::AddPuzzleActivationVoice(CScene& aScene, RapidArray someData
 		settings.myMinimumVolume = activation["minimumVolume"].GetFloat();
 		settings.myGameObjectID = gameObject->InstanceID();
 		gameObject->AddComponent<CVoiceActivation>(*gameObject, settings, is3D);
+	}
+}
+
+void CSceneManager::AddPuzzleActivationLight(CScene& aScene, RapidArray someData)
+{
+	for (const auto& data : someData)
+	{
+		CGameObject* g = aScene.FindObjectWithID(data["instanceID"].GetInt());
+
+		CLightActivation::SData initData = {};
+		initData.myTargetInstanceID = data["targetInstanceID"].GetInt();
+		initData.myIntensity = data["setIntensity"].GetFloat();
+		initData.myTargetType = data["targetType"].GetString();
+		initData.myColor = { 
+			data["color"]["x"].GetFloat(), 
+			data["color"]["y"].GetFloat(), 
+			data["color"]["z"].GetFloat() 
+		};
+
+		g->AddComponent<CLightActivation>(*g, initData);
 	}
 }
 
