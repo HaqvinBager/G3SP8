@@ -25,7 +25,7 @@ public class ExportSpotLight
 {
     public static SpotLightCollection Export()
     {
-        Debug.Log("Exporting SpotLights");
+        //Debug.Log("Exporting SpotLights");
         Light[] allLights = GameObject.FindObjectsOfType<Light>();
         SpotLightCollection lightCollection = new SpotLightCollection();
         lightCollection.spotLights = new List<SpotLight>();

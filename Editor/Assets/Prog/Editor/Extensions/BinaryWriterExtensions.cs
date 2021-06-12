@@ -1,6 +1,7 @@
 ﻿using System.IO;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Text;
 
 public static class BinaryWriterExtensions
 {
@@ -118,7 +119,7 @@ public static class BinaryWriterExtensions
         }
     }
 
-    public static void Write(this BinaryWriter aBinWriter, List<TransformLink> someData)
+    public static string Write(this BinaryWriter aBinWriter, List<TransformLink> someData)
     {
         aBinWriter.Write(someData.Count);
         foreach (var data in someData)
@@ -128,14 +129,19 @@ public static class BinaryWriterExtensions
             aBinWriter.Write(data.rotation);
             aBinWriter.Write(data.scale);
         }
+
+        return "Transform Count " + someData.Count;
     }
 
 
-    public static void Write(this BinaryWriter aBinWriter, List<ModelLink> someData)
+    public static string Write(this BinaryWriter aBinWriter, List<ModelLink> someData)
     {
+        StringBuilder log = new StringBuilder();
+        log.AppendLine("Model Component Count " + someData.Count);
         aBinWriter.Write(someData.Count);
         foreach (var data in someData)
         {
+            //log.AppendLine("Asset ID " + data.assetID + "\tInstanceID " + data.instanceID + "\tVertexColorID " + data.vertexColorID + "\tMaterial Count " + data.materialIDs.Count);
             aBinWriter.Write(data.instanceID);
             aBinWriter.Write(data.assetID);
             aBinWriter.Write(data.vertexColorID);
@@ -143,8 +149,12 @@ public static class BinaryWriterExtensions
             if (data.materialIDs == null)
                 aBinWriter.Write(0);
             else
+            {
                 aBinWriter.Write(data.materialIDs);
+            }
         }
+
+        return log.ToString();
     }
 
     public static void Write(this BinaryWriter aBinWriter, List<PointLight> someData)
@@ -234,18 +244,23 @@ public static class BinaryWriterExtensions
         aBinWriter.Write(data.children);
     }
 
-    public static void Write(this BinaryWriter aBinWRiter, InstancedModel data)
+    public static string Write(this BinaryWriter aBinWRiter, InstancedModel data)
     {
         aBinWRiter.Write(data.assetID);
         aBinWRiter.Write(data.tag);
         aBinWRiter.Write(data.materialIDs);
         aBinWRiter.Write(data.transforms.Count);
+       
         foreach (STransform transformData in data.transforms)
         {
             aBinWRiter.Write(transformData.position);
             aBinWRiter.Write(transformData.rotation);
             aBinWRiter.Write(transformData.scale);
         }
+
+        StringBuilder log = new StringBuilder();
+        log.Append("AssetID " + data.assetID + "\tTag " + data.tag + "\tMaterial Count " + data.materialIDs.Count + "\tInstance Count " + data.transforms.Count);
+        return log.ToString();
     }
 
     public static void Write(this BinaryWriter aBinWriter, InstanceIDCollection data)
@@ -271,9 +286,9 @@ public static class BinaryWriterExtensions
     //    }
     //}
 
-    public static void Write(this BinaryWriter aBinWriter, TransformCollection data)
+    public static string Write(this BinaryWriter aBinWriter, TransformCollection data)
     {
-        aBinWriter.Write(data.transforms);
+        return aBinWriter.Write(data.transforms);
     }
 
     public static void Write(this BinaryWriter aBinWriter, VertexColorCollection data)
@@ -282,9 +297,9 @@ public static class BinaryWriterExtensions
         //Move Material Names into Resource_Assets.json
     }
 
-    public static void Write(this BinaryWriter aBinWriter, ModelCollection data)
+    public static string Write(this BinaryWriter aBinWriter, ModelCollection data)
     {
-        aBinWriter.Write(data.models);
+        return aBinWriter.Write(data.models);
     }
 
     public static void Write(this BinaryWriter aBinWriter, DirectionalLightCollection data)
@@ -354,10 +369,14 @@ public static class BinaryWriterExtensions
         aBinWriter.Write(data.triggerEvents);
     }
 
-    public static void Write(this BinaryWriter aBinWriter, InstanceModelCollection data)
+    public static string Write(this BinaryWriter aBinWriter, InstanceModelCollection data)
     {
+        StringBuilder infoLog = new StringBuilder();
+        infoLog.AppendLine("Static Unique Count " + data.instancedModels.Count);
         aBinWriter.Write(data.instancedModels.Count);
         foreach (InstancedModel instancedModelData in data.instancedModels)
-            aBinWriter.Write(instancedModelData);
+            infoLog.AppendLine(aBinWriter.Write(instancedModelData));
+
+        return infoLog.ToString();
     }
 }
