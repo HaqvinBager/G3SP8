@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using System.Text;
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
@@ -63,6 +64,9 @@ public class ExportResource
 
     public static Assets ExportModelAssets(string aSceneName)
     {
+        StringBuilder infoLog = new StringBuilder();
+        infoLog.AppendLine("[Resources]");
+        
         string[] allAssetPaths = AssetDatabase.GetAllAssetPaths();
         Assets assets = new Assets();
         assets.models = new List<ModelAsset>();
@@ -72,7 +76,8 @@ public class ExportResource
         assets.events = new List<EventAsset>();
 
         List<Object> models = MagicString.LoadAssets<Object>("t:Model", "Assets/IronWrought/Mesh");
-        Debug.Log(models.Count);
+        
+        infoLog .AppendLine("[Resources] FBX Count " + models.Count);
         foreach(GameObject model in models)
         {
             ModelAsset modelAsset = new ModelAsset();
@@ -82,6 +87,7 @@ public class ExportResource
         }
 
         List<Texture> textures = MagicString.GetTextures();
+        infoLog.AppendLine("[Resources] Texture Count " + textures.Count);
         foreach (Texture t in textures)
         {
             TextureAsset asset = new TextureAsset();
@@ -91,6 +97,7 @@ public class ExportResource
         }
 
         List<Material> materials = MagicString.LoadAssets<Material>("t:Material", "Assets/Material");
+        infoLog.AppendLine("[Resources] Material Count " + materials.Count);
         foreach(Material mat in materials)
         {
             MaterialAsset asset = new MaterialAsset();
@@ -104,11 +111,11 @@ public class ExportResource
                 Texture texture = AssetDatabase.LoadAssetAtPath<Texture>(texturePath);
                 asset.textureAssets.Add(texture.GetInstanceID());
             }
-
             assets.materials.Add(asset);
         }
 
         List<CustomEvent> events = MagicString.LoadAssets<CustomEvent>("l:IronEvent", "Assets");
+        infoLog.AppendLine("[Resources] Custom Event Count " + events.Count);
         foreach (CustomEvent customEvent in events)
         {
             //Debug.Log(ironEvent?.name);
@@ -132,8 +139,11 @@ public class ExportResource
                 }
             }
         }
+        infoLog.AppendLine("[Resources] VertexPaint ColorData Count " + assets.vertexColors.Count);
+        Debug.Log(infoLog.ToString());
 
         Json.ExportToJson(assets, "Resource");
+
         return assets;
     }
 

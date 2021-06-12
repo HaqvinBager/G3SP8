@@ -71,11 +71,8 @@ public class ExportCollider : MonoBehaviour
                             triggerLink.positionOffest = boxCollider.center;
                             triggerLink.boxSize = boxCollider.size;
                             colliderCollection.colliders.Add(triggerLink);
-                            Debug.Log("NOT Expecting: ClockHand(1) == " + collider.gameObject.name);
-
                         }
                     }
-
                     continue;
                 }
 

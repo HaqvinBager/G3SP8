@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -69,6 +70,17 @@ public struct ActivationNextLevelData
 }
 
 [System.Serializable]
+public struct ActivationLightData
+{
+    public Vector3 color;
+    public float setIntensity;
+    public int targetInstanceID;
+    public string targetType;
+    public int instanceID;
+}
+
+
+[System.Serializable]
 public struct KeyCollection
 {
     public List<KeyData> keys;
@@ -77,6 +89,7 @@ public struct KeyCollection
     public List<ActivationPlayAudioData> activationAudios;
     public List<ActivationPlayVoiceData> activationVoices;
     public List<ActivationNextLevelData> activationNextLevel;
+    public List<ActivationLightData> activationLights;
 }
 
 public class ExportKey
@@ -90,6 +103,7 @@ public class ExportKey
         collection.activationAudios = new List<ActivationPlayAudioData>();
         collection.activationVoices = new List<ActivationPlayVoiceData>();
         collection.activationNextLevel = new List<ActivationNextLevelData>();
+        collection.activationLights = new List<ActivationLightData>();
 
         Key[] keys = GameObject.FindObjectsOfType<Key>();
         foreach (Key key in keys)
@@ -113,9 +127,11 @@ public class ExportKey
             ExportPlayAudioActivations(ref collection.activationAudios, key);
             ExportPlayVoiceActivations(ref collection.activationVoices, key);
             ExportNextLevelActivations(ref collection.activationNextLevel, key);
+            ExportLightActivations(ref collection.activationLights, key);
         }
         return collection;
     }
+
 
     private static void ExportMoveActivations(ref List<ActivationMoveData> moves, Key key)
     {
@@ -189,6 +205,25 @@ public class ExportKey
             nextLevelData.delay = nextLevel.myDelay;
             nextLevelData.instanceID = nextLevel.transform.GetInstanceID();
             collection.Add(nextLevelData);
+        }
+    }
+
+    private static void ExportLightActivations(ref List<ActivationLightData> collection, Key key)
+    {
+        if (key.TryGetComponent(out ActivationLight behavior))
+        {
+            if(behavior.IsNullPrintWarning(behavior.target, "Fix this by adding a Target =) Hälsningar, Axel Savage"))
+                return;
+            if (behavior.IsNullPrintWarning(behavior.targetLight, "Fix this by adding a Target Light =) Hälsningar, Axel Savage"))
+                return;
+
+            ActivationLightData data = new ActivationLightData();
+            data.targetInstanceID = behavior.target.GetInstanceID();
+            data.color = new Vector3(behavior.setColor.r, behavior.setColor.g, behavior.setColor.b);
+            data.targetType = behavior.targetLight.type.ToString();
+            data.setIntensity = behavior.setIntensity;
+            data.instanceID = behavior.transform.GetInstanceID();
+            collection.Add(data);
         }
     }
 }

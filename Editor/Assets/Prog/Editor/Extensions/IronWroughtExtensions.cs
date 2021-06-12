@@ -25,6 +25,16 @@ static class IronWroughtExtensions
         //Add any changes in Scale for fixing anything in IronWrought here
         return scale;
     }
+
+    public static bool IsNullPrintWarning(this Component aComponent, Component aCheckTarget, string aMessage)
+    {
+        if (aCheckTarget == null)
+            Debug.LogWarning(aComponent.name + " [Click here to Highlight Error Object] | " + aMessage, aComponent);
+
+        return aCheckTarget == null;
+    }
+
+
 }
 
 
