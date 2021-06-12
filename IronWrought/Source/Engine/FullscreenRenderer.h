@@ -37,7 +37,11 @@ public:
 		int myIsACES;
 
 		float myEmissiveStrength;
-		float myPadding[2];
+		
+		float myVignetteStrength;
+		float myPadding;
+
+		DirectX::SimpleMath::Vector4 myVignetteColor;
 	};
 
 static_assert((sizeof(SPostProcessingBufferData) % 16) == 0, "CB size not padded correctly");

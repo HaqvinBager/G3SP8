@@ -39,7 +39,12 @@ cbuffer PostProcessingBuffer : register(b2)
     int myIsUncharted;
     int myIsACES;
 
-    float myPadding[3];
+    float myEmissiveStrength;
+    
+    float myVignetteStrength;    
+    float myPadding;
+    
+    float4 myVignetteColor;
 }
 
 Texture2D fullscreenTexture1 : register(t0);
