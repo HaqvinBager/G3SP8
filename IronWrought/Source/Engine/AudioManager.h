@@ -12,7 +12,7 @@ class CAudioChannel;
 enum class EMusic { Count };
 enum class EAmbience { Cottage, Basement1, Basement2, Count };
 enum class EPropAmbience { GrandfatherClock, TVStatic, ElectricalCabinet, Boiler, Refrigerator, Toilet, PhoneCalling, PhoneDead, Count };
-enum class ESFX { Unused, Grab, Throw, LetGo, Unused1, EnemyHit, SwitchPress, PickupGravityGlove, PickupHeal, EnemyAttack, CardboardBox, MovePainting, DoorOpen, PhoneDead, WoodImpactMedium, WoodImpactSmall, CeramicImpactLarge, CeramicImpactMedium, CeramicImpactSmall, PlasticImpact, PaperImpact, SilverwareImpact, Count };
+enum class ESFX { Unused, Grab, Throw, LetGo, Unused1, EnemyHit, SwitchPress, PickupGravityGlove, PickupHeal, EnemyAttack, CardboardBox, MovePainting, DoorOpen, PhoneDead, WoodImpactMedium, WoodImpactSmall, CeramicImpactLarge, CeramicImpactMedium, CeramicImpactSmall, PlasticImpact, PaperImpact, SilverwareImpact, AshtrayImpact, CanImpact, BookImpact, ToiletPaperRollImpact, CameraImpact, ViolinImpact, Count };
 enum class ESFXCollection { StepWood, StepWoodFast, StepCarpet, StepCarpetFast, StepConcrete, StepConcreteFast, Count };
 enum class EUI { ButtonClick, PlayClick, Count };
 enum class EVOX { Line0, Line1, Line2, Line3, Line4, Line5, Line6, Line7, Line8, Line9, Line10, Line11, Line12, Line13, Line14, Line15, Line16, Line17, Line18, Line19, Line20, Line21, Line22, Line23, Line24, Line25, Line26, Line27, Line28, Line29, Line30, Line31, Line32, Line33, Line34, Line35, Line36, Line37, Line38, Line39, Line40, Heal1, Heal2, Heal3, LeaveCottage, PickUpPhone, WakeUpAfterDamage1, WakeUpAfterDamage2, WakeUpAfterDamage3, Count };
