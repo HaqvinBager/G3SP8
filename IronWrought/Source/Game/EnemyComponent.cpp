@@ -304,6 +304,8 @@ void CEnemyComponent::Update()//får bestämma vilket behaviour vi vill köra i 
 			myWakeUpTimer = 0.f;
 		}
 	}
+
+	UpdateVignette();
 }
 
 void CEnemyComponent::FixedUpdate()
@@ -451,8 +453,14 @@ const float CEnemyComponent::PercentileDistanceToPlayer() const
 	return mySqrdDistanceToPlayer / (myCloseToPlayerThreshold * myCloseToPlayerThreshold);
 }
 
+const float CEnemyComponent::CurrentStateBlendValue() const
+{
+	return myCurrentStateBlend;
+}
+
 void CEnemyComponent::UpdateAttackEvent()
 {
+	UpdateVignette();
 	myAttackPlayerTimer -= CTimer::Dt();
 	if (myAttackPlayerTimer <= 0.0f)
 	{
@@ -498,5 +506,18 @@ void CEnemyComponent::UpdateAttackEvent()
 		IRONWROUGHT->GetActiveScene().MainCamera()->Fade(false, myAttackPlayerTimerMax * 0.4f, true);
 		IRONWROUGHT->GetActiveScene().MainCamera()->SetTrauma(2.0f);
 	}
+}
+
+void CEnemyComponent::UpdateVignette()
+{
+	CFullscreenRenderer::SPostProcessingBufferData data = CEngine::GetInstance()->GetPostProcessingBufferData();
+	float timeVariationAmplitude = 0.05f;
+	float timeVariationSpeed = 1.4f;
+	float timeVariation = abs(sinf(CTimer::Time() * timeVariationSpeed) * sinf(CTimer::Time() * timeVariationSpeed)) * timeVariationAmplitude;
+	float normalizedBlend = std::clamp(((myCloseToPlayerThreshold * myCloseToPlayerThreshold) / mySqrdDistanceToPlayer), 0.0f, 1.0f);
+	normalizedBlend += timeVariation;
+	data.myVignetteStrength = Lerp(0.11f, 0.25f, normalizedBlend);
+	data.myVignetteColor = Vector4::Lerp({ 0.0f, 0.0f, 0.0f, 1.0f }, { 1.0f, 0.0f, 0.0f, 1.0f }, normalizedBlend);
+	CEngine::GetInstance()->SetPostProcessingBufferData(data);
 }
 

@@ -962,6 +962,26 @@ std::string CAudioManager::TranslateEnum(ESFX enumerator) const {
 		return "PaperImpact";
 	case ESFX::SilverwareImpact:
 		return "SilverwareImpact";
+	case ESFX::AshtrayImpact:
+		return "AshtrayImpact";
+	case ESFX::CanImpact:
+		return "CanImpact";
+	case ESFX::BookImpact:
+		return "BookImpact";
+	case ESFX::ToiletPaperRollImpact:
+		return "ToiletPaperRollImpact";
+	case ESFX::CameraImpact:
+		return "CameraImpact";
+	case ESFX::ViolinImpact:
+		return "ViolinImpact";
+	case ESFX::DoorRattle:
+		return "DoorRattle";
+	case ESFX::PuzzleProgress:
+		return "PuzzleProgress";
+	case ESFX::PuzzleSolved:
+		return "PuzzleSolved";
+	case ESFX::PuzzleKey:
+		return "PuzzleKey";
 	default:
 		return "";
 	}

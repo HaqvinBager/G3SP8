@@ -10,7 +10,7 @@ namespace PostMaster {
 class CAudioResponse :  public IResponseBehavior
 {
 public:
-	CAudioResponse(CGameObject& aParent, const PostMaster::SAudioSourceInitData& someSettings);
+	CAudioResponse(CGameObject& aParent, const PostMaster::SAudioSourceInitData& someSettings, bool aShouldBe3D);
 	~CAudioResponse() override;
 
 	void Start() override;
@@ -20,8 +20,10 @@ public:
 
 private:
 	PostMaster::SAudioSourceInitData mySettings;
-	PostMaster::SPlayDynamicAudioData myPlayMessage;
+	PostMaster::SPlayDynamicAudioData my3DPlayMessage;
 	CAudioChannel* myAudioChannel;
+	int my2DPlayMessage;
 	float myTime;
+	bool myIs3D;
 };
 

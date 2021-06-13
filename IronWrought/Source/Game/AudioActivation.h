@@ -10,7 +10,7 @@ namespace PostMaster {
 class CAudioActivation : public IActivationBehavior
 {
 public:
-	CAudioActivation(CGameObject& aParent, const PostMaster::SAudioSourceInitData& someSettings);
+	CAudioActivation(CGameObject& aParent, const PostMaster::SAudioSourceInitData& someSettings, bool aShouldBe3D);
 	~CAudioActivation() override;
 
 	void Start() override;
@@ -20,7 +20,9 @@ public:
 
 private:
 	PostMaster::SAudioSourceInitData mySettings;
-	PostMaster::SPlayDynamicAudioData myPlayMessage;
+	PostMaster::SPlayDynamicAudioData my3DPlayMessage;
 	CAudioChannel* myAudioChannel;
+	int my2DPlayMessage;
 	float myTime;
+	bool myIs3D;
 };
