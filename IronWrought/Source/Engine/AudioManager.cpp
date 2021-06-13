@@ -976,6 +976,12 @@ std::string CAudioManager::TranslateEnum(ESFX enumerator) const {
 		return "ViolinImpact";
 	case ESFX::DoorRattle:
 		return "DoorRattle";
+	case ESFX::PuzzleProgress:
+		return "PuzzleProgress";
+	case ESFX::PuzzleSolved:
+		return "PuzzleSolved";
+	case ESFX::PuzzleKey:
+		return "PuzzleKey";
 	default:
 		return "";
 	}
