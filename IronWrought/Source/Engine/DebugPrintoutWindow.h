@@ -38,7 +38,7 @@ namespace ImGui
 		std::string print;
 		char* myLastPos;
 
-		size_t myBufferSize = 8192;
+		size_t myBufferSize = 3128;
 
 		RedirectStdOutput* redir;
 		//char buf[2056];
