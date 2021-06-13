@@ -974,6 +974,8 @@ std::string CAudioManager::TranslateEnum(ESFX enumerator) const {
 		return "CameraImpact";
 	case ESFX::ViolinImpact:
 		return "ViolinImpact";
+	case ESFX::DoorRattle:
+		return "DoorRattle";
 	default:
 		return "";
 	}
