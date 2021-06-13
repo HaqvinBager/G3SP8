@@ -64,6 +64,34 @@ CFullscreenTexture CFullscreenTextureFactory::CreateTexture(ID3D11Texture2D* aTe
 	return returnTexture;
 }
 
+CFullscreenTexture CFullscreenTextureFactory::CreateTexture(SM::Vector2 aSize, DXGI_FORMAT aFormat, const std::string& aFilePath)
+{
+	D3D11_TEXTURE2D_DESC textureDesc = { 0 };
+	textureDesc.Width = static_cast<unsigned int>(aSize.x);
+	textureDesc.Height = static_cast<unsigned int>(aSize.y);
+	textureDesc.MipLevels = 1;
+	textureDesc.ArraySize = 1;
+	textureDesc.Format = aFormat;
+	textureDesc.SampleDesc.Count = 1;
+	textureDesc.SampleDesc.Quality = 0;
+	textureDesc.Usage = D3D11_USAGE_DEFAULT;
+	textureDesc.BindFlags = D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE;
+	textureDesc.CPUAccessFlags = 0;
+	textureDesc.MiscFlags = 0;
+
+	ID3D11Texture2D* texture;
+	ENGINE_HR_MESSAGE(myFramework->GetDevice()->CreateTexture2D(&textureDesc, nullptr, &texture), "Could not create Fullscreen Texture2D");
+
+	CFullscreenTexture returnTexture;
+	returnTexture = CreateTexture(texture);
+
+	ID3D11ShaderResourceView* shaderResource = GetShaderResourceView(myFramework->GetDevice(), aFilePath);
+	//ENGINE_HR_MESSAGE(myFramework->GetDevice()->CreateShaderResourceView(texture, nullptr, &shaderResource), "Could not create Fullscreen Shader Resource View.");
+
+	returnTexture.myShaderResource = shaderResource;
+	return returnTexture;
+}
+
 CFullscreenTexture CFullscreenTextureFactory::CreateDepth(SM::Vector2 aSize, DXGI_FORMAT aFormat) 
 {	
 	DXGI_FORMAT stencilViewFormat = DXGI_FORMAT_UNKNOWN;
@@ -159,4 +187,27 @@ CGBuffer CFullscreenTextureFactory::CreateGBuffer(DirectX::SimpleMath::Vector2 a
 	returnGBuffer.myShaderResources = std::move(shaderResources);
 	returnGBuffer.myViewport = viewport;
 	return returnGBuffer;
+}
+
+ID3D11ShaderResourceView* CFullscreenTextureFactory::GetShaderResourceView(ID3D11Device* aDevice, std::string aTexturePath)
+{
+	ID3D11ShaderResourceView* shaderResourceView;
+
+	wchar_t* widePath = new wchar_t[aTexturePath.length() + 1];
+	std::copy(aTexturePath.begin(), aTexturePath.end(), widePath);
+	widePath[aTexturePath.length()] = 0;
+
+	////==ENABLE FOR TEXTURE CHECKING==
+	ENGINE_HR_MESSAGE(DirectX::CreateDDSTextureFromFile(aDevice, widePath, nullptr, &shaderResourceView), aTexturePath.append(" could not be found.").c_str());
+	////===============================
+
+	//==DISABLE FOR TEXTURE CHECKING==
+	HRESULT result;
+	result = DirectX::CreateDDSTextureFromFile(aDevice, widePath, nullptr, &shaderResourceView);
+	if (FAILED(result))
+		DirectX::CreateDDSTextureFromFile(aDevice, L"ErrorTexture.dds", nullptr, &shaderResourceView);
+	//================================
+
+	delete[] widePath;
+	return shaderResourceView;
 }

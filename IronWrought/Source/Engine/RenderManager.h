@@ -72,6 +72,7 @@ private:
 	CFullscreenTexture myBlurTexture1;
 	CFullscreenTexture myBlurTexture2;
 	CFullscreenTexture myVignetteTexture;
+	CFullscreenTexture myVignetteOverlayTexture;
 	CFullscreenTexture myDeferredLightingTexture;
 	CFullscreenTexture myVolumetricAccumulationBuffer;
 	CFullscreenTexture myVolumetricBlurTexture;

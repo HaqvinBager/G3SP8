@@ -58,7 +58,7 @@ public:
 	// Based on threshold. 
 	const float PercentileDistanceToPlayer() const;
 
-	const float CurrentStateBlendValue() const { return myCurrentStateBlend; };
+	const float CurrentStateBlendValue() const;
 
 public:
 	float WrapAngle(float anAngleRadians)
@@ -77,6 +77,7 @@ public:
 
 private:
 	void UpdateAttackEvent();
+	void UpdateVignette();
 
 private:
 	friend class CEnemyAnimationController;
