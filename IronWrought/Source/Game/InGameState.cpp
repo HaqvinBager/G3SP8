@@ -41,7 +41,7 @@
 #ifdef NDEBUG
 #define INGAME_USE_MENU
 #else
-#define INGAME_USE_MENU
+//#define INGAME_USE_MENU
 #endif
 
 #define MENU_SCENE "Level_Cottage_1"
