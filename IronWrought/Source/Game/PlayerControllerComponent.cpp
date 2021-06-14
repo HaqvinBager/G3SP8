@@ -172,6 +172,9 @@ void CPlayerControllerComponent::FixedUpdate()
 
 void CPlayerControllerComponent::ReceiveEvent(const EInputEvent aEvent)
 {
+	if (myMovementLockTimer >= 0.0f)
+		return;
+
 	switch (myPlayerMovementLock)
 	{
 	case EPlayerMovementLock::None:
@@ -335,6 +338,9 @@ void CPlayerControllerComponent::Crouch()
 
 void CPlayerControllerComponent::CrouchUpdate(const float& dt)
 {
+	if (myMovementLockTimer >= 0.0f)
+		return;
+
 	if (myCrouchingLerp >= 0.0f && myCrouchingLerp <= 1.0f)
 	{
 		float currentYPos = Lerp(myCameraPosYStanding, myCameraPosYCrouching, myCrouchingLerp);

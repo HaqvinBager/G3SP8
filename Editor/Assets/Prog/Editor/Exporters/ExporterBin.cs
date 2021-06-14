@@ -6,6 +6,7 @@ using System.IO;
 using UnityEditor;
 using UnityEngine.SceneManagement;
 using UnityEditor.SceneManagement;
+using System.Text;
 
 public class ExporterBin
 {
@@ -39,38 +40,30 @@ public class ExporterBin
         string levelFolder = fullName.Substring(fullName.IndexOf("Assets"), fullName.Length - fullName.IndexOf("Assets"));
         LevelCollection level = AssetDatabase.LoadAssetAtPath<LevelCollection>(levelFolder + "\\" + directoryInfo.Parent.Name + "_Scenes.asset");
 
-        Debug.Log("Exporting " + level.name, level);
+        StringBuilder infoLog = new StringBuilder();
+
+        infoLog.AppendLine("[Binary Export] - " + level.name + "\n");
 
         var ids = ExportInstanceID.Export(level.name);
-        List<int> idNumbers = new List<int>();
-        ids.Ids.ForEach(e => idNumbers.Add(e.instanceID));
+        List<int> exportedInstanceIDs = new List<int>();
+        ids.Ids.ForEach(e => exportedInstanceIDs.Add(e.instanceID));
 
-        var transforms = ExportTransform.Export(level.name, idNumbers);
-        var models = ExportModel.Export(level.name, idNumbers);
-        var instancedModels = ExportInstancedModel.Export(level.name);
-        var pointLights = ExportPointlights.ExportPointlight(level.name);
-        var colliders = ExportCollider.Export(level.name, idNumbers);
-        var fuses = FusePickUpExporter.Export(level.name);
-        
         ExporterBin exporter = new ExporterBin(directoryInfo.Parent.Name);
         exporter.binWriter.Write(ids);
-        exporter.binWriter.Write(transforms);
-        exporter.binWriter.Write(models);
-        exporter.binWriter.Write(pointLights);
+        infoLog.AppendLine(
+            exporter.binWriter.Write(ExportTransform.Export(level.name, exportedInstanceIDs)
+            ) + "\n");
+        infoLog.AppendLine(
+            exporter.binWriter.Write(ExportModel.Export(level.name, exportedInstanceIDs)
+            ));
+        exporter.binWriter.Write(ExportPointlights.ExportPointlight(level.name));
         exporter.binWriter.Write(ExportSpotLight.Export());
-        exporter.binWriter.Write(colliders);
-        exporter.binWriter.Write(instancedModels);
+        exporter.binWriter.Write(ExportCollider.Export(level.name, exportedInstanceIDs));
+        infoLog.AppendLine(
+            exporter.binWriter.Write(ExportInstancedModel.Export(level.name))
+            );
         exporter.binWriter.Close();
 
-        Debug.Log(level.name + " Export Complete <3");
-        //var resources = ExportResource.ExportModelAssets("Scene");
-        //ExporterBin resourceBin = new ExporterBin("Resources");
-        //resourceBin.binWriter.Write(resources.models.Count * 100);
-
-        //foreach (var res in resources.models)
-        //{
-        //    resourceBin.binWriter.Write(res.path);     
-        //}
-        //resourceBin.binWriter.Close();
+        Debug.Log(infoLog.ToString(), level);
     }
 }

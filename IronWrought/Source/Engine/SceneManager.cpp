@@ -61,6 +61,7 @@
 #include <TeleportResponse.h>
 
 #include "PuzzleSetting.h"
+#include <LightActivation.h>
 
 
 
@@ -229,6 +230,8 @@ bool CSceneManager::AddToScene(CScene& aScene, Binary::SLevelData& aBinLevelData
 				AddPuzzleActivationAudio(aScene, sceneData["activationAudios"].GetArray());
 			if (sceneData.HasMember("activationVoices"))
 				AddPuzzleActivationVoice(aScene, sceneData["activationVoices"].GetArray());
+			if (sceneData.HasMember("activationLights"))
+				AddPuzzleActivationLight(aScene, sceneData["activationLights"].GetArray());
 
 			if (sceneData.HasMember("responseMoves"))
 				AddPuzzleResponseMove(aScene, sceneData["responseMoves"].GetArray());
@@ -726,7 +729,7 @@ void CSceneManager::AddPuzzleActivationAudio(CScene& aScene, RapidArray someData
 
 		PostMaster::SAudioSourceInitData settings = {};
 		settings.mySoundIndex = activation["soundEffect"].GetInt();
-		//bool is3D = response["is3D"].GetInt() ? 1 : 0;
+		bool is3D = activation["is3D"].GetBool();
 		settings.myForward = Vector3
 		{
 			activation["coneDirection"]["x"].GetFloat(),
@@ -740,7 +743,7 @@ void CSceneManager::AddPuzzleActivationAudio(CScene& aScene, RapidArray someData
 		settings.myMinimumVolume = activation["minimumVolume"].GetFloat();
 		settings.myGameObjectID = gameObject->InstanceID();
 		settings.myDelay = activation["delay"].GetFloat();
-		gameObject->AddComponent<CAudioActivation>(*gameObject, settings);
+		gameObject->AddComponent<CAudioActivation>(*gameObject, settings, is3D);
 	}
 }
 
@@ -771,6 +774,26 @@ void CSceneManager::AddPuzzleActivationVoice(CScene& aScene, RapidArray someData
 		settings.myMinimumVolume = activation["minimumVolume"].GetFloat();
 		settings.myGameObjectID = gameObject->InstanceID();
 		gameObject->AddComponent<CVoiceActivation>(*gameObject, settings, is3D);
+	}
+}
+
+void CSceneManager::AddPuzzleActivationLight(CScene& aScene, RapidArray someData)
+{
+	for (const auto& data : someData)
+	{
+		CGameObject* g = aScene.FindObjectWithID(data["instanceID"].GetInt());
+
+		CLightActivation::SData initData = {};
+		initData.myTargetInstanceID = data["targetInstanceID"].GetInt();
+		initData.myIntensity = data["setIntensity"].GetFloat();
+		initData.myTargetType = data["targetType"].GetString();
+		initData.myColor = { 
+			data["color"]["x"].GetFloat(), 
+			data["color"]["y"].GetFloat(), 
+			data["color"]["z"].GetFloat() 
+		};
+
+		g->AddComponent<CLightActivation>(*g, initData);
 	}
 }
 
@@ -954,7 +977,7 @@ void CSceneManager::AddPuzzleResponseAudio(CScene& aScene, RapidArray someData)
 
 		PostMaster::SAudioSourceInitData settings = {};
 		settings.mySoundIndex = response["soundEffect"].GetInt();
-		//bool is3D = response["myIs3D"].GetInt() ? 1 : 0;
+		bool is3D = response["is3D"].GetBool();
 		settings.myForward = Vector3
 		{
 			response["coneDirection"]["x"].GetFloat(),
@@ -968,7 +991,7 @@ void CSceneManager::AddPuzzleResponseAudio(CScene& aScene, RapidArray someData)
 		settings.myMinimumVolume = response["minimumVolume"].GetFloat();
 		settings.myGameObjectID = gameObject->InstanceID();
 		settings.myDelay = response["delay"].GetFloat();
-		gameObject->AddComponent<CAudioResponse>(*gameObject, settings);
+		gameObject->AddComponent<CAudioResponse>(*gameObject, settings, is3D);
 	}
 }
 
@@ -1104,6 +1127,15 @@ void CSceneManager::AddEnemyComponents(CScene& aScene, RapidArray someData, cons
 				CGameObject* patrolPoint = aScene.FindObjectWithID(point["transform"]["instanceID"].GetInt());
 				auto patrolComponent = patrolPoint->AddComponent<CPatrolPointComponent>(*patrolPoint, point["interestValue"].GetFloat());
 				aScene.AddInstance(patrolComponent);
+			}
+		}
+		if (m.HasMember("spawnPointTransforms"))
+		{
+			for (const auto& point : m["spawnPointTransforms"].GetArray())
+			{
+				int id = point["transform"]["instanceID"].GetInt();
+				CGameObject* spawnPoint = aScene.FindObjectWithID(id);
+				settings.mySpawnPoints.push_back(spawnPoint->GetComponent<CTransformComponent>()->GameObject().myTransform->Position());
 			}
 		}
 		gameObject->AddComponent<CEnemyComponent>(*gameObject, settings, InitNavMesh(aNavMeshPath));

@@ -3,16 +3,28 @@
 #include "AudioChannel.h"
 #include "TransformComponent.h"
 
-CAudioResponse::CAudioResponse(CGameObject& aParent, const PostMaster::SAudioSourceInitData& someSettings)
+CAudioResponse::CAudioResponse(CGameObject& aParent, const PostMaster::SAudioSourceInitData& someSettings, bool aShouldBe3D)
 	: IResponseBehavior(aParent)
 	, mySettings(someSettings)
+	, my2DPlayMessage(0)
 	, myTime(0.0f)
+	, myIs3D(aShouldBe3D)
 {
 	if (mySettings.myDelay < 0.001f)
 		mySettings.myDelay = 0.001f;
-	myAudioChannel = CEngine::GetInstance()->RequestAudioSource(mySettings);
-	myPlayMessage.myChannel = myAudioChannel;
-	myPlayMessage.mySoundIndex = mySettings.mySoundIndex;
+
+	if (myIs3D)
+	{
+		myAudioChannel = CEngine::GetInstance()->RequestAudioSource(mySettings);
+		my3DPlayMessage.myChannel = myAudioChannel;
+		my3DPlayMessage.mySoundIndex = mySettings.mySoundIndex;
+	}
+	else
+	{
+		my3DPlayMessage.myChannel = nullptr;
+		my3DPlayMessage.mySoundIndex = mySettings.mySoundIndex;
+		my2DPlayMessage = mySettings.mySoundIndex;
+	}
 }
 
 CAudioResponse::~CAudioResponse()
@@ -38,15 +50,22 @@ void CAudioResponse::Update()
 		myTime -= mySettings.myDelay;
 	}
 
-	const Matrix& matrix = GameObject().myTransform->GetLocalMatrix();
-	myAudioChannel->Set3DAttributes(matrix.Translation());
-	myAudioChannel->Set3DConeAttributes(matrix.Forward(), mySettings.myStartAttenuationAngle, mySettings.myMaxAttenuationAngle, mySettings.myMinimumVolume);
+	if (myIs3D)
+	{
+		const Matrix& matrix = GameObject().myTransform->GetLocalMatrix();
+		myAudioChannel->Set3DAttributes(matrix.Translation());
+		myAudioChannel->Set3DConeAttributes(matrix.Forward(), mySettings.myStartAttenuationAngle, mySettings.myMaxAttenuationAngle, mySettings.myMinimumVolume);
+	}
 }
 
 void CAudioResponse::OnRespond()
 {
 	std::cout << __FUNCTION__ << "Play Audio" << std::endl;
-	CMainSingleton::PostMaster().SendLate({ EMessageType::PlayDynamicAudioSource, &myPlayMessage });
+	
+	if (myIs3D)
+		CMainSingleton::PostMaster().SendLate({ EMessageType::PlayDynamicAudioSource, &my3DPlayMessage });
+	else
+		CMainSingleton::PostMaster().SendLate({ EMessageType::PlaySFX, &my2DPlayMessage });
 }
 
 void CAudioResponse::OnDisable()

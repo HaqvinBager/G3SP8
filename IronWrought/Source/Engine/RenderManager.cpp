@@ -35,6 +35,7 @@ CRenderManager::CRenderManager()
 
 CRenderManager::~CRenderManager()
 {
+	Release();
 }
 
 bool CRenderManager::Init(CDirectXFramework* aFramework, CWindowHandler* aWindowHandler)
@@ -89,7 +90,8 @@ void CRenderManager::InitRenderTextures(CWindowHandler* aWindowHandler)
 	myBlurTexture1 = myFullscreenTextureFactory.CreateTexture(aWindowHandler->GetResolution(), DXGI_FORMAT_R16G16B16A16_FLOAT);
 	myBlurTexture2 = myFullscreenTextureFactory.CreateTexture(aWindowHandler->GetResolution(), DXGI_FORMAT_R16G16B16A16_FLOAT);
 	myVignetteTexture = myFullscreenTextureFactory.CreateTexture(aWindowHandler->GetResolution(), DXGI_FORMAT_R16G16B16A16_FLOAT);
-	
+	myVignetteOverlayTexture = myFullscreenTextureFactory.CreateTexture(aWindowHandler->GetResolution(), DXGI_FORMAT_R16G16B16A16_FLOAT, ASSETPATH("Assets/IronWrought/UI/Misc/UI_VignetteTexture.dds"));
+
 	myDeferredLightingTexture = myFullscreenTextureFactory.CreateTexture(aWindowHandler->GetResolution(), DXGI_FORMAT_R16G16B16A16_FLOAT);
 	
 	myVolumetricAccumulationBuffer = myFullscreenTextureFactory.CreateTexture(aWindowHandler->GetResolution() / 2.0f, DXGI_FORMAT_R16G16B16A16_FLOAT);
@@ -422,7 +424,7 @@ void CRenderManager::Render(CScene& aScene)
 	}
 
 	// Gamma correction
-	myBackbuffer.SetAsActiveTarget();
+	myVignetteTexture.SetAsActiveTarget(); // For vignetting
 	myAntiAliasedTexture.SetAsResourceOnSlot(0);
 	
 	if (myRenderPassIndex == 7)
@@ -445,7 +447,13 @@ void CRenderManager::Render(CScene& aScene)
 		myFullscreenRenderer.Render(CFullscreenRenderer::FullscreenShader::GammaCorrectionRenderPass);
 	}
 
+	// Vignette
 	myBackbuffer.SetAsActiveTarget();
+	myVignetteTexture.SetAsResourceOnSlot(0);
+	myVignetteOverlayTexture.SetAsResourceOnSlot(1);
+	myFullscreenRenderer.Render(CFullscreenRenderer::FullscreenShader::Vignette);
+
+	//myBackbuffer.SetAsActiveTarget();
 
 	myRenderStateManager.SetBlendState(CRenderStateManager::BlendStates::BLENDSTATE_ALPHABLEND);
 	myRenderStateManager.SetDepthStencilState(CRenderStateManager::DepthStencilStates::DEPTHSTENCILSTATE_ONLYREAD);
@@ -495,6 +503,7 @@ void CRenderManager::Release()
 	myBlurTexture1.ReleaseTexture();
 	myBlurTexture2.ReleaseTexture();
 	myVignetteTexture.ReleaseTexture();
+	myVignetteOverlayTexture.ReleaseTexture();
 	myDeferredLightingTexture.ReleaseTexture();
 
 	myEnvironmentShadowDepth.ReleaseDepth();
@@ -572,7 +581,7 @@ void CRenderManager::RenderBloom()
 
 	myVignetteTexture.SetAsActiveTarget();
 	myDeferredLightingTexture.SetAsResourceOnSlot(0);
-	myFullscreenRenderer.Render(CFullscreenRenderer::FullscreenShader::Vignette);
+	myFullscreenRenderer.Render(CFullscreenRenderer::FullscreenShader::Copy); // No vignette at this step
 
 	myDeferredLightingTexture.SetAsActiveTarget();
 	myVignetteTexture.SetAsResourceOnSlot(0);

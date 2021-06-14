@@ -15,7 +15,8 @@ public enum KeyType
     PlayAudio,
     PlayVoice,
     Destroy,
-    Teleport
+    Teleport,
+    Light,
 }
 
 public interface IKey
@@ -57,6 +58,9 @@ public class Key : MonoBehaviour
                     break;
                 case KeyType.Teleport:
                     AddType<ActivationNextLevel>(gameObject);
+                    break;
+                case KeyType.Light:
+                    AddType<ActivationLight>(gameObject);
                     break;
                 case KeyType.Clear:
                     {

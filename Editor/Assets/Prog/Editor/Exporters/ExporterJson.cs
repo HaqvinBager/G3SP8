@@ -53,6 +53,8 @@ public class ExporterJson
             gameObject.SetActive(true);
 
         ExportResource.Export("Resources");
+
+        Debug.Log("[Export Complete]");
     }
 
     private static void DeactivateAndExportScene(int aSceneIndex, List<GameObject> allScenesActiveObjects)

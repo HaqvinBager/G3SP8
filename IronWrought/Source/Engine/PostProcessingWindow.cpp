@@ -17,6 +17,8 @@ ImGui::CPostProcessingWindow::CPostProcessingWindow(const char* aName)
 	, myIsReinhard(false)
 	, myIsUncharted(true)
 	, myIsACES(false)
+	, myVignetteStrength(1.0f/9.0f)
+	, myVignetteColor(Vector4(0.0f, 0.0f, 0.0f, 1.0f))
 {
 }
 
@@ -41,6 +43,9 @@ void ImGui::CPostProcessingWindow::OnEnable()
 	mySSAOConstantBias = 0.2f;
 
 	myEmissiveStrength = bufferData.myEmissiveStrength;
+
+	myVignetteStrength = bufferData.myVignetteStrength;
+	myVignetteColor = bufferData.myVignetteColor;
 }
 
 void ImGui::CPostProcessingWindow::OnInspectorGUI()
@@ -129,6 +134,22 @@ void ImGui::CPostProcessingWindow::OnInspectorGUI()
 	{
 		bufferData.mySSAOContrast = mySSAOContrast;
 	}
+
+	ImGui::Dummy({ 0.0f, 10.0f });
+
+	ImVec4 vignetteTextColor = { 1.0f, 1.0f, 0.0f, 1.0f };
+	ImGui::TextColored(vignetteTextColor, "Vignette");
+
+	if (ImGui::SliderFloat("Vignette Strength", &myVignetteStrength, 0.0625f, 0.25f, "%.2f", ImGuiSliderFlags_Logarithmic))
+	{
+		bufferData.myVignetteStrength = myVignetteStrength;
+	}
+
+	memcpy(&imguiVector4[0], &myVignetteColor, sizeof(Vector4));
+	ImGui::ColorEdit4("Vignette Color", &imguiVector4[0]);
+	memcpy(&myVignetteColor, &imguiVector4[0], sizeof(Vector4));
+
+	bufferData.myVignetteColor = myVignetteColor;
 
 	ImGui::End();
 

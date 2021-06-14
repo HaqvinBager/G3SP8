@@ -34,6 +34,9 @@ namespace ImGui {
 		float mySSAOConstantBias;
 
 		float myEmissiveStrength;
+
+		float myVignetteStrength;
+		Vector4 myVignetteColor;
 	};
 
 }
