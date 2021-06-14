@@ -541,16 +541,54 @@ void CEnemyComponent::UpdateAttackEvent()
 	}
 }
 
+float CEnemyComponent::SmoothStep(float a, float b, float t)
+{
+	float x = std::clamp((t - a) / (b - a), 0.0f, 1.0f);
+	return x * x * (3.0f - 2.0f * x);
+}
+
+float CEnemyComponent::InverseLerp(float a, float b, float v)
+{
+	return (v - a) / (b - a);
+}
+
+#include "CameraComponent.h"
 void CEnemyComponent::UpdateVignette()
 {
-	CFullscreenRenderer::SPostProcessingBufferData data = CEngine::GetInstance()->GetPostProcessingBufferData();
-	float timeVariationAmplitude = 0.005f;
-	float timeVariationSpeed = 1.4f;
-	float timeVariation = sinf(CTimer::Time() * timeVariationSpeed) * timeVariationAmplitude;
-	float normalizedBlend = std::clamp(((myCloseToPlayerThreshold * myCloseToPlayerThreshold) / mySqrdDistanceToPlayer), 0.0f, 1.0f);
-	normalizedBlend += timeVariation;
-	data.myVignetteStrength = Lerp(0.35f, 10.0f, normalizedBlend);
-	//data.myVignetteColor = Vector4::Lerp({ 0.0f, 0.0f, 0.0f, 1.0f }, { 1.0f, 0.0f, 0.0f, 1.0f }, normalizedBlend);
-	CEngine::GetInstance()->SetPostProcessingBufferData(data);
+	float range = 100.0f;
+	Vector3 enemyPos = GameObject().myTransform->Position();
+	Vector3 playerPos = myPlayer->myTransform->WorldPosition();
+
+	Vector3 direction = playerPos - enemyPos;
+	PxRaycastBuffer hit = CEngine::GetInstance()->GetPhysx().Raycast(enemyPos, direction, range, CPhysXWrapper::ELayerMask::STATIC_ENVIRONMENT | CPhysXWrapper::ELayerMask::PLAYER);
+	if (hit.getNbAnyHits() > 0) {
+		CTransformComponent* transform = (CTransformComponent*)hit.getAnyHit(0).actor->userData;
+		if (!transform)
+		{
+			direction.Normalize();
+			float dot = myPlayer->myTransform->GetLocalMatrix().Forward().Dot(direction);
+			
+			dot = InverseLerp(0.9f, 1.0f, dot);
+			dot = std::clamp(dot, 0.0f, 1.0f);
+			dot *= dot * dot;
+			
+			//std::cout << __FUNCTION__ << " Dot: " << dot << std::endl;
+
+			CFullscreenRenderer::SPostProcessingBufferData data = CEngine::GetInstance()->GetPostProcessingBufferData();
+			float timeVariationAmplitude = 0.1f;
+			timeVariationAmplitude *= dot;
+			float timeVariationSpeed = 10.0f;
+			float timeVariation = abs(sinf(CTimer::Time() * timeVariationSpeed)) * timeVariationAmplitude * -1.0f;
+			dot += timeVariation;
+
+			float normalizedBlend = SmoothStep(0.0f, 1.0f, dot);
+
+			data.myVignetteStrength = Lerp(0.35f, 5.0f, normalizedBlend);
+			CEngine::GetInstance()->SetPostProcessingBufferData(data);
+
+			IRONWROUGHT_ACTIVE_SCENE.MainCamera()->SetTrauma(normalizedBlend, CCameraComponent::ECameraShakeState::EnemySway);
+		}
+	}
+
 }
 
