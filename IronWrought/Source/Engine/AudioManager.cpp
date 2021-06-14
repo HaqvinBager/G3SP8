@@ -242,7 +242,7 @@ void CAudioManager::Receive(const SMessage& aMessage) {
 		{
 			if (stepData.myIsSprint)
 				PlayCyclicRandomSoundFromCollection(myConcreteFastStepSounds, EChannel::SFX, myStepSoundIndices, 1);
-			else 
+			else
 				PlayCyclicRandomSoundFromCollection(myConcreteStepSounds, EChannel::SFX, myStepSoundIndices, 1);
 
 		}
@@ -260,7 +260,7 @@ void CAudioManager::Receive(const SMessage& aMessage) {
 		int index = *static_cast<int*>(aMessage.data);
 		myChannels[CAST(EChannel::VOX)]->Stop();
 		myWrapper.Play(myVoiceEventSounds[index], myChannels[CAST(EChannel::VOX)]);
-	
+
 		CMainSingleton::PostMaster().Send({ EMessageType::LoadDialogue, &index });
 	}
 	break;
@@ -296,8 +296,8 @@ void CAudioManager::Receive(const SMessage& aMessage) {
 
 	case EMessageType::EnemyAttackState:
 	{
-		if (myChannels[CAST(EChannel::VOX)]->IsPlaying())
-			return;
+		myDynamicSource->Stop();
+		myWrapper.Play(myEnemyVoiceSounds[CAST(EEnemyVoiceLine::EnemyDamagePlayer)], myDynamicSource);
 
 	}break;
 
@@ -338,7 +338,7 @@ void CAudioManager::Receive(const SMessage& aMessage) {
 	case EMessageType::EnemyFoundPlayerScream:
 	{
 		//myDynamicSource->Stop();
-		
+
 	}break;
 
 	case EMessageType::EnemyLostPlayer:
@@ -447,7 +447,7 @@ void CAudioManager::Receive(const SMessage& aMessage) {
 		PostMaster::SPlayDynamicAudioData data = *static_cast<PostMaster::SPlayDynamicAudioData*>(aMessage.data);
 		myWrapper.Play(mySFXAudio[data.mySoundIndex], data.myChannel);
 	}break;
-	
+
 	case EMessageType::Play3DVoiceLine:
 	{
 		PostMaster::SPlayDynamicAudioData data = *static_cast<PostMaster::SPlayDynamicAudioData*>(aMessage.data);
@@ -468,13 +468,14 @@ void CAudioManager::Receive(const SMessage& aMessage) {
 
 		myChannels[CAST(EChannel::VOX)]->Stop();
 		int data = *static_cast<int*>(aMessage.data);
-		myWrapper.Play(myVoiceEventSounds[data], myChannels[CAST(EChannel::VOX)]);
+		if (data >= 0)
+			myWrapper.Play(myVoiceEventSounds[data], myChannels[CAST(EChannel::VOX)]);
 	}break;
 
 	case EMessageType::SetAmbience:
 	{
 		PostMaster::ELevelName level = *reinterpret_cast<PostMaster::ELevelName*>(aMessage.data);
-		
+
 		switch (level)
 		{
 		case PostMaster::ELevelName::Level_Cottage_1:
@@ -516,7 +517,7 @@ void CAudioManager::Receive(const SMessage& aMessage) {
 			break;
 		}
 	}break;
-	
+
 	case EMessageType::PauseMenu:
 	{
 		Pause();
@@ -631,7 +632,7 @@ void CAudioManager::SetListener(CGameObject* aGameObject)
 	myListener = aGameObject;
 }
 
-CAudioChannel* CAudioManager::AddSource(const PostMaster::SAudioSourceInitData& someData) 
+CAudioChannel* CAudioManager::AddSource(const PostMaster::SAudioSourceInitData& someData)
 {
 	myDynamicSources.push_back(myWrapper.RequestAudioSource(std::to_string(someData.myGameObjectID)));
 	myDynamicSources.back()->Set3DMinMaxDistance(someData.myMinAttenuationDistance, someData.myMaxAttenuationDistance);
@@ -778,7 +779,7 @@ void CAudioManager::UnsubscribeToMessages()
 	CMainSingleton::PostMaster().Unsubscribe(EMessageType::EnemyStateChange, this);
 
 	CMainSingleton::PostMaster().Unsubscribe(EMessageType::SetAmbience, this);
-	
+
 	//Pussel
 	CMainSingleton::PostMaster().Unsubscribe(EMessageType::PlayDynamicAudioSource, this);
 	CMainSingleton::PostMaster().Unsubscribe(EMessageType::Play3DVoiceLine, this);
@@ -1289,7 +1290,7 @@ void CAudioManager::FadeChannelOverSeconds(const EChannel& aChannel, const float
 			myFadingChannels.push_back({ aChannel, aNumberOfSeconds, aNumberOfSeconds, aShouldFadeOut });
 		}
 	}
-	else 
+	else
 	{
 		if (myChannels[CAST(aChannel)]->GetVolume() != 1.0f)
 		{
