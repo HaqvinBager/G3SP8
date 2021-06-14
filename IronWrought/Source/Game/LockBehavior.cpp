@@ -70,6 +70,21 @@ void CLockBehavior::Receive(const SIDMessage& aMessage)
 	else
 	{
 		++myAmountOfKeys;
+		
+		if (myMaxAmountOfKeys == 3)
+		{
+			if (myAmountOfKeys < myMaxAmountOfKeys)
+			{
+				int soundIndex = 29;
+				CMainSingleton::PostMaster().Send({ EMessageType::PlaySFX, &soundIndex });
+			}
+			else if (myAmountOfKeys >= myMaxAmountOfKeys)
+			{
+				int soundIndex = 30;
+				CMainSingleton::PostMaster().Send({ EMessageType::PlaySFX, &soundIndex });
+			}
+		}
+
 		std::cout << __FUNCTION__ << "----> \t" << GameObject().Name() << " Key Pickup: " << myAmountOfKeys << std::endl;
 	}
 }
