@@ -464,6 +464,9 @@ void CEnemyComponent::UpdateAttackEvent()
 	myAttackPlayerTimer -= CTimer::Dt();
 	if (myAttackPlayerTimer <= 0.0f)
 	{
+		float damageToPlayer = 34.0f;
+		CMainSingleton::PostMaster().Send({ EMessageType::PlayerTakeDamage, &damageToPlayer });
+
 		CPlayerControllerComponent* plCtrl = myPlayer->GetComponent<CPlayerControllerComponent>();
 		gcamera->SetParent(myPlayer->myTransform);
 		plCtrl->Crouch();
@@ -486,6 +489,7 @@ void CEnemyComponent::UpdateAttackEvent()
 		}
 		GameObject().myTransform->Position(mySpawnPosition);
 		myMovementLocked = false;
+		
 		SetState(EBehaviour::Idle);
 		//std::cout << __FUNCTION__ << " Attack event end." << std::endl;
 		return;
