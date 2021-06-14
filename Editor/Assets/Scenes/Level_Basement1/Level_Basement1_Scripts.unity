@@ -122,7 +122,7 @@ NavMeshSettings:
     preserveTilesOutsideBounds: 0
     debug:
       m_Flags: 0
-  m_NavMeshData: {fileID: 23800000, guid: 5d9c7d1ea37c32243b377bab6a08f22c, type: 2}
+  m_NavMeshData: {fileID: 23800000, guid: 8d3cb99ad5a12b84f8f6ab7988df75a1, type: 2}
 --- !u!134 &21863897
 PhysicMaterial:
   m_ObjectHideFlags: 0
@@ -915,20 +915,6 @@ PhysicMaterial:
   bounciness: 0
   frictionCombine: 0
   bounceCombine: 0
---- !u!134 &601877930
-PhysicMaterial:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_Name: ' (Instance) (Instance) (Instance) (Instance) (Instance) (Instance) (Instance)
-    (Instance) (Instance) (Instance) (Instance) (Instance) (Instance) (Instance)
-    (Instance) (Instance) (Instance)'
-  dynamicFriction: 0.6
-  staticFriction: 0.6
-  bounciness: 0
-  frictionCombine: 0
-  bounceCombine: 0
 --- !u!1001 &658364659
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1694,72 +1680,6 @@ PhysicMaterial:
   bounciness: 0
   frictionCombine: 0
   bounceCombine: 0
---- !u!1001 &1254179491
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    m_TransformParent: {fileID: 1459353049}
-    m_Modifications:
-    - target: {fileID: 108000140269899719, guid: 00b5f825fc6a26442bf8352c1807b379, type: 3}
-      propertyPath: m_Name
-      value: PhysicsProp (7)
-      objectReference: {fileID: 0}
-    - target: {fileID: 5809781630519710818, guid: 00b5f825fc6a26442bf8352c1807b379, type: 3}
-      propertyPath: m_Material
-      value: 
-      objectReference: {fileID: 601877930}
-    - target: {fileID: 8859506014069488075, guid: 00b5f825fc6a26442bf8352c1807b379, type: 3}
-      propertyPath: m_RootOrder
-      value: 6
-      objectReference: {fileID: 0}
-    - target: {fileID: 8859506014069488075, guid: 00b5f825fc6a26442bf8352c1807b379, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: -13.344
-      objectReference: {fileID: 0}
-    - target: {fileID: 8859506014069488075, guid: 00b5f825fc6a26442bf8352c1807b379, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: -4.500217
-      objectReference: {fileID: 0}
-    - target: {fileID: 8859506014069488075, guid: 00b5f825fc6a26442bf8352c1807b379, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: -2.309
-      objectReference: {fileID: 0}
-    - target: {fileID: 8859506014069488075, guid: 00b5f825fc6a26442bf8352c1807b379, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 0.012058514
-      objectReference: {fileID: 0}
-    - target: {fileID: 8859506014069488075, guid: 00b5f825fc6a26442bf8352c1807b379, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8859506014069488075, guid: 00b5f825fc6a26442bf8352c1807b379, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: -0.99992734
-      objectReference: {fileID: 0}
-    - target: {fileID: 8859506014069488075, guid: 00b5f825fc6a26442bf8352c1807b379, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8859506014069488075, guid: 00b5f825fc6a26442bf8352c1807b379, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8859506014069488075, guid: 00b5f825fc6a26442bf8352c1807b379, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: -178.618
-      objectReference: {fileID: 0}
-    - target: {fileID: 8859506014069488075, guid: 00b5f825fc6a26442bf8352c1807b379, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: 00b5f825fc6a26442bf8352c1807b379, type: 3}
---- !u!4 &1254179492 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 8859506014069488075, guid: 00b5f825fc6a26442bf8352c1807b379, type: 3}
-  m_PrefabInstance: {fileID: 1254179491}
-  m_PrefabAsset: {fileID: 0}
 --- !u!134 &1259401529
 PhysicMaterial:
   m_ObjectHideFlags: 0
@@ -1818,7 +1738,6 @@ Transform:
   - {fileID: 2126007638}
   - {fileID: 226295747}
   - {fileID: 942595600}
-  - {fileID: 1254179492}
   - {fileID: 2034016987}
   - {fileID: 1022207272}
   - {fileID: 413504341}

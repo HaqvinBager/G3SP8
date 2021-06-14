@@ -194,17 +194,10 @@ void CEnemyComponent::Update()//får bestämma vilket behaviour vi vill köra i 
 					myHasReachedAlertedTarget = true;
 					myHasFoundPlayer = true;
 					myHasReachedLastPlayerPosition = false;
-					/*myDetectionTimer += CTimer::Dt();
-					if (myDetectionTimer >= 0.1f) {*/
-					if (!myHasScreamed) {
-						myHasScreamed = true;
-						CMainSingleton::PostMaster().Send({ EMessageType::EnemyFoundPlayerScream });
-					}
 					CMainSingleton::PostMaster().Send({ EMessageType::EnemyFoundPlayer });
-					//}
 				}
 			}
-		}
+		}	
 		else if (myHasFoundPlayer)//Out of View
 		{
 			myIdlingTimer = 0.0f;
@@ -270,33 +263,34 @@ void CEnemyComponent::Update()//får bestämma vilket behaviour vi vill köra i 
 
 		switch (myCurrentState)
 		{
-			case EBehaviour::Seek:
-			{
-				myCurrentStateBlend = PercentileDistanceToPlayer();
-			}break;
+		case EBehaviour::Seek:
+		{
+			myCurrentStateBlend = PercentileDistanceToPlayer();
+		}break;
 
-			case EBehaviour::Alerted:
-			{
-				CAlerted* alertedBehaviour = static_cast<CAlerted*>(myBehaviours[static_cast<int>(EBehaviour::Alerted)]);
-				myCurrentStateBlend = alertedBehaviour->PercentileAlertedTimer();
-			}break;
+		case EBehaviour::Alerted:
+		{
+			CAlerted* alertedBehaviour = static_cast<CAlerted*>(myBehaviours[static_cast<int>(EBehaviour::Alerted)]);
+			myCurrentStateBlend = alertedBehaviour->PercentileAlertedTimer();
+		}break;
 
-			case EBehaviour::Detection:
+		case EBehaviour::Detection:
+		{
+			
+			CDetection* detectedBehaviour = static_cast<CDetection*>(myBehaviours[static_cast<int>(EBehaviour::Detection)]);
+			myCurrentStateBlend = detectedBehaviour->PercentileOfTimer();
+			if (myCurrentStateBlend <= 0.0f)
 			{
-				CDetection* detectedBehaviour = static_cast<CDetection*>(myBehaviours[static_cast<int>(EBehaviour::Detection)]);
-				myCurrentStateBlend = detectedBehaviour->PercentileOfTimer();
-				if (myCurrentStateBlend <= 0.0f)
-				{
-					mySettings.mySpeed = 3.0f;
-					SetState(EBehaviour::Seek);
-					myCurrentStateBlend = 1.0f;
-				}
-			}break;
+				mySettings.mySpeed = 3.0f;
+				SetState(EBehaviour::Seek);
+				myCurrentStateBlend = 1.0f;
+			}
+		}break;
 
-			default:
-			{
-				myCurrentStateBlend = 0.0f;
-			}break;
+		default:
+		{
+			myCurrentStateBlend = 0.0f;
+		}break;
 		}
 
 		CMainSingleton::PostMaster().Send({ EMessageType::EnemyUpdateCurrentState, this });
@@ -325,10 +319,13 @@ void CEnemyComponent::SetState(EBehaviour aState)
 	myCurrentState = aState;
 	myBehaviours[static_cast<int>(myCurrentState)]->Enter(GameObject().myTransform->Position());
 	EMessageType msgType = EMessageType::Count;
+	bool aggro = false;
 	switch (myCurrentState)
 	{
 	case EBehaviour::Patrol:
 	{
+		aggro = false;
+		CMainSingleton::PostMaster().Send({ EMessageType::EnemyAggro, &aggro });
 		msgType = EMessageType::EnemyPatrolState;
 	}break;
 
@@ -354,6 +351,9 @@ void CEnemyComponent::SetState(EBehaviour aState)
 
 	case EBehaviour::Detection:
 	{
+		aggro = true;
+		CMainSingleton::PostMaster().Send({EMessageType::EnemyAggro, &aggro} );
+		/*CMainSingleton::PostMaster().Send({ EMessageType::EnemyFoundPlayerScream });*/
 		msgType = EMessageType::EnemyDetectionState;
 	}break;
 
@@ -400,7 +400,7 @@ void CEnemyComponent::Receive(const SMessage& aMsg)
 		float targetOrientation = WrapAngle(atan2f(targetDirection.x, targetDirection.z));
 		GameObject().myTransform->Rotation({ 0, targetOrientation + 180.f, 0 });
 		//myPlayer->myTransform->FetchChildren()[0]->Rotation({ 25.0f, 0.0f, 0.0f });
-		
+
 		// Detach player face
 		gcamera = myPlayer->myTransform->FetchChildren()[0];
 		gcamera->RemoveParent();
@@ -436,7 +436,7 @@ void CEnemyComponent::Receive(const SMessage& aMsg)
 
 	if (aMsg.myMessageType == EMessageType::EnemyReachedLastPlayerPosition) {
 		//std::cout << " REACHED " << std::endl;
-		myHasScreamed = false;
+		
 		myHasReachedLastPlayerPosition = true;
 		myIsIdle = true;
 		SetState(EBehaviour::Idle);
@@ -493,7 +493,7 @@ void CEnemyComponent::UpdateAttackEvent()
 		}
 		GameObject().myTransform->Position(mySpawnPosition);
 		myMovementLocked = false;
-		
+
 		SetState(EBehaviour::Idle);
 		//std::cout << __FUNCTION__ << " Attack event end." << std::endl;
 		return;
@@ -519,13 +519,13 @@ void CEnemyComponent::UpdateAttackEvent()
 void CEnemyComponent::UpdateVignette()
 {
 	CFullscreenRenderer::SPostProcessingBufferData data = CEngine::GetInstance()->GetPostProcessingBufferData();
-	float timeVariationAmplitude = 0.05f;
+	float timeVariationAmplitude = 0.005f;
 	float timeVariationSpeed = 1.4f;
-	float timeVariation = abs(sinf(CTimer::Time() * timeVariationSpeed) * sinf(CTimer::Time() * timeVariationSpeed)) * timeVariationAmplitude;
+	float timeVariation = sinf(CTimer::Time() * timeVariationSpeed) * timeVariationAmplitude;
 	float normalizedBlend = std::clamp(((myCloseToPlayerThreshold * myCloseToPlayerThreshold) / mySqrdDistanceToPlayer), 0.0f, 1.0f);
 	normalizedBlend += timeVariation;
-	data.myVignetteStrength = Lerp(0.11f, 0.25f, normalizedBlend);
-	data.myVignetteColor = Vector4::Lerp({ 0.0f, 0.0f, 0.0f, 1.0f }, { 1.0f, 0.0f, 0.0f, 1.0f }, normalizedBlend);
+	data.myVignetteStrength = Lerp(0.11f, 10.0f, normalizedBlend);
+	//data.myVignetteColor = Vector4::Lerp({ 0.0f, 0.0f, 0.0f, 1.0f }, { 1.0f, 0.0f, 0.0f, 1.0f }, normalizedBlend);
 	CEngine::GetInstance()->SetPostProcessingBufferData(data);
 }
 
