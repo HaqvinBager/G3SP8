@@ -76,16 +76,19 @@ void CGravityGloveComponent::Update()
 		}
 		myCurrentTarget.myRigidBodyPtr->IsHeld(true);
 		
-		RotateObject();
+		if (myIsRotatingmode) {
+			RotateObject();
+		}
 
 		if (myJoint == nullptr) {
 			myJoint = CreateD6Joint(myRigidStatic, &myCurrentTarget.myRigidBodyPtr->GetDynamicRigidBody()->GetBody(), mySettings.myMinDistance + myExtendedOffsetArm);
 			myCurrentTarget.myRigidBodyPtr->LockAngular(true);
 		}
 		else {
-			myJoint->setLocalPose(PxJointActorIndex::eACTOR0, PxTransform(0, 0, mySettings.myMaxDistance + myExtendedOffsetArm));
+			myJoint->setLocalPose(PxJointActorIndex::eACTOR0, PxTransform(0, 0, mySettings.myMinDistance + myExtendedOffsetArm));
 			float dist = Vector3::Distance(GameObject().myTransform->WorldPosition(), myCurrentTarget.myRigidBodyPtr->GameObject().myTransform->Position());
-			if (dist >= mySettings.myMaxDistance + mySettings.myStuckRange + myExtendedOffsetArm) {
+			
+			if (dist >= mySettings.myMinDistance + mySettings.myStuckRange + myExtendedOffsetArm) {
 				myJoint->release();
 				myJoint = nullptr; 
 				myCurrentTarget.myRigidBodyPtr->LockAngular(false);
@@ -360,6 +363,7 @@ void CGravityGloveComponent::InteractionLogicContinuous()
 		}
 	}
 	else {
+		mySettings.myMinDistance = 0.75f;
 		myExtendedOffsetArm = 0.f;
 	}
 
@@ -372,12 +376,6 @@ void CGravityGloveComponent::InteractionLogicContinuous()
 		CMainSingleton::PostMaster().Send({ EMessageType::LockFPSCamera, &lockCamera });
 		myObjectRotation = Input::GetInstance()->GetAxisRaw();
 		CEngine::GetInstance()->GetWindowHandler()->HidLockCursor(false);
-		/*if (Input::GetInstance()->IsMouseDown(Input::EMouseButton::Left)) {
-			myObjectRotation.x = 5;
-		}
-		if (Input::GetInstance()->IsMouseDown(Input::EMouseButton::Right)) {
-			myObjectRotation.y = 5;
-		}*/
 		lockCamera = true;
 	}
 	else if (myHoldingAItem && myCurrentTarget.myRigidBodyPtr) {
@@ -439,7 +437,7 @@ void CGravityGloveComponent::RotateObject()
 	float x = std::clamp((myObjectRotation.y * sensitivity), ToDegrees(-PI / 2.0f) + 0.1f, ToDegrees(PI / 2.0f) - 0.1f);
 	float y = WrapAngle((myObjectRotation.x * sensitivity));
 
-	matrix = myGravitySlot->RotateMatrix(matrix, {x * 5.f, y * 5.f,0.f });
+	matrix = CTransformComponent::RotateMatrix(matrix, {x * 5.f, y * 5.f,0.f });
 
 	DirectX::SimpleMath::Vector3 translation;
 	DirectX::SimpleMath::Vector3 scale;
