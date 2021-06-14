@@ -161,7 +161,8 @@ public class ExportKey
 
     private static void ExportPlayAudioActivations(ref List<ActivationPlayAudioData> collection, Key key)
     {
-        if (key.TryGetComponent(out ActivationPlayAudio playAudio))
+        //if (key.TryGetComponent(out ActivationPlayAudio playAudio))
+        foreach (ActivationPlayAudio playAudio in key.GetComponents<ActivationPlayAudio>())
         {
             ActivationPlayAudioData playAudioData = new ActivationPlayAudioData();
             playAudioData.coneDirection = playAudio.myConeDirection;

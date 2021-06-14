@@ -729,7 +729,7 @@ void CSceneManager::AddPuzzleActivationAudio(CScene& aScene, RapidArray someData
 
 		PostMaster::SAudioSourceInitData settings = {};
 		settings.mySoundIndex = activation["soundEffect"].GetInt();
-		//bool is3D = response["is3D"].GetInt() ? 1 : 0;
+		bool is3D = activation["is3D"].GetBool();
 		settings.myForward = Vector3
 		{
 			activation["coneDirection"]["x"].GetFloat(),
@@ -743,7 +743,7 @@ void CSceneManager::AddPuzzleActivationAudio(CScene& aScene, RapidArray someData
 		settings.myMinimumVolume = activation["minimumVolume"].GetFloat();
 		settings.myGameObjectID = gameObject->InstanceID();
 		settings.myDelay = activation["delay"].GetFloat();
-		gameObject->AddComponent<CAudioActivation>(*gameObject, settings);
+		gameObject->AddComponent<CAudioActivation>(*gameObject, settings, is3D);
 	}
 }
 
@@ -977,7 +977,7 @@ void CSceneManager::AddPuzzleResponseAudio(CScene& aScene, RapidArray someData)
 
 		PostMaster::SAudioSourceInitData settings = {};
 		settings.mySoundIndex = response["soundEffect"].GetInt();
-		//bool is3D = response["myIs3D"].GetInt() ? 1 : 0;
+		bool is3D = response["is3D"].GetBool();
 		settings.myForward = Vector3
 		{
 			response["coneDirection"]["x"].GetFloat(),
@@ -991,7 +991,7 @@ void CSceneManager::AddPuzzleResponseAudio(CScene& aScene, RapidArray someData)
 		settings.myMinimumVolume = response["minimumVolume"].GetFloat();
 		settings.myGameObjectID = gameObject->InstanceID();
 		settings.myDelay = response["delay"].GetFloat();
-		gameObject->AddComponent<CAudioResponse>(*gameObject, settings);
+		gameObject->AddComponent<CAudioResponse>(*gameObject, settings, is3D);
 	}
 }
 

@@ -65,4 +65,5 @@ private:
 	std::array<CCanvas*, EInGameCanvases_Count> myCanvases;
 	EInGameCanvases myCurrentCanvas;
 	float myMenuCameraSpeed;
+	std::string myCurrentLevel;
 };

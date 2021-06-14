@@ -94,12 +94,7 @@ CEngine::~CEngine()
 	ImGui_ImplDX11_Shutdown();
 #endif
 
-	delete myWindowHandler;
-	myWindowHandler = nullptr;
-	delete myFramework;
-	myFramework = nullptr;
-	delete myTimer;
-	myTimer = nullptr;
+
 
 	//auto it = mySceneMap.begin();
 	//while (it != mySceneMap.end())
@@ -151,6 +146,13 @@ CEngine::~CEngine()
 
 	delete mySceneFactory;
 	mySceneFactory = nullptr;
+
+	delete myWindowHandler;
+	myWindowHandler = nullptr;
+	delete myFramework;
+	myFramework = nullptr;
+	delete myTimer;
+	myTimer = nullptr;
 
 	ourInstance = nullptr;
 }

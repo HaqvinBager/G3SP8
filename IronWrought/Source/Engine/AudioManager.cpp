@@ -19,6 +19,7 @@ CAudioManager::CAudioManager()
 	, myDynamicChannel1(0.0f)
 	, myDynamicChannel2(0.0f)
 	, myDynamicChannel3(0.0f)
+	, myDynamicChannel4(0.0f)
 	, myListener(nullptr)
 	, myDynamicObject(nullptr)
 	, myDynamicSource(nullptr)
@@ -106,11 +107,12 @@ CAudioManager::CAudioManager()
 	myDynamicSource->Set3DMinMaxDistance(10.0f, 1000.0f);
 	//myDynamicSource->SetVolume(0.2f);
 
-	SetDynamicTrack(EAmbience::Cottage, EAmbience::Basement1, EAmbience::Basement2);
+	SetDynamicTrack(EAmbience::Cottage1, EAmbience::Cottage2, EAmbience::Basement1, EAmbience::Basement2);
 
 	myChannels[CAST(EChannel::DynamicChannel1)]->SetVolume(0.0f);
 	myChannels[CAST(EChannel::DynamicChannel2)]->SetVolume(0.0f);
 	myChannels[CAST(EChannel::DynamicChannel3)]->SetVolume(0.0f);
+	myChannels[CAST(EChannel::DynamicChannel4)]->SetVolume(0.0f);
 }
 
 CAudioManager::~CAudioManager()
@@ -329,8 +331,8 @@ void CAudioManager::Receive(const SMessage& aMessage) {
 		myDynamicSource->Stop();
 		myWrapper.Play(myEnemyVoiceSounds[CAST(EEnemyVoiceLine::EnemyFoundPlayer)], myDynamicSource);
 		myDelayedAudio.push_back({ myEnemyVoiceSounds[CAST(EEnemyVoiceLine::EnemyChasing)], myDynamicSource, 4.0f });
-		FadeChannelOverSeconds(EChannel::DynamicChannel2, 4.0f);
-		FadeChannelOverSeconds(EChannel::DynamicChannel3, 4.0f, false);
+		FadeChannelOverSeconds(EChannel::DynamicChannel3, 4.0f);
+		FadeChannelOverSeconds(EChannel::DynamicChannel4, 4.0f, false);
 	}break;
 
 	case EMessageType::EnemyFoundPlayerScream:
@@ -343,8 +345,8 @@ void CAudioManager::Receive(const SMessage& aMessage) {
 	{
 		myDynamicSource->Stop();
 		myWrapper.Play(myEnemyVoiceSounds[CAST(EEnemyVoiceLine::EnemyLostPlayer)], myDynamicSource);
-		FadeChannelOverSeconds(EChannel::DynamicChannel2, 4.0f, false);
-		FadeChannelOverSeconds(EChannel::DynamicChannel3, 4.0f);
+		FadeChannelOverSeconds(EChannel::DynamicChannel3, 4.0f, false);
+		FadeChannelOverSeconds(EChannel::DynamicChannel4, 4.0f);
 	}break;
 
 	case EMessageType::EnemyAttack:
@@ -475,53 +477,40 @@ void CAudioManager::Receive(const SMessage& aMessage) {
 		
 		switch (level)
 		{
-		case PostMaster::ELevelName::Cottage_1:
+		case PostMaster::ELevelName::Level_Cottage_1:
 		{
 			FadeChannelOverSeconds(EChannel::DynamicChannel1, 1.0f, false);
 			FadeChannelOverSeconds(EChannel::DynamicChannel2, 1.0f);
 			FadeChannelOverSeconds(EChannel::DynamicChannel3, 1.0f);
+			FadeChannelOverSeconds(EChannel::DynamicChannel4, 1.0f);
 		}break;
-		case PostMaster::ELevelName::Cottage_2:
+		case PostMaster::ELevelName::Level_Cottage_2:
 		{
-			FadeChannelOverSeconds(EChannel::DynamicChannel1, 1.0f, false);
+			FadeChannelOverSeconds(EChannel::DynamicChannel1, 1.0f);
+			FadeChannelOverSeconds(EChannel::DynamicChannel2, 1.0f, false);
+			FadeChannelOverSeconds(EChannel::DynamicChannel3, 1.0f);
+			FadeChannelOverSeconds(EChannel::DynamicChannel4, 1.0f);
+		}break;
+		case PostMaster::ELevelName::Level_Basement1:
+		{
+			FadeChannelOverSeconds(EChannel::DynamicChannel1, 1.0f);
 			FadeChannelOverSeconds(EChannel::DynamicChannel2, 1.0f);
-			FadeChannelOverSeconds(EChannel::DynamicChannel3, 1.0f);
+			FadeChannelOverSeconds(EChannel::DynamicChannel3, 1.0f, false);
+			FadeChannelOverSeconds(EChannel::DynamicChannel4, 1.0f);
 		}break;
-		//case PostMaster::ELevelName::Basement_1_1_A:
-		//{
-		//	FadeChannelOverSeconds(EChannel::DynamicChannel2, 1.0f, false);
-		//	FadeChannelOverSeconds(EChannel::DynamicChannel1, 1.0f);
-		//	FadeChannelOverSeconds(EChannel::DynamicChannel3, 1.0f);
-		//}break;
-		//case PostMaster::ELevelName::Basement_1_1_B:
-		//{
-		//	FadeChannelOverSeconds(EChannel::DynamicChannel2, 1.0f, false);
-		//	FadeChannelOverSeconds(EChannel::DynamicChannel1, 1.0f);
-		//	FadeChannelOverSeconds(EChannel::DynamicChannel3, 1.0f);
-		//}break;
-		//case PostMaster::ELevelName::Basement_1_2_A:
-		//{
-		//	FadeChannelOverSeconds(EChannel::DynamicChannel2, 1.0f, false);
-		//	FadeChannelOverSeconds(EChannel::DynamicChannel1, 1.0f);
-		//	FadeChannelOverSeconds(EChannel::DynamicChannel3, 1.0f);
-		//}break;
-		//case PostMaster::ELevelName::Basement_1_2_B:
-		//{
-		//	FadeChannelOverSeconds(EChannel::DynamicChannel2, 1.0f, false);
-		//	FadeChannelOverSeconds(EChannel::DynamicChannel1, 1.0f);
-		//	FadeChannelOverSeconds(EChannel::DynamicChannel3, 1.0f);
-		//}break;
-		case PostMaster::ELevelName::Basement_1_3:
+		case PostMaster::ELevelName::Level_Basement1_3:
 		{
-			FadeChannelOverSeconds(EChannel::DynamicChannel2, 1.0f, false);
 			FadeChannelOverSeconds(EChannel::DynamicChannel1, 1.0f);
-			FadeChannelOverSeconds(EChannel::DynamicChannel3, 1.0f);
+			FadeChannelOverSeconds(EChannel::DynamicChannel2, 1.0f);
+			FadeChannelOverSeconds(EChannel::DynamicChannel3, 1.0f, false);
+			FadeChannelOverSeconds(EChannel::DynamicChannel4, 1.0f);
 		}break;
-		case PostMaster::ELevelName::Basement_2:
+		case PostMaster::ELevelName::Level_Basement2:
 		{
-			FadeChannelOverSeconds(EChannel::DynamicChannel2, 1.0f, false);
 			FadeChannelOverSeconds(EChannel::DynamicChannel1, 1.0f);
-			FadeChannelOverSeconds(EChannel::DynamicChannel3, 1.0f);
+			FadeChannelOverSeconds(EChannel::DynamicChannel2, 1.0f);
+			FadeChannelOverSeconds(EChannel::DynamicChannel3, 1.0f, false);
+			FadeChannelOverSeconds(EChannel::DynamicChannel4, 1.0f);
 		}break;
 		default:
 			break;
@@ -864,6 +853,8 @@ std::string CAudioManager::TranslateEnum(EChannel enumerator) const
 		return "DynamicChannel2";
 	case EChannel::DynamicChannel3:
 		return "DynamicChannel3";
+	case EChannel::DynamicChannel4:
+		return "DynamicChannel4";
 	default:
 		return "";
 	}
@@ -881,8 +872,10 @@ std::string CAudioManager::TranslateEnum(EMusic /*enumerator*/) const
 std::string CAudioManager::TranslateEnum(EAmbience enumerator) const {
 	switch (enumerator)
 	{
-	case EAmbience::Cottage:
-		return "Cottage";
+	case EAmbience::Cottage1:
+		return "Cottage1";
+	case EAmbience::Cottage2:
+		return "Cottage2";
 	case EAmbience::Basement1:
 		return "Basement1";
 	case EAmbience::Basement2:
@@ -962,6 +955,26 @@ std::string CAudioManager::TranslateEnum(ESFX enumerator) const {
 		return "PaperImpact";
 	case ESFX::SilverwareImpact:
 		return "SilverwareImpact";
+	case ESFX::AshtrayImpact:
+		return "AshtrayImpact";
+	case ESFX::CanImpact:
+		return "CanImpact";
+	case ESFX::BookImpact:
+		return "BookImpact";
+	case ESFX::ToiletPaperRollImpact:
+		return "ToiletPaperRollImpact";
+	case ESFX::CameraImpact:
+		return "CameraImpact";
+	case ESFX::ViolinImpact:
+		return "ViolinImpact";
+	case ESFX::DoorRattle:
+		return "DoorRattle";
+	case ESFX::PuzzleProgress:
+		return "PuzzleProgress";
+	case ESFX::PuzzleSolved:
+		return "PuzzleSolved";
+	case ESFX::PuzzleKey:
+		return "PuzzleKey";
 	default:
 		return "";
 	}
@@ -1285,11 +1298,12 @@ void CAudioManager::FadeChannelOverSeconds(const EChannel& aChannel, const float
 	}
 }
 
-void CAudioManager::SetDynamicTrack(const EAmbience& aFirstTrack, const EAmbience& aSecondTrack, const EAmbience& aThirdTrack)
+void CAudioManager::SetDynamicTrack(const EAmbience& aFirstTrack, const EAmbience& aSecondTrack, const EAmbience& aThirdTrack, const EAmbience& aFourthTrack)
 {
 	myWrapper.Play(myAmbienceAudio[CAST(aFirstTrack)], myChannels[CAST(EChannel::DynamicChannel1)]);
 	myWrapper.Play(myAmbienceAudio[CAST(aSecondTrack)], myChannels[CAST(EChannel::DynamicChannel2)]);
 	myWrapper.Play(myAmbienceAudio[CAST(aThirdTrack)], myChannels[CAST(EChannel::DynamicChannel3)]);
+	myWrapper.Play(myAmbienceAudio[CAST(aFourthTrack)], myChannels[CAST(EChannel::DynamicChannel4)]);
 }
 
 void CAudioManager::Pause()
@@ -1301,6 +1315,7 @@ void CAudioManager::Pause()
 	myChannels[CAST(EChannel::DynamicChannel1)]->SetPaused(true);
 	myChannels[CAST(EChannel::DynamicChannel2)]->SetPaused(true);
 	myChannels[CAST(EChannel::DynamicChannel3)]->SetPaused(true);
+	myChannels[CAST(EChannel::DynamicChannel4)]->SetPaused(true);
 
 	for (unsigned int i = 0; i < myStaticAudioSources.size(); ++i)
 	{
@@ -1319,6 +1334,7 @@ void CAudioManager::Resume()
 	myChannels[CAST(EChannel::DynamicChannel1)]->SetPaused(false);
 	myChannels[CAST(EChannel::DynamicChannel2)]->SetPaused(false);
 	myChannels[CAST(EChannel::DynamicChannel3)]->SetPaused(false);
+	myChannels[CAST(EChannel::DynamicChannel4)]->SetPaused(false);
 
 	for (unsigned int i = 0; i < myStaticAudioSources.size(); ++i)
 	{

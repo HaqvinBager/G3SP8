@@ -35,6 +35,7 @@ CRenderManager::CRenderManager()
 
 CRenderManager::~CRenderManager()
 {
+	Release();
 }
 
 bool CRenderManager::Init(CDirectXFramework* aFramework, CWindowHandler* aWindowHandler)
@@ -89,7 +90,8 @@ void CRenderManager::InitRenderTextures(CWindowHandler* aWindowHandler)
 	myBlurTexture1 = myFullscreenTextureFactory.CreateTexture(aWindowHandler->GetResolution(), DXGI_FORMAT_R16G16B16A16_FLOAT);
 	myBlurTexture2 = myFullscreenTextureFactory.CreateTexture(aWindowHandler->GetResolution(), DXGI_FORMAT_R16G16B16A16_FLOAT);
 	myVignetteTexture = myFullscreenTextureFactory.CreateTexture(aWindowHandler->GetResolution(), DXGI_FORMAT_R16G16B16A16_FLOAT);
-	
+	myVignetteOverlayTexture = myFullscreenTextureFactory.CreateTexture(aWindowHandler->GetResolution(), DXGI_FORMAT_R16G16B16A16_FLOAT, ASSETPATH("Assets/IronWrought/UI/Misc/UI_VignetteTexture.dds"));
+
 	myDeferredLightingTexture = myFullscreenTextureFactory.CreateTexture(aWindowHandler->GetResolution(), DXGI_FORMAT_R16G16B16A16_FLOAT);
 	
 	myVolumetricAccumulationBuffer = myFullscreenTextureFactory.CreateTexture(aWindowHandler->GetResolution() / 2.0f, DXGI_FORMAT_R16G16B16A16_FLOAT);
@@ -448,6 +450,7 @@ void CRenderManager::Render(CScene& aScene)
 	// Vignette
 	myBackbuffer.SetAsActiveTarget();
 	myVignetteTexture.SetAsResourceOnSlot(0);
+	myVignetteOverlayTexture.SetAsResourceOnSlot(1);
 	myFullscreenRenderer.Render(CFullscreenRenderer::FullscreenShader::Vignette);
 
 	//myBackbuffer.SetAsActiveTarget();
@@ -500,6 +503,7 @@ void CRenderManager::Release()
 	myBlurTexture1.ReleaseTexture();
 	myBlurTexture2.ReleaseTexture();
 	myVignetteTexture.ReleaseTexture();
+	myVignetteOverlayTexture.ReleaseTexture();
 	myDeferredLightingTexture.ReleaseTexture();
 
 	myEnvironmentShadowDepth.ReleaseDepth();

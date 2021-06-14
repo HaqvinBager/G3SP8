@@ -41,7 +41,7 @@
 #ifdef NDEBUG
 #define INGAME_USE_MENU
 #else
-//#define INGAME_USE_MENU
+#define INGAME_USE_MENU
 #endif
 
 #define MENU_SCENE "Level_Cottage_1"
@@ -108,7 +108,7 @@ void CInGameState::Start()
 	scene->UpdateOnlyCanvas(true);
 	CEngine::GetInstance()->AddScene(myState, scene);
 	CEngine::GetInstance()->SetActiveScene(myState);
-	IRONWROUGHT->ShowCursor(false);
+	IRONWROUGHT->HideCursor(false);
 
 	CMainSingleton::PostMaster().Subscribe(EMessageType::StartGame, this);
 	CMainSingleton::PostMaster().Subscribe(EMessageType::Credits, this);
@@ -148,6 +148,7 @@ void CInGameState::Start()
 	// ! Removed as of 2021 06 10 / Aki
 
 
+	myCurrentLevel = MENU_SCENE;
 	CSceneFactory::Get()->LoadSceneAsync(MENU_SCENE, myState, [this](std::string aMsg) { CInGameState::OnSceneLoadCompleteMenu(aMsg); });
 	myExitTo = EExitTo::None;
 
@@ -169,6 +170,7 @@ void CInGameState::Start()
 
 	CMainSingleton::PostMaster().Subscribe(EMessageType::LoadLevel, this);
 	CMainSingleton::PostMaster().Subscribe(EMessageType::LevelSelectLoadLevel, this);
+	CMainSingleton::PostMaster().Subscribe(EMessageType::PlayerDied, this);
 }
 
 void CInGameState::Stop()
@@ -194,6 +196,7 @@ void CInGameState::Stop()
 
 	CMainSingleton::PostMaster().Unsubscribe(EMessageType::LoadLevel, this);
 	CMainSingleton::PostMaster().Unsubscribe(EMessageType::LevelSelectLoadLevel, this);
+	CMainSingleton::PostMaster().Unsubscribe(EMessageType::PlayerDied, this);
 
 	myMenuCamera = nullptr; // Has been deleted by Scene when IRONWROUGHT->RemoveScene(..) was called, as it is added as a gameobject.
 }
@@ -220,8 +223,8 @@ void CInGameState::Update()
 	}
 	if (myMenuCamera)
 	{
-		//myMenuCamera->myTransform->Position(Vector3::Lerp(myMenuCamera->myTransform->Position(), myMenuCameraTargetPosition, myMenuCameraSpeed * CTimer::Dt()));
-		//myMenuCamera->myTransform->Rotation(Quaternion::Slerp(myMenuCamera->myTransform->Rotation(), myMenuCameraTargetRotation, myMenuCameraSpeed * CTimer::Dt()));
+		myMenuCamera->myTransform->Position(Vector3::Lerp(myMenuCamera->myTransform->Position(), myMenuCameraTargetPosition, myMenuCameraSpeed * CTimer::Dt()));
+		myMenuCamera->myTransform->Rotation(Quaternion::Slerp(myMenuCamera->myTransform->Rotation(), myMenuCameraTargetRotation, myMenuCameraSpeed * CTimer::Dt()));
 	}
 #else
 #endif
@@ -290,92 +293,102 @@ void CInGameState::Receive(const SMessage& aMessage)
 {
 	switch (aMessage.myMessageType)
 	{
-	case EMessageType::LoadLevel:
-	{
-		ToggleCanvas(EInGameCanvases_LoadingScreen);
-		IRONWROUGHT->GetActiveScene().MainCamera()->Fade(false, 0.5f);
-		IRONWROUGHT->GetActiveScene().PlayerController()->LockMovementFor(0.5f);
-		CMainSingleton::PostMaster().Send({ PostMaster::SMSG_DISABLE_GLOVE, nullptr });
-		myMenuCamera = nullptr;
-		std::string levelName = *static_cast<std::string*>(aMessage.data);
-		CSceneFactory::Get()->LoadSceneAsync(levelName, myState, [this](std::string aMsg) { CInGameState::OnSceneLoadCompleteInGame(aMsg); });
-	}break;
+		case EMessageType::PlayerDied:
+		{
+			ToggleCanvas(EInGameCanvases_LoadingScreen);
+			IRONWROUGHT->GetActiveScene().MainCamera()->Fade(false, 0.5f);
+			IRONWROUGHT->GetActiveScene().PlayerController()->LockMovementFor(0.5f);
+			CMainSingleton::PostMaster().Send({ PostMaster::SMSG_DISABLE_GLOVE, nullptr });
+			myMenuCamera = nullptr;
+			CSceneFactory::Get()->LoadSceneAsync(myCurrentLevel, myState, [this](std::string aMsg) { CInGameState::OnSceneLoadCompleteInGame(aMsg); });
+		}break;
 
-	case EMessageType::LevelSelectLoadLevel:
-	{
-		if (!aMessage.data)
-			return;
-		ToggleCanvas(EInGameCanvases_LoadingScreen);
-		myMenuCamera = nullptr;
-		
-		std::string levelName = *static_cast<std::string*>(aMessage.data);
-		CSceneFactory::Get()->LoadSceneAsync(levelName, myState, [this](std::string aMsg) { CInGameState::OnSceneLoadCompleteInGame(aMsg); });
-	}break;
+		case EMessageType::LoadLevel:
+		{
+			ToggleCanvas(EInGameCanvases_LoadingScreen);
+			IRONWROUGHT->GetActiveScene().MainCamera()->Fade(false, 0.5f);
+			IRONWROUGHT->GetActiveScene().PlayerController()->LockMovementFor(0.5f);
+			CMainSingleton::PostMaster().Send({ PostMaster::SMSG_DISABLE_GLOVE, nullptr });
+			myMenuCamera = nullptr;
+			myCurrentLevel = *static_cast<std::string*>(aMessage.data);
+			CSceneFactory::Get()->LoadSceneAsync(myCurrentLevel, myState, [this](std::string aMsg) { CInGameState::OnSceneLoadCompleteInGame(aMsg); });
+		}break;
 
-	case EMessageType::StartGame:
-	{
-		IRONWROUGHT->GetActiveScene().ToggleSections(0);// Disable when single level loading.
-		ToggleCanvas(EInGameCanvases_HUD);
-	}break;
+		case EMessageType::LevelSelectLoadLevel:
+		{
+			if (!aMessage.data)
+				return;
+			ToggleCanvas(EInGameCanvases_LoadingScreen);
+			myMenuCamera = nullptr;
+			
+			myCurrentLevel = *static_cast<std::string*>(aMessage.data);
+			CSceneFactory::Get()->LoadSceneAsync(myCurrentLevel, myState, [this](std::string aMsg) { CInGameState::OnSceneLoadCompleteInGame(aMsg); });
+		}break;
 
-	case EMessageType::Resume:
-	{
-		ToggleCanvas(EInGameCanvases_HUD);
-	}break;
+		case EMessageType::StartGame:
+		{
+			IRONWROUGHT->GetActiveScene().ToggleSections(0);// Disable when single level loading.
+			ToggleCanvas(EInGameCanvases_HUD);
+		}break;
 
-	case EMessageType::SetResolution1600x900:
-	{
-		CEngine::GetInstance()->SetResolution({ 1600.0f, 900.0f });
-		myCanvases[EInGameCanvases_MainMenu]->Init(ASSETPATH("Assets/IronWrought/UI/JSON/UI_MainMenu.json"));
-		myCanvases[EInGameCanvases_HUD]->Init(ASSETPATH("Assets/IronWrought/UI/JSON/UI_HUD.json"));
-		myCanvases[EInGameCanvases_PauseMenu]->Init(ASSETPATH("Assets/IronWrought/UI/JSON/UI_PauseMenu.json"));
-		myCanvases[EInGameCanvases_LoadingScreen]->Init(ASSETPATH("Assets/IronWrought/UI/JSON/UI_LoadingScreen.json"));
-	} break;
-	case EMessageType::SetResolution1920x1080:
-	{
-		CEngine::GetInstance()->SetResolution({ 1920.0f, 1080.0f });
-		myCanvases[EInGameCanvases_MainMenu]->Init(ASSETPATH("Assets/IronWrought/UI/JSON/UI_MainMenu.json"));
-		myCanvases[EInGameCanvases_HUD]->Init(ASSETPATH("Assets/IronWrought/UI/JSON/UI_HUD.json"));
-		myCanvases[EInGameCanvases_PauseMenu]->Init(ASSETPATH("Assets/IronWrought/UI/JSON/UI_PauseMenu.json"));
-		myCanvases[EInGameCanvases_LoadingScreen]->Init(ASSETPATH("Assets/IronWrought/UI/JSON/UI_LoadingScreen.json"));
-	} break;
-	case EMessageType::SetResolution2560x1440:
-	{
-		CEngine::GetInstance()->SetResolution({ 2560.0f, 1440.0f });
-		myCanvases[EInGameCanvases_MainMenu]->Init(ASSETPATH("Assets/IronWrought/UI/JSON/UI_MainMenu.json"));
-		myCanvases[EInGameCanvases_HUD]->Init(ASSETPATH("Assets/IronWrought/UI/JSON/UI_HUD.json"));
-		myCanvases[EInGameCanvases_PauseMenu]->Init(ASSETPATH("Assets/IronWrought/UI/JSON/UI_PauseMenu.json"));
-		myCanvases[EInGameCanvases_LoadingScreen]->Init(ASSETPATH("Assets/IronWrought/UI/JSON/UI_LoadingScreen.json"));
-	} break;
+		case EMessageType::Resume:
+		{
+			ToggleCanvas(EInGameCanvases_HUD);
+		}break;
 
-	case EMessageType::MainMenu:
-	{
-		myStateStack.PopTopAndPush(CStateStack::EState::InGame);
-	}break;
+		case EMessageType::SetResolution1600x900:
+		{
+			CEngine::GetInstance()->SetResolution({ 1600.0f, 900.0f });
+			myCanvases[EInGameCanvases_MainMenu]->Init(ASSETPATH("Assets/IronWrought/UI/JSON/UI_MainMenu.json"));
+			myCanvases[EInGameCanvases_HUD]->Init(ASSETPATH("Assets/IronWrought/UI/JSON/UI_HUD.json"));
+			myCanvases[EInGameCanvases_PauseMenu]->Init(ASSETPATH("Assets/IronWrought/UI/JSON/UI_PauseMenu.json"));
+			myCanvases[EInGameCanvases_LoadingScreen]->Init(ASSETPATH("Assets/IronWrought/UI/JSON/UI_LoadingScreen.json"));
+		} break;
+		case EMessageType::SetResolution1920x1080:
+		{
+			CEngine::GetInstance()->SetResolution({ 1920.0f, 1080.0f });
+			myCanvases[EInGameCanvases_MainMenu]->Init(ASSETPATH("Assets/IronWrought/UI/JSON/UI_MainMenu.json"));
+			myCanvases[EInGameCanvases_HUD]->Init(ASSETPATH("Assets/IronWrought/UI/JSON/UI_HUD.json"));
+			myCanvases[EInGameCanvases_PauseMenu]->Init(ASSETPATH("Assets/IronWrought/UI/JSON/UI_PauseMenu.json"));
+			myCanvases[EInGameCanvases_LoadingScreen]->Init(ASSETPATH("Assets/IronWrought/UI/JSON/UI_LoadingScreen.json"));
+		} break;
+		case EMessageType::SetResolution2560x1440:
+		{
+			CEngine::GetInstance()->SetResolution({ 2560.0f, 1440.0f });
+			myCanvases[EInGameCanvases_MainMenu]->Init(ASSETPATH("Assets/IronWrought/UI/JSON/UI_MainMenu.json"));
+			myCanvases[EInGameCanvases_HUD]->Init(ASSETPATH("Assets/IronWrought/UI/JSON/UI_HUD.json"));
+			myCanvases[EInGameCanvases_PauseMenu]->Init(ASSETPATH("Assets/IronWrought/UI/JSON/UI_PauseMenu.json"));
+			myCanvases[EInGameCanvases_LoadingScreen]->Init(ASSETPATH("Assets/IronWrought/UI/JSON/UI_LoadingScreen.json"));
+		} break;
 
-	case EMessageType::CanvasButtonIndex:
-	{
+		case EMessageType::MainMenu:
+		{
+			myStateStack.PopTopAndPush(CStateStack::EState::InGame);
+		}break;
+
+		case EMessageType::CanvasButtonIndex:
+		{
 #ifdef INGAME_USE_MENU
-		int index = *static_cast<int*>(aMessage.data);
-		if (index < 0 || index > myMenuCameraPositions.size() - 1)
-			break;
+			int index = *static_cast<int*>(aMessage.data);
+			if (index < 0 || index > myMenuCameraPositions.size() - 1)
+				break;
 
-		myMenuCameraTargetPosition = myMenuCameraPositions[index];
-		myMenuCameraTargetRotation = Quaternion::CreateFromYawPitchRoll
-		(
-			  DirectX::XMConvertToRadians(myMenuCameraRotations[index].y)
-			, DirectX::XMConvertToRadians(myMenuCameraRotations[index].x)
-			, DirectX::XMConvertToRadians(myMenuCameraRotations[index].z)
-		);
+			myMenuCameraTargetPosition = myMenuCameraPositions[index];
+			myMenuCameraTargetRotation = Quaternion::CreateFromYawPitchRoll
+			(
+				  DirectX::XMConvertToRadians(myMenuCameraRotations[index].y)
+				, DirectX::XMConvertToRadians(myMenuCameraRotations[index].x)
+				, DirectX::XMConvertToRadians(myMenuCameraRotations[index].z)
+			);
 #endif
-	}break;
+		}break;
 
-	case EMessageType::Quit:
-	{
-		myExitTo = EExitTo::Windows;
-	}break;
+		case EMessageType::Quit:
+		{
+			myExitTo = EExitTo::Windows;
+		}break;
 
-	default:break;
+		default:break;
 	}
 }
 
@@ -402,10 +415,37 @@ void CInGameState::OnSceneLoadCompleteInGame(std::string aMsg)
 	std::cout << __FUNCTION__ << " InGame Load Complete!" << std::endl;
 	/*CScene& scene = */IRONWROUGHT->GetActiveScene();
 	ToggleCanvas(EInGameCanvases_HUD);
-	IRONWROUGHT->ShowCursor(false);
+	IRONWROUGHT->HideCursor(false);
 	
 	myEnemyAnimationController->Activate();
 	CEngine::GetInstance()->SetActiveScene(myState);
+
+	int levelIndex = -1;
+	if (aMsg == "Level_Cottage_1")
+	{
+		levelIndex = 0;
+	}
+	if (aMsg == "Level_Basement1")
+	{
+		levelIndex = 1;
+	}
+	if (aMsg == "Level_Basement2")
+	{
+		levelIndex = 2;
+	}
+	if (aMsg == "Level_Cottage_2")
+	{
+		levelIndex = 3;
+	}
+	if (aMsg == "Level_Basement1_3")
+	{
+		levelIndex = 4;
+	}
+	
+	if (levelIndex > -1)
+	{
+		CMainSingleton::PostMaster().Send({ EMessageType::SetAmbience, &levelIndex });
+	}
 
 	myExitTo = EExitTo::None;
 }
@@ -474,6 +514,7 @@ void CInGameState::ToggleCanvas(EInGameCanvases anEInGameCanvases)
 		scene.UpdateOnlyCanvas(true);
 		scene.MainCamera(ESceneCamera::MenuCam);
 		myMenuCamera->myTransform->Position(myMenuCameraPositions[0]);
+		IRONWROUGHT->ShowCursor(false);
 		IRONWROUGHT->SetIsMenu(true);
 	}
 	else if (myCurrentCanvas == EInGameCanvases_PauseMenu)
@@ -482,6 +523,7 @@ void CInGameState::ToggleCanvas(EInGameCanvases anEInGameCanvases)
 		scene.CanvasIsHUD(false);
 		scene.MainCamera(ESceneCamera::PlayerFirstPerson);
 		CMainSingleton::PostMaster().SendLate({ EMessageType::PauseMenu, nullptr });
+		IRONWROUGHT->ShowCursor(false);
 		IRONWROUGHT->SetIsMenu(true);
 	}
 	else if (myCurrentCanvas == EInGameCanvases_HUD)
@@ -490,13 +532,14 @@ void CInGameState::ToggleCanvas(EInGameCanvases anEInGameCanvases)
 		scene.CanvasIsHUD(true);
 		scene.MainCamera(ESceneCamera::PlayerFirstPerson);
 		CMainSingleton::PostMaster().Unsubscribe(EMessageType::CanvasButtonIndex, this);
+		IRONWROUGHT->HideCursor(false);
 		IRONWROUGHT->SetIsMenu(false);
 	}
 	else if (myCurrentCanvas == EInGameCanvases_LoadingScreen)
 	{
+		IRONWROUGHT->HideCursor(false);
 		scene.SetCanvas(myCanvases[myCurrentCanvas]);
 		scene.UpdateOnlyCanvas(true);
-		IRONWROUGHT->ShowCursor(false);
 	}
 #else
 	if (myCurrentCanvas == EInGameCanvases_HUD)

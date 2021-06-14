@@ -11,12 +11,10 @@ ImGui::CDebugPrintoutWindow::CDebugPrintoutWindow(const char* aName)
 
 	freopen_s(&outPut, "DebugLog.txt", "w", stdout);
 	if(outPut != nullptr)
-		setvbuf(outPut, NULL, _IOFBF, 1024);
+		setvbuf(outPut, NULL, _IOFBF, myBufferSize);
 
 	read = std::ifstream("DebugLog.txt", std::ios::in);
 	*Open() = true;
-
-	print.reserve(50000);
 }
 
 ImGui::CDebugPrintoutWindow::~CDebugPrintoutWindow()
@@ -36,10 +34,16 @@ void ImGui::CDebugPrintoutWindow::OnInspectorGUI()
 	std::string data((std::istreambuf_iterator<char>(read)), std::istreambuf_iterator<char>());
 	if(data.size() > 0)
 	{
+		if (print.size() >= myBufferSize)
+		{
+			std::string temp = print.substr(print.size() / 2, (print.size() / 2 - print.size()));
+			print.clear();
+			print.reserve(temp.size());
+			print = std::move(temp);
+		}
 		print.append(data);
-		//if (print.size() > myBufferSize)
-		//	print.clear();
 	}
+
 	ImGui::Text(print.c_str());	
 	ImGui::SetScrollHere(0.999f);
 	ImGui::End();

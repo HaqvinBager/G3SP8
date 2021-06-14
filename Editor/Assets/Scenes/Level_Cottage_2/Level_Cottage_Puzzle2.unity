@@ -835,26 +835,6 @@ MonoBehaviour:
   myMaxAttenuationDistance: 10000
   myMinimumVolume: 10
   myDelay: 0
---- !u!114 &942056438
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 942056435}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7378230467a50d848a9fd18fdad76f09, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  voiceLine: 0
-  myIs3D: 0
-  myConeDirection: {x: 0, y: 0, z: 0}
-  myMinAttenuationAngle: 0
-  myMaxAttenuationAngle: 0
-  myMinAttenuationDistance: 1
-  myMaxAttenuationDistance: 10000
-  myMinimumVolume: 0
 --- !u!65 &942056439
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -1384,7 +1364,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7378230467a50d848a9fd18fdad76f09, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  voiceLine: 42
+  dialogueScene: 25
   myIs3D: 0
   myConeDirection: {x: 0, y: 0, z: 0}
   myMinAttenuationAngle: 0
