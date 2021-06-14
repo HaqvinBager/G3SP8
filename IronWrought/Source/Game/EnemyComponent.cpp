@@ -519,13 +519,13 @@ void CEnemyComponent::UpdateAttackEvent()
 void CEnemyComponent::UpdateVignette()
 {
 	CFullscreenRenderer::SPostProcessingBufferData data = CEngine::GetInstance()->GetPostProcessingBufferData();
-	float timeVariationAmplitude = 0.05f;
+	float timeVariationAmplitude = 0.005f;
 	float timeVariationSpeed = 1.4f;
-	float timeVariation = abs(sinf(CTimer::Time() * timeVariationSpeed) * sinf(CTimer::Time() * timeVariationSpeed)) * timeVariationAmplitude;
+	float timeVariation = sinf(CTimer::Time() * timeVariationSpeed) * timeVariationAmplitude;
 	float normalizedBlend = std::clamp(((myCloseToPlayerThreshold * myCloseToPlayerThreshold) / mySqrdDistanceToPlayer), 0.0f, 1.0f);
 	normalizedBlend += timeVariation;
-	data.myVignetteStrength = Lerp(0.11f, 0.25f, normalizedBlend);
-	data.myVignetteColor = Vector4::Lerp({ 0.0f, 0.0f, 0.0f, 1.0f }, { 1.0f, 0.0f, 0.0f, 1.0f }, normalizedBlend);
+	data.myVignetteStrength = Lerp(0.11f, 10.0f, normalizedBlend);
+	//data.myVignetteColor = Vector4::Lerp({ 0.0f, 0.0f, 0.0f, 1.0f }, { 1.0f, 0.0f, 0.0f, 1.0f }, normalizedBlend);
 	CEngine::GetInstance()->SetPostProcessingBufferData(data);
 }
 
