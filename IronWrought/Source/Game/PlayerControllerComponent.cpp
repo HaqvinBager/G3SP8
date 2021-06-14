@@ -339,6 +339,14 @@ void CPlayerControllerComponent::Crouch()
 	}
 }
 
+void CPlayerControllerComponent::ForceCrouch()
+{	
+	myIsCrouching = true;
+	myController->GetController().resize(myColliderHeightCrouched);
+	GameObject().myTransform->FetchChildren()[0]->Position({ 0.0f, myCameraPosYCrouching, myCameraPosZ });// Equivalent to myCamera->GameObject().myTransform->Position
+	mySpeed = myCrouchSpeed;
+}
+
 void CPlayerControllerComponent::CrouchUpdate(const float& dt)
 {
 	if (myMovementLockTimer >= 0.0f)

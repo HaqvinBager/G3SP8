@@ -386,11 +386,12 @@ void CGravityGloveComponent::InteractionLogicContinuous()
 		CEngine::GetInstance()->GetWindowHandler()->HidLockCursor(true);
 		CMainSingleton::PostMaster().Send({ EMessageType::LockFPSCamera, &lockCamera });
 	}
-	else {
-		myObjectRotation = Vector2::Zero;
-		bool lockCamera = false;
-		CMainSingleton::PostMaster().Send({ EMessageType::LockFPSCamera, &lockCamera });
-	}
+	//else { // This ruins the camera shake :/
+	//	myObjectRotation = Vector2::Zero;
+	//	bool lockCamera = false;
+	//	CMainSingleton::PostMaster().Send({ EMessageType::LockFPSCamera, &lockCamera });
+	//}
+
 	CMainSingleton::PostMaster().SendLate({ EMessageType::UpdateCrosshair, &myCrosshairData });
 }
 

@@ -79,7 +79,7 @@ private:
 	void UpdateAttackEvent();
 	float SmoothStep(float a, float b, float t);
 	float InverseLerp(float a, float b, float v);
-	void UpdateVignette();
+	void UpdateVignette(const float aDotOverload = -1.0f);
 
 private:
 	friend class CEnemyAnimationController;

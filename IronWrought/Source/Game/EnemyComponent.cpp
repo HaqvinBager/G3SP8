@@ -234,8 +234,6 @@ void CEnemyComponent::Update()//får bestämma vilket behaviour vi vill köra i 
 
 				if (myCurrentState != EBehaviour::Detection && myCurrentState != EBehaviour::Seek)
 					SetState(EBehaviour::Detection);
-				//mySettings.mySpeed = 3.0f;
-				//SetState(EBehaviour::Seek);
 			}
 			else if (!myHasFoundPlayer && !myHasReachedLastPlayerPosition /*&& !myHeardSound && myHasReachedAlertedTarget*/) {
 				mySettings.mySpeed = 3.0f;
@@ -388,22 +386,6 @@ void CEnemyComponent::Receive(const SMessage& aMsg)
 		CPlayerControllerComponent* plCtrl = myPlayer->GetComponent<CPlayerControllerComponent>();
 		plCtrl->ForceStand();
 		plCtrl->LockMovementFor(myAttackPlayerTimerMax + 0.75f);
-		
-		// Face player
-// This part is wonk - someone else. (pure garbage - Haqvin 2021 06 14)
-//Vector3 distance = myPlayer->myTransform->Position() - this->GameObject().myTransform->Position();
-//Vector3 dirA = Vector3::Forward;
-//Vector3 dirB = distance;
-//dirB.Normalize();
-//
-//float rotationAngle = std::acos(dirA.Dot(dirB));
-//Vector3 rotationAxis = dirA.Cross(dirB);
-//rotationAxis.Normalize();
-//
-//Vector3 oPos = GameObject().myTransform->Position();
-//Matrix rotMatrix = DirectX::XMMatrixRotationAxis(rotationAxis, rotationAngle);
-//GameObject().myTransform->SetToOtherTransform(rotMatrix);
-//GameObject().myTransform->Position(oPos);
 
 		Vector3 targetDirection = myPlayer->myTransform->Position() - this->GameObject().myTransform->Position();
 		targetDirection.Normalize();
@@ -413,23 +395,8 @@ void CEnemyComponent::Receive(const SMessage& aMsg)
 		// Detach player head
 		myDetachedPlayerHead = myPlayer->myTransform->FetchChildren()[0];
 		myDetachedPlayerHead->RemoveParent();
-		float a = atan2f(GameObject().myTransform->Position().x - myDetachedPlayerHead->Position().x, GameObject().myTransform->Position().z - myDetachedPlayerHead->Position().z);
-		myDetachedPlayerHead->Rotation({ 0.f, DirectX::XMConvertToDegrees(a), 0.f });
-		//targetDirection = this->GameObject().myTransform->Position() - myDetachedPlayerHead->Position();
-		//targetDirection.Normalize();
-		//targetOrientation = WrapAngle(atan2f(targetDirection.x, targetDirection.z));
-		//myDetachedPlayerHead->Rotation({ 0, targetOrientation, 0 });
-
-//myDetachedPlayerHead->SetToOtherTransform(GameObject().myTransform->Transform());
-		//myDetachedPlayerHead->Position(GameObject().myTransform->Position());
-		//myDetachedPlayerHead->Move(GameObject().myTransform->Transform().Forward() * std::sqrt(myGrabRange * 0.5f));
-//Quaternion targetRotPlayer = this->GameObject().myTransform->Rotation();
-//myDetachedPlayerHead->Rotation(targetRotPlayer);
-		//myDetachedPlayerHead->Rotate({0.f, 180.f, 0.0f});
-		// Adding height of camera
-//myDetachedPlayerHead->Position({ myDetachedPlayerHead->Position().x, GameObject().myTransform->Position().y + 1.5f, myDetachedPlayerHead->Position().z });
-
-		IRONWROUGHT->GetActiveScene().MainCamera()->SetTrauma(3.0f);
+		//float a = atan2f(GameObject().myTransform->Position().x - myDetachedPlayerHead->Position().x, GameObject().myTransform->Position().z - myDetachedPlayerHead->Position().z);
+		//myDetachedPlayerHead->Rotation({ 0.f, DirectX::XMConvertToDegrees(a), 0.f });
 
 		myAttackPlayerTimer = myAttackPlayerTimerMax;
 		IRONWROUGHT->GetActiveScene().MainCamera()->Fade(false, myAttackPlayerTimerMax + 1.f, true);
@@ -487,17 +454,18 @@ const float CEnemyComponent::CurrentStateBlendValue() const
 
 void CEnemyComponent::UpdateAttackEvent()
 {
+	//std::cout << __FUNCTION__ << "." << std::endl;
 	UpdateVignette();
 	myAttackPlayerTimer -= CTimer::Dt();
 	if (myAttackPlayerTimer <= 0.0f)
 	{
-		IRONWROUGHT->GetActiveScene().MainCamera()->Fade(false, 0.1f, true);
+		IRONWROUGHT->GetActiveScene().MainCamera()->Fade(false, 0.1f, false);
 		float damageToPlayer = 34.0f;
 		CMainSingleton::PostMaster().Send({ EMessageType::PlayerTakeDamage, &damageToPlayer });
 
 		CPlayerControllerComponent* plCtrl = myPlayer->GetComponent<CPlayerControllerComponent>();
 		myDetachedPlayerHead->SetParent(myPlayer->myTransform);
-		plCtrl->Crouch();
+		plCtrl->ForceCrouch();
 		//plCtrl->OnCrouch();
 
 		bool lockCamera = false;
@@ -521,24 +489,16 @@ void CEnemyComponent::UpdateAttackEvent()
 		myDetachedPlayerHead = nullptr;
 		SetState(EBehaviour::Idle);
 		//std::cout << __FUNCTION__ << " Attack event end." << std::endl;
+		UpdateVignette(0.0f);
 		return;
 	}
 
-	//Quaternion targetRotCamera = Quaternion::CreateFromYawPitchRoll(DirectX::XMConvertToRadians(25.0f), 0.0f, 0.0f);
-	//Quaternion targetRotPlayer = this->GameObject().myTransform->Rotation();
-	//
-	////Quaternion slerp = Quaternion::Slerp(myPlayer->myTransform->FetchChildren()[0]->Rotation(), targetRotCamera, 0.4f);
-	////myPlayer->myTransform->FetchChildren()[0]->Rotation(slerp);
-	//Quaternion slerp = Quaternion::Slerp(myDetachedPlayerHead->Rotation(), targetRotPlayer, 0.4f);
-	//myDetachedPlayerHead->Rotation(slerp);
-
-	if ((myAttackPlayerTimer <= (myAttackPlayerTimerMax * 0.55f)) && (myAttackPlayerTimer >= (myAttackPlayerTimerMax * 0.5f)))
-	{
-		// Fade out
-		std::cout << __FUNCTION__ << " Camera fade out." << std::endl;
-		//IRONWROUGHT->GetActiveScene().MainCamera()->Fade(false, myAttackPlayerTimerMax * 0.4f, false);
-		IRONWROUGHT->GetActiveScene().MainCamera()->SetTrauma(2.0f);
-	}
+	float a = atan2f(GameObject().myTransform->Position().x - myDetachedPlayerHead->Position().x, GameObject().myTransform->Position().z - myDetachedPlayerHead->Position().z);
+	Quaternion targetRotCamera = Quaternion::CreateFromYawPitchRoll(a, 0.0f, 0.0f);
+	Quaternion rotCamera = myDetachedPlayerHead->Rotation();
+	Quaternion slerp = Quaternion::Slerp(rotCamera, targetRotCamera, 7.0f * CTimer::Dt());
+	myDetachedPlayerHead->Rotation(slerp);
+	myPlayer->myTransform->Rotation(slerp);
 }
 
 float CEnemyComponent::SmoothStep(float a, float b, float t)
@@ -553,34 +513,49 @@ float CEnemyComponent::InverseLerp(float a, float b, float v)
 }
 
 #include "CameraComponent.h"
-void CEnemyComponent::UpdateVignette()
+void CEnemyComponent::UpdateVignette(const float aDotOverload)
 {
+	if (aDotOverload >= 0.0f)
+	{
+		CFullscreenRenderer::SPostProcessingBufferData data = CEngine::GetInstance()->GetPostProcessingBufferData();
+		float normalizedBlend = SmoothStep(0.0f, 1.0f, aDotOverload);
+
+		data.myVignetteStrength = Lerp(0.35f, 5.0f, normalizedBlend);
+		CEngine::GetInstance()->SetPostProcessingBufferData(data);
+		IRONWROUGHT_ACTIVE_SCENE.MainCamera()->SetTrauma(normalizedBlend, CCameraComponent::ECameraShakeState::EnemySway);
+		return;
+	}
+
 	float range = 100.0f;
 	Vector3 enemyPos = GameObject().myTransform->Position();
 	Vector3 playerPos = myPlayer->myTransform->WorldPosition();
+	enemyPos.y = playerPos.y;
 
 	Vector3 direction = playerPos - enemyPos;
+	direction.Normalize();
 	PxRaycastBuffer hit = CEngine::GetInstance()->GetPhysx().Raycast(enemyPos, direction, range, CPhysXWrapper::ELayerMask::STATIC_ENVIRONMENT | CPhysXWrapper::ELayerMask::PLAYER);
 	if (hit.getNbAnyHits() > 0) {
 		CTransformComponent* transform = (CTransformComponent*)hit.getAnyHit(0).actor->userData;
 		if (!transform)
 		{
-			direction.Normalize();
 			float dot = myPlayer->myTransform->GetLocalMatrix().Forward().Dot(direction);
-			
+
+			//std::cout << "Enemy pos " << enemyPos.x << " " << enemyPos.y << " " <<  enemyPos.z << std::endl;
+			//std::cout << "Player Pos " << playerPos.x << " " << playerPos.y << " " <<  playerPos.z << std::endl;
+
+			//std::cout << __FUNCTION__ << " Dot: " << dot << std::endl;
 			dot = InverseLerp(0.9f, 1.0f, dot);
 			dot = std::clamp(dot, 0.0f, 1.0f);
 			dot *= dot * dot;
-			
-			//std::cout << __FUNCTION__ << " Dot: " << dot << std::endl;
 
-			CFullscreenRenderer::SPostProcessingBufferData data = CEngine::GetInstance()->GetPostProcessingBufferData();
+
 			float timeVariationAmplitude = 0.1f;
 			timeVariationAmplitude *= dot;
 			float timeVariationSpeed = 10.0f;
 			float timeVariation = abs(sinf(CTimer::Time() * timeVariationSpeed)) * timeVariationAmplitude * -1.0f;
 			dot += timeVariation;
 
+			CFullscreenRenderer::SPostProcessingBufferData data = CEngine::GetInstance()->GetPostProcessingBufferData();
 			float normalizedBlend = SmoothStep(0.0f, 1.0f, dot);
 
 			data.myVignetteStrength = Lerp(0.35f, 5.0f, normalizedBlend);
@@ -589,6 +564,5 @@ void CEnemyComponent::UpdateVignette()
 			IRONWROUGHT_ACTIVE_SCENE.MainCamera()->SetTrauma(normalizedBlend, CCameraComponent::ECameraShakeState::EnemySway);
 		}
 	}
-
 }
 
