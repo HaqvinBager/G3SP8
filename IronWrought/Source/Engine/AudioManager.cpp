@@ -437,6 +437,7 @@ void CAudioManager::Receive(const SMessage& aMessage) {
 	case EMessageType::PhysicsPropCollision:
 	{
 		PostMaster::SPlayDynamicAudioData data = *static_cast<PostMaster::SPlayDynamicAudioData*>(aMessage.data);
+		data.myChannel->Stop();
 		data.myChannel->SetPitch(Random(0.95f, 1.05f));
 		myWrapper.Play(mySFXAudio[data.mySoundIndex], data.myChannel);
 	}break;
@@ -444,7 +445,8 @@ void CAudioManager::Receive(const SMessage& aMessage) {
 	case EMessageType::PlayDynamicAudioSource:
 	{
 		PostMaster::SPlayDynamicAudioData data = *static_cast<PostMaster::SPlayDynamicAudioData*>(aMessage.data);
-		myWrapper.Play(mySFXAudio[data.mySoundIndex], data.myChannel);
+		if (!data.myChannel->IsPlaying())
+			myWrapper.Play(mySFXAudio[data.mySoundIndex], data.myChannel);
 	}break;
 
 	case EMessageType::Play3DVoiceLine:
