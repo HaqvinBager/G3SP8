@@ -255,26 +255,36 @@ CAlerted::CAlerted(SNavMesh* aNavMesh)
 {
 	myNavMesh = aNavMesh;
 	myAlertedTimer = 0.0f;
+	myHasNewTartget = false;
 }
 
 void CAlerted::Enter(const Vector3& aPosition)
 {
+	aPosition;
+
 	myPath.clear();
 	SetPath(myNavMesh->CalculatePath(aPosition, myAlertedPosition, myNavMesh), myAlertedPosition);
-	aPosition;
+	myHasNewTartget = false;
 	myAlertedTimer = myAlertedTimerMax;
 }
 
 Vector3 CAlerted::Update(const Vector3& aPosition)
 {
+	if (myHasNewTartget) {
+		myPath.clear();
+		SetPath(myNavMesh->CalculatePath(aPosition, myAlertedPosition, myNavMesh), myAlertedPosition);
+		myAlertedTimer = myAlertedTimerMax;
+		myHasNewTartget = false;
+	}
+
 	myAlertedTimer -= CTimer::Dt();
 	if (myAlertedTimer > (myAlertedTimerMax * myAlertedFactor))
 		return Vector3();
 
 	//SetPath(myNavMesh->CalculatePath(aPosition, myAlertedPosition, myNavMesh), myAlertedPosition);
 
-	float dist = DirectX::SimpleMath::Vector3::DistanceSquared(aPosition, myAlertedPosition);
-	float epsilon = 0.3f;
+	float dist = DirectX::SimpleMath::Vector3::Distance(myAlertedPosition, aPosition);
+	float epsilon = 0.5f;
 	if (dist < epsilon) {
 		CMainSingleton::PostMaster().Send({ EMessageType::EnemyReachedTarget });
 	}
@@ -305,6 +315,7 @@ void CAlerted::ClearPath()
 void CAlerted::SetAlertedPosition(const Vector3& aAlertedPosition)
 {
 	myAlertedPosition = aAlertedPosition;
+	myHasNewTartget = true;
 }
 
 void CAlerted::SetPath(std::vector<Vector3> aPath, Vector3 aFinalPosition)
@@ -345,6 +356,7 @@ void CIdle::Enter(const Vector3& /*aPosition*/)
 
 Vector3 CIdle::Update(const Vector3& aPosition)
 {
+	//myTarget is not set so we crash... See fix in EnemyComponent.cpp row 129 - 132 maybe I broke its direction so please check it out - Alexander Matthäi 2021-06-13
 	Vector3 dir =  myTarget->Position() - aPosition ;
 	return dir;
 }

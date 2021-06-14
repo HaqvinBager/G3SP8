@@ -22,6 +22,8 @@ CGravityGloveComponent::CGravityGloveComponent(CGameObject& aParent, CTransformC
 	, myGravitySlot(aGravitySlot)
 	, myRigidStatic(nullptr)
 	, myHoldingAItem(false)
+	, myExtendedOffsetArm(0.f)
+	, myIsRotatingmode(false)
 {
 	mySettings.myPushForce = 10.f;
 	//mySettings.myDistanceToMaxLinearVelocity = 2.5f;
@@ -29,7 +31,9 @@ CGravityGloveComponent::CGravityGloveComponent(CGameObject& aParent, CTransformC
 	mySettings.myMinPushForce = 10.0f;
 	mySettings.myMinPullForce = 200.0f;
 
-	mySettings.myMaxDistance = 0.75f;
+	mySettings.myMaxDistance = 2.75f;
+	mySettings.myMinDistance = 0.75f;
+	mySettings.myStuckRange = 1.f;
 	mySettings.myCurrentDistanceInverseLerp = 0.0f;
 	myJoint = nullptr;
 }
@@ -70,26 +74,23 @@ void CGravityGloveComponent::Update()
 		if (myCurrentTarget.myRigidBodyPtr->GetDynamicRigidBody()->GetBody().isSleeping()) {
 			myCurrentTarget.myRigidBodyPtr->GetDynamicRigidBody()->GetBody().wakeUp();
 		}
-		myHoldingAItem = true;
 		myCurrentTarget.myRigidBodyPtr->IsHeld(true);
-		//myCurrentTarget.myRigidBodyPtr->GetDynamicRigidBody()->GetBody().setRigidBodyFlag(PxRigidBodyFlag::eRETAIN_ACCELERATIONS, false);
-		myCurrentTarget.myRigidBodyPtr->GetDynamicRigidBody()->GetBody().setRigidDynamicLockFlag(PxRigidDynamicLockFlag::eLOCK_ANGULAR_X, true);
-		myCurrentTarget.myRigidBodyPtr->GetDynamicRigidBody()->GetBody().setRigidDynamicLockFlag(PxRigidDynamicLockFlag::eLOCK_ANGULAR_Y, true);
-		myCurrentTarget.myRigidBodyPtr->GetDynamicRigidBody()->GetBody().setRigidDynamicLockFlag(PxRigidDynamicLockFlag::eLOCK_ANGULAR_Z, true);
+		
+		RotateObject();
+
 		if (myJoint == nullptr) {
-			myJoint = CreateD6Joint(myRigidStatic, &myCurrentTarget.myRigidBodyPtr->GetDynamicRigidBody()->GetBody(), mySettings.myMaxDistance);
+			myJoint = CreateD6Joint(myRigidStatic, &myCurrentTarget.myRigidBodyPtr->GetDynamicRigidBody()->GetBody(), mySettings.myMinDistance + myExtendedOffsetArm);
+			myCurrentTarget.myRigidBodyPtr->LockAngular(true);
 		}
 		else {
-
+			myJoint->setLocalPose(PxJointActorIndex::eACTOR0, PxTransform(0, 0, mySettings.myMaxDistance + myExtendedOffsetArm));
 			float dist = Vector3::Distance(GameObject().myTransform->WorldPosition(), myCurrentTarget.myRigidBodyPtr->GameObject().myTransform->Position());
-			if (dist >= mySettings.myMaxDistance + 3.f) {
+			if (dist >= mySettings.myMaxDistance + mySettings.myStuckRange + myExtendedOffsetArm) {
 				myJoint->release();
-				myJoint = nullptr;
-				myCurrentTarget.myRigidBodyPtr->GetDynamicRigidBody()->GetBody().setRigidDynamicLockFlag(PxRigidDynamicLockFlag::eLOCK_ANGULAR_X, false);
-				myCurrentTarget.myRigidBodyPtr->GetDynamicRigidBody()->GetBody().setRigidDynamicLockFlag(PxRigidDynamicLockFlag::eLOCK_ANGULAR_Y, false);
-				myCurrentTarget.myRigidBodyPtr->GetDynamicRigidBody()->GetBody().setRigidDynamicLockFlag(PxRigidDynamicLockFlag::eLOCK_ANGULAR_Z, false);
-				myCurrentTarget.myRigidBodyPtr = nullptr;
+				myJoint = nullptr; 
+				myCurrentTarget.myRigidBodyPtr->LockAngular(false);
 				myHoldingAItem = false;
+				myCurrentTarget.myRigidBodyPtr = nullptr;
 			}
 		}
 	}
@@ -109,21 +110,6 @@ void CGravityGloveComponent::Pull()
 
 	PxRaycastBuffer hit = CEngine::GetInstance()->GetPhysx().Raycast(start, dir, mySettings.myMaxDistance, CPhysXWrapper::ELayerMask::WORLD);
 
-	//std::vector<CGameObject*> gameobjects = CEngine::GetInstance()->GetActiveScene().ActiveGameObjects();
-
-	/*for (int i = 0; i < gameobjects.size(); ++i) {
-		if (gameobjects[i]->GetComponent<CRigidBodyComponent>()) {
-			Vector3 pos = gameobjects[i]->myTransform->Position();
-			pos -= start;
-			pos.Normalize();
-			dir.Normalize();
-			float lookPrecentage = dir.Dot(pos);
-			std::cout << i << ": " << lookPrecentage << std::endl;
-			if (lookPrecentage > 0.99f && lookPrecentage > 0.f) {
-				myCurrentTarget = gameobjects[i]->GetComponent<CRigidBodyComponent>();
-			}
-		}
-	}*/
 	if (hit.getNbAnyHits() > 0)
 	{
 		CTransformComponent* transform = (CTransformComponent*)hit.getAnyHit(0).actor->userData;
@@ -174,7 +160,20 @@ void CGravityGloveComponent::Pull(CTransformComponent* aTransform, CRigidBodyCom
 		aRigidBodyTarget->SetLinearVelocity({0.f, 0.f, 0.f});
 		aRigidBodyTarget->SetAngularVelocity({0.f, 0.f, 0.f});
 		aRigidBodyTarget->GetDynamicRigidBody()->GetBody().setMaxLinearVelocity(10.f);
+
 		myCurrentTarget.myRigidBodyPtr = aRigidBodyTarget;
+
+		myHoldingAItem = true;
+		float dist = Vector3::Distance(GameObject().myTransform->WorldPosition(), myCurrentTarget.myRigidBodyPtr->GameObject().myTransform->Position());
+		if (dist > (mySettings.myMaxDistance)) {
+			myExtendedOffsetArm = 2.f;
+		}
+		else if (dist < mySettings.myMinDistance) {
+			myExtendedOffsetArm = 0.f;
+		}
+		else {
+			myExtendedOffsetArm = dist - mySettings.myMinDistance;
+		}
 		myCurrentTarget.initialDistanceSquared = Vector3::DistanceSquared(myGravitySlot->WorldPosition(), aTransform->WorldPosition());
 
 		CMainSingleton::PostMaster().Send({ EMessageType::GravityGlovePull, nullptr });
@@ -186,10 +185,12 @@ void CGravityGloveComponent::Release()
 	if (myCurrentTarget.myRigidBodyPtr != nullptr)
 	{
 		myCurrentTarget.myRigidBodyPtr->GetDynamicRigidBody()->GetBody().setMaxLinearVelocity(100.f);
-		myCurrentTarget.myRigidBodyPtr->GetDynamicRigidBody()->GetBody().setRigidDynamicLockFlag(PxRigidDynamicLockFlag::eLOCK_ANGULAR_X, false);
-		myCurrentTarget.myRigidBodyPtr->GetDynamicRigidBody()->GetBody().setRigidDynamicLockFlag(PxRigidDynamicLockFlag::eLOCK_ANGULAR_Y, false);
-		myCurrentTarget.myRigidBodyPtr->GetDynamicRigidBody()->GetBody().setRigidDynamicLockFlag(PxRigidDynamicLockFlag::eLOCK_ANGULAR_Z, false);
+		myCurrentTarget.myRigidBodyPtr->LockAngular(false);
 		myCurrentTarget.myRigidBodyPtr = nullptr;
+		if (myIsRotatingmode) {
+			CEngine::GetInstance()->GetWindowHandler()->HidLockCursor(true);
+			myIsRotatingmode = false;
+		}
 		bool released = true;
 		CMainSingleton::PostMaster().Send({ EMessageType::GravityGlovePull, &released });
 	}
@@ -246,6 +247,9 @@ void CGravityGloveComponent::Push(CTransformComponent* aTransform, CRigidBodyCom
 		IRONWROUGHT->GetActiveScene().MainCamera()->SetTrauma(0.25f); // plz enable camera movement without moving player for shake??? ::)) Nico 2021-04-09
 
 		myCurrentTarget.myRigidBodyPtr->GetDynamicRigidBody()->GetBody().setMaxLinearVelocity(100.f);
+		myCurrentTarget.myRigidBodyPtr->GetDynamicRigidBody()->GetBody().setRigidDynamicLockFlag(PxRigidDynamicLockFlag::eLOCK_ANGULAR_X, false);
+		myCurrentTarget.myRigidBodyPtr->GetDynamicRigidBody()->GetBody().setRigidDynamicLockFlag(PxRigidDynamicLockFlag::eLOCK_ANGULAR_Y, false);
+		myCurrentTarget.myRigidBodyPtr->GetDynamicRigidBody()->GetBody().setRigidDynamicLockFlag(PxRigidDynamicLockFlag::eLOCK_ANGULAR_Z, false);
 		myCurrentTarget.myRigidBodyPtr->AddForce(-GameObject().myTransform->GetWorldMatrix().Forward(), mySettings.myPushForce * myCurrentTarget.myRigidBodyPtr->GetMass(), EForceMode::EImpulse);
 		myCurrentTarget.myRigidBodyPtr = nullptr;
 		sendPushMessage = true;
@@ -297,7 +301,7 @@ void CGravityGloveComponent::InteractionLogicContinuous()
 	Vector3 start = GameObject().myTransform->GetWorldMatrix().Translation();
 	Vector3 dir = -GameObject().myTransform->GetWorldMatrix().Forward();
 
-	PxRaycastBuffer hit = CEngine::GetInstance()->GetPhysx().Raycast(start, dir, mySettings.myMaxDistance + 2.f, CPhysXWrapper::ELayerMask::DYNAMIC_OBJECTS);// ELayerMask could be changed to ::DYNAMIC only? // Aki 2021 05 26
+	PxRaycastBuffer hit = CEngine::GetInstance()->GetPhysx().Raycast(start, dir, mySettings.myMaxDistance, CPhysXWrapper::ELayerMask::DYNAMIC_OBJECTS);// ELayerMask could be changed to ::DYNAMIC only? // Aki 2021 05 26
 	if (hit.getNbAnyHits() > 0)
 	{
 		CTransformComponent* transform = static_cast<CTransformComponent*>(hit.getAnyHit(0).actor->userData);
@@ -306,7 +310,7 @@ void CGravityGloveComponent::InteractionLogicContinuous()
 			CRigidBodyComponent* rigidbody = nullptr;
 			if (transform->GameObject().TryGetComponent<CRigidBodyComponent>(&rigidbody))
 			{
-				if (Input::GetInstance()->IsMousePressed(Input::EMouseButton::Left))
+				if (Input::GetInstance()->IsMousePressed(Input::EMouseButton::Left) && myIsRotatingmode == false)
 				{
 					Pull(transform, rigidbody);
 				} 
@@ -326,11 +330,8 @@ void CGravityGloveComponent::InteractionLogicContinuous()
 	{
 		myCrosshairData.myTargetStatus = PostMaster::SCrossHairData::ETargetStatus::None;
 	}
-	if (Input::GetInstance()->IsMousePressed(Input::EMouseButton::Right))
+	if (Input::GetInstance()->IsMousePressed(Input::EMouseButton::Right) && myIsRotatingmode == false)
 	{
-		// Wind down
-		//data.myIndex = 0;
-		//data.myShouldBeReversed = true;
 		if (myCurrentTarget.myRigidBodyPtr) {
 			Push(myCurrentTarget.myRigidBodyPtr->GameObject().myTransform, myCurrentTarget.myRigidBodyPtr);
 		}
@@ -338,6 +339,59 @@ void CGravityGloveComponent::InteractionLogicContinuous()
 	if (Input::GetInstance()->IsMouseReleased(Input::EMouseButton::Left))
 	{
 		Release();
+	}
+
+	if (myHoldingAItem) {
+		if (Input::GetInstance()->MouseWheel() < 0) {
+			if (myExtendedOffsetArm <= 0.f) {
+				myExtendedOffsetArm = 0.f;
+			}
+			else {
+				myExtendedOffsetArm -= CTimer::Dt() * 10.f;
+			}
+		}
+		else if (Input::GetInstance()->MouseWheel() > 0) {
+			if (myExtendedOffsetArm >= 2.f) {
+				myExtendedOffsetArm = 2.f;
+			}
+			else {
+				myExtendedOffsetArm += CTimer::Dt() * 10.f;
+			}
+		}
+	}
+	else {
+		myExtendedOffsetArm = 0.f;
+	}
+
+	//shoudl be changed to R instead of L
+	if (Input::GetInstance()->IsKeyDown('R') && myHoldingAItem && myCurrentTarget.myRigidBodyPtr) {
+		myIsRotatingmode = true;
+		myCurrentTarget.myRigidBodyPtr->LockAngular(false);
+		bool lockCamera = true;
+		myObjectRotation = Vector2::Zero;
+		CMainSingleton::PostMaster().Send({ EMessageType::LockFPSCamera, &lockCamera });
+		myObjectRotation = Input::GetInstance()->GetAxisRaw();
+		CEngine::GetInstance()->GetWindowHandler()->HidLockCursor(false);
+		/*if (Input::GetInstance()->IsMouseDown(Input::EMouseButton::Left)) {
+			myObjectRotation.x = 5;
+		}
+		if (Input::GetInstance()->IsMouseDown(Input::EMouseButton::Right)) {
+			myObjectRotation.y = 5;
+		}*/
+		lockCamera = true;
+	}
+	else if (myHoldingAItem && myCurrentTarget.myRigidBodyPtr) {
+		myIsRotatingmode = false;
+		myObjectRotation = Vector2::Zero;
+		myCurrentTarget.myRigidBodyPtr->LockAngular(true);
+		bool lockCamera = false;
+		CEngine::GetInstance()->GetWindowHandler()->HidLockCursor(true);
+		CMainSingleton::PostMaster().Send({ EMessageType::LockFPSCamera, &lockCamera });
+	}
+	else {
+		myObjectRotation = Vector2::Zero;
+		bool lockCamera = false;
+		CMainSingleton::PostMaster().Send({ EMessageType::LockFPSCamera, &lockCamera });
 	}
 	CMainSingleton::PostMaster().SendLate({ EMessageType::UpdateCrosshair, &myCrosshairData });
 }
@@ -361,6 +415,38 @@ void CGravityGloveComponent::InteractionLogicOnInput()
 	{
 		Release();
 	}
+}
+
+void CGravityGloveComponent::RotateObject()
+{
+	myCurrentTarget.myRigidBodyPtr->GetDynamicRigidBody()->GetBody().setActorFlag(PxActorFlag::eDISABLE_GRAVITY, true);
+	if (myJoint) {
+		myJoint->release();
+	}
+	myJoint = nullptr;
+
+	Matrix matrix;
+	matrix.Forward(GameObject().myTransform->GetWorldMatrix().Forward());
+	Matrix tempRotation = Matrix::CreateFromQuaternion(
+		myCurrentTarget.myRigidBodyPtr->GetDynamicRigidBody()->GetRotation()
+	);
+	matrix = Matrix::CreateScale(myCurrentTarget.myRigidBodyPtr->GameObject().myTransform->Scale());
+	matrix *= tempRotation;
+	matrix.Translation(myCurrentTarget.myRigidBodyPtr->GetDynamicRigidBody()->GetPosition());
+
+
+	float sensitivity = 0.075f;
+	float x = std::clamp((myObjectRotation.y * sensitivity), ToDegrees(-PI / 2.0f) + 0.1f, ToDegrees(PI / 2.0f) - 0.1f);
+	float y = WrapAngle((myObjectRotation.x * sensitivity));
+
+	matrix = myGravitySlot->RotateMatrix(matrix, {x * 5.f, y * 5.f,0.f });
+
+	DirectX::SimpleMath::Vector3 translation;
+	DirectX::SimpleMath::Vector3 scale;
+	DirectX::SimpleMath::Quaternion quat;
+	matrix.Decompose(scale, quat, translation);
+	myCurrentTarget.myRigidBodyPtr->SetGlobalPose(myCurrentTarget.myRigidBodyPtr->GetDynamicRigidBody()->GetPosition(), quat);
+	myCurrentTarget.myRigidBodyPtr->GetDynamicRigidBody()->GetBody().setActorFlag(PxActorFlag::eDISABLE_GRAVITY, false);
 }
 
 physx::PxD6Joint* CGravityGloveComponent::CreateD6Joint(PxRigidActor* actor0, PxRigidActor* actor1, float aOffest)

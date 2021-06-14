@@ -126,6 +126,10 @@ void CEnemyComponent::Start()
 	myBehaviours.push_back(new CAlerted(myNavMesh));
 	myIdleState = new CIdle();
 	myBehaviours.push_back(myIdleState);
+	if (myPlayer != nullptr)
+	{
+		myIdleState->SetTarget(myPlayer->myTransform);
+	}
 
 	CAttack* attack = new CAttack();
 	myBehaviours.push_back(attack);
@@ -414,7 +418,6 @@ void CEnemyComponent::Receive(const SMessage& aMsg)
 			if (myNavMesh->PathLength(path, GameObject().myTransform->Position()) <= 20.f && !myHasFoundPlayer && myHasReachedLastPlayerPosition) {
 				/*SetState(EBehaviour::Idle);*/
 				//myIsIdle = true;
-				SetState(EBehaviour::Alerted);
 				mySettings.mySpeed = 3.0f;
 				//play heardsound sound
 				CAlerted* alertedBehaviour = static_cast<CAlerted*>(myBehaviours[static_cast<int>(EBehaviour::Alerted)]);
@@ -423,6 +426,7 @@ void CEnemyComponent::Receive(const SMessage& aMsg)
 					myHasReachedAlertedTarget = false;
 					myHeardSound = true;
 				}
+				SetState(EBehaviour::Alerted);
 			}
 		}
 		return;

@@ -34,6 +34,7 @@ public:
 
 	const bool CursorLocked() const;
 	void LockCursor(bool aShouldLock);
+	void HidLockCursor(bool aShouldLock);
 
 	void HideAndLockCursor(const bool& anIsInEditorMode = false);
 	void ShowAndUnlockCursor(const bool& anIsInEditorMode = true);

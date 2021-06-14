@@ -37,6 +37,7 @@ public:
 	void AddAngularForce(const Vector3& aAngularForce, const EForceMode aForceMode = EForceMode::EForce);
 	void SetAngularVelocity(const Vector3& aVelocity);
 	void SetLinearVelocity(const Vector3& aVelocity);
+	void LockAngular(bool aLock);
 
 	const float GetLinearVelocityLengthSqr() const;
 
@@ -46,7 +47,6 @@ public:
 
 	void AttachShape(physx::PxShape* aShape);
 	physx::PxShape* GetShape();
-
 
 	const bool IsKinematic() const { return myIsKinematic; }
 	const float GetMass() const;
@@ -64,7 +64,6 @@ private:
 	Vector3 myLocalCenterMass;
 	Vector3 myInertiaTensor;
 	physx::PxShape* myShape;
-
 
 public:
 	void IsHeld(bool isHeld);

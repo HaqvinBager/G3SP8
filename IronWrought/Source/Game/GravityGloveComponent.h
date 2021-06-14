@@ -27,6 +27,9 @@ struct SGravityGloveSettings {
 	float myMinPullForce;
 
 	float myMaxDistance;
+	float myMinDistance;
+	float myGrabRange;
+	float myStuckRange;
 	float myCurrentDistanceInverseLerp;
 };
 
@@ -60,6 +63,8 @@ public:
 
 	void Receive(const SStringMessage& aMessage) override;
 
+	CRigidBodyComponent* GetHoldingObject() { return myCurrentTarget.myRigidBodyPtr; }
+
 private:
 	// USE EITHER InteractionLogicContinuous OR InteractionLogicOnInput. Not both!
 	void InteractionLogicContinuous();
@@ -67,15 +72,26 @@ private:
 	void InteractionLogicOnInput();
 
 	//Actor0 and Actor1 is what the joint should be connected to
+	//Actor0 will always be player and Actor1 will always be the object
 	//Offest in forward (Z)
 	physx::PxD6Joint* CreateD6Joint(physx::PxRigidActor* actor0, physx::PxRigidActor* actor1, float aOffest = 0.f);
+
+	void RotateObject();
 
 	void Pull();
 	void Pull(CTransformComponent* aTransform, CRigidBodyComponent* aRigidBodyTarget);
 	void Release();
 	void Push();
 	void Push(CTransformComponent* aTransform, CRigidBodyComponent* aRigidBodyTarget);
+	float WrapAngle(float anAngle)
+	{
+		return fmodf(anAngle, 360.0f);
+	}
 
+	float ToDegrees(float anAngleInRadians)
+	{
+		return anAngleInRadians * (180.0f / 3.14159265f);
+	}
 private:
 	SGravityGloveSettings mySettings;
 	float InverseLerp(float a, float b, float t) const
@@ -136,5 +152,8 @@ private:
 	physx::PxRigidStatic* myRigidStatic;
 	physx::PxD6Joint* myJoint;
 	PostMaster::SCrossHairData myCrosshairData;
+	bool myIsRotatingmode;
 	bool myHoldingAItem;
+	float myExtendedOffsetArm;
+	Vector2 myObjectRotation;
 };
