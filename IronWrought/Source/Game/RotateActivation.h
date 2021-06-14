@@ -1,23 +1,15 @@
 #pragma once
 #include "ActivationBehavior.h"
+#include "PuzzleSetting.h"
 
 class CRotateActivation : public IActivationBehavior
 {
 public:
-	struct SSettings
-	{
-		Vector3 myStartRotation;
-		Vector3 myEndRotation;
-		float myDuration;
-	};
-
-	CRotateActivation(CGameObject& aParent, const SSettings& someSettings);
+	CRotateActivation(CGameObject& aParent, const SSettings<Quaternion>& someSettings);
 	~CRotateActivation() override;
 	void Update() override;
 
 private:
-	SSettings mySettings;
+	SSettings<Quaternion> mySettings;
 	float myTime;
-	Quaternion myStart;
-	Quaternion myEnd;
 };

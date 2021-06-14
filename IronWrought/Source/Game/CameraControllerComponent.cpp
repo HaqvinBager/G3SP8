@@ -149,11 +149,11 @@ void CCameraControllerComponent::RotateTransformWithYawAndPitch(const Vector2& s
 	if (myLimitFirstPerson)
 	{
 		const Vector3& shakeVector = GameObject().GetComponent<CCameraComponent>()->GetShakeVector();
-		GameObject().myTransform->Rotation({ myPitch + shakeVector.x, shakeVector.y, shakeVector.z });
+		GameObject().myTransform->Rotate({ shakeVector.x, shakeVector.y, shakeVector.z });
 		return;
 	}
 
-	float sensitivity = 0.075f;//was 0.25f //TestV�rde, K�ndes  okej p� min Dator! Bra � testa p� andras datorer! /Axel Savage 2021-04-09 14:00
+	float sensitivity = 0.065f;//was 0.25f //TestV�rde, K�ndes  okej p� min Dator! Bra � testa p� andras datorer! /Axel Savage 2021-04-09 14:00
 	myYaw = WrapAngle(myYaw + (someInput.x * sensitivity));
 	myPitch = std::clamp(myPitch + (someInput.y * sensitivity), ToDegrees(-PI / 2.0f)+0.1f, ToDegrees(PI / 2.0f)-0.1f);
 	if (myCameraMode == ECameraMode::FreeCam) {
@@ -175,6 +175,7 @@ void CCameraControllerComponent::Receive(const SMessage& aMsg)
 			lock = *static_cast<bool*>(aMsg.data);
 		}
 		myLimitFirstPerson = lock;
+		std::cout << __FUNCTION__ << std::endl;
 		return;
 	}
 }

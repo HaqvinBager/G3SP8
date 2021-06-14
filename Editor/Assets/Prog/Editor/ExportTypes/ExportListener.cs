@@ -85,6 +85,14 @@ public struct ResponseNextLevelData
 }
 
 [System.Serializable]
+public struct ResponsePlayVFXData
+{
+    public float duration;
+    public float delay;
+    public int instanceID;
+}
+
+[System.Serializable]
 public struct ListenerCollection
 {
     public List<ListenerData> listeners;
@@ -95,6 +103,7 @@ public struct ListenerCollection
     public List<ResponsePlayAudioData> responseAudios;
     public List<ResponsePlayVoiceData> responseVoices;
     public List<ResponseNextLevelData> responseNextLevel;
+    public List<ResponsePlayVFXData> responsePlayVFXes;
 }
 
 public class ExportListener
@@ -110,6 +119,7 @@ public class ExportListener
         collection.responseAudios = new List<ResponsePlayAudioData>();
         collection.responseVoices = new List<ResponsePlayVoiceData>();
         collection.responseNextLevel = new List<ResponseNextLevelData>();
+        collection.responsePlayVFXes = new List<ResponsePlayVFXData>();
 
         Listener[] listeners = GameObject.FindObjectsOfType<Listener>();
         foreach (Listener listener in listeners)
@@ -138,6 +148,7 @@ public class ExportListener
             ExportPlayAudioResponses(ref collection.responseAudios, listener);
             ExportPlayVoiceResponses(ref collection.responseVoices, listener);
             ExportNextLevelResponses(ref collection.responseNextLevel, listener);
+            ExportPlayVFXResponses(ref collection.responsePlayVFXes, listener);
         }
         return collection;
     }
@@ -251,6 +262,17 @@ public class ExportListener
             nextLevelData.delay = nextLevel.myDelay;
             nextLevelData.instanceID = nextLevel.transform.GetInstanceID();
             collection.Add(nextLevelData);
+        }
+    }
+    private static void ExportPlayVFXResponses(ref List<ResponsePlayVFXData> collection, Listener Response)
+    {
+        if (Response.TryGetComponent(out ResponsePlayVFX playVFX))
+        {
+            ResponsePlayVFXData playVFXData = new ResponsePlayVFXData();
+            playVFXData.duration = playVFX.duration;
+            playVFXData.delay = playVFX.delay;
+            playVFXData.instanceID = playVFX.transform.GetInstanceID();
+            collection.Add(playVFXData);
         }
     }
 }
