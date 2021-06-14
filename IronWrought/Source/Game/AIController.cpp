@@ -330,9 +330,9 @@ void CAlerted::SetPath(std::vector<Vector3> aPath, Vector3 aFinalPosition)
 		if (aPath[i] != aFinalPosition) {
 			myPath.push_back(aPath[i]);
 		}
-		if (i > 0) {
+		/*if (i > 0) {
 			CDebug::GetInstance()->DrawLine(aPath[i - 1], aPath[i], 60.0f);
-		}
+		}*/
 	}
 }
 
