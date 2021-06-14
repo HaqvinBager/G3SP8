@@ -77,6 +77,8 @@ public:
 
 private:
 	void UpdateAttackEvent();
+	float SmoothStep(float a, float b, float t);
+	float InverseLerp(float a, float b, float v);
 	void UpdateVignette();
 
 private:

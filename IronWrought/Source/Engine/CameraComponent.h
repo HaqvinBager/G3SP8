@@ -14,7 +14,19 @@ public:
 	{
 		IdleSway,
 		Shake,
+		EnemySway,
 		None
+	};
+
+	struct SShakeProfile
+	{
+		Vector3 myMaxShakeRotation = Vector3::Zero;
+		float myMinShakeSpeed = 0.0f;
+		float myMaxShakeSpeed = myMinShakeSpeed;
+		float myMinStaticTrauma = 0.0f;
+		float myMaxStaticTrauma = myMinStaticTrauma;
+		float myStaticTrauma = 0.0f;
+		float myDecayTime = 0.0f;
 	};
 
 	static constexpr float SP8_FOV = 59.5f;
@@ -48,9 +60,11 @@ public:
 	void SetShakeSpeed(float aSpeed);
 	void SetMaxShakeRotation(const Vector3& aMaxRotation);
 	void SetTestTrauma(float aTrauma);
+	void SetTraumaBlend(float aT);
 
 private:
 	void Shake();
+	float Lerp(float a, float b, float t);
 
 	enum class ECameraState
 	{
@@ -71,10 +85,17 @@ private:
 	DirectX::SimpleMath::Vector3 myStartingRotation;
 	DirectX::SimpleMath::Vector3 myMaxShakeRotation;
 	DirectX::SimpleMath::Vector3 myShakeVector;
+	
+	FastNoise::SmartNode<FastNoise::Simplex> myNoise;
 	/*PerlinNoise myNoise;*/
-	FastNoise::SmartNode<FastNoise::Simplex> myIdleNoise;
-	FastNoise::SmartNode<FastNoise::Simplex> myShakeNoise;
+	
 	ECameraShakeState myShakeState;
+	SShakeProfile myCurrentShakeProfile;
+
+	SShakeProfile myIdleSwayProfile;
+	SShakeProfile myTraumaProfile;
+	SShakeProfile myEnemySwayProfile;
+
 	float myIdleTrauma;
 	float myTrauma;
 	float myTestTrauma;
