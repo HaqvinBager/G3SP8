@@ -19,7 +19,6 @@ CPlayerComponent::CPlayerComponent(CGameObject& gameObject, const float& aMaxHea
 {
 	CMainSingleton::PostMaster().Subscribe(EMessageType::PlayerHealthPickup, this);
 	CMainSingleton::PostMaster().Subscribe(EMessageType::PlayerSetRespawnPoint, this);
-	CMainSingleton::PostMaster().Subscribe(EMessageType::PlayerRespawn, this);
 	CMainSingleton::PostMaster().Subscribe(EMessageType::PlayerTakeDamage, this);
 }
 
@@ -27,7 +26,6 @@ CPlayerComponent::~CPlayerComponent()
 {
 	CMainSingleton::PostMaster().Unsubscribe(EMessageType::PlayerHealthPickup, this);
 	CMainSingleton::PostMaster().Unsubscribe(EMessageType::PlayerSetRespawnPoint, this);
-	CMainSingleton::PostMaster().Unsubscribe(EMessageType::PlayerRespawn, this);
 	CMainSingleton::PostMaster().Unsubscribe(EMessageType::PlayerTakeDamage, this);
 	CMainSingleton::PostMaster().Unsubscribe("Ladder", this);
 }
@@ -70,21 +68,13 @@ void CPlayerComponent::Update()
 	//	CMainSingleton::PostMaster().SendLate({ EMessageType::PlayerSetRespawnPoint, nullptr });
 	//}
 #endif // DEBUG
-
-	RegenerateHealth();
-
-	if (!myIsAlive)
-	{
-		OnNotAlive();
-	}
 }
 
 void CPlayerComponent::OnNotAlive()
 {
-	CMainSingleton::PostMaster().Send({ EMessageType::PlayerDied, nullptr });
+	CMainSingleton::PostMaster().Send({ EMessageType::PlayerRespawn, nullptr });
 
 	myPlayerController->ResetPlayerPosition();
-
 	ResetHealth();
 }
 
@@ -159,6 +149,9 @@ void CPlayerComponent::OnDisable()
 void CPlayerComponent::CheckIfAlive()
 {
 	myIsAlive = (myHealth > 0.0f);
+
+	if(!myIsAlive)
+		CMainSingleton::PostMaster().Send({ EMessageType::PlayerDied, nullptr });
 }
 
 inline void CPlayerComponent::SendHealthChangedMessage()
@@ -191,7 +184,7 @@ void CPlayerComponent::Receive(const SMessage& aMessage)
 		case EMessageType::PlayerHealthPickup:
 		{
 			if (aMessage.data)
-				IncreaseHealth(*reinterpret_cast<float*>(aMessage.data));
+				IncreaseHealth(*static_cast<float*>(aMessage.data));
 			else
 				IncreaseHealth();
 		}
@@ -200,7 +193,7 @@ void CPlayerComponent::Receive(const SMessage& aMessage)
 		case EMessageType::PlayerTakeDamage:
 		{
 			if (aMessage.data)
-				DecreaseHealth(*reinterpret_cast<float*>(aMessage.data));
+				DecreaseHealth(*static_cast<float*>(aMessage.data));
 			else
 				DecreaseHealth();
 		}
