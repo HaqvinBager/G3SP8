@@ -43,7 +43,7 @@ public:
 	void Rotate(const DirectX::SimpleMath::Vector3& aRotation);
 	void Rotate(const DirectX::SimpleMath::Quaternion& aQuaternion);
 
-	Matrix RotateMatrix(Matrix aMatrix,const DirectX::SimpleMath::Vector3& aRotation);
+	static Matrix RotateMatrix(Matrix aMatrix,const DirectX::SimpleMath::Vector3& aRotation);
 
 	void ResetScale();
 	//To be Removed 2020-01-12 -> 2020-01-22 /Axel
