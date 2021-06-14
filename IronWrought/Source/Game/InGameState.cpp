@@ -420,6 +420,33 @@ void CInGameState::OnSceneLoadCompleteInGame(std::string aMsg)
 	myEnemyAnimationController->Activate();
 	CEngine::GetInstance()->SetActiveScene(myState);
 
+	int levelIndex = -1;
+	if (aMsg == "Level_Cottage_1")
+	{
+		levelIndex = 0;
+	}
+	if (aMsg == "Level_Basement1")
+	{
+		levelIndex = 1;
+	}
+	if (aMsg == "Level_Basement2")
+	{
+		levelIndex = 2;
+	}
+	if (aMsg == "Level_Cottage_2")
+	{
+		levelIndex = 3;
+	}
+	if (aMsg == "Level_Basement1_3")
+	{
+		levelIndex = 4;
+	}
+	
+	if (levelIndex > -1)
+	{
+		CMainSingleton::PostMaster().Send({ EMessageType::SetAmbience, &levelIndex });
+	}
+
 	myExitTo = EExitTo::None;
 }
 
