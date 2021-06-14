@@ -59,6 +59,8 @@
 #include <VoiceActivation.h>
 #include <TeleportActivation.h>
 #include <TeleportResponse.h>
+#include <PlayVFXActivation.h>
+#include <PlayVFXResponse.h>
 
 #include "PuzzleSetting.h"
 #include <LightActivation.h>
@@ -200,7 +202,7 @@ bool CSceneManager::AddToScene(CScene& aScene, Binary::SLevelData& aBinLevelData
 		AddModelComponents(aScene, aBinLevelData.myModels);
 		AddCollider(aScene, aBinLevelData.myColliders);
 		AddSpotLights(aScene, aBinLevelData.mySpotLights);
-		
+
 
 		for (const auto& sceneData : scenes)
 		{
@@ -233,6 +235,8 @@ bool CSceneManager::AddToScene(CScene& aScene, Binary::SLevelData& aBinLevelData
 				AddPuzzleActivationVoice(aScene, sceneData["activationVoices"].GetArray());
 			if (sceneData.HasMember("activationLights"))
 				AddPuzzleActivationLight(aScene, sceneData["activationLights"].GetArray());
+			if (sceneData.HasMember("activationPlayVFXes"))
+				AddPuzzleActivationPlayVFX(aScene, sceneData["activationPlayVFXes"].GetArray());
 
 			if (sceneData.HasMember("responseMoves"))
 				AddPuzzleResponseMove(aScene, sceneData["responseMoves"].GetArray());
@@ -248,6 +252,8 @@ bool CSceneManager::AddToScene(CScene& aScene, Binary::SLevelData& aBinLevelData
 				AddPuzzleResponseVoice(aScene, sceneData["responseVoices"].GetArray());
 			if (sceneData.HasMember("responseNextLevel"))
 				AddNextLevelResponse(aScene, sceneData["responseNextLevel"].GetArray());
+			if (sceneData.HasMember("responsePlayVFXes"))
+				AddPuzzleResponsePlayVFX(aScene, sceneData["responsePlayVFXes"].GetArray());
 
 			AddDirectionalLights(aScene, sceneData["directionalLights"].GetArray());
 			SetVertexPaintedColors(aScene, sceneData["vertexColors"].GetArray(), vertexPaintData);
@@ -691,22 +697,36 @@ void CSceneManager::AddPuzzleActivationMove(CScene& aScene, RapidArray someData)
 
 void CSceneManager::AddPuzzleActivationRotate(CScene& aScene, RapidArray someData)
 {
-	for (const auto& response : someData)
+	for (const auto& activation : someData)
 	{
-		CGameObject* gameObject = aScene.FindObjectWithID(response["instanceID"].GetInt());
+		CGameObject* gameObject = aScene.FindObjectWithID(activation["instanceID"].GetInt());
 		if (!gameObject)
 			continue;
 
-		CRotateActivation::SSettings settings = {};
-		settings.myDuration = response["duration"].GetFloat();
+		Vector3 start = { activation["start"]["x"].GetFloat(),
+									 activation["start"]["y"].GetFloat(),
+									 activation["start"]["z"].GetFloat() };
+		Vector3 end = { activation["end"]["x"].GetFloat(),
+									activation["end"]["y"].GetFloat(),
+									activation["end"]["z"].GetFloat() };
 
-		settings.myStartRotation = { response["start"]["x"].GetFloat(),
-									 response["start"]["y"].GetFloat(),
-									 response["start"]["z"].GetFloat() };
+		start.x = (-start.x) - 360.0f;
+		start.y += 180.0f;
+		start.z = (-start.z) - 360.0f;
+		start *= (PI / 180.0f);
 
-		settings.myEndRotation = { response["end"]["x"].GetFloat(),
-									response["end"]["y"].GetFloat(),
-									response["end"]["z"].GetFloat() };
+		end.x = (-end.x) - 360.0f;
+		end.y += 180.0f;
+		end.z = (-end.z) - 360.0f;
+		end *= (PI / 180.0f);
+
+		SSettings<Quaternion> settings = {};
+
+		settings.myDuration = activation["duration"].GetFloat();
+		settings.myDelay = activation["delay"].GetFloat();
+		settings.myOrigin = gameObject->myTransform->Rotation();
+		settings.myStart = Quaternion::CreateFromYawPitchRoll(start.y, start.x, start.z);
+		settings.myEnd = Quaternion::CreateFromYawPitchRoll(end.y, end.x, end.z);
 
 		gameObject->AddComponent<CRotateActivation>(*gameObject, settings);
 	}
@@ -761,7 +781,7 @@ void CSceneManager::AddPuzzleActivationVoice(CScene& aScene, RapidArray someData
 		PostMaster::SAudioSourceInitData settings = {};
 		settings.mySoundIndex = activation["voiceLine"].GetInt();
 		bool is3D = activation["is3D"].GetBool()/* ? 1 : 0*/;
-		
+
 		const Matrix& matrix = gameObject->myTransform->GetLocalMatrix();
 		settings.myPosition = matrix.Translation();
 		settings.myForward = Vector3
@@ -790,13 +810,28 @@ void CSceneManager::AddPuzzleActivationLight(CScene& aScene, RapidArray someData
 		initData.myTargetInstanceID = data["targetInstanceID"].GetInt();
 		initData.myIntensity = data["setIntensity"].GetFloat();
 		initData.myTargetType = data["targetType"].GetString();
-		initData.myColor = { 
-			data["color"]["x"].GetFloat(), 
-			data["color"]["y"].GetFloat(), 
-			data["color"]["z"].GetFloat() 
+		initData.myColor = {
+			data["color"]["x"].GetFloat(),
+			data["color"]["y"].GetFloat(),
+			data["color"]["z"].GetFloat()
 		};
 
 		g->AddComponent<CLightActivation>(*g, initData);
+	}
+}
+
+void CSceneManager::AddPuzzleActivationPlayVFX(CScene& aScene, RapidArray someData)
+{
+	for (const auto& activation : someData)
+	{
+		CGameObject* gameObject = aScene.FindObjectWithID(activation["instanceID"].GetInt());
+		if (!gameObject)
+			continue;
+
+		CPlayVFXActivation::SSettings settings = {};
+		settings.myDuration = activation["duration"].GetFloat();
+
+		gameObject->AddComponent<CPlayVFXActivation>(*gameObject, settings);
 	}
 }
 
@@ -1009,7 +1044,7 @@ void CSceneManager::AddPuzzleResponseVoice(CScene& aScene, RapidArray someData)
 		PostMaster::SAudioSourceInitData settings = {};
 		settings.mySoundIndex = response["voiceLine"].GetInt();
 		bool is3D = response["is3D"].GetBool()/* ? 1 : 0*/;
-		
+
 		const Matrix& matrix = gameObject->myTransform->GetLocalMatrix();
 		settings.myPosition = matrix.Translation();
 		settings.myForward = Vector3
@@ -1025,6 +1060,22 @@ void CSceneManager::AddPuzzleResponseVoice(CScene& aScene, RapidArray someData)
 		settings.myMinimumVolume = response["minimumVolume"].GetFloat();
 		settings.myGameObjectID = gameObject->InstanceID();
 		gameObject->AddComponent<CVoiceResponse>(*gameObject, settings, is3D);
+	}
+}
+
+void CSceneManager::AddPuzzleResponsePlayVFX(CScene& aScene, RapidArray someData)
+{
+	for (const auto& response : someData)
+	{
+		CGameObject* gameObject = aScene.FindObjectWithID(response["instanceID"].GetInt());
+		if (!gameObject)
+			continue;
+
+		CPlayVFXResponse::SSettings settings = {};
+		settings.myDelay = response["delay"].GetFloat();
+		settings.myDuration = response["duration"].GetFloat();
+
+		gameObject->AddComponent<CPlayVFXResponse>(*gameObject, settings);
 	}
 }
 

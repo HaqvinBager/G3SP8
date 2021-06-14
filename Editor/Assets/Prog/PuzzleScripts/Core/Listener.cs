@@ -17,6 +17,7 @@ public enum ListenerType
     PlayAudio,
     PlayVoice,
     Teleport,
+    PlayVFX,
 }
 
 public interface IListener
@@ -65,7 +66,9 @@ public class Listener : MonoBehaviour
                 case ListenerType.Teleport:
                     AddType<ResponseNextLevel>(gameObject);
                     break;
-
+                case ListenerType.PlayVFX:
+                    AddType<ResponsePlayVFX>(gameObject);
+                    break;
                 case ListenerType.Clear:
                     {
                         IListener[] others = GetComponents<IListener>();

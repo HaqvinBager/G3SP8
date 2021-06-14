@@ -79,6 +79,13 @@ public struct ActivationLightData
     public int instanceID;
 }
 
+[System.Serializable]
+public struct ActivationPlayVFXData
+{
+    public float duration;
+    public int instanceID;
+}
+
 
 [System.Serializable]
 public struct KeyCollection
@@ -90,6 +97,7 @@ public struct KeyCollection
     public List<ActivationPlayVoiceData> activationVoices;
     public List<ActivationNextLevelData> activationNextLevel;
     public List<ActivationLightData> activationLights;
+    public List<ActivationPlayVFXData> activationPlayVFXes;
 }
 
 public class ExportKey
@@ -104,6 +112,7 @@ public class ExportKey
         collection.activationVoices = new List<ActivationPlayVoiceData>();
         collection.activationNextLevel = new List<ActivationNextLevelData>();
         collection.activationLights = new List<ActivationLightData>();
+        collection.activationPlayVFXes = new List<ActivationPlayVFXData>();
 
         Key[] keys = GameObject.FindObjectsOfType<Key>();
         foreach (Key key in keys)
@@ -128,6 +137,7 @@ public class ExportKey
             ExportPlayVoiceActivations(ref collection.activationVoices, key);
             ExportNextLevelActivations(ref collection.activationNextLevel, key);
             ExportLightActivations(ref collection.activationLights, key);
+            ExportPlayVFXActivations(ref collection.activationPlayVFXes, key);
         }
         return collection;
     }
@@ -225,6 +235,17 @@ public class ExportKey
             data.setIntensity = behavior.setIntensity;
             data.instanceID = behavior.transform.GetInstanceID();
             collection.Add(data);
+        }
+    }
+
+    private static void ExportPlayVFXActivations(ref List<ActivationPlayVFXData> collection, Key key)
+    {
+        if (key.TryGetComponent(out ActivationPlayVFX playVFX))
+        {
+            ActivationPlayVFXData playVFXData = new ActivationPlayVFXData();
+            playVFXData.duration = playVFX.duration;
+            playVFXData.instanceID = playVFX.transform.GetInstanceID();
+            collection.Add(playVFXData);
         }
     }
 }
