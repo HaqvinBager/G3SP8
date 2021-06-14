@@ -321,6 +321,9 @@ inline const float Lerp(const float& A, const float& B, const float& T)
 
 void CPlayerControllerComponent::Crouch()
 {
+	if (myMovementLockTimer >= 0.0f)
+		return;
+
 	myIsCrouching = !myIsCrouching;
 	if (myIsCrouching)
 	{
