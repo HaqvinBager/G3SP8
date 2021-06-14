@@ -296,8 +296,8 @@ void CAudioManager::Receive(const SMessage& aMessage) {
 
 	case EMessageType::EnemyAttackState:
 	{
-		if (myChannels[CAST(EChannel::VOX)]->IsPlaying())
-			return;
+		myDynamicSource->Stop();
+		myWrapper.Play(myEnemyVoiceSounds[CAST(EEnemyVoiceLine::EnemyDamagePlayer)], myDynamicSource);
 
 	}break;
 
