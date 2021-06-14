@@ -520,7 +520,12 @@ void CAudioManager::Receive(const SMessage& aMessage) {
 
 	case EMessageType::PauseMenu:
 	{
-		Pause();
+		bool isPaused = *static_cast<bool*>(aMessage.data);
+
+		if (isPaused)
+			Pause();
+		else
+			Resume();
 	}break;
 
 	case EMessageType::Resume:
