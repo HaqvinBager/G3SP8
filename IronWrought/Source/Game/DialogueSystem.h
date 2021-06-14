@@ -58,6 +58,9 @@ private:
 	CSpriteInstance* myDialogueBox;
 
 	CTextInstance* myAnimatedDialogue;
+	CTextInstance* myText1600x900;
+	CTextInstance* myText1920x1080;
+	CTextInstance* myText2560x1440;
 
 	std::vector<SSpeakerLine> myDialogueBuffer;
 	std::string myCurrentLine = "";
