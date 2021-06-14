@@ -25,15 +25,14 @@ void CEndEventComponent::Awake()
 
 void CEndEventComponent::Start()
 {
-
+	myLastPos = GameObject().myTransform->Position();
 }
 
 void CEndEventComponent::Update()
 {
 	if (myPathIndex > -1 && myPathIndex < myData.myEnemyPath.size())
 	{
-		float dt = CTimer::Dt();
-		myTime += dt;
+		myTime += CTimer::Dt();
 		Vector3 newPosition = Vector3::Lerp(myLastPos, myData.myEnemyPath[myPathIndex].myPosition, myTime / myData.myEnemyPath[myPathIndex].myDuration);
 		myEnemy->myTransform->Position(newPosition);
 
