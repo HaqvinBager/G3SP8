@@ -147,7 +147,11 @@ void CCameraControllerComponent::UpdateFreeCam()
 void CCameraControllerComponent::RotateTransformWithYawAndPitch(const Vector2& someInput)
 {
 	if (myLimitFirstPerson)
+	{
+		const Vector3& shakeVector = GameObject().GetComponent<CCameraComponent>()->GetShakeVector();
+		GameObject().myTransform->Rotation({ myPitch + shakeVector.x, shakeVector.y, shakeVector.z });
 		return;
+	}
 
 	float sensitivity = 0.075f;//was 0.25f //TestV�rde, K�ndes  okej p� min Dator! Bra � testa p� andras datorer! /Axel Savage 2021-04-09 14:00
 	myYaw = WrapAngle(myYaw + (someInput.x * sensitivity));

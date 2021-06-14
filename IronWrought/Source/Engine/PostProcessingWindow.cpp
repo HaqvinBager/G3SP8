@@ -140,7 +140,7 @@ void ImGui::CPostProcessingWindow::OnInspectorGUI()
 	ImVec4 vignetteTextColor = { 1.0f, 1.0f, 0.0f, 1.0f };
 	ImGui::TextColored(vignetteTextColor, "Vignette");
 
-	if (ImGui::SliderFloat("Vignette Strength", &myVignetteStrength, 0.0625f, 0.25f, "%.2f", ImGuiSliderFlags_Logarithmic))
+	if (ImGui::SliderFloat("Vignette Strength", &myVignetteStrength, 0.0625f, 1.0f, "%.2f", ImGuiSliderFlags_Logarithmic))
 	{
 		bufferData.myVignetteStrength = myVignetteStrength;
 	}
