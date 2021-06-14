@@ -1,4 +1,5 @@
 #pragma once
+#include "EndEventData.h"
 
 struct SVertexPaintColorData {
 	std::vector<Vector3> myColors;
@@ -124,6 +125,7 @@ namespace Binary {
 		std::vector<SSpotLight> mySpotLights;
 		std::vector<SCollider> myColliders;
 		std::vector<SInstancedModel> myInstancedModels;
+		SEndEventData myEndEventData;
 		//std::vector<SInstanceName> myInstanceNames;
 	};
 
@@ -284,6 +286,39 @@ namespace Binary {
 				ptr += ReadCharBuffer(ptr, someData[i].name);
 				ptr += ReadCharBuffer(ptr, someData[i].tag);
 			}
+			return ptr - aPtr;
+		}
+	};
+
+	template<>
+	struct CopyBin<SEndEventData> {
+
+		template<typename T>
+		size_t Copy(T& aData, char* aStreamPtr, const unsigned int aCount = 1)
+		{
+			memcpy(&aData, aStreamPtr, sizeof(T) * aCount);
+			return sizeof(T) * aCount;
+		}
+
+		size_t operator()(SEndEventData& someData, char* aPtr)
+		{
+			char* ptr = aPtr;
+
+			int existsCode = 0;
+			ptr += Copy(existsCode, ptr);
+			if (existsCode == 0)
+				return ptr - aPtr;		
+
+			ptr += Copy(someData.myEnemyInstanceID, ptr);
+			ptr += Copy(someData.myPlayerInstanceID, ptr);
+			ptr += Copy(someData.instanceID, ptr);
+			ptr += Copy(someData.myLockPlayerDuration, ptr);
+
+			int count = 0;
+			ptr += Copy(count, ptr);
+			someData.myEnemyPath.resize(count);
+			ptr += Copy(someData.myEnemyPath.data()[0], ptr, count);
+
 			return ptr - aPtr;
 		}
 	};

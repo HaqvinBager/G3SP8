@@ -379,4 +379,22 @@ public static class BinaryWriterExtensions
 
         return infoLog.ToString();
     }
+
+    public static string Write(this BinaryWriter aBinWriter, EndEventCollection data)
+    {
+        aBinWriter.Write(data.endEvent.enemyInstanceID);
+        aBinWriter.Write(data.endEvent.playerInstanceID);
+        aBinWriter.Write(data.endEvent.instanceID);
+        aBinWriter.Write(data.endEvent.lockPlayerDuration);
+
+        aBinWriter.Write(data.endEvent.path.Count);
+        foreach(PathPoint pathPoint in data.endEvent.path)
+        {
+            aBinWriter.Write(pathPoint.position);
+            aBinWriter.Write(pathPoint.rotation);
+            aBinWriter.Write(pathPoint.duration);
+        }
+        return "";
+    }
+
 }

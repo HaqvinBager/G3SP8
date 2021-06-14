@@ -62,7 +62,7 @@
 
 #include "PuzzleSetting.h"
 #include <LightActivation.h>
-
+#include <EndEventComponent.h>
 
 
 CScene* CSceneManager::ourLastInstantiatedScene = nullptr;
@@ -200,6 +200,7 @@ bool CSceneManager::AddToScene(CScene& aScene, Binary::SLevelData& aBinLevelData
 		AddModelComponents(aScene, aBinLevelData.myModels);
 		AddCollider(aScene, aBinLevelData.myColliders);
 		AddSpotLights(aScene, aBinLevelData.mySpotLights);
+		
 
 		for (const auto& sceneData : scenes)
 		{
@@ -286,6 +287,8 @@ bool CSceneManager::AddToScene(CScene& aScene, Binary::SLevelData& aBinLevelData
 					std::cout << __FUNCTION__ << " navmesh not found!\n";
 			}
 		}
+
+		AddEndEventComponent(aScene, aBinLevelData.myEndEventData);
 	}
 
 	//scene->NavMesh();
@@ -1219,6 +1222,15 @@ void CSceneManager::AddVFX(CScene& aScene, RapidArray someData)
 		auto component = gameObject->AddComponent<CVFXSystemComponent>(*gameObject, ASSETPATH(jsonPath + m["effectName"].GetString() + ".json"));
 
 		component->EnableEffect(0); // Temp
+	}
+}
+
+void CSceneManager::AddEndEventComponent(CScene& aScene, const SEndEventData& aData)
+{
+	CGameObject* gameObject = aScene.FindObjectWithID(aData.instanceID);
+	if (gameObject != nullptr)
+	{
+		gameObject->AddComponent<CEndEventComponent>(*gameObject, aData);
 	}
 }
 
