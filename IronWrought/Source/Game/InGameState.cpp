@@ -211,14 +211,18 @@ void CInGameState::Update()
 #ifdef INGAME_USE_MENU
 	if (Input::GetInstance()->IsKeyPressed(VK_ESCAPE))
 	{
+		bool isPaused = false;
 		if (myCurrentCanvas == EInGameCanvases_HUD)
 		{
 			ToggleCanvas(EInGameCanvases_PauseMenu);
+			isPaused = true;
+			CMainSingleton::PostMaster().Send({ EMessageType::PauseMenu, &isPaused });
 		}
 		else if (myCurrentCanvas == EInGameCanvases_PauseMenu)
 		{
 			ToggleCanvas(EInGameCanvases_HUD);
-			CMainSingleton::PostMaster().SendLate({ EMessageType::PauseMenu, nullptr });
+			isPaused = false;
+			CMainSingleton::PostMaster().Send({ EMessageType::PauseMenu, &isPaused });
 		}
 	}
 	if (myMenuCamera)
@@ -522,7 +526,6 @@ void CInGameState::ToggleCanvas(EInGameCanvases anEInGameCanvases)
 		scene.UpdateOnlyCanvas(true);
 		scene.CanvasIsHUD(false);
 		scene.MainCamera(ESceneCamera::PlayerFirstPerson);
-		CMainSingleton::PostMaster().SendLate({ EMessageType::PauseMenu, nullptr });
 		IRONWROUGHT->ShowCursor(false);
 		IRONWROUGHT->SetIsMenu(true);
 	}

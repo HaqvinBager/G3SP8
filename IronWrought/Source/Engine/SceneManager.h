@@ -100,6 +100,7 @@ private:
 	static void AddPickups(CScene& aScene, RapidArray someData);
 	static void AddAudioSources(CScene& aScene, RapidArray someData);
 	static void AddVFX(CScene& aScene, RapidArray someData);
+	static void AddEndEventComponent(CScene& aScene, const SEndEventData& aData);
 	static SNavMesh* InitNavMesh(const std::string& aPath);
 	static CScene* ourLastInstantiatedScene;
 };

@@ -326,27 +326,26 @@ void CAudioManager::Receive(const SMessage& aMessage) {
 		myWrapper.Play(myEnemyVoiceSounds[CAST(EEnemyVoiceLine::EnemyLostPlayer)], myDynamicSource);
 	}break;
 
-	case EMessageType::EnemyFoundPlayer:
+	
+
+	case EMessageType::EnemyAggro:
 	{
 		myDynamicSource->Stop();
-		myWrapper.Play(myEnemyVoiceSounds[CAST(EEnemyVoiceLine::EnemyFoundPlayer)], myDynamicSource);
-		myDelayedAudio.push_back({ myEnemyVoiceSounds[CAST(EEnemyVoiceLine::EnemyChasing)], myDynamicSource, 4.0f });
-		FadeChannelOverSeconds(EChannel::DynamicChannel3, 4.0f);
-		FadeChannelOverSeconds(EChannel::DynamicChannel4, 4.0f, false);
-	}break;
-
-	case EMessageType::EnemyFoundPlayerScream:
-	{
-		//myDynamicSource->Stop();
-
-	}break;
-
-	case EMessageType::EnemyLostPlayer:
-	{
-		myDynamicSource->Stop();
-		myWrapper.Play(myEnemyVoiceSounds[CAST(EEnemyVoiceLine::EnemyLostPlayer)], myDynamicSource);
-		FadeChannelOverSeconds(EChannel::DynamicChannel3, 4.0f, false);
-		FadeChannelOverSeconds(EChannel::DynamicChannel4, 4.0f);
+		bool aggro = *static_cast<bool*>(aMessage.data);
+		if (aggro) 
+		{
+			myWrapper.Play(myEnemyVoiceSounds[CAST(EEnemyVoiceLine::EnemyFoundPlayer)], myDynamicSource);
+			myDelayedAudio.push_back({ myEnemyVoiceSounds[CAST(EEnemyVoiceLine::EnemyChasing)], myDynamicSource, 4.0f });
+			FadeChannelOverSeconds(EChannel::DynamicChannel3, 4.0f);
+			FadeChannelOverSeconds(EChannel::DynamicChannel4, 4.0f, false);
+		}
+		else
+		{
+			myWrapper.Play(myEnemyVoiceSounds[CAST(EEnemyVoiceLine::EnemyLostPlayer)], myDynamicSource);
+			FadeChannelOverSeconds(EChannel::DynamicChannel3, 4.0f, false);
+			FadeChannelOverSeconds(EChannel::DynamicChannel4, 4.0f);
+		}
+		
 	}break;
 
 	case EMessageType::EnemyAttack:
@@ -438,6 +437,7 @@ void CAudioManager::Receive(const SMessage& aMessage) {
 	case EMessageType::PhysicsPropCollision:
 	{
 		PostMaster::SPlayDynamicAudioData data = *static_cast<PostMaster::SPlayDynamicAudioData*>(aMessage.data);
+		data.myChannel->Stop();
 		data.myChannel->SetPitch(Random(0.95f, 1.05f));
 		myWrapper.Play(mySFXAudio[data.mySoundIndex], data.myChannel);
 	}break;
@@ -445,7 +445,8 @@ void CAudioManager::Receive(const SMessage& aMessage) {
 	case EMessageType::PlayDynamicAudioSource:
 	{
 		PostMaster::SPlayDynamicAudioData data = *static_cast<PostMaster::SPlayDynamicAudioData*>(aMessage.data);
-		myWrapper.Play(mySFXAudio[data.mySoundIndex], data.myChannel);
+		if (!data.myChannel->IsPlaying())
+			myWrapper.Play(mySFXAudio[data.mySoundIndex], data.myChannel);
 	}break;
 
 	case EMessageType::Play3DVoiceLine:
@@ -520,7 +521,12 @@ void CAudioManager::Receive(const SMessage& aMessage) {
 
 	case EMessageType::PauseMenu:
 	{
-		Pause();
+		bool isPaused = *static_cast<bool*>(aMessage.data);
+
+		if (isPaused)
+			Pause();
+		else
+			Resume();
 	}break;
 
 	case EMessageType::Resume:
@@ -686,7 +692,7 @@ void CAudioManager::SubscribeToMessages()
 	CMainSingleton::PostMaster().Subscribe(EMessageType::EnemyAttack, this);
 	CMainSingleton::PostMaster().Subscribe(EMessageType::EnemyTakeDamage, this);
 	CMainSingleton::PostMaster().Subscribe(EMessageType::EnemyFoundPlayer, this);
-	CMainSingleton::PostMaster().Subscribe(EMessageType::EnemyFoundPlayerScream, this);
+	CMainSingleton::PostMaster().Subscribe(EMessageType::EnemyAggro, this);
 	CMainSingleton::PostMaster().Subscribe(EMessageType::EnemyLostPlayer, this);
 
 	//CMainSingleton::PostMaster().Subscribe(EMessageType::PlayVoiceLine, this);
@@ -751,7 +757,7 @@ void CAudioManager::UnsubscribeToMessages()
 	CMainSingleton::PostMaster().Unsubscribe(EMessageType::EnemyAttack, this);
 	CMainSingleton::PostMaster().Unsubscribe(EMessageType::EnemyTakeDamage, this);
 	CMainSingleton::PostMaster().Unsubscribe(EMessageType::EnemyFoundPlayer, this);
-	CMainSingleton::PostMaster().Unsubscribe(EMessageType::EnemyFoundPlayerScream, this);
+	CMainSingleton::PostMaster().Unsubscribe(EMessageType::EnemyAggro, this);
 	CMainSingleton::PostMaster().Unsubscribe(EMessageType::EnemyLostPlayer, this);
 
 	//CMainSingleton::PostMaster().Unsubscribe(EMessageType::PlayVoiceLine, this);
