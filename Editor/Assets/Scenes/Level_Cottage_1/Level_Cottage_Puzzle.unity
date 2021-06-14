@@ -1063,11 +1063,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 147784994726880131, guid: 37732feaecf67d24fa037a9f8a7c788b, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 1.406
+      value: 1.54
       objectReference: {fileID: 0}
     - target: {fileID: 147784994726880131, guid: 37732feaecf67d24fa037a9f8a7c788b, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -39.122
+      value: -40
       objectReference: {fileID: 0}
     - target: {fileID: 147784994726880131, guid: 37732feaecf67d24fa037a9f8a7c788b, type: 3}
       propertyPath: m_LocalRotation.w
@@ -1394,6 +1394,22 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   myLock: {fileID: 0}
   activationType: 1
+--- !u!114 &1455497452851688521
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1455497452851688514}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0bcdc97ffdbb7a24082fd03dc460e7e4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  enabledOnStart: 1
+  enableOnNotify: 0
+  aTarget: {fileID: 1821684225093121145}
+  aTargetType: {fileID: 5559287681381473867}
 --- !u!4 &1555496758681668806 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4159421834661305897, guid: a233b1d4d4742794b88a8d807be05e53, type: 3}
@@ -1791,7 +1807,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4159421834661305897, guid: a233b1d4d4742794b88a8d807be05e53, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 1.494
+      value: 1.614
       objectReference: {fileID: 0}
     - target: {fileID: 4159421834661305897, guid: a233b1d4d4742794b88a8d807be05e53, type: 3}
       propertyPath: m_LocalPosition.z
@@ -2229,27 +2245,6 @@ MonoBehaviour:
   myMaxAttenuationDistance: 10000
   myMinimumVolume: 10
   myDelay: 0
---- !u!114 &4266603263020844622
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4266603263020844616}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a773d588b90225c42a6c299e9ff92366, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  soundEffect: 29
-  myIs3D: 0
-  myConeDirection: {x: 0, y: 0, z: 0}
-  myMinAttenuationAngle: 0
-  myMaxAttenuationAngle: 0
-  myMinAttenuationDistance: 1
-  myMaxAttenuationDistance: 10000
-  myMinimumVolume: 0
-  myDelay: 0
 --- !u!4 &5142190419299157431 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1829307789605916410, guid: 220e231b56eaefc4faf1e667c876d2a3, type: 3}
@@ -2320,6 +2315,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7b86903e5196dbf418ab2cff91fb3dfa, type: 3}
+--- !u!65 &5559287681381473867 stripped
+BoxCollider:
+  m_CorrespondingSourceObject: {fileID: 4753371939885947513, guid: 7b86903e5196dbf418ab2cff91fb3dfa, type: 3}
+  m_PrefabInstance: {fileID: 5559287681381473866}
+  m_PrefabAsset: {fileID: 0}
 --- !u!65 &5897895506827051491 stripped
 BoxCollider:
   m_CorrespondingSourceObject: {fileID: 3148618521715875859, guid: b7d9de1494211314e805f8a86df70859, type: 3}
@@ -2445,8 +2445,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e7ce7700dceebbb4682835e8a36c682f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  start: {x: 13.02, y: 1.406, z: -39.122}
-  end: {x: 13.02, y: 1.406, z: -40}
+  start: {x: 13.02, y: 1.526, z: -39.122}
+  end: {x: 13.02, y: 1.54, z: -40}
   duration: 0.0001
   delay: 0
 --- !u!114 &6712031322288785461
@@ -2677,27 +2677,6 @@ MonoBehaviour:
   myMaxAttenuationDistance: 10000
   myMinimumVolume: 10
   myDelay: 0
---- !u!114 &7113124825571751669
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7113124825571751663}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a773d588b90225c42a6c299e9ff92366, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  soundEffect: 29
-  myIs3D: 0
-  myConeDirection: {x: 0, y: 0, z: 0}
-  myMinAttenuationAngle: 0
-  myMaxAttenuationAngle: 0
-  myMinAttenuationDistance: 1
-  myMaxAttenuationDistance: 10000
-  myMinimumVolume: 0
-  myDelay: 0
 --- !u!1001 &7150407095199083501
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2852,27 +2831,6 @@ MonoBehaviour:
   myMinAttenuationDistance: 1
   myMaxAttenuationDistance: 10000
   myMinimumVolume: 10
-  myDelay: 0
---- !u!114 &8077492164720930388
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8077492164720930382}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a773d588b90225c42a6c299e9ff92366, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  soundEffect: 29
-  myIs3D: 0
-  myConeDirection: {x: 0, y: 0, z: 0}
-  myMinAttenuationAngle: 0
-  myMaxAttenuationAngle: 0
-  myMinAttenuationDistance: 1
-  myMaxAttenuationDistance: 10000
-  myMinimumVolume: 0
   myDelay: 0
 --- !u!1001 &8112901506045880560
 PrefabInstance:
