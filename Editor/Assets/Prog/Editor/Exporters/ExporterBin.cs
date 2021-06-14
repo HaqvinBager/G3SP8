@@ -62,6 +62,19 @@ public class ExporterBin
         infoLog.AppendLine(
             exporter.binWriter.Write(ExportInstancedModel.Export(level.name))
             );
+
+        Player playerData = ExporterJson.ExportPlayer(level.name);
+
+        if(ExportEndEvent.TryExport(playerData.player, out EndEventCollection outData))
+        {
+            exporter.binWriter.Write(1);
+            exporter.binWriter.Write(outData);
+        }
+        else
+        {
+            exporter.binWriter.Write(0);
+        }
+
         exporter.binWriter.Close();
 
         Debug.Log(infoLog.ToString(), level);

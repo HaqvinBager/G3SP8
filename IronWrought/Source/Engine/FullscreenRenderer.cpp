@@ -228,7 +228,7 @@ bool CFullscreenRenderer::Init(CDirectXFramework* aFramework) {
 
 	myPostProcessingBufferData.myEmissiveStrength = 2.1f;
 
-	myPostProcessingBufferData.myVignetteStrength = 1.0f / 9.0f;
+	myPostProcessingBufferData.myVignetteStrength = 0.35f;
 	myPostProcessingBufferData.myPadding = 0.0f;
 	myPostProcessingBufferData.myVignetteColor = { 0.0f, 0.0f, 0.0f, 1.0f };
 

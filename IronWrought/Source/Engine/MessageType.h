@@ -81,7 +81,7 @@ enum class EMessageType
 	EnemyFoundPlayer,
 	EnemyLostPlayer,
 	EnemyReachedLastPlayerPosition,
-	EnemyFoundPlayerScream,
+	EnemyAggro,
 
 	FuseCreated,
 	FusePickedUp,

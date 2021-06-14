@@ -9,6 +9,7 @@
 #include "SpriteFactory.h"
 #include "SpriteInstance.h"
 #include "Scene.h"
+#include "WindowHandler.h"
 
 #include <rapidjson/document.h>
 #include <rapidjson/filereadstream.h>
@@ -24,6 +25,9 @@ CDialogueSystem::CDialogueSystem()
 {
 	myAnimatedDialogue = nullptr;
 	myDialogueBox = nullptr;
+	myText1600x900 = nullptr;
+	myText1920x1080 = nullptr;
+	myText2560x1440 = nullptr;
 }
 
 CDialogueSystem::~CDialogueSystem() 
@@ -59,11 +63,36 @@ bool CDialogueSystem::Init()
 		myDialogueBox->SetPosition({0.0f, 0.4f});
 	}
 
-	myAnimatedDialogue = new CTextInstance();
-	myAnimatedDialogue->Init(textFactory->GetText(document["Dialogue Text Font and Size"].GetString()));
-	myAnimatedDialogue->SetPivot({0.5f, 0.5f});
-	myAnimatedDialogue->SetPosition({document["Dialogue Text Position X"].GetFloat(), document["Dialogue Text Position Y"].GetFloat()});
-	myAnimatedDialogue->SetColor({document["Dialogue Text Color R"].GetFloat(), document["Dialogue Text Color G"].GetFloat(), document["Dialogue Text Color B"].GetFloat(), 1.0f});
+	myText1600x900 = nullptr;
+	myText1920x1080 = nullptr;
+	myText2560x1440 = nullptr;
+
+	myText1600x900 = new CTextInstance();
+	myText1600x900->Init(textFactory->GetText(document["Dialogue Text Font and Size 1600x900"].GetString()));
+	myText1600x900->SetPivot({0.5f, 0.5f});
+	myText1600x900->SetPosition({document["Dialogue Text Position X"].GetFloat(), document["Dialogue Text Position Y"].GetFloat()});
+	myText1600x900->SetColor({document["Dialogue Text Color R"].GetFloat(), document["Dialogue Text Color G"].GetFloat(), document["Dialogue Text Color B"].GetFloat(), 1.0f});
+
+	myText1920x1080 = new CTextInstance();
+	myText1920x1080->Init(textFactory->GetText(document["Dialogue Text Font and Size 1920x1080"].GetString()));
+	myText1920x1080->SetPivot({ 0.5f, 0.5f });
+	myText1920x1080->SetPosition({ document["Dialogue Text Position X"].GetFloat(), document["Dialogue Text Position Y"].GetFloat() });
+	myText1920x1080->SetColor({ document["Dialogue Text Color R"].GetFloat(), document["Dialogue Text Color G"].GetFloat(), document["Dialogue Text Color B"].GetFloat(), 1.0f });
+
+	myText2560x1440 = new CTextInstance();
+	myText2560x1440->Init(textFactory->GetText(document["Dialogue Text Font and Size 2560x1440"].GetString()));
+	myText2560x1440->SetPivot({ 0.5f, 0.5f });
+	myText2560x1440->SetPosition({ document["Dialogue Text Position X"].GetFloat(), document["Dialogue Text Position Y"].GetFloat() });
+	myText2560x1440->SetColor({ document["Dialogue Text Color R"].GetFloat(), document["Dialogue Text Color G"].GetFloat(), document["Dialogue Text Color B"].GetFloat(), 1.0f });
+
+	float resolutionY = CEngine::GetInstance()->GetWindowHandler()->GetResolution().y;
+
+	if (resolutionY == 900.0f)
+		myAnimatedDialogue = myText1600x900;
+	if (resolutionY == 1080.0f)
+		myAnimatedDialogue = myText1920x1080;
+	if (resolutionY == 1440.0f)
+		myAnimatedDialogue = myText2560x1440;
 
 	myLineBreakDialogue = document["Dialogue Line Break After Characters"].GetInt();
 
@@ -124,6 +153,15 @@ void CDialogueSystem::LoadDialogue(int aSceneIndex, CAudioChannel* a3DChannel) {
 			}
 		}
 	}
+
+	float resolutionY = CEngine::GetInstance()->GetWindowHandler()->GetResolution().y;
+
+	if (resolutionY == 900.0f)
+		myAnimatedDialogue = myText1600x900;
+	if (resolutionY == 1080.0f)
+		myAnimatedDialogue = myText1920x1080;
+	if (resolutionY == 1440.0f)
+		myAnimatedDialogue = myText2560x1440;
 
 	myIsActive = !myDialogueBuffer.empty();
 }

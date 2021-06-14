@@ -79,6 +79,8 @@ Binary::SLevelData CBinReader::Load(const std::string& aPath)
 	ptr += CopyBin<SSpotLight>()(data.mySpotLights, ptr);
 	ptr += CopyBin<SCollider>()(data.myColliders, ptr);
 	ptr += CopyBin<SInstancedModel>()(data.myInstancedModels, ptr);
+	ptr += CopyBin<SEndEventData>()(data.myEndEventData, ptr);
+
 	return std::move(data);
 }
 
