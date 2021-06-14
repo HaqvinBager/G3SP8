@@ -88,6 +88,7 @@ private:
 	Vector3 myResetPosition;
 	SNavMesh* myNavMesh;
 	float myAlertedTimer;
+	bool myHasNewTartget;
 	const float myAlertedTimerMax = 1.733f;// either 2.167 or 1.733
 	const float myAlertedFactor = 0.4f;// Roughly half of the alerted-animation time? (It is roughly 2.0s @ 2021 06 09)
 };

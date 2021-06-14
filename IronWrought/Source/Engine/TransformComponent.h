@@ -21,6 +21,7 @@ public:
 
 	void Rotation(const DirectX::SimpleMath::Vector3& aRotation);
 	void Rotation(const DirectX::SimpleMath::Quaternion& aQuaternion);
+	void RotationWithRigidBody(const DirectX::SimpleMath::Quaternion& aQuaternion);
 	void RotationRigidbody(DirectX::SimpleMath::Quaternion aQuaternion);
 	DirectX::SimpleMath::Quaternion Rotation() const;
 	void CopyRotation(const DirectX::SimpleMath::Matrix& aTransform);
@@ -41,6 +42,8 @@ public:
 	void MoveLocal(const DirectX::SimpleMath::Vector3& aMovement);
 	void Rotate(const DirectX::SimpleMath::Vector3& aRotation);
 	void Rotate(const DirectX::SimpleMath::Quaternion& aQuaternion);
+
+	Matrix RotateMatrix(Matrix aMatrix,const DirectX::SimpleMath::Vector3& aRotation);
 
 	void ResetScale();
 	//To be Removed 2020-01-12 -> 2020-01-22 /Axel

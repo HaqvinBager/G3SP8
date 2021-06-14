@@ -94,6 +94,15 @@ void CTransformComponent::Rotation(const DirectX::SimpleMath::Quaternion& aQuate
 	myLocalTransform.Translation(tempTranslation);
 }
 
+void CTransformComponent::RotationWithRigidBody(const DirectX::SimpleMath::Quaternion& aQuaternion)
+{
+	Rotation(aQuaternion);
+	CRigidBodyComponent* rigidbody = nullptr;
+	if (GameObject().TryGetComponent<CRigidBodyComponent>(&rigidbody)) {
+		rigidbody->SetRotation(Rotation());
+	}
+}
+
 void CTransformComponent::RotationRigidbody(DirectX::SimpleMath::Quaternion aQuaternion)
 {
 	CRigidBodyComponent* rigidbody = nullptr;
@@ -204,6 +213,19 @@ void CTransformComponent::Rotate(const DirectX::SimpleMath::Quaternion& aQuatern
 	Matrix tempRotation = Matrix::CreateFromQuaternion(aQuaternion);
 	myLocalTransform *= tempRotation;
 	myLocalTransform.Translation(tempTranslation);
+}
+
+Matrix CTransformComponent::RotateMatrix(Matrix aMatrix, const DirectX::SimpleMath::Vector3& aRotation)
+{
+	Matrix newMatrix = aMatrix;
+	Vector3 tempTranslation = newMatrix.Translation();
+	Matrix tempRotation = Matrix::CreateFromYawPitchRoll(
+		DirectX::XMConvertToRadians(aRotation.y)
+		, DirectX::XMConvertToRadians(aRotation.x)
+		, DirectX::XMConvertToRadians(aRotation.z));
+	newMatrix *= tempRotation;
+	newMatrix.Translation(tempTranslation);
+	return newMatrix;
 }
 
 const DirectX::SimpleMath::Matrix& CTransformComponent::GetWorldMatrix() const

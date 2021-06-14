@@ -102,6 +102,12 @@ void CRigidBodyComponent::SetLinearVelocity(const Vector3& aVelocity)
 	myDynamicRigidBody->GetBody().setLinearVelocity({ aVelocity.x, aVelocity.y, aVelocity.z });
 }
 
+void CRigidBodyComponent::LockAngular(bool aLock) {
+	myDynamicRigidBody->GetBody().setRigidDynamicLockFlag(PxRigidDynamicLockFlag::eLOCK_ANGULAR_X, aLock);
+	myDynamicRigidBody->GetBody().setRigidDynamicLockFlag(PxRigidDynamicLockFlag::eLOCK_ANGULAR_Y, aLock);
+	myDynamicRigidBody->GetBody().setRigidDynamicLockFlag(PxRigidDynamicLockFlag::eLOCK_ANGULAR_Z, aLock);
+}
+
 const float CRigidBodyComponent::GetLinearVelocityLengthSqr() const
 {
 	return myDynamicRigidBody->GetLinearVelocity().LengthSquared();
@@ -144,7 +150,7 @@ void CRigidBodyComponent::Destroy()
 }
 
 void CRigidBodyComponent::SetPosition(const Vector3& aPos) {
-	myDynamicRigidBody->GetBody().setGlobalPose({aPos.x, aPos.y, aPos.z});
+	myDynamicRigidBody->GetBody().setGlobalPose({ { aPos.x, aPos.y, aPos.z },{ myDynamicRigidBody->GetRotation().x, myDynamicRigidBody->GetRotation().y, myDynamicRigidBody->GetRotation().z, myDynamicRigidBody->GetRotation().w}});
 }
 
 void CRigidBodyComponent::SetRotation(const Quaternion& aRot)

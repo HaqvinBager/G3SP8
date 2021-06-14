@@ -229,6 +229,17 @@ void CWindowHandler::LockCursor(bool aShouldLock)
     aShouldLock ? SetCapture(myWindowHandle) : SetCapture(nullptr);
 }
 
+void CWindowHandler::HidLockCursor(bool aShouldLock)
+{
+    myCursorIsLocked = aShouldLock;
+    if (aShouldLock)
+    {
+        Vector2 center = GetCenterPosition();
+        SetCursorPos(static_cast<int>(center.x), static_cast<int>(center.y));
+    }
+    aShouldLock ? SetCapture(myWindowHandle) : SetCapture(nullptr);
+}
+
 void CWindowHandler::HideAndLockCursor(const bool& anIsInEditorMode)
 {
     std::cout << __FUNCTION__ << std::endl;
