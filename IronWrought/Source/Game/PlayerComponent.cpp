@@ -150,8 +150,8 @@ void CPlayerComponent::CheckIfAlive()
 {
 	myIsAlive = (myHealth > 0.0f);
 
-	if(!myIsAlive)
-		CMainSingleton::PostMaster().Send({ EMessageType::PlayerDied, nullptr });
+	//if(!myIsAlive)
+	//	CMainSingleton::PostMaster().Send({ EMessageType::PlayerDied, nullptr });
 }
 
 inline void CPlayerComponent::SendHealthChangedMessage()

@@ -27,8 +27,31 @@ CCameraComponent::CCameraComponent(CGameObject& aParent, const float aFoV/*, flo
 	myShakeSpeed = 0.65f;
 	myMaxShakeRotation = { 2.05f, 0.5f, 0.5f };
 
-	myIdleNoise = FastNoise::New<FastNoise::Simplex>();
-	myShakeNoise = FastNoise::New<FastNoise::Simplex>();
+	myIdleSwayProfile.myMaxShakeRotation = { 2.05f, 0.5f, 0.5f };
+	myIdleSwayProfile.myMinShakeSpeed = 0.65f;
+	myIdleSwayProfile.myMaxShakeSpeed = 0.65f;
+	myIdleSwayProfile.myDecayTime = 0.5f;
+	myIdleSwayProfile.myMinStaticTrauma = 0.4f;
+	myIdleSwayProfile.myMaxStaticTrauma = 0.4f;
+	myIdleSwayProfile.myStaticTrauma = myIdleSwayProfile.myMinStaticTrauma;
+
+	myTraumaProfile.myMaxShakeRotation = { 2.05f, 0.5f, 0.5f };
+	myTraumaProfile.myMinShakeSpeed = 0.65f;
+	myTraumaProfile.myMaxShakeSpeed = 0.65f;
+	myTraumaProfile.myDecayTime = 0.5f;
+	myTraumaProfile.myMinStaticTrauma = 0.0f;
+	myTraumaProfile.myMaxStaticTrauma = 0.0f;
+	myTraumaProfile.myStaticTrauma = 0.0f;
+
+	myEnemySwayProfile.myMaxShakeRotation = { 4.0f, 1.0f, 4.0f };
+	myEnemySwayProfile.myMinShakeSpeed = 0.5f;
+	myEnemySwayProfile.myMaxShakeSpeed = 2.0f;
+	myEnemySwayProfile.myDecayTime = 0.5f;
+	myEnemySwayProfile.myMinStaticTrauma = 0.6f;
+	myEnemySwayProfile.myMaxStaticTrauma = 0.8f;
+	myEnemySwayProfile.myStaticTrauma = myEnemySwayProfile.myMinStaticTrauma;
+
+	myNoise = FastNoise::New<FastNoise::Simplex>();
 	//myNoise = PerlinNoise(214125213);
 
 	myShakeTimer = 0.0f;
@@ -81,12 +104,12 @@ void CCameraComponent::Update()
 	}
 #endif
 
-	if(myShakeState == ECameraShakeState::IdleSway)
-		this->SetTrauma(myIdleTrauma, ECameraShakeState::IdleSway);
+	if (myShakeState == ECameraShakeState::IdleSway || myShakeState == ECameraShakeState::EnemySway)
+		myTrauma = myCurrentShakeProfile.myStaticTrauma;
+		/*this->SetTrauma(myIdleTrauma, ECameraShakeState::IdleSway);*/
 
 	if (myTrauma > 0.0f) {
-		//myShakeTimer += CTimer::Dt();
-		myTrauma -= (1 / myDecayInSeconds) * CTimer::Dt();
+		myTrauma -= (1 / myCurrentShakeProfile.myDecayTime) * CTimer::Dt();
 		Shake();
 	}
 
@@ -144,6 +167,24 @@ void CCameraComponent::Update()
 
 void CCameraComponent::SetTrauma(float aValue, const ECameraShakeState aShakeState)
 {
+	switch (aShakeState)
+	{
+	case CCameraComponent::ECameraShakeState::IdleSway:
+		myCurrentShakeProfile = myIdleSwayProfile;
+		SetTraumaBlend(aValue);
+		break;
+	case CCameraComponent::ECameraShakeState::Shake:
+		myCurrentShakeProfile = myTraumaProfile;
+		myTrauma = aValue;
+		break;
+	case CCameraComponent::ECameraShakeState::EnemySway:
+		myCurrentShakeProfile = myEnemySwayProfile;
+		SetTraumaBlend(aValue);
+		break;
+	default:
+		break;
+	}
+
 	myTrauma = aValue;
 	myShakeState = aShakeState;
 }
@@ -256,24 +297,32 @@ void CCameraComponent::SetTestTrauma(float aTrauma)
 	myTestTrauma = aTrauma;
 }
 
+void CCameraComponent::SetTraumaBlend(float aT)
+{
+	myShakeSpeed = Lerp(myCurrentShakeProfile.myMinShakeSpeed, myCurrentShakeProfile.myMaxShakeSpeed, aT);
+	myCurrentShakeProfile.myStaticTrauma = Lerp(myCurrentShakeProfile.myMinStaticTrauma, myCurrentShakeProfile.myMaxStaticTrauma, aT);
+}
+
 void CCameraComponent::Shake()
 {
 	myShake = myTrauma * myTrauma * myTrauma;
 
-	auto& noise = myIdleNoise;
 	switch (myShakeState)
 	{
 		case ECameraShakeState::Shake:
-			noise = myShakeNoise;
-		break;
+			break;
+		case ECameraShakeState::IdleSway:
+			break;
+		case ECameraShakeState::EnemySway:
+			break;
 
 		default:break;
 	}
 	static int seed = 1462;
 	float speed = myShakeSpeed * myShakeSpeed * myShakeSpeed;
-	float newRotX = myMaxShakeRotation.x * myShake * noise->GenSingle2D(CTimer::Time() * speed, CTimer::Time() * speed, seed);
-	float newRotY = myMaxShakeRotation.y * myShake * noise->GenSingle2D(CTimer::Time() * speed, CTimer::Time() * speed, seed+1);
-	float newRotZ = myMaxShakeRotation.z * myShake * noise->GenSingle2D(CTimer::Time() * speed, CTimer::Time() * speed, seed+2);
+	float newRotX = myMaxShakeRotation.x * myShake * myNoise->GenSingle2D(CTimer::Time() * speed, CTimer::Time() * speed, seed);
+	float newRotY = myMaxShakeRotation.y * myShake * myNoise->GenSingle2D(CTimer::Time() * speed, CTimer::Time() * speed, seed+1);
+	float newRotZ = myMaxShakeRotation.z * myShake * myNoise->GenSingle2D(CTimer::Time() * speed, CTimer::Time() * speed, seed+2);
 
 	DirectX::SimpleMath::Vector3 newRotation = { newRotX, newRotY, newRotZ };
 
@@ -283,6 +332,11 @@ void CCameraComponent::Shake()
 	newRotation += myStartingRotation;
 	//GameObject().myTransform->Rotation(newRotation);
 	//myShakeTimer -= 0.0167f;
+}
+
+float CCameraComponent::Lerp(float a, float b, float t)
+{
+	return (1.0f - t) * a + b * t;
 }
 
 
