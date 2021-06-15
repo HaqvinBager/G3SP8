@@ -446,7 +446,6 @@ PxShape* CPhysXWrapper::CookShape(const CModel* aModel, const CTransformComponen
 */
 std::vector<PxRigidStatic*> CPhysXWrapper::CookShapes(const CModel* aModel, const CTransformComponent* aTransform, const physx::PxMaterial* aMaterial, const std::vector<Matrix>& someTransforms) const
 {
-	int count = 0;
 	const CModel::SModelInstanceData& modelData = aModel->GetModelInstanceData();
 	std::vector<PxRigidStatic*> statics = { };
 	statics.reserve(someTransforms.size());
