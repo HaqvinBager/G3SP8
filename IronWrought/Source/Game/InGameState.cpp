@@ -58,6 +58,7 @@ CInGameState::CInGameState(CStateStack& aStateStack, const CStateStack::EState a
 	, myCanvases({ nullptr, nullptr, nullptr })
 	, myCurrentCanvas(EInGameCanvases_Count)
 	, myMenuCameraSpeed(2.0f)
+	, myShowCreditsFromEnd(false)
 {
 }
 
@@ -172,6 +173,9 @@ void CInGameState::Start()
 	CMainSingleton::PostMaster().Subscribe(EMessageType::LoadLevel, this);
 	CMainSingleton::PostMaster().Subscribe(EMessageType::LevelSelectLoadLevel, this);
 	CMainSingleton::PostMaster().Subscribe(EMessageType::PlayerDied, this);
+	CMainSingleton::PostMaster().Subscribe(EMessageType::EndOfGameEvent, this);
+
+
 }
 
 void CInGameState::Stop()
@@ -198,6 +202,8 @@ void CInGameState::Stop()
 	CMainSingleton::PostMaster().Unsubscribe(EMessageType::LoadLevel, this);
 	CMainSingleton::PostMaster().Unsubscribe(EMessageType::LevelSelectLoadLevel, this);
 	CMainSingleton::PostMaster().Unsubscribe(EMessageType::PlayerDied, this);
+	CMainSingleton::PostMaster().Unsubscribe(EMessageType::EndOfGameEvent, this);
+
 
 	myMenuCamera = nullptr; // Has been deleted by Scene when IRONWROUGHT->RemoveScene(..) was called, as it is added as a gameobject.
 }
@@ -405,6 +411,12 @@ void CInGameState::Receive(const SMessage& aMessage)
 			myExitTo = EExitTo::Windows;
 		}break;
 
+		case EMessageType::EndOfGameEvent:
+		{
+				myShowCreditsFromEnd = true;
+				myStateStack.PopTopAndPush(CStateStack::EState::InGame);
+		}break;
+
 		default:break;
 	}
 }
@@ -535,6 +547,18 @@ void CInGameState::ToggleCanvas(EInGameCanvases anEInGameCanvases)
 		IRONWROUGHT->ShowCursor(false);
 		IRONWROUGHT->SetIsMenu(true);
 		myCanvases[myCurrentCanvas]->DisableWidgets();
+
+		if (myShowCreditsFromEnd == true)
+		{
+			myShowCreditsFromEnd = false;
+			myCanvases[EInGameCanvases_MainMenu]->ForceEnabled(true);
+			myCanvases[EInGameCanvases_MainMenu]->DisableWidgets(0);
+
+			CFullscreenRenderer::SPostProcessingBufferData data = CEngine::GetInstance()->GetPostProcessingBufferData();
+			data.myVignetteStrength = 0.35f;
+			CEngine::GetInstance()->SetPostProcessingBufferData(data);
+		}
+		
 		scene.myPlayer->Active(false);
 	}
 	else if (myCurrentCanvas == EInGameCanvases_PauseMenu)
