@@ -123,25 +123,25 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 23800000, guid: d2438aebf88701647bdbbc9e6c7e6cab, type: 2}
---- !u!134 &479826613
+--- !u!134 &1948192057
 PhysicMaterial:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: ' (Instance) (Instance) (Instance) (Instance)'
+  m_Name: ' (Instance) (Instance) (Instance) (Instance) (Instance)'
   dynamicFriction: 0.6
   staticFriction: 0.6
   bounciness: 0
   frictionCombine: 0
   bounceCombine: 0
---- !u!134 &2015062702
+--- !u!134 &1951578668
 PhysicMaterial:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: ' (Instance) (Instance) (Instance) (Instance)'
+  m_Name: ' (Instance) (Instance) (Instance) (Instance) (Instance)'
   dynamicFriction: 0.6
   staticFriction: 0.6
   bounciness: 0
@@ -207,7 +207,7 @@ BoxCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1031876865513136764}
-  m_Material: {fileID: 479826613}
+  m_Material: {fileID: 1948192057}
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
@@ -247,6 +247,27 @@ MonoBehaviour:
   myMinAttenuationDistance: 1
   myMaxAttenuationDistance: 10000
   myMinimumVolume: 0
+--- !u!114 &1031876865513136771
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1031876865513136764}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f573c0162a19b3d439a274b0e0888abc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  soundEffect: 31
+  myIs3D: 0
+  myConeDirection: {x: 0, y: 0, z: 0}
+  myMinAttenuationAngle: 0
+  myMaxAttenuationAngle: 0
+  myMinAttenuationDistance: 1
+  myMaxAttenuationDistance: 10000
+  myMinimumVolume: 0
+  myDelay: 0
 --- !u!4 &4205775150775911261 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4987837350171161627, guid: 5df0f6bc861e6cf4584fa82486b1d1fb, type: 3}
@@ -338,7 +359,7 @@ BoxCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5339392776290667463}
-  m_Material: {fileID: 2015062702}
+  m_Material: {fileID: 1951578668}
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2

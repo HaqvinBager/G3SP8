@@ -970,8 +970,8 @@ std::string CAudioManager::TranslateEnum(ESFX enumerator) const {
 		return "LetGo";
 	case ESFX::EnemyHit:
 		return "EnemyHit";
-	case ESFX::SwitchPress:
-		return "SwitchPress";
+	case ESFX::SwitchPull:
+		return "SwitchPull";
 	case ESFX::PickupGravityGlove:
 		return "PickupGravityGlove";
 	case ESFX::PickupHeal:

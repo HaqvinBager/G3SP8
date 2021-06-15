@@ -659,6 +659,10 @@ void CSceneManager::AddPuzzleKey(CScene& aScene, RapidArray someData)
 	for (const auto& key : someData)
 	{
 		CGameObject* gameObject = aScene.FindObjectWithID(key["instanceID"].GetInt());
+
+		if (!gameObject)
+			continue;
+
 		CKeyBehavior::SSettings settings = {
 			key["onKeyCreateNotifyName"].GetString(),
 			key["onKeyInteractNotifyName"].GetString(),
@@ -1281,6 +1285,15 @@ void CSceneManager::AddEndEventComponent(CScene& aScene, const SEndEventData& aD
 	if (gameObject != nullptr)
 	{
 		gameObject->AddComponent<CEndEventComponent>(*gameObject, aData);
+
+		//for (const auto& vfx : aData.myVFX)
+		//{
+		//	CGameObject* vfxGameObject = aScene.FindObjectWithID(vfx.myInstanceID);
+		//	if (vfxGameObject != nullptr)
+		//	{
+		//		vfxGameObject->AddComponent<CVFXSystemComponent>(*vfxGameObject, ASSETPATH("" + vfx.myVfxPath));
+		//	}
+		//}
 	}
 }
 
