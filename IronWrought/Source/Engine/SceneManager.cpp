@@ -1133,7 +1133,7 @@ void CSceneManager::AddPlayer(CScene& aScene, RapidObject someData)
 	CGameObject* camera = CCameraControllerComponent::CreatePlayerFirstPersonCamera(player);//new CGameObject(1000);
 	camera->AddComponent<CInteractionBehavior>(*camera);
 
-	camera->myTransform->Rotation(playerRot);
+	//camera->myTransform->Rotation(playerRot);
 	//std::string modelPath = ASSETPATH("Assets/IronWrought/Mesh/Main_Character/CH_PL_SK.fbx");
 	//camera->AddComponent<CModelComponent>(*camera, modelPath);
 	//AnimationLoader::AddAnimationsToGameObject(camera, modelPath);
