@@ -535,7 +535,7 @@ void CEnemyComponent::UpdateVignette(const float aDotOverload)
 		CEngine::GetInstance()->SetPostProcessingBufferData(data);
 		IRONWROUGHT_ACTIVE_SCENE.MainCamera()->SetTrauma(normalizedBlend, CCameraComponent::ECameraShakeState::EnemySway);
 
-		std::cout << __FUNCTION__ << " update overload" << std::endl;
+		//std::cout << __FUNCTION__ << " update overload" << std::endl;
 		return;
 	}
 
@@ -582,7 +582,7 @@ void CEnemyComponent::UpdateVignette(const float aDotOverload)
 
 			IRONWROUGHT_ACTIVE_SCENE.MainCamera()->SetTrauma(myCurrentVignetteBlend, CCameraComponent::ECameraShakeState::EnemySway);
 
-			std::cout << __FUNCTION__ << " Current: " << myCurrentVignetteBlend << std::endl;
+			//std::cout << __FUNCTION__ << " Current: " << myCurrentVignetteBlend << std::endl;
 		}
 		else {
 			CFullscreenRenderer::SPostProcessingBufferData data = CEngine::GetInstance()->GetPostProcessingBufferData();
@@ -596,7 +596,7 @@ void CEnemyComponent::UpdateVignette(const float aDotOverload)
 
 			IRONWROUGHT_ACTIVE_SCENE.MainCamera()->SetTrauma(normalizedBlend, CCameraComponent::ECameraShakeState::IdleSway);
 		
-			std::cout << __FUNCTION__ << " update no hit" << std::endl;
+			//std::cout << __FUNCTION__ << " update no hit" << std::endl;
 		}
 	}
 }
