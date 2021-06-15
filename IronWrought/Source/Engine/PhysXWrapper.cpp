@@ -446,6 +446,7 @@ PxShape* CPhysXWrapper::CookShape(const CModel* aModel, const CTransformComponen
 */
 std::vector<PxRigidStatic*> CPhysXWrapper::CookShapes(const CModel* aModel, const CTransformComponent* aTransform, const physx::PxMaterial* aMaterial, const std::vector<Matrix>& someTransforms) const
 {
+	int count = 0;
 	const CModel::SModelInstanceData& modelData = aModel->GetModelInstanceData();
 	std::vector<PxRigidStatic*> statics = { };
 	statics.reserve(someTransforms.size());
@@ -481,7 +482,9 @@ std::vector<PxRigidStatic*> CPhysXWrapper::CookShapes(const CModel* aModel, cons
 			PxShape* instancedShape = myPhysics->createShape(pMeshGeometry, *aMaterial, true);
 
 			PxFilterData filterData;
-			filterData.word0 = static_cast<PxU32>(CPhysXWrapper::ELayerMask::STATIC_ENVIRONMENT);
+			if (aTransform->GameObject().Tag() != "Door") {
+				filterData.word0 = static_cast<PxU32>(CPhysXWrapper::ELayerMask::STATIC_ENVIRONMENT);
+			} 
 			instancedShape->setQueryFilterData(filterData);
 			staticRigidbody->attachShape(*instancedShape);
 
