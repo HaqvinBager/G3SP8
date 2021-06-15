@@ -41,7 +41,7 @@
 #ifdef NDEBUG
 #define INGAME_USE_MENU
 #else
-//#define INGAME_USE_MENU
+#define INGAME_USE_MENU
 #endif
 
 #define MENU_SCENE "Level_Cottage_1"
@@ -147,6 +147,7 @@ void CInGameState::Start()
 	*/
 	// ! Removed as of 2021 06 10 / Aki
 
+	CMainSingleton::PostMaster().Send({ EMessageType::ClearStaticAudioSources });
 
 	myCurrentLevel = MENU_SCENE;
 	CSceneFactory::Get()->LoadSceneAsync(MENU_SCENE, myState, [this](std::string aMsg) { CInGameState::OnSceneLoadCompleteMenu(aMsg); });
@@ -301,6 +302,7 @@ void CInGameState::Receive(const SMessage& aMessage)
 	{
 		case EMessageType::PlayerDied:
 		{
+			CMainSingleton::PostMaster().Send({ EMessageType::ClearStaticAudioSources });
 			ToggleCanvas(EInGameCanvases_LoadingScreen);
 			IRONWROUGHT->GetActiveScene().MainCamera()->Fade(false, 0.5f);
 			IRONWROUGHT->GetActiveScene().PlayerController()->LockMovementFor(0.5f);
@@ -311,6 +313,7 @@ void CInGameState::Receive(const SMessage& aMessage)
 
 		case EMessageType::LoadLevel:
 		{
+			CMainSingleton::PostMaster().Send({ EMessageType::ClearStaticAudioSources });
 			ToggleCanvas(EInGameCanvases_LoadingScreen);
 			IRONWROUGHT->GetActiveScene().MainCamera()->Fade(false, 0.5f);
 			IRONWROUGHT->GetActiveScene().PlayerController()->LockMovementFor(0.5f);
@@ -324,6 +327,8 @@ void CInGameState::Receive(const SMessage& aMessage)
 		{
 			if (!aMessage.data)
 				return;
+
+			CMainSingleton::PostMaster().Send({ EMessageType::ClearStaticAudioSources });
 			ToggleCanvas(EInGameCanvases_LoadingScreen);
 			myMenuCamera = nullptr;
 			

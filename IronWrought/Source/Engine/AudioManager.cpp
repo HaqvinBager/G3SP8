@@ -540,6 +540,11 @@ void CAudioManager::Receive(const SMessage& aMessage) {
 		}
 	}break;
 
+	case EMessageType::ClearStaticAudioSources:
+	{
+		ClearSources();
+	}break;
+
 	case EMessageType::PauseMenu:
 	{
 		bool isPaused = *static_cast<bool*>(aMessage.data);
@@ -681,7 +686,18 @@ void CAudioManager::RemoveSource(const int /*anIdentifier*/)
 
 void CAudioManager::ClearSources()
 {
+	for (auto channel : myStaticAudioSources)
+	{
+		channel.myChannel->Stop();
+	}
 	myStaticAudioSources.clear();
+
+	for (auto channel : myDynamicSources)
+	{
+		channel->Stop();
+	}
+
+	myDynamicSource->Stop();
 }
 
 void CAudioManager::SubscribeToMessages()
@@ -1378,3 +1394,72 @@ void CAudioManager::Resume()
 
 	myDynamicSource->SetPaused(false);
 }
+
+//CAudioManager::SStaticAudioSource::SStaticAudioSource()
+//	: myGameObjectID(0)
+//	, mySoundIndex(0)
+//	, myChannel(nullptr)
+//{
+//}
+
+//CAudioManager::SStaticAudioSource::SStaticAudioSource(int aGameObjectID, unsigned int aSoundIndex, CAudioChannel* anAudioChannel)
+//	: myGameObjectID(aGameObjectID)
+//	, mySoundIndex(aSoundIndex)
+//	, myChannel(anAudioChannel)
+//{
+//}
+//
+//CAudioManager::SStaticAudioSource::SStaticAudioSource(SStaticAudioSource&& other) noexcept
+//{
+//	//if (this->myChannel)
+//	//	delete myChannel;
+//
+//	this->myChannel = other.myChannel;
+//	other.myChannel = nullptr;
+//
+//	this->myGameObjectID = other.myGameObjectID;
+//	this->mySoundIndex = other.mySoundIndex;
+//}
+//
+//CAudioManager::SStaticAudioSource& CAudioManager::SStaticAudioSource::operator=(SStaticAudioSource&& other) noexcept
+//{
+//	//if (this->myChannel)
+//	//	delete myChannel;
+//
+//	this->myChannel = other.myChannel;
+//	other.myChannel = nullptr;
+//
+//	this->myGameObjectID = other.myGameObjectID;
+//	this->mySoundIndex = other.mySoundIndex;
+//
+//	return *this;
+//}
+//
+//CAudioManager::SStaticAudioSource::SStaticAudioSource(SStaticAudioSource& other) noexcept
+//{
+//	//if (this->myChannel)
+//	//	delete myChannel;
+//
+//	this->myChannel = other.myChannel;
+//	this->myGameObjectID = other.myGameObjectID;
+//	this->mySoundIndex = other.mySoundIndex;
+//}
+//
+//CAudioManager::SStaticAudioSource& CAudioManager::SStaticAudioSource::operator=(SStaticAudioSource& other) noexcept
+//{
+//	//if (this->myChannel)
+//	//	delete myChannel;
+//
+//	this->myChannel = other.myChannel;
+//	this->myGameObjectID = other.myGameObjectID;
+//	this->mySoundIndex = other.mySoundIndex;
+//
+//	return *this;
+//}
+//
+//CAudioManager::SStaticAudioSource::~SStaticAudioSource()
+//{
+//	if (myChannel)
+//		delete myChannel;
+//	myChannel = nullptr;
+//}

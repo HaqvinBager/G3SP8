@@ -9,6 +9,7 @@ CAudioActivation::CAudioActivation(CGameObject& aParent, const PostMaster::SAudi
 	, my2DPlayMessage(0)
 	, myTime(0.0f)
 	, myIs3D(aShouldBe3D)
+	, myAudioChannel(nullptr)
 {
 	if (mySettings.myDelay < 0.001f)
 		mySettings.myDelay = 0.001f;
@@ -30,6 +31,8 @@ CAudioActivation::CAudioActivation(CGameObject& aParent, const PostMaster::SAudi
 
 CAudioActivation::~CAudioActivation()
 {
+	myAudioChannel = nullptr;
+	my3DPlayMessage.myChannel = nullptr;
 }
 
 void CAudioActivation::Start()
