@@ -472,9 +472,6 @@ void CEnemyComponent::UpdateAttackEvent()
 		CMainSingleton::PostMaster().Send({ EMessageType::PlayerTakeDamage, &damageToPlayer });
 		CPlayerControllerComponent* plCtrl = myPlayer->GetComponent<CPlayerControllerComponent>();
 		myDetachedPlayerHead->SetParent(myPlayer->myTransform);
-		if (myDetachedPlayerHead)
-		{
-		}
 		plCtrl->ForceCrouch();
 		//plCtrl->OnCrouch();
 
