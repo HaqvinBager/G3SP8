@@ -318,8 +318,6 @@ void CEngine::SetActiveScene(const CStateStack::EState aState)
 		AddScene(myActiveState, CSceneManager::CreateEmpty());
 	}
 
-	CheckIfMenuState(aState);
-
 	CTimer::Mark();
 	//mySceneMap[myActiveState]->Awake();// Unused
 	mySceneMap[myActiveState]->Start();
@@ -403,7 +401,7 @@ void CEngine::CheckIfMenuState(const CStateStack::EState& aState)
 			break;
 
 		case CStateStack::EState::InGame:
-			isInMenu = true;
+			isInMenu = false;
 			break;
 
 		case CStateStack::EState::MainMenu:

@@ -6,9 +6,11 @@ using UnityEngine;
 public struct PathPoint
 {
     public Vector3 position;
-    public Vector3 rotation;
+    public Quaternion rotation;
     public float duration;
+    
     //Optional data to add here
+    public float playerVingetteStrength;
 }
 
 public class EndEvent : MonoBehaviour

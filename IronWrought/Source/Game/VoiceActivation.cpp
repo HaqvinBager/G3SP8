@@ -9,6 +9,7 @@ CVoiceActivation::CVoiceActivation(CGameObject& aParent, const PostMaster::SAudi
 	, mySettings(someSettings)
 	, my2DPlayMessage(0)
 	, myIs3D(aShouldBe3D)
+	, myAudioChannel(nullptr)
 {
 	if (myIs3D)
 	{
@@ -26,6 +27,8 @@ CVoiceActivation::CVoiceActivation(CGameObject& aParent, const PostMaster::SAudi
 
 CVoiceActivation::~CVoiceActivation()
 {
+	myAudioChannel = nullptr;
+	my3DPlayMessage.myChannel = nullptr;
 }
 
 void CVoiceActivation::Start()

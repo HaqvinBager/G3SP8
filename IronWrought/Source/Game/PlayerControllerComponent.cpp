@@ -262,8 +262,9 @@ void CPlayerControllerComponent::ControllerUpdate()
 {
 	const float horizontalInput = Input::GetInstance()->GetAxis(Input::EAxis::Horizontal);
 	const float verticalInput = Input::GetInstance()->GetAxis(Input::EAxis::Vertical);
+	const float verticalInputModifier = (verticalInput < 0.0f ? -0.6f : verticalInput); // Make the player move slower when moving backwards. 70% of speed.
 	Vector3 horizontal = -GameObject().myTransform->GetLocalMatrix().Right() * horizontalInput;
-	Vector3 vertical = -GameObject().myTransform->GetLocalMatrix().Forward() * verticalInput;
+	Vector3 vertical = -GameObject().myTransform->GetLocalMatrix().Forward() * verticalInputModifier;
 	float y = myMovement.y;
 	myMovement = (horizontal + vertical) * mySpeed;
 	
@@ -462,8 +463,11 @@ void CPlayerControllerComponent::LockMovementFor(const float& someSeconds)
 
 void CPlayerControllerComponent::ForceStand()
 {
-	myIsCrouching = true;
-	Crouch();
+	myIsCrouching = false;
+	myController->GetController().resize(myColliderHeightStanding);
+	GameObject().myTransform->FetchChildren()[0]->Position({ 0.0f, myCameraPosYStanding, myCameraPosZ });// Equivalent to myCamera->GameObject().myTransform->Position
+	mySpeed = myWalkSpeed;
+	//Crouch();
 }
 
 void CPlayerControllerComponent::UpdateMovementLock()

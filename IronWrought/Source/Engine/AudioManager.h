@@ -158,6 +158,13 @@ private:
 
 	struct SStaticAudioSource
 	{
+		//SStaticAudioSource();
+		//SStaticAudioSource(int aGameObjectID, unsigned int aSoundIndex, CAudioChannel* anAudioChannel);
+		//SStaticAudioSource(SStaticAudioSource&& other) noexcept;
+		//SStaticAudioSource& operator=(SStaticAudioSource&& other) noexcept;
+		//SStaticAudioSource(SStaticAudioSource& other) noexcept;
+		//SStaticAudioSource& operator=(SStaticAudioSource& other) noexcept;
+		//~SStaticAudioSource();
 		int myGameObjectID;
 		unsigned int mySoundIndex;
 		CAudioChannel* myChannel;
