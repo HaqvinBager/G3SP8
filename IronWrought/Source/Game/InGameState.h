@@ -66,4 +66,5 @@ private:
 	EInGameCanvases myCurrentCanvas;
 	float myMenuCameraSpeed;
 	std::string myCurrentLevel;
+	bool myShowCreditsFromEnd;
 };
