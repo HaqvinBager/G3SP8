@@ -21,7 +21,10 @@ void CPlayVFXActivation::Start()
 {
 	myVFXSystemComponent = GameObject().GetComponent<CVFXSystemComponent>();
 	if (myVFXSystemComponent)
+	{
 		myHasVFX = true;
+		myVFXSystemComponent->DisableEffect(0);
+	}
 }
 
 void CPlayVFXActivation::OnActivation()
@@ -29,8 +32,7 @@ void CPlayVFXActivation::OnActivation()
 	if (myHasVFX)
 	{
 		myIsInteracted = true;
-		for (auto& effect : myVFXSystemComponent->GetVFXEffects())
-			effect.get()->Enable();
+		myVFXSystemComponent->EnableEffect(0);
 	}
 }
 
@@ -42,8 +44,7 @@ void CPlayVFXActivation::Update()
 
 		if (myTime >= mySettings.myDuration)
 		{
-			for (auto& effect : myVFXSystemComponent->GetVFXEffects())
-				effect.get()->Disable();
+			myVFXSystemComponent->DisableEffect(0);
 
 			Enabled(false);
 		}
