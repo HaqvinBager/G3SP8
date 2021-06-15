@@ -43,12 +43,12 @@ CCameraComponent::CCameraComponent(CGameObject& aParent, const float aFoV/*, flo
 	myTraumaProfile.myMaxStaticTrauma = 0.0f;
 	myTraumaProfile.myStaticTrauma = 0.0f;
 
-	myEnemySwayProfile.myMaxShakeRotation = { 4.0f, 1.0f, 4.0f };
+	myEnemySwayProfile.myMaxShakeRotation = { 2.0f, 1.0f, 4.0f };
 	myEnemySwayProfile.myMinShakeSpeed = 0.5f;
-	myEnemySwayProfile.myMaxShakeSpeed = 2.0f;
-	myEnemySwayProfile.myDecayTime = 0.5f;
+	myEnemySwayProfile.myMaxShakeSpeed = 0.75f;
+	myEnemySwayProfile.myDecayTime = 1.0f;
 	myEnemySwayProfile.myMinStaticTrauma = 0.6f;
-	myEnemySwayProfile.myMaxStaticTrauma = 0.8f;
+	myEnemySwayProfile.myMaxStaticTrauma = 0.7f;
 	myEnemySwayProfile.myStaticTrauma = myEnemySwayProfile.myMinStaticTrauma;
 
 	myNoise = FastNoise::New<FastNoise::Simplex>();
