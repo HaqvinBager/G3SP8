@@ -340,6 +340,7 @@ void CInGameState::Receive(const SMessage& aMessage)
 		case EMessageType::StartGame:
 		{
 			//IRONWROUGHT->GetActiveScene().ToggleSections(0);// Disable when single level loading.
+			IRONWROUGHT->GetActiveScene().myPlayer->Active(true);
 			ToggleCanvas(EInGameCanvases_HUD);
 		}break;
 
@@ -419,7 +420,6 @@ void CInGameState::OnSceneLoadCompleteMenu(std::string /*aMsg*/)
 	//myCurrentCanvas = EInGameCanvases_MainMenu;
 	//scene.SetCanvas(myCanvases[myCurrentCanvas]);
 	//scene.UpdateOnlyCanvas(false);
-	scene.ToggleSections(0);
 	//IRONWROUGHT->ShowCursor(true);
 
 	myEnemyAnimationController->Activate();
@@ -535,6 +535,7 @@ void CInGameState::ToggleCanvas(EInGameCanvases anEInGameCanvases)
 		IRONWROUGHT->ShowCursor(false);
 		IRONWROUGHT->SetIsMenu(true);
 		myCanvases[myCurrentCanvas]->DisableWidgets();
+		scene.myPlayer->Active(false);
 	}
 	else if (myCurrentCanvas == EInGameCanvases_PauseMenu)
 	{
