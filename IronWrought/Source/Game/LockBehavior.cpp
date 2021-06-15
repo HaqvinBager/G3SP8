@@ -43,6 +43,7 @@ void CLockBehavior::RunEvent()
 	{
 		if (myAmountOfKeys >= myMaxAmountOfKeys)
 		{
+			CMainSingleton::PostMaster().SendLate({ EMessageType::FoundKey, &this->GameObject() });
 			std::cout << __FUNCTION__ << "----< \tLock Activated \t" << GameObject().Name() << std::endl;
 			myHasTriggered = true;
 			CMainSingleton::PostMaster().Send({ mySettings.myOnNotifyName.c_str(), mySettings.myOnNotify });

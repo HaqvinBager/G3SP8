@@ -40,8 +40,12 @@ LRESULT CWindowHandler::WinProc(_In_ HWND hwnd, _In_ UINT uMsg, _In_ WPARAM wPar
             break;
 
         case WM_SETFOCUS:
-#ifndef NDEBUG
-            windowHandler->myWindowIsInEditingMode ? windowHandler->LockCursor(false) : windowHandler->LockCursor(true);
+#ifdef _DEBUG
+            if (windowHandler->myGameIsInMenu)
+                windowHandler->ShowAndUnlockCursor();
+            else
+                windowHandler->HideAndLockCursor();
+            //windowHandler->myWindowIsInEditingMode ? windowHandler->LockCursor(false) : windowHandler->LockCursor(true);
 #else
         if (windowHandler->myGameIsInMenu)
             windowHandler->ShowAndUnlockCursor();

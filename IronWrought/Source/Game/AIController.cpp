@@ -54,6 +54,7 @@ Vector3 CPatrol::Update(const Vector3& aPosition)
 		return Vector3::Zero;
 
 	Vector3 patrolPointPosition = myPatrolPoints[myTarget]->GameObject().myTransform->Position();
+	patrolPointPosition.y = aPosition.y;
 	CPatrolPointComponent* patrolPoint;// = FindBestPatrolPoint(aPosition);
 
 	if (CheckIfOverlap(aPosition, patrolPointPosition)) // change patrol points & calculate path
@@ -64,6 +65,7 @@ Vector3 CPatrol::Update(const Vector3& aPosition)
 			if (myPatrolPoints[i] == patrolPoint) {
 				myTarget = i;
 				patrolPointPosition = myPatrolPoints[myTarget]->GameObject().myTransform->Position();
+				patrolPointPosition.y = aPosition.y;
 			}
 		}
 		//CMainSingleton::PostMaster().Send({ EMessageType::EnemyReachedTarget });
@@ -116,6 +118,7 @@ CPatrolPointComponent* CPatrol::FindBestPatrolPoint(const Vector3& aPosition)
 	if (!myPatrolPoints.empty()) {
 		for (int i = 0; i < myPatrolPoints.size(); ++i) {
 			Vector3 patrolPositions = myPatrolPoints[i]->GameObject().myTransform->Position();
+			patrolPositions.y = aPosition.y;
 			Vector3 dist = patrolPositions - aPosition;
 			float length = dist.LengthSquared() / 10.f;
 			myPatrolPoints[i]->AddValue(length);

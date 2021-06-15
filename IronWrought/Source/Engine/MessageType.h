@@ -106,6 +106,7 @@ enum class EMessageType
 	PauseMenu,
 	PhysicsPropCollision,
 	PropCollided,
+	FoundKey,
 
 	EnemyStateChange,
 
