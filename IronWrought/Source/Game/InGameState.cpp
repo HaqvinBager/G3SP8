@@ -286,12 +286,12 @@ void CInGameState::Receive(const SStringMessage& aMessage)
 
 	if (PostMaster::DisableCanvas(aMessage.myMessageType))
 	{
-		IRONWROUGHT->GetActiveScene().CanvasToggle(false);
+		myCanvases[myCurrentCanvas]->ForceEnabled(false);
 		return;
 	}
 	if (PostMaster::EnableCanvas(aMessage.myMessageType))
 	{
-		IRONWROUGHT->GetActiveScene().CanvasToggle(true);
+		myCanvases[myCurrentCanvas]->ForceEnabled(true);
 		return;
 	}
 }
