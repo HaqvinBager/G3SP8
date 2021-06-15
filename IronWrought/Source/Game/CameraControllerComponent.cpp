@@ -175,7 +175,6 @@ void CCameraControllerComponent::Receive(const SMessage& aMsg)
 			lock = *static_cast<bool*>(aMsg.data);
 		}
 		myLimitFirstPerson = lock;
-		std::cout << __FUNCTION__ << std::endl;
 		return;
 	}
 }

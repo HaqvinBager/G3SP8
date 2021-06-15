@@ -12,6 +12,18 @@ static class IronWroughtExtensions
         return eulerAngles;
     }
 
+    public static Quaternion ConvertToIronWroughtRotationQuaternion(this Transform aTransform)
+    {
+        //Vector3 eulerAngles = aTransform.eulerAngles;
+        ////Add any changes in Rotation for fixing anything in IronWrought here
+        //eulerAngles.x = (-eulerAngles.x) - 360.0f;
+        //eulerAngles.y += 180.0f;
+        //eulerAngles.z = (-eulerAngles.z) - 360.0f;
+        //eulerAngles *= Mathf.Deg2Rad;
+        //return Quaternion.Euler(eulerAngles);
+        return aTransform.rotation;
+    }
+
     public static Vector3 ConvertToIronWroughtPosition(this Transform aTransform)
     {
         Vector3 position = aTransform.position;

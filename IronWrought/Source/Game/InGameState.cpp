@@ -147,6 +147,7 @@ void CInGameState::Start()
 	*/
 	// ! Removed as of 2021 06 10 / Aki
 
+	CMainSingleton::PostMaster().Send({ EMessageType::ClearStaticAudioSources });
 
 	myCurrentLevel = MENU_SCENE;
 	CSceneFactory::Get()->LoadSceneAsync(MENU_SCENE, myState, [this](std::string aMsg) { CInGameState::OnSceneLoadCompleteMenu(aMsg); });
@@ -285,12 +286,12 @@ void CInGameState::Receive(const SStringMessage& aMessage)
 
 	if (PostMaster::DisableCanvas(aMessage.myMessageType))
 	{
-		IRONWROUGHT->GetActiveScene().CanvasToggle(false);
+		myCanvases[myCurrentCanvas]->ForceEnabled(false);
 		return;
 	}
 	if (PostMaster::EnableCanvas(aMessage.myMessageType))
 	{
-		IRONWROUGHT->GetActiveScene().CanvasToggle(true);
+		myCanvases[myCurrentCanvas]->ForceEnabled(true);
 		return;
 	}
 }
@@ -301,6 +302,7 @@ void CInGameState::Receive(const SMessage& aMessage)
 	{
 		case EMessageType::PlayerDied:
 		{
+			CMainSingleton::PostMaster().Send({ EMessageType::ClearStaticAudioSources });
 			ToggleCanvas(EInGameCanvases_LoadingScreen);
 			IRONWROUGHT->GetActiveScene().MainCamera()->Fade(false, 0.5f);
 			IRONWROUGHT->GetActiveScene().PlayerController()->LockMovementFor(0.5f);
@@ -311,6 +313,7 @@ void CInGameState::Receive(const SMessage& aMessage)
 
 		case EMessageType::LoadLevel:
 		{
+			CMainSingleton::PostMaster().Send({ EMessageType::ClearStaticAudioSources });
 			ToggleCanvas(EInGameCanvases_LoadingScreen);
 			IRONWROUGHT->GetActiveScene().MainCamera()->Fade(false, 0.5f);
 			IRONWROUGHT->GetActiveScene().PlayerController()->LockMovementFor(0.5f);
@@ -324,6 +327,8 @@ void CInGameState::Receive(const SMessage& aMessage)
 		{
 			if (!aMessage.data)
 				return;
+
+			CMainSingleton::PostMaster().Send({ EMessageType::ClearStaticAudioSources });
 			ToggleCanvas(EInGameCanvases_LoadingScreen);
 			myMenuCamera = nullptr;
 			
@@ -333,7 +338,7 @@ void CInGameState::Receive(const SMessage& aMessage)
 
 		case EMessageType::StartGame:
 		{
-			IRONWROUGHT->GetActiveScene().ToggleSections(0);// Disable when single level loading.
+			//IRONWROUGHT->GetActiveScene().ToggleSections(0);// Disable when single level loading.
 			ToggleCanvas(EInGameCanvases_HUD);
 		}break;
 
@@ -549,6 +554,7 @@ void CInGameState::ToggleCanvas(EInGameCanvases anEInGameCanvases)
 		IRONWROUGHT->HideCursor(false);
 		scene.SetCanvas(myCanvases[myCurrentCanvas]);
 		scene.UpdateOnlyCanvas(true);
+		IRONWROUGHT->SetIsMenu(false);
 	}
 #else
 	if (myCurrentCanvas == EInGameCanvases_HUD)
