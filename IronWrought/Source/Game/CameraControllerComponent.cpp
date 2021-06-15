@@ -116,7 +116,7 @@ CGameObject* CCameraControllerComponent::CreatePlayerFirstPersonCamera(CGameObje
 	CGameObject* camera = new CGameObject(PLAYER_CAMERA_ID, "Player Camera");
 	camera->AddComponent<CCameraComponent>(*camera, CCameraComponent::SP8_FOV);
 	CCameraControllerComponent* camCTRL = camera->AddComponent<CCameraControllerComponent>(*camera, 2.0f, ECameraMode::PlayerFirstPerson);
-	camCTRL->myYaw = 180.0f + camCTRL->ToDegrees(atan2f(aParentObject->myTransform->Transform().Forward().x, aParentObject->myTransform->Transform().Forward().z));
+	camCTRL->myYaw = camCTRL->ToDegrees(atan2f(aParentObject->myTransform->Transform().Forward().x, aParentObject->myTransform->Transform().Forward().z));
 	camera->myTransform->SetParent(aParentObject->myTransform);
 	camera->myTransform->Position({ 0.f,0.f,0.f });
 	//camera->myTransform->Rotation(rot);

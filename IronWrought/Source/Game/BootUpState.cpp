@@ -117,6 +117,7 @@ void CBootUpState::Update()
 		myLogos[myLogoToRender]->SetColor(color);
 	}
 
+#ifdef _DEBUG
 	if (INPUT->IsKeyPressed(VK_SPACE))
 	{
 		myLogoToRender++;
@@ -144,6 +145,7 @@ void CBootUpState::Update()
 		color.z = myTimer / myFadeInDuration;
 		myLogos[myLogoToRender]->SetColor(color);
 	}
+#endif
 }
 
 void CBootUpState::Receive(const SStringMessage& /*aMessage*/)

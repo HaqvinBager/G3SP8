@@ -27,7 +27,7 @@ namespace AnimationLoader
 		if (!std::filesystem::exists(animationPath))
 			return std::move(animsInFolder);
 
-		std::filesystem::directory_iterator start(animationPath.c_str());
+		std::filesystem::directory_iterator start(animationPath.c_str(), std::filesystem::directory_options::follow_directory_symlink);
 		//try
 		//{
 		//	throw start = std::filesystem::directory_iterator(animationPath.c_str());
@@ -48,6 +48,9 @@ namespace AnimationLoader
 			if(itPath.extension().filename().string() == ".fbx")
 				animsInFolder.emplace_back(animationPath + itPath.filename().string());
 		}
+
+		std::sort(animsInFolder.begin(), animsInFolder.end());
+
 		return std::move(animsInFolder);
 	}
 

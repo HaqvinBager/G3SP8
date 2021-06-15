@@ -249,6 +249,7 @@ void CInGameState::Update()
 	case EExitTo::MainMenu:
 	{
 		myExitTo = EExitTo::None;
+		ToggleCanvas(EInGameCanvases_MainMenu);
 	}break;
 
 	case EExitTo::Windows:
@@ -413,11 +414,13 @@ void CInGameState::OnSceneLoadCompleteMenu(std::string /*aMsg*/)
 	CScene& scene = IRONWROUGHT->GetActiveScene();
 	CreateMenuCamera(scene);
 
-	myCurrentCanvas = EInGameCanvases_MainMenu;
-	scene.SetCanvas(myCanvases[myCurrentCanvas]);
-	scene.UpdateOnlyCanvas(false);
+	ToggleCanvas(EInGameCanvases_MainMenu);
+
+	//myCurrentCanvas = EInGameCanvases_MainMenu;
+	//scene.SetCanvas(myCanvases[myCurrentCanvas]);
+	//scene.UpdateOnlyCanvas(false);
 	scene.ToggleSections(0);
-	IRONWROUGHT->ShowCursor(true);
+	//IRONWROUGHT->ShowCursor(true);
 
 	myEnemyAnimationController->Activate();
 	CEngine::GetInstance()->SetActiveScene(myState);// Might be redundant.
@@ -526,11 +529,12 @@ void CInGameState::ToggleCanvas(EInGameCanvases anEInGameCanvases)
 
 	if (myCurrentCanvas == EInGameCanvases_MainMenu)
 	{
-		scene.UpdateOnlyCanvas(true);
+		scene.UpdateOnlyCanvas(false);
 		scene.MainCamera(ESceneCamera::MenuCam);
 		myMenuCamera->myTransform->Position(myMenuCameraPositions[0]);
 		IRONWROUGHT->ShowCursor(false);
 		IRONWROUGHT->SetIsMenu(true);
+		myCanvases[myCurrentCanvas]->DisableWidgets();
 	}
 	else if (myCurrentCanvas == EInGameCanvases_PauseMenu)
 	{
