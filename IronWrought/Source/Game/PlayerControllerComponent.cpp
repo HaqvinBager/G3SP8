@@ -23,7 +23,7 @@
 #define PLAYER_MIN_POSITION -500.0f
 
 CPlayerControllerComponent::CPlayerControllerComponent(CGameObject& gameObject, const float aWalkSpeed, const float aCrouchSpeed, physx::PxUserControllerHitReport* aHitReport)
-	: CComponent(gameObject)
+	: CBehavior(gameObject)
 	, mySpeed(aWalkSpeed)
 	, myIsCrouching(false)
 	, myWalkSpeed(aWalkSpeed)
@@ -169,6 +169,12 @@ void CPlayerControllerComponent::FixedUpdate()
 		CrouchUpdate(CTimer::FixedDt() * 2.0f);
 	}
 }
+
+void CPlayerControllerComponent::OnEnable()
+{}
+
+void CPlayerControllerComponent::OnDisable()
+{}
 
 void CPlayerControllerComponent::ReceiveEvent(const EInputEvent aEvent)
 {
