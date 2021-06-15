@@ -374,7 +374,7 @@ void CInGameState::Receive(const SMessage& aMessage)
 		{
 #ifdef INGAME_USE_MENU
 			int index = *static_cast<int*>(aMessage.data);
-			if (index < 0 || index > myMenuCameraPositions.size() - 1)
+			if (index < 1 || index > myMenuCameraPositions.size() - 1 || myMenuCameraTargetPosition == myMenuCameraPositions[index])
 				break;
 
 			myMenuCameraTargetPosition = myMenuCameraPositions[index];
@@ -384,6 +384,8 @@ void CInGameState::Receive(const SMessage& aMessage)
 				, DirectX::XMConvertToRadians(myMenuCameraRotations[index].x)
 				, DirectX::XMConvertToRadians(myMenuCameraRotations[index].z)
 			);
+
+			CMainSingleton::PostMaster().Send({ EMessageType::UICameraWoosh, nullptr });
 #endif
 		}break;
 
