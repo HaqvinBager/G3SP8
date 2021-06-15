@@ -328,7 +328,7 @@ BoxCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 79527616}
-  m_Material: {fileID: 1231507234}
+  m_Material: {fileID: 129907537}
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
@@ -350,6 +350,18 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!134 &129907537
+PhysicMaterial:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: ' (Instance) (Instance) (Instance) (Instance) (Instance) (Instance)'
+  dynamicFriction: 0.6
+  staticFriction: 0.6
+  bounciness: 0
+  frictionCombine: 0
+  bounceCombine: 0
 --- !u!1001 &282378520
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -424,18 +436,6 @@ PrefabInstance:
     m_RemovedComponents:
     - {fileID: 2005558277879865816, guid: 04a5fc57e73e31f4e996581c5b52a590, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 04a5fc57e73e31f4e996581c5b52a590, type: 3}
---- !u!134 &348450639
-PhysicMaterial:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_Name: ' (Instance) (Instance) (Instance) (Instance)'
-  dynamicFriction: 0.6
-  staticFriction: 0.6
-  bounciness: 0
-  frictionCombine: 0
-  bounceCombine: 0
 --- !u!134 &657237680
 PhysicMaterial:
   m_ObjectHideFlags: 0
@@ -443,18 +443,6 @@ PhysicMaterial:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: ' (Instance)'
-  dynamicFriction: 0.6
-  staticFriction: 0.6
-  bounciness: 0
-  frictionCombine: 0
-  bounceCombine: 0
---- !u!134 &679513068
-PhysicMaterial:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_Name: ' (Instance) (Instance) (Instance) (Instance)'
   dynamicFriction: 0.6
   staticFriction: 0.6
   bounciness: 0
@@ -603,6 +591,18 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e003e6005d232aa4897d5ca485792bb4, type: 3}
+--- !u!134 &857589040
+PhysicMaterial:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: ' (Instance) (Instance) (Instance) (Instance) (Instance)'
+  dynamicFriction: 0.6
+  staticFriction: 0.6
+  bounciness: 0
+  frictionCombine: 0
+  bounceCombine: 0
 --- !u!134 &889386788
 PhysicMaterial:
   m_ObjectHideFlags: 0
@@ -818,7 +818,7 @@ BoxCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 942056435}
-  m_Material: {fileID: 348450639}
+  m_Material: {fileID: 857589040}
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
@@ -840,6 +840,18 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!134 &998941118
+PhysicMaterial:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: ' (Instance) (Instance) (Instance) (Instance) (Instance) (Instance)'
+  dynamicFriction: 0.6
+  staticFriction: 0.6
+  bounciness: 0
+  frictionCombine: 0
+  bounceCombine: 0
 --- !u!1001 &1179616199
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -934,18 +946,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5c562e108cc65394cb59634177042694, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!134 &1231507234
-PhysicMaterial:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_Name: ' (Instance) (Instance) (Instance) (Instance) (Instance)'
-  dynamicFriction: 0.6
-  staticFriction: 0.6
-  bounciness: 0
-  frictionCombine: 0
-  bounceCombine: 0
 --- !u!1001 &1250483854
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1077,7 +1077,7 @@ BoxCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1250483855}
-  m_Material: {fileID: 1685427497}
+  m_Material: {fileID: 998941118}
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
@@ -1133,7 +1133,7 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!134 &1685427497
+--- !u!134 &1698291985
 PhysicMaterial:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1254,13 +1254,40 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   myLock: {fileID: 7583396419264505223}
   responseType: 1
---- !u!134 &1917720075
+--- !u!114 &1727195254
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1727195251}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7652d18929f027e43b5eaeeb24e1754f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  effectName: ElectricSpark
+--- !u!114 &1727195255
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1727195251}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 818126f2d86e0164a8ad747fb3dd6ff8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  duration: 0.5
+  delay: 0.5
+--- !u!134 &1932255122
 PhysicMaterial:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: ' (Instance) (Instance) (Instance) (Instance)'
+  m_Name: ' (Instance) (Instance) (Instance) (Instance) (Instance)'
   dynamicFriction: 0.6
   staticFriction: 0.6
   bounciness: 0
@@ -1510,7 +1537,7 @@ BoxCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 406547622860585527}
-  m_Material: {fileID: 679513068}
+  m_Material: {fileID: 1932255122}
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
@@ -1682,7 +1709,7 @@ BoxCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2118541223123314273}
-  m_Material: {fileID: 1917720075}
+  m_Material: {fileID: 1698291985}
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
