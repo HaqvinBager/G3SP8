@@ -1016,6 +1016,8 @@ std::string CAudioManager::TranslateEnum(ESFX enumerator) const {
 		return "PuzzleSolved";
 	case ESFX::PuzzleKey:
 		return "PuzzleKey";
+	case ESFX::InsertFuse:
+		return "InsertFuse";
 	default:
 		return "";
 	}
