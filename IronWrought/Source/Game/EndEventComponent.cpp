@@ -4,6 +4,7 @@
 #include "PlayerControllerComponent.h"
 #include "TransformComponent.h"
 #include <AnimationComponent.h>
+#include "CameraComponent.h"
 
 CEndEventComponent::CEndEventComponent(CGameObject& aParent, const SEndEventData& aData)
 	: IResponseBehavior(aParent)
@@ -12,6 +13,7 @@ CEndEventComponent::CEndEventComponent(CGameObject& aParent, const SEndEventData
 	, myTime(0.0f)
 	, myLastVingetteStrength(0.0f)
 	, myLastAnimationIndex(-1) //5 == Idle
+	, myEventHasCompleted(false)
 {
 
 }
@@ -34,6 +36,12 @@ void CEndEventComponent::Start()
 
 void CEndEventComponent::Update()
 {
+	if (myEventHasCompleted)
+	{
+		OnEndEventComplete();
+		return;
+	}
+
 	if (IsValidPathIndex(myPathIndex))
 	{
 		myTime += CTimer::Dt();	
@@ -53,15 +61,43 @@ void CEndEventComponent::UpdatePathIndex(const SPathPoint& point)
 		myLastRotation = point.myRotation;
 		myLastVingetteStrength = point.myVingetteStrength;
 		myLastAnimationIndex = point.myAnimationIndex;
-		std::cout << __FUNCTION__ << " Next Index! " << std::endl;
+		//std::cout << __FUNCTION__ << " Next Index! " << std::endl;
 		myTime = 0.0f;
 		//std::cout << CTimer::Time() << " /tTime" << std::endl;
 		myPathIndex = (myPathIndex + static_cast<int>(1)) % myData.myEnemyPath.size();	
+
+		if (myPathIndex == myData.myEnemyPath.size() - 1)
+		{
+			StartPostEvent();
+		}
+
 		if (myPathIndex == 0) //PathIndex will only equal Zero when it has played the entire sequence, and would then re-start. We dont want it to restart <3 /Axel Savage 2021-06-14 16:54
 		{
-			Enabled(false);
+			myEventHasCompleted = true;
+			//Enabled(false);
 		}
 	}
+}
+
+void CEndEventComponent::StartPostEvent()
+{
+	CCameraComponent* camera = CEngine::GetInstance()->GetActiveScene().MainCamera();
+	camera->Fade(false, 1.142f, true);
+
+	Vector3 playerPos = myPlayer->myTransform->Position();
+	Vector3 enemyPos = myEnemy->myTransform->Position();
+
+	enemyPos.x = playerPos.x;
+	enemyPos.z = playerPos.z;
+
+	IRONWROUGHT_ACTIVE_SCENE.MainCamera()->SetTrauma(myNormalizedBlend, CCameraComponent::ECameraShakeState::EnemySway);
+
+	myData.myEnemyPath[myPathIndex].myPosition = enemyPos;
+}
+
+void CEndEventComponent::OnEndEventComplete()
+{
+	CMainSingleton::PostMaster().SendLate({ EMessageType::EndOfGameEvent, nullptr });
 }
 
 void CEndEventComponent::OnRespond()

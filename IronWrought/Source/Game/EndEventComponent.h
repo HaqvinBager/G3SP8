@@ -23,12 +23,12 @@ public:
 private:
 
 	const bool IsValidPathIndex(const int aPathIndex);
-	
 	void MoveAlongPath(const SPathPoint& aPoint);
 	void UpdateAnimation(const SPathPoint& aPoint);
 	void UpdateVingette(const SPathPoint& aPoint);
-
 	void UpdatePathIndex(const SPathPoint& point);
+	void StartPostEvent();
+	void OnEndEventComplete();
 
 	const float Lerp(const float a, const float b, const float t) const
 	{
@@ -55,6 +55,7 @@ private:
 	int myLastAnimationIndex;
 	int myPathIndex;
 	float myTime;
+	bool myEventHasCompleted;
 
 	CGameObject* myPlayer;
 	CGameObject* myEnemy;
