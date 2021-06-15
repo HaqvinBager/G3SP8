@@ -5,6 +5,7 @@ using UnityEngine;
 public struct EndEventData
 {
     public List<PathPoint> path;
+    public List<VFXPoint> vfx;
     public int enemyInstanceID;
     public int playerInstanceID;
     public int instanceID;
@@ -24,6 +25,7 @@ public class ExportEndEvent
         EndEvent endEvent = GameObject.FindObjectOfType<EndEvent>();
         outData.endEvent = new EndEventData();
         outData.endEvent.path = new List<PathPoint>();
+        outData.endEvent.vfx = new List<VFXPoint>();
         if (endEvent != null)
         {
             outData.endEvent.enemyInstanceID = endEvent.enemy.GetInstanceID();
@@ -34,6 +36,14 @@ public class ExportEndEvent
             {
                 outData.endEvent.path.Add(point);
             }
+            //foreach(VFXPoint point in endEvent.vfx)
+            //{
+            //    if(point != null)
+            //    {
+            //        point.instanceID = point.transform.GetInstanceID();
+            //        outData.endEvent.vfx.Add(point);
+            //    }
+            //}
 
             return true;
         }

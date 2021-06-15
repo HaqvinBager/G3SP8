@@ -1285,6 +1285,15 @@ void CSceneManager::AddEndEventComponent(CScene& aScene, const SEndEventData& aD
 	if (gameObject != nullptr)
 	{
 		gameObject->AddComponent<CEndEventComponent>(*gameObject, aData);
+
+		//for (const auto& vfx : aData.myVFX)
+		//{
+		//	CGameObject* vfxGameObject = aScene.FindObjectWithID(vfx.myInstanceID);
+		//	if (vfxGameObject != nullptr)
+		//	{
+		//		vfxGameObject->AddComponent<CVFXSystemComponent>(*vfxGameObject, ASSETPATH("" + vfx.myVfxPath));
+		//	}
+		//}
 	}
 }
 

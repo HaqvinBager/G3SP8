@@ -300,6 +300,17 @@ namespace Binary {
 			return sizeof(T) * aCount;
 		}
 
+
+		size_t ReadCharBuffer(char* aPtr, std::string& outString)
+		{
+			char buffer[128];// = new char[aPtr[0]];
+			memcpy(&buffer[0], aPtr + 1, aPtr[0]);
+			buffer[aPtr[0]] = '\0';
+			outString.resize(aPtr[0]);
+			memcpy(&outString.data()[0], &aPtr[1], aPtr[0]);
+			return sizeof(char) * aPtr[0] + 1;
+		}
+
 		size_t operator()(SEndEventData& someData, char* aPtr)
 		{
 			char* ptr = aPtr;
@@ -319,6 +330,14 @@ namespace Binary {
 			someData.myEnemyPath.resize(count);
 			ptr += Copy(someData.myEnemyPath.data()[0], ptr, count);
 
+			//ptr += Copy(count, ptr);
+			//someData.myVFX.resize(count);
+			//for (int i = 0; i < count; ++i)
+			//{
+			//	ptr += ReadCharBuffer(ptr, someData.myVFX[i].myVfxPath);
+			//	ptr += Copy(someData.myVFX[i].myDelay, ptr);
+			//	ptr += Copy(someData.myVFX[i].myInstanceID, ptr);
+			//}
 			return ptr - aPtr;
 		}
 	};

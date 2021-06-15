@@ -13,9 +13,12 @@ public struct PathPoint
     public float playerVingetteStrength;
 }
 
+
+
 public class EndEvent : MonoBehaviour
 {
     public Transform enemy;
     public float lockPlayerDuration = 5.0f;
     public List<PathPoint> path = new List<PathPoint>();
+    //public List<VFXPoint> vfx = new List<VFXPoint>();
 }

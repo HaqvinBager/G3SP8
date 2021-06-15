@@ -9,8 +9,15 @@ struct SPathPoint {
 	float myVingetteStrength;
 };
 
+//struct SVFXPoint {
+//	std::string myVfxPath;
+//	float myDelay;
+//	int myInstanceID;
+//};
+
 struct SEndEventData {
 	std::vector<SPathPoint> myEnemyPath;
+	//std::vector<SVFXPoint> myVFX;
 	int instanceID;
 	int myEnemyInstanceID;
 	int myPlayerInstanceID;
