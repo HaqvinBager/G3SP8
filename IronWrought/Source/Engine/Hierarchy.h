@@ -36,6 +36,7 @@ class CRotateResponse;
 class CMoveActivation;
 class CMoveResponse;
 class CToggleResponse;
+class CEndEventComponent;
 
 namespace ImGui {
 	class CHierarchy : public CWindow
@@ -82,6 +83,8 @@ namespace ImGui {
 		void Edit(COnTriggerLock* aComponent);
 		void Edit(CListenerBehavior* aComponent);
 		void Edit(CKeyBehavior* aComponent);
+		void Edit(CEndEventComponent* aComponent);
+
 
 	private:
 		std::unordered_map<std::type_index, std::function<void(CComponent*)>> myComponentMap;

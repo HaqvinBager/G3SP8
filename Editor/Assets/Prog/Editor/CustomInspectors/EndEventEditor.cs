@@ -15,7 +15,7 @@ public class EndEventEditor : Editor
             SerializedProperty newElement = AddToPath();
             EndEvent script = (EndEvent)target;
             newElement.FindPropertyRelative("position").vector3Value = script.transform.ConvertToIronWroughtPosition();
-            newElement.FindPropertyRelative("rotation").vector3Value = script.transform.ConvertToIronWroughtRotation();
+            newElement.FindPropertyRelative("rotation").quaternionValue = script.transform.ConvertToIronWroughtRotationQuaternion();
             newElement.FindPropertyRelative("duration").floatValue = 0.5f;
         }
         serializedObject.ApplyModifiedProperties();
