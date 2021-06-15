@@ -122,6 +122,7 @@ enum class EMessageType
 	LevelSelectLoadLevel,
 
 	UIHoverButton,
+	UICameraWoosh,
 
 	Count
 };

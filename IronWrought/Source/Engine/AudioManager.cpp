@@ -226,6 +226,14 @@ void CAudioManager::Receive(const SMessage& aMessage) {
 		}
 	}break;
 
+	case EMessageType::UICameraWoosh:
+	{
+		if (myUIAudio.size() >= static_cast<unsigned int>(EUI::CameraWoosh))
+		{
+			myWrapper.Play(myUIAudio[CAST(EUI::CameraWoosh)], myChannels[CAST(EChannel::UI)]);
+		}
+	}break;
+
 	case EMessageType::PlayStepSound:
 	{
 		PostMaster::SStepSoundData stepData = *reinterpret_cast<PostMaster::SStepSoundData*>(aMessage.data);
@@ -680,6 +688,7 @@ void CAudioManager::SubscribeToMessages()
 {
 	CMainSingleton::PostMaster().Subscribe(EMessageType::UIButtonPress, this);
 	CMainSingleton::PostMaster().Subscribe(EMessageType::UIHoverButton, this);
+	CMainSingleton::PostMaster().Subscribe(EMessageType::UICameraWoosh, this);
 	CMainSingleton::PostMaster().Subscribe(EMessageType::PlayResearcherReactionExplosives, this);
 	CMainSingleton::PostMaster().Subscribe(EMessageType::PlayRobotAttackSound, this);
 	CMainSingleton::PostMaster().Subscribe(EMessageType::PlayRobotDeathSound, this);
@@ -739,13 +748,13 @@ void CAudioManager::SubscribeToMessages()
 	CMainSingleton::PostMaster().Subscribe(EMessageType::PlayDynamicAudioSource, this);
 	CMainSingleton::PostMaster().Subscribe(EMessageType::Play3DVoiceLine, this);
 	CMainSingleton::PostMaster().Subscribe(EMessageType::Play2DVoiceLine, this);
-
 }
 
 void CAudioManager::UnsubscribeToMessages()
 {
 	CMainSingleton::PostMaster().Unsubscribe(EMessageType::UIButtonPress, this);
 	CMainSingleton::PostMaster().Unsubscribe(EMessageType::UIHoverButton, this);
+	CMainSingleton::PostMaster().Unsubscribe(EMessageType::UICameraWoosh, this);
 	CMainSingleton::PostMaster().Unsubscribe(EMessageType::PlayResearcherReactionExplosives, this);
 	CMainSingleton::PostMaster().Unsubscribe(EMessageType::PlayRobotAttackSound, this);
 	CMainSingleton::PostMaster().Unsubscribe(EMessageType::PlayRobotDeathSound, this);
@@ -1030,6 +1039,8 @@ std::string CAudioManager::TranslateEnum(EUI enumerator) const {
 		return "PlayClick";
 	case EUI::HoverButton:
 		return "HoverButton";
+	case EUI::CameraWoosh:
+		return "CameraWoosh";
 	default:
 		return "";
 	}
