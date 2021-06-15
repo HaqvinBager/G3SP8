@@ -265,12 +265,6 @@ void CAudioManager::Receive(const SMessage& aMessage) {
 	}
 	break;
 
-	case EMessageType::PlayerTakeDamage:
-	{
-		myWrapper.Play(mySFXAudio[CAST(ESFX::EnemyHit)], myChannels[CAST(EChannel::SFX)]);
-	}
-	break;
-
 	case EMessageType::PlayVoiceEvent:
 	{
 		int index = *static_cast<int*>(aMessage.data);
@@ -1022,6 +1016,8 @@ std::string CAudioManager::TranslateEnum(ESFX enumerator) const {
 		return "PuzzleSolved";
 	case ESFX::PuzzleKey:
 		return "PuzzleKey";
+	case ESFX::InsertFuse:
+		return "InsertFuse";
 	default:
 		return "";
 	}

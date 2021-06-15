@@ -334,7 +334,7 @@ void CGravityGloveComponent::InteractionLogicContinuous()
 
 			if (myCurrentTarget.myRigidBodyPtr)
 				myCrosshairData.myTargetStatus = PostMaster::SCrossHairData::ETargetStatus::Holding;
-			else if(rigidbody)
+			else if(rigidbody || transform->GameObject().Tag() == "Painting")
 				myCrosshairData.myTargetStatus = PostMaster::SCrossHairData::ETargetStatus::Targeted;
 			else
 				myCrosshairData.myTargetStatus = PostMaster::SCrossHairData::ETargetStatus::None;

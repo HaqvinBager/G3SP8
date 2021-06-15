@@ -177,7 +177,7 @@ PrefabInstance:
     - target: {fileID: 5870580155986294078, guid: 3f84232a6a8e3ea45ba5024dd0e18116, type: 3}
       propertyPath: m_Material
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 1181362746}
     - target: {fileID: 6422795178679717016, guid: 3f84232a6a8e3ea45ba5024dd0e18116, type: 3}
       propertyPath: audioIndex
       value: 0
@@ -196,6 +196,30 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3f84232a6a8e3ea45ba5024dd0e18116, type: 3}
+--- !u!134 &721502664
+PhysicMaterial:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: 
+  dynamicFriction: 0.6
+  staticFriction: 0.6
+  bounciness: 0
+  frictionCombine: 0
+  bounceCombine: 0
+--- !u!134 &1181362746
+PhysicMaterial:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: 
+  dynamicFriction: 0.6
+  staticFriction: 0.6
+  bounciness: 0
+  frictionCombine: 0
+  bounceCombine: 0
 --- !u!1001 &1513793148
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -209,7 +233,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1090454937506686994, guid: 3f84232a6a8e3ea45ba5024dd0e18116, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 14.344
+      value: 14.379
       objectReference: {fileID: 0}
     - target: {fileID: 1090454937506686994, guid: 3f84232a6a8e3ea45ba5024dd0e18116, type: 3}
       propertyPath: m_LocalPosition.y
@@ -217,7 +241,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1090454937506686994, guid: 3f84232a6a8e3ea45ba5024dd0e18116, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -38.009
+      value: -37.246
       objectReference: {fileID: 0}
     - target: {fileID: 1090454937506686994, guid: 3f84232a6a8e3ea45ba5024dd0e18116, type: 3}
       propertyPath: m_LocalRotation.w
@@ -250,7 +274,7 @@ PrefabInstance:
     - target: {fileID: 5870580155986294078, guid: 3f84232a6a8e3ea45ba5024dd0e18116, type: 3}
       propertyPath: m_Material
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 721502664}
     - target: {fileID: 6422795178679717016, guid: 3f84232a6a8e3ea45ba5024dd0e18116, type: 3}
       propertyPath: audioIndex
       value: 0
