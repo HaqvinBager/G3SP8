@@ -123,19 +123,6 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
---- !u!134 &441168118
-PhysicMaterial:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_Name: ' (Instance) (Instance) (Instance) (Instance) (Instance) (Instance) (Instance)
-    (Instance)'
-  dynamicFriction: 0.6
-  staticFriction: 0.6
-  bounciness: 0
-  frictionCombine: 0
-  bounceCombine: 0
 --- !u!1001 &667290754
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -149,31 +136,31 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1090454937506686994, guid: 3f84232a6a8e3ea45ba5024dd0e18116, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 11.559
+      value: 12.692
       objectReference: {fileID: 0}
     - target: {fileID: 1090454937506686994, guid: 3f84232a6a8e3ea45ba5024dd0e18116, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 1.048
+      value: -1.307
       objectReference: {fileID: 0}
     - target: {fileID: 1090454937506686994, guid: 3f84232a6a8e3ea45ba5024dd0e18116, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -32.312
+      value: -34.364
       objectReference: {fileID: 0}
     - target: {fileID: 1090454937506686994, guid: 3f84232a6a8e3ea45ba5024dd0e18116, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 1
+      value: 0.70710784
       objectReference: {fileID: 0}
     - target: {fileID: 1090454937506686994, guid: 3f84232a6a8e3ea45ba5024dd0e18116, type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 1090454937506686994, guid: 3f84232a6a8e3ea45ba5024dd0e18116, type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0
+      value: -0.70710576
       objectReference: {fileID: 0}
     - target: {fileID: 1090454937506686994, guid: 3f84232a6a8e3ea45ba5024dd0e18116, type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 1090454937506686994, guid: 3f84232a6a8e3ea45ba5024dd0e18116, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -181,7 +168,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1090454937506686994, guid: 3f84232a6a8e3ea45ba5024dd0e18116, type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
+      value: -90
       objectReference: {fileID: 0}
     - target: {fileID: 1090454937506686994, guid: 3f84232a6a8e3ea45ba5024dd0e18116, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
@@ -198,7 +185,7 @@ PrefabInstance:
     - target: {fileID: 5870580155986294078, guid: 3f84232a6a8e3ea45ba5024dd0e18116, type: 3}
       propertyPath: m_Material
       value: 
-      objectReference: {fileID: 1716870036}
+      objectReference: {fileID: 1510822637}
     - target: {fileID: 6422795178679717016, guid: 3f84232a6a8e3ea45ba5024dd0e18116, type: 3}
       propertyPath: audioIndex
       value: 2
@@ -217,14 +204,27 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3f84232a6a8e3ea45ba5024dd0e18116, type: 3}
---- !u!134 &1716870036
+--- !u!134 &1487185855
 PhysicMaterial:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: ' (Instance) (Instance) (Instance) (Instance) (Instance) (Instance) (Instance)
-    (Instance)'
+    (Instance) (Instance) (Instance)'
+  dynamicFriction: 0.6
+  staticFriction: 0.6
+  bounciness: 0
+  frictionCombine: 0
+  bounceCombine: 0
+--- !u!134 &1510822637
+PhysicMaterial:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: ' (Instance) (Instance) (Instance) (Instance) (Instance) (Instance) (Instance)
+    (Instance) (Instance) (Instance)'
   dynamicFriction: 0.6
   staticFriction: 0.6
   bounciness: 0
@@ -284,7 +284,7 @@ PrefabInstance:
     - target: {fileID: 5870580155986294078, guid: 3f84232a6a8e3ea45ba5024dd0e18116, type: 3}
       propertyPath: m_Material
       value: 
-      objectReference: {fileID: 441168118}
+      objectReference: {fileID: 1487185855}
     - target: {fileID: 6422795178679717016, guid: 3f84232a6a8e3ea45ba5024dd0e18116, type: 3}
       propertyPath: audioIndex
       value: 0
