@@ -313,7 +313,6 @@ void CGravityGloveComponent::Receive(const SStringMessage& aMessage)
 
 void CGravityGloveComponent::InteractionLogicContinuous()
 {
-	std::cout << __FUNCTION__ << std::endl;
 	// -4FPS! with continuous raycasts :S (compared to InteractionLogicOnInput() in Cottage) // Aki 2021 05 26
 	Vector3 start = GameObject().myTransform->GetWorldMatrix().Translation();
 	Vector3 dir = -GameObject().myTransform->GetWorldMatrix().Forward();

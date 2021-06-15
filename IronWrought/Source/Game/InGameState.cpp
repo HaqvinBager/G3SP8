@@ -41,7 +41,7 @@
 #ifdef NDEBUG
 #define INGAME_USE_MENU
 #else
-#define INGAME_USE_MENU
+//#define INGAME_USE_MENU
 #endif
 
 #define MENU_SCENE "Level_Cottage_1"
@@ -338,7 +338,7 @@ void CInGameState::Receive(const SMessage& aMessage)
 
 		case EMessageType::StartGame:
 		{
-			IRONWROUGHT->GetActiveScene().ToggleSections(0);// Disable when single level loading.
+			//IRONWROUGHT->GetActiveScene().ToggleSections(0);// Disable when single level loading.
 			ToggleCanvas(EInGameCanvases_HUD);
 		}break;
 
@@ -554,6 +554,7 @@ void CInGameState::ToggleCanvas(EInGameCanvases anEInGameCanvases)
 		IRONWROUGHT->HideCursor(false);
 		scene.SetCanvas(myCanvases[myCurrentCanvas]);
 		scene.UpdateOnlyCanvas(true);
+		IRONWROUGHT->SetIsMenu(false);
 	}
 #else
 	if (myCurrentCanvas == EInGameCanvases_HUD)
