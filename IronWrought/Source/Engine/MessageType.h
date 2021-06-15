@@ -121,5 +121,7 @@ enum class EMessageType
 
 	LevelSelectLoadLevel,
 
+	UIHoverButton,
+
 	Count
 };

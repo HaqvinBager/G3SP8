@@ -218,6 +218,14 @@ void CAudioManager::Receive(const SMessage& aMessage) {
 		}
 	}break;
 
+	case EMessageType::UIHoverButton:
+	{
+		if (myUIAudio.size() >= static_cast<unsigned int>(EUI::HoverButton))
+		{
+			myWrapper.Play(myUIAudio[CAST(EUI::HoverButton)], myChannels[CAST(EChannel::UI)]);
+		}
+	}break;
+
 	case EMessageType::PlayStepSound:
 	{
 		PostMaster::SStepSoundData stepData = *reinterpret_cast<PostMaster::SStepSoundData*>(aMessage.data);
@@ -365,6 +373,11 @@ void CAudioManager::Receive(const SMessage& aMessage) {
 
 	case EMessageType::StartGame:
 	{
+		if (myUIAudio.size() >= static_cast<unsigned int>(EUI::PlayClick))
+		{
+			myWrapper.Play(myUIAudio[CAST(EUI::PlayClick)], myChannels[CAST(EChannel::UI)]);
+		}
+
 		//std::string scene = *reinterpret_cast<std::string*>(aMessage.data);
 		//if (strcmp(scene.c_str(), "VerticalSlice") == 0)
 		//{
@@ -666,6 +679,7 @@ void CAudioManager::ClearSources()
 void CAudioManager::SubscribeToMessages()
 {
 	CMainSingleton::PostMaster().Subscribe(EMessageType::UIButtonPress, this);
+	CMainSingleton::PostMaster().Subscribe(EMessageType::UIHoverButton, this);
 	CMainSingleton::PostMaster().Subscribe(EMessageType::PlayResearcherReactionExplosives, this);
 	CMainSingleton::PostMaster().Subscribe(EMessageType::PlayRobotAttackSound, this);
 	CMainSingleton::PostMaster().Subscribe(EMessageType::PlayRobotDeathSound, this);
@@ -731,6 +745,7 @@ void CAudioManager::SubscribeToMessages()
 void CAudioManager::UnsubscribeToMessages()
 {
 	CMainSingleton::PostMaster().Unsubscribe(EMessageType::UIButtonPress, this);
+	CMainSingleton::PostMaster().Unsubscribe(EMessageType::UIHoverButton, this);
 	CMainSingleton::PostMaster().Unsubscribe(EMessageType::PlayResearcherReactionExplosives, this);
 	CMainSingleton::PostMaster().Unsubscribe(EMessageType::PlayRobotAttackSound, this);
 	CMainSingleton::PostMaster().Unsubscribe(EMessageType::PlayRobotDeathSound, this);
@@ -1013,6 +1028,8 @@ std::string CAudioManager::TranslateEnum(EUI enumerator) const {
 		return "ButtonClick";
 	case EUI::PlayClick:
 		return "PlayClick";
+	case EUI::HoverButton:
+		return "HoverButton";
 	default:
 		return "";
 	}

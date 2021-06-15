@@ -14,6 +14,9 @@ void CButton::OnHover()
 	myState = EButtonState::Hover;
 	mySprites.at(static_cast<size_t>(EButtonState::Idle))->SetShouldRender(false);
 	mySprites.at(static_cast<size_t>(EButtonState::Hover))->SetShouldRender(true);
+
+	SMessage msg = { EMessageType::UIHoverButton, nullptr };
+	CMainSingleton::PostMaster().Send(msg);
 }
 
 void CButton::OnClickDown()
