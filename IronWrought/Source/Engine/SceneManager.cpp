@@ -659,6 +659,10 @@ void CSceneManager::AddPuzzleKey(CScene& aScene, RapidArray someData)
 	for (const auto& key : someData)
 	{
 		CGameObject* gameObject = aScene.FindObjectWithID(key["instanceID"].GetInt());
+
+		if (!gameObject)
+			continue;
+
 		CKeyBehavior::SSettings settings = {
 			key["onKeyCreateNotifyName"].GetString(),
 			key["onKeyInteractNotifyName"].GetString(),

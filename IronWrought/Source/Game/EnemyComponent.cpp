@@ -380,12 +380,15 @@ void CEnemyComponent::Receive(const SMessage& aMsg)
 {
 	if (aMsg.myMessageType == EMessageType::EnemyAttackedPlayer)
 	{
+		//std::cout << __FUNCTION__ << " ATTACK PLAYER " << std::endl;
 		myMovementLocked = true;
 		bool lockCamera = true;
 		CMainSingleton::PostMaster().Send({ EMessageType::LockFPSCamera, &lockCamera });
 		CPlayerControllerComponent* plCtrl = myPlayer->GetComponent<CPlayerControllerComponent>();
 		plCtrl->ForceStand();
 		plCtrl->LockMovementFor(myAttackPlayerTimerMax + 0.75f);
+		//CMainSingleton::PostMaster().Send({ PostMaster::SMSG_DISABLE_GLOVE, nullptr });// Doing this did not work out well
+		CMainSingleton::PostMaster().Send({ PostMaster::SMSG_DISABLE_CANVAS, nullptr });
 
 		Vector3 targetDirection = myPlayer->myTransform->Position() - this->GameObject().myTransform->Position();
 		targetDirection.Normalize();
@@ -404,6 +407,10 @@ void CEnemyComponent::Receive(const SMessage& aMsg)
 	}
 
 	if (aMsg.myMessageType == EMessageType::PropCollided) {
+		
+		if (myDetachedPlayerHead)// Return if the enemy is attacking the players head.
+			return;
+		
 		CGameObject* gameobject = reinterpret_cast<CGameObject*>(aMsg.data);
 		if (gameobject) {
 			std::vector<Vector3> path = myNavMesh->CalculatePath(GameObject().myTransform->Position(), gameobject->myTransform->Position(), myNavMesh);
@@ -462,15 +469,21 @@ void CEnemyComponent::UpdateAttackEvent()
 		IRONWROUGHT->GetActiveScene().MainCamera()->Fade(false, 0.1f, false);
 		float damageToPlayer = 34.0f;
 		CMainSingleton::PostMaster().Send({ EMessageType::PlayerTakeDamage, &damageToPlayer });
-
 		CPlayerControllerComponent* plCtrl = myPlayer->GetComponent<CPlayerControllerComponent>();
 		myDetachedPlayerHead->SetParent(myPlayer->myTransform);
+		if (myDetachedPlayerHead)
+		{
+		}
 		plCtrl->ForceCrouch();
 		//plCtrl->OnCrouch();
 
 		bool lockCamera = false;
 		CMainSingleton::PostMaster().Send({ EMessageType::LockFPSCamera, &lockCamera });
+		//CMainSingleton::PostMaster().Send({ PostMaster::SMSG_ENABLE_GLOVE, nullptr });// Only needs to be re-enabled if it has been disabled
+		CMainSingleton::PostMaster().Send({ PostMaster::SMSG_ENABLE_CANVAS, nullptr });
+
 		IRONWROUGHT->GetActiveScene().MainCamera()->Fade(true, 1.0f);
+
 		float previousDistance = 0.0f;
 		if (!mySettings.mySpawnPoints.empty())
 		{
