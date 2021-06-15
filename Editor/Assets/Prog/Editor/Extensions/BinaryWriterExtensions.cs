@@ -408,6 +408,7 @@ public static class BinaryWriterExtensions
             aBinWriter.Write(p.rotation);
             aBinWriter.Write(p.duration);
             aBinWriter.Write(p.playerVingetteStrength);
+            aBinWriter.Write((int)p.animation);
         }
 
         //aBinWriter.Write(data.endEvent.vfx.Count);

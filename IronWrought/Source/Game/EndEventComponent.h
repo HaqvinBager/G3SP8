@@ -25,6 +25,7 @@ private:
 	const bool IsValidPathIndex(const int aPathIndex);
 	
 	void MoveAlongPath(const SPathPoint& aPoint);
+	void UpdateAnimation(const SPathPoint& aPoint);
 	void UpdateVingette(const SPathPoint& aPoint);
 
 	void UpdatePathIndex(const SPathPoint& point);
@@ -51,6 +52,7 @@ private:
 	Quaternion myLastRotation;
 	Vector3 myLastPos;
 	float myLastVingetteStrength;
+	int myLastAnimationIndex;
 	int myPathIndex;
 	float myTime;
 
