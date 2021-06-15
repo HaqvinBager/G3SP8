@@ -101,9 +101,12 @@ void CEndEventComponent::UpdateAnimation(const SPathPoint& aPoint)
 
 void CEndEventComponent::UpdateVingette(const SPathPoint& aPoint)
 {
-	CFullscreenRenderer::SPostProcessingBufferData data = CEngine::GetInstance()->GetPostProcessingBufferData();
-	myNormalizedBlend = SmoothStep(myLastVingetteStrength, aPoint.myVingetteStrength, myTime / aPoint.myDuration);
-	data.myVignetteStrength = Lerp(0.35f, 5.0f, myNormalizedBlend);
-	myActualVingetteStrength = data.myVignetteStrength;
-	CEngine::GetInstance()->SetPostProcessingBufferData(data);
+	if (aPoint.myVingetteStrength > 0.01f)
+	{
+		CFullscreenRenderer::SPostProcessingBufferData data = CEngine::GetInstance()->GetPostProcessingBufferData();
+		myNormalizedBlend = SmoothStep(myLastVingetteStrength, aPoint.myVingetteStrength, myTime / aPoint.myDuration);
+		data.myVignetteStrength = Lerp(0.35f, 3.0f, myNormalizedBlend);
+		myActualVingetteStrength = data.myVignetteStrength;
+		CEngine::GetInstance()->SetPostProcessingBufferData(data);
+	}
 }
