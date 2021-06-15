@@ -36,6 +36,7 @@ public:
 	void SetControllerPosition(const Vector3& aPos);
 	// No lerp. Instant crouch
 	void Crouch();
+	void ForceCrouch();
 	// Lerp for crouch
 	void CrouchUpdate(const float& dt);
 	void OnCrouch();

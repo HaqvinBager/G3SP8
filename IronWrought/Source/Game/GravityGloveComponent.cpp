@@ -284,6 +284,17 @@ void CGravityGloveComponent::OnEnable()
 
 void CGravityGloveComponent::OnDisable()
 {
+// The following code was a test for when the enemy grabs the player while it is holding an item.
+	//if (myCurrentTarget.myRigidBodyPtr)
+	//{
+	//	Push(myCurrentTarget.myRigidBodyPtr->GameObject().myTransform, myCurrentTarget.myRigidBodyPtr);
+	//	//Release();
+	//}
+	//myHoldingAItem = false;
+	//
+	//myCurrentTarget.myRigidBodyPtr = nullptr;
+	//myCrosshairData.myTargetStatus = PostMaster::SCrossHairData::ETargetStatus::None;
+	//CMainSingleton::PostMaster().SendLate({ EMessageType::UpdateCrosshair, &myCrosshairData });
 }
 
 void CGravityGloveComponent::Receive(const SStringMessage& aMessage)
@@ -291,10 +302,12 @@ void CGravityGloveComponent::Receive(const SStringMessage& aMessage)
 	if (PostMaster::DisableGravityGlove(aMessage.myMessageType))
 	{
 		this->Enabled(false);
+		return;
 	}
 	if (PostMaster::EnableGravityGlove(aMessage.myMessageType))
 	{
 		this->Enabled(true);
+		return;
 	}
 }
 
@@ -395,11 +408,12 @@ void CGravityGloveComponent::InteractionLogicContinuous()
 		CEngine::GetInstance()->GetWindowHandler()->HidLockCursor(true);
 		CMainSingleton::PostMaster().Send({ EMessageType::LockFPSCamera, &lockCamera });
 	}
-	else {
-		myObjectRotation = Vector2::Zero;
-		bool lockCamera = false;
-		CMainSingleton::PostMaster().Send({ EMessageType::LockFPSCamera, &lockCamera });
-	}
+	//else { // This ruins the camera shake :/
+	//	myObjectRotation = Vector2::Zero;
+	//	bool lockCamera = false;
+	//	CMainSingleton::PostMaster().Send({ EMessageType::LockFPSCamera, &lockCamera });
+	//}
+
 	CMainSingleton::PostMaster().SendLate({ EMessageType::UpdateCrosshair, &myCrosshairData });
 }
 

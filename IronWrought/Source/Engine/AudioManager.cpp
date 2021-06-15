@@ -218,6 +218,22 @@ void CAudioManager::Receive(const SMessage& aMessage) {
 		}
 	}break;
 
+	case EMessageType::UIHoverButton:
+	{
+		if (myUIAudio.size() >= static_cast<unsigned int>(EUI::HoverButton))
+		{
+			myWrapper.Play(myUIAudio[CAST(EUI::HoverButton)], myChannels[CAST(EChannel::UI)]);
+		}
+	}break;
+
+	case EMessageType::UICameraWoosh:
+	{
+		if (myUIAudio.size() >= static_cast<unsigned int>(EUI::CameraWoosh))
+		{
+			myWrapper.Play(myUIAudio[CAST(EUI::CameraWoosh)], myChannels[CAST(EChannel::UI)]);
+		}
+	}break;
+
 	case EMessageType::PlayStepSound:
 	{
 		PostMaster::SStepSoundData stepData = *reinterpret_cast<PostMaster::SStepSoundData*>(aMessage.data);
@@ -326,27 +342,26 @@ void CAudioManager::Receive(const SMessage& aMessage) {
 		myWrapper.Play(myEnemyVoiceSounds[CAST(EEnemyVoiceLine::EnemyLostPlayer)], myDynamicSource);
 	}break;
 
-	case EMessageType::EnemyFoundPlayer:
+	
+
+	case EMessageType::EnemyAggro:
 	{
 		myDynamicSource->Stop();
-		myWrapper.Play(myEnemyVoiceSounds[CAST(EEnemyVoiceLine::EnemyFoundPlayer)], myDynamicSource);
-		myDelayedAudio.push_back({ myEnemyVoiceSounds[CAST(EEnemyVoiceLine::EnemyChasing)], myDynamicSource, 4.0f });
-		FadeChannelOverSeconds(EChannel::DynamicChannel3, 4.0f);
-		FadeChannelOverSeconds(EChannel::DynamicChannel4, 4.0f, false);
-	}break;
-
-	case EMessageType::EnemyFoundPlayerScream:
-	{
-		//myDynamicSource->Stop();
-
-	}break;
-
-	case EMessageType::EnemyLostPlayer:
-	{
-		myDynamicSource->Stop();
-		myWrapper.Play(myEnemyVoiceSounds[CAST(EEnemyVoiceLine::EnemyLostPlayer)], myDynamicSource);
-		FadeChannelOverSeconds(EChannel::DynamicChannel3, 4.0f, false);
-		FadeChannelOverSeconds(EChannel::DynamicChannel4, 4.0f);
+		bool aggro = *static_cast<bool*>(aMessage.data);
+		if (aggro) 
+		{
+			myWrapper.Play(myEnemyVoiceSounds[CAST(EEnemyVoiceLine::EnemyFoundPlayer)], myDynamicSource);
+			myDelayedAudio.push_back({ myEnemyVoiceSounds[CAST(EEnemyVoiceLine::EnemyChasing)], myDynamicSource, 4.0f });
+			FadeChannelOverSeconds(EChannel::DynamicChannel3, 4.0f);
+			FadeChannelOverSeconds(EChannel::DynamicChannel4, 4.0f, false);
+		}
+		else
+		{
+			myWrapper.Play(myEnemyVoiceSounds[CAST(EEnemyVoiceLine::EnemyLostPlayer)], myDynamicSource);
+			FadeChannelOverSeconds(EChannel::DynamicChannel3, 4.0f, false);
+			FadeChannelOverSeconds(EChannel::DynamicChannel4, 4.0f);
+		}
+		
 	}break;
 
 	case EMessageType::EnemyAttack:
@@ -366,6 +381,11 @@ void CAudioManager::Receive(const SMessage& aMessage) {
 
 	case EMessageType::StartGame:
 	{
+		if (myUIAudio.size() >= static_cast<unsigned int>(EUI::PlayClick))
+		{
+			myWrapper.Play(myUIAudio[CAST(EUI::PlayClick)], myChannels[CAST(EChannel::UI)]);
+		}
+
 		//std::string scene = *reinterpret_cast<std::string*>(aMessage.data);
 		//if (strcmp(scene.c_str(), "VerticalSlice") == 0)
 		//{
@@ -438,6 +458,7 @@ void CAudioManager::Receive(const SMessage& aMessage) {
 	case EMessageType::PhysicsPropCollision:
 	{
 		PostMaster::SPlayDynamicAudioData data = *static_cast<PostMaster::SPlayDynamicAudioData*>(aMessage.data);
+		data.myChannel->Stop();
 		data.myChannel->SetPitch(Random(0.95f, 1.05f));
 		myWrapper.Play(mySFXAudio[data.mySoundIndex], data.myChannel);
 	}break;
@@ -445,7 +466,8 @@ void CAudioManager::Receive(const SMessage& aMessage) {
 	case EMessageType::PlayDynamicAudioSource:
 	{
 		PostMaster::SPlayDynamicAudioData data = *static_cast<PostMaster::SPlayDynamicAudioData*>(aMessage.data);
-		myWrapper.Play(mySFXAudio[data.mySoundIndex], data.myChannel);
+		if (!data.myChannel->IsPlaying())
+			myWrapper.Play(mySFXAudio[data.mySoundIndex], data.myChannel);
 	}break;
 
 	case EMessageType::Play3DVoiceLine:
@@ -518,9 +540,19 @@ void CAudioManager::Receive(const SMessage& aMessage) {
 		}
 	}break;
 
+	case EMessageType::ClearStaticAudioSources:
+	{
+		ClearSources();
+	}break;
+
 	case EMessageType::PauseMenu:
 	{
-		Pause();
+		bool isPaused = *static_cast<bool*>(aMessage.data);
+
+		if (isPaused)
+			Pause();
+		else
+			Resume();
 	}break;
 
 	case EMessageType::Resume:
@@ -654,12 +686,25 @@ void CAudioManager::RemoveSource(const int /*anIdentifier*/)
 
 void CAudioManager::ClearSources()
 {
+	for (auto channel : myStaticAudioSources)
+	{
+		channel.myChannel->Stop();
+	}
 	myStaticAudioSources.clear();
+
+	for (auto channel : myDynamicSources)
+	{
+		channel->Stop();
+	}
+
+	myDynamicSource->Stop();
 }
 
 void CAudioManager::SubscribeToMessages()
 {
 	CMainSingleton::PostMaster().Subscribe(EMessageType::UIButtonPress, this);
+	CMainSingleton::PostMaster().Subscribe(EMessageType::UIHoverButton, this);
+	CMainSingleton::PostMaster().Subscribe(EMessageType::UICameraWoosh, this);
 	CMainSingleton::PostMaster().Subscribe(EMessageType::PlayResearcherReactionExplosives, this);
 	CMainSingleton::PostMaster().Subscribe(EMessageType::PlayRobotAttackSound, this);
 	CMainSingleton::PostMaster().Subscribe(EMessageType::PlayRobotDeathSound, this);
@@ -686,7 +731,7 @@ void CAudioManager::SubscribeToMessages()
 	CMainSingleton::PostMaster().Subscribe(EMessageType::EnemyAttack, this);
 	CMainSingleton::PostMaster().Subscribe(EMessageType::EnemyTakeDamage, this);
 	CMainSingleton::PostMaster().Subscribe(EMessageType::EnemyFoundPlayer, this);
-	CMainSingleton::PostMaster().Subscribe(EMessageType::EnemyFoundPlayerScream, this);
+	CMainSingleton::PostMaster().Subscribe(EMessageType::EnemyAggro, this);
 	CMainSingleton::PostMaster().Subscribe(EMessageType::EnemyLostPlayer, this);
 
 	//CMainSingleton::PostMaster().Subscribe(EMessageType::PlayVoiceLine, this);
@@ -719,12 +764,13 @@ void CAudioManager::SubscribeToMessages()
 	CMainSingleton::PostMaster().Subscribe(EMessageType::PlayDynamicAudioSource, this);
 	CMainSingleton::PostMaster().Subscribe(EMessageType::Play3DVoiceLine, this);
 	CMainSingleton::PostMaster().Subscribe(EMessageType::Play2DVoiceLine, this);
-
 }
 
 void CAudioManager::UnsubscribeToMessages()
 {
 	CMainSingleton::PostMaster().Unsubscribe(EMessageType::UIButtonPress, this);
+	CMainSingleton::PostMaster().Unsubscribe(EMessageType::UIHoverButton, this);
+	CMainSingleton::PostMaster().Unsubscribe(EMessageType::UICameraWoosh, this);
 	CMainSingleton::PostMaster().Unsubscribe(EMessageType::PlayResearcherReactionExplosives, this);
 	CMainSingleton::PostMaster().Unsubscribe(EMessageType::PlayRobotAttackSound, this);
 	CMainSingleton::PostMaster().Unsubscribe(EMessageType::PlayRobotDeathSound, this);
@@ -751,7 +797,7 @@ void CAudioManager::UnsubscribeToMessages()
 	CMainSingleton::PostMaster().Unsubscribe(EMessageType::EnemyAttack, this);
 	CMainSingleton::PostMaster().Unsubscribe(EMessageType::EnemyTakeDamage, this);
 	CMainSingleton::PostMaster().Unsubscribe(EMessageType::EnemyFoundPlayer, this);
-	CMainSingleton::PostMaster().Unsubscribe(EMessageType::EnemyFoundPlayerScream, this);
+	CMainSingleton::PostMaster().Unsubscribe(EMessageType::EnemyAggro, this);
 	CMainSingleton::PostMaster().Unsubscribe(EMessageType::EnemyLostPlayer, this);
 
 	//CMainSingleton::PostMaster().Unsubscribe(EMessageType::PlayVoiceLine, this);
@@ -924,8 +970,8 @@ std::string CAudioManager::TranslateEnum(ESFX enumerator) const {
 		return "LetGo";
 	case ESFX::EnemyHit:
 		return "EnemyHit";
-	case ESFX::SwitchPress:
-		return "SwitchPress";
+	case ESFX::SwitchPull:
+		return "SwitchPull";
 	case ESFX::PickupGravityGlove:
 		return "PickupGravityGlove";
 	case ESFX::PickupHeal:
@@ -1007,6 +1053,10 @@ std::string CAudioManager::TranslateEnum(EUI enumerator) const {
 		return "ButtonClick";
 	case EUI::PlayClick:
 		return "PlayClick";
+	case EUI::HoverButton:
+		return "HoverButton";
+	case EUI::CameraWoosh:
+		return "CameraWoosh";
 	default:
 		return "";
 	}
@@ -1344,3 +1394,72 @@ void CAudioManager::Resume()
 
 	myDynamicSource->SetPaused(false);
 }
+
+//CAudioManager::SStaticAudioSource::SStaticAudioSource()
+//	: myGameObjectID(0)
+//	, mySoundIndex(0)
+//	, myChannel(nullptr)
+//{
+//}
+
+//CAudioManager::SStaticAudioSource::SStaticAudioSource(int aGameObjectID, unsigned int aSoundIndex, CAudioChannel* anAudioChannel)
+//	: myGameObjectID(aGameObjectID)
+//	, mySoundIndex(aSoundIndex)
+//	, myChannel(anAudioChannel)
+//{
+//}
+//
+//CAudioManager::SStaticAudioSource::SStaticAudioSource(SStaticAudioSource&& other) noexcept
+//{
+//	//if (this->myChannel)
+//	//	delete myChannel;
+//
+//	this->myChannel = other.myChannel;
+//	other.myChannel = nullptr;
+//
+//	this->myGameObjectID = other.myGameObjectID;
+//	this->mySoundIndex = other.mySoundIndex;
+//}
+//
+//CAudioManager::SStaticAudioSource& CAudioManager::SStaticAudioSource::operator=(SStaticAudioSource&& other) noexcept
+//{
+//	//if (this->myChannel)
+//	//	delete myChannel;
+//
+//	this->myChannel = other.myChannel;
+//	other.myChannel = nullptr;
+//
+//	this->myGameObjectID = other.myGameObjectID;
+//	this->mySoundIndex = other.mySoundIndex;
+//
+//	return *this;
+//}
+//
+//CAudioManager::SStaticAudioSource::SStaticAudioSource(SStaticAudioSource& other) noexcept
+//{
+//	//if (this->myChannel)
+//	//	delete myChannel;
+//
+//	this->myChannel = other.myChannel;
+//	this->myGameObjectID = other.myGameObjectID;
+//	this->mySoundIndex = other.mySoundIndex;
+//}
+//
+//CAudioManager::SStaticAudioSource& CAudioManager::SStaticAudioSource::operator=(SStaticAudioSource& other) noexcept
+//{
+//	//if (this->myChannel)
+//	//	delete myChannel;
+//
+//	this->myChannel = other.myChannel;
+//	this->myGameObjectID = other.myGameObjectID;
+//	this->mySoundIndex = other.mySoundIndex;
+//
+//	return *this;
+//}
+//
+//CAudioManager::SStaticAudioSource::~SStaticAudioSource()
+//{
+//	if (myChannel)
+//		delete myChannel;
+//	myChannel = nullptr;
+//}

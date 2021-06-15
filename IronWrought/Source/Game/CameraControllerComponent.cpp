@@ -112,12 +112,14 @@ void CCameraControllerComponent::Update()
 
 CGameObject* CCameraControllerComponent::CreatePlayerFirstPersonCamera(CGameObject* aParentObject)
 {
+	//Quaternion rot = aParentObject->myTransform->Rotation();
 	CGameObject* camera = new CGameObject(PLAYER_CAMERA_ID, "Player Camera");
 	camera->AddComponent<CCameraComponent>(*camera, CCameraComponent::SP8_FOV);
-	camera->AddComponent<CCameraControllerComponent>(*camera, 2.0f, ECameraMode::PlayerFirstPerson);
+	CCameraControllerComponent* camCTRL = camera->AddComponent<CCameraControllerComponent>(*camera, 2.0f, ECameraMode::PlayerFirstPerson);
+	camCTRL->myYaw = camCTRL->ToDegrees(atan2f(aParentObject->myTransform->Transform().Forward().x, aParentObject->myTransform->Transform().Forward().z));
 	camera->myTransform->SetParent(aParentObject->myTransform);
 	camera->myTransform->Position({ 0.f,0.f,0.f });
-	camera->myTransform->Rotation({ 0.f,0.f,0.f });
+	//camera->myTransform->Rotation(rot);
 	return camera;
 }
 
@@ -149,11 +151,11 @@ void CCameraControllerComponent::RotateTransformWithYawAndPitch(const Vector2& s
 	if (myLimitFirstPerson)
 	{
 		const Vector3& shakeVector = GameObject().GetComponent<CCameraComponent>()->GetShakeVector();
-		GameObject().myTransform->Rotation({ myPitch + shakeVector.x, shakeVector.y, shakeVector.z });
+		GameObject().myTransform->Rotate({ shakeVector.x, shakeVector.y, shakeVector.z });
 		return;
 	}
 
-	float sensitivity = 0.075f;//was 0.25f //TestV�rde, K�ndes  okej p� min Dator! Bra � testa p� andras datorer! /Axel Savage 2021-04-09 14:00
+	float sensitivity = 0.065f;//was 0.25f //TestV�rde, K�ndes  okej p� min Dator! Bra � testa p� andras datorer! /Axel Savage 2021-04-09 14:00
 	myYaw = WrapAngle(myYaw + (someInput.x * sensitivity));
 	myPitch = std::clamp(myPitch + (someInput.y * sensitivity), ToDegrees(-PI / 2.0f)+0.1f, ToDegrees(PI / 2.0f)-0.1f);
 	if (myCameraMode == ECameraMode::FreeCam) {

@@ -60,6 +60,7 @@ private:
 	static void AddPuzzleActivationAudio(CScene& aScene, RapidArray someData);
 	static void AddPuzzleActivationVoice(CScene& aScene, RapidArray someData);
 	static void AddPuzzleActivationLight(CScene& aScene, RapidArray someData);
+	static void AddPuzzleActivationPlayVFX(CScene& aScene, RapidArray someData);
 	//static void AddPuzzleActivationTeleporter(CScene& aScene, RapidArray someData);
 	static void AddPuzzleLock(CScene& aScene, RapidArray someData);
 	static void AddPuzzleListener(CScene& aScene, RapidArray someData);
@@ -69,6 +70,7 @@ private:
 	static void AddPuzzleResponseToggle(CScene& aScene, RapidArray someData);
 	static void AddPuzzleResponseAudio(CScene& aScene, RapidArray someData);
 	static void AddPuzzleResponseVoice(CScene& aScene, RapidArray someData);
+	static void AddPuzzleResponsePlayVFX(CScene& aScene, RapidArray someData);
 	//static void AddPuzzleResponseTeleporter(CScene& aScene, RapidArray someData);
 
 	static void AddNextLevelActivation(CScene& aScene, RapidArray someData);
@@ -100,6 +102,7 @@ private:
 	static void AddPickups(CScene& aScene, RapidArray someData);
 	static void AddAudioSources(CScene& aScene, RapidArray someData);
 	static void AddVFX(CScene& aScene, RapidArray someData);
+	static void AddEndEventComponent(CScene& aScene, const SEndEventData& aData);
 	static SNavMesh* InitNavMesh(const std::string& aPath);
 	static CScene* ourLastInstantiatedScene;
 };

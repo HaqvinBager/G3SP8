@@ -58,6 +58,20 @@ public static class BinaryWriterExtensions
     }
 
     /// <summary>  
+    /// <list type="bullet">X</list>
+    /// <list type="bullet">Y</list>
+    /// <list type="bullet">Z</list>
+    /// </summary>
+    public static void Write(this BinaryWriter aBinWriter, Quaternion aData)
+    {
+        aBinWriter.Write(aData.x);
+        aBinWriter.Write(aData.y);
+        aBinWriter.Write(aData.z);
+        aBinWriter.Write(aData.w);
+    }
+
+
+    /// <summary>  
     /// <list type="Bullet">Array Of </list>
     /// <list type="bullet">X</list>
     /// <list type="bullet">Y</list>
@@ -379,4 +393,31 @@ public static class BinaryWriterExtensions
 
         return infoLog.ToString();
     }
+
+    public static string Write(this BinaryWriter aBinWriter, EndEventCollection data)
+    {
+        aBinWriter.Write(data.endEvent.enemyInstanceID);
+        aBinWriter.Write(data.endEvent.playerInstanceID);
+        aBinWriter.Write(data.endEvent.instanceID);
+        aBinWriter.Write(data.endEvent.lockPlayerDuration);
+
+        aBinWriter.Write(data.endEvent.path.Count);
+        foreach(PathPoint p in data.endEvent.path)
+        {
+            aBinWriter.Write(p.position);
+            aBinWriter.Write(p.rotation);
+            aBinWriter.Write(p.duration);
+            aBinWriter.Write(p.playerVingetteStrength);
+        }
+
+        //aBinWriter.Write(data.endEvent.vfx.Count);
+        //foreach(VFXPoint p in data.endEvent.vfx)
+        //{
+        //    aBinWriter.Write(p.vfxPath);
+        //    aBinWriter.Write(p.delay);
+        //    aBinWriter.Write(p.instanceID);
+        //}
+        return "";
+    }
+
 }

@@ -91,10 +91,13 @@ public class ExporterJson
 
         List<int> ids = new List<int>();
         instanceIDs.Ids.ForEach(e => ids.Add(e.instanceID));
+
+        Player playerData = ExportPlayer(aSceneName);
+
         Json.AddToExport(ExportVertexPaint.Export(aSceneName, ids));
         Json.AddToExport(ExportDirectionalLight.Export(aSceneName));
         Json.AddToExport(ExportDecals.Export(aSceneName));
-        Json.AddToExport(ExportPlayer(aSceneName));
+        Json.AddToExport(playerData);
         Json.AddToExport(ExportBluePrint.Export(aSceneName));
         Json.AddToExport(EnemyExporter.Export(aSceneName));
         Json.AddToExport(ExportParents.Export(aSceneName));
@@ -113,6 +116,7 @@ public class ExporterJson
         Json.AddToExport(ExportLock.Export());
         Json.AddToExport(ExportKey.Export());
         Json.AddToExport(ExportListener.Export(), true);
+        //Json.AddToExport(ExportEndEvent.Export(playerData.player), true);
         //Json.AddToExport(ExportLevelTeleporter.Export(aSceneName), true);
     }
 

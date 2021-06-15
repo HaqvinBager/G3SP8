@@ -82,6 +82,8 @@ CAudioChannel::CAudioChannel(FMOD::ChannelGroup* aChannelPointer)
 
 CAudioChannel::~CAudioChannel()
 {
-    delete myFModChannel;
+    if (myFModChannel)
+        myFModChannel->release();
+    //delete myFModChannel;
     myFModChannel = nullptr;
 }

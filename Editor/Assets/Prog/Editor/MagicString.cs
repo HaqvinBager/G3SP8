@@ -10,6 +10,7 @@ using UnityEditor;
 public class MagicString
 {
     public const string GeneratedPath = "Assets/Generated/";
+    public const string VFXJsonPath = "Assets/IronWrought/VFX/VFX_JSON/";
 
     public static List<Texture> GetTextures()
     {

@@ -147,6 +147,7 @@ void CInGameState::Start()
 	*/
 	// ! Removed as of 2021 06 10 / Aki
 
+	CMainSingleton::PostMaster().Send({ EMessageType::ClearStaticAudioSources });
 
 	myCurrentLevel = MENU_SCENE;
 	CSceneFactory::Get()->LoadSceneAsync(MENU_SCENE, myState, [this](std::string aMsg) { CInGameState::OnSceneLoadCompleteMenu(aMsg); });
@@ -211,14 +212,20 @@ void CInGameState::Update()
 #ifdef INGAME_USE_MENU
 	if (Input::GetInstance()->IsKeyPressed(VK_ESCAPE))
 	{
+		CMainSingleton::PostMaster().SendLate({ EMessageType::UIButtonPress });
+
+		bool isPaused = false;
 		if (myCurrentCanvas == EInGameCanvases_HUD)
 		{
 			ToggleCanvas(EInGameCanvases_PauseMenu);
+			isPaused = true;
+			CMainSingleton::PostMaster().Send({ EMessageType::PauseMenu, &isPaused });
 		}
 		else if (myCurrentCanvas == EInGameCanvases_PauseMenu)
 		{
 			ToggleCanvas(EInGameCanvases_HUD);
-			CMainSingleton::PostMaster().SendLate({ EMessageType::PauseMenu, nullptr });
+			isPaused = false;
+			CMainSingleton::PostMaster().Send({ EMessageType::PauseMenu, &isPaused });
 		}
 	}
 	if (myMenuCamera)
@@ -279,12 +286,12 @@ void CInGameState::Receive(const SStringMessage& aMessage)
 
 	if (PostMaster::DisableCanvas(aMessage.myMessageType))
 	{
-		IRONWROUGHT->GetActiveScene().CanvasToggle(false);
+		myCanvases[myCurrentCanvas]->ForceEnabled(false);
 		return;
 	}
 	if (PostMaster::EnableCanvas(aMessage.myMessageType))
 	{
-		IRONWROUGHT->GetActiveScene().CanvasToggle(true);
+		myCanvases[myCurrentCanvas]->ForceEnabled(true);
 		return;
 	}
 }
@@ -295,6 +302,7 @@ void CInGameState::Receive(const SMessage& aMessage)
 	{
 		case EMessageType::PlayerDied:
 		{
+			CMainSingleton::PostMaster().Send({ EMessageType::ClearStaticAudioSources });
 			ToggleCanvas(EInGameCanvases_LoadingScreen);
 			IRONWROUGHT->GetActiveScene().MainCamera()->Fade(false, 0.5f);
 			IRONWROUGHT->GetActiveScene().PlayerController()->LockMovementFor(0.5f);
@@ -305,6 +313,7 @@ void CInGameState::Receive(const SMessage& aMessage)
 
 		case EMessageType::LoadLevel:
 		{
+			CMainSingleton::PostMaster().Send({ EMessageType::ClearStaticAudioSources });
 			ToggleCanvas(EInGameCanvases_LoadingScreen);
 			IRONWROUGHT->GetActiveScene().MainCamera()->Fade(false, 0.5f);
 			IRONWROUGHT->GetActiveScene().PlayerController()->LockMovementFor(0.5f);
@@ -318,6 +327,8 @@ void CInGameState::Receive(const SMessage& aMessage)
 		{
 			if (!aMessage.data)
 				return;
+
+			CMainSingleton::PostMaster().Send({ EMessageType::ClearStaticAudioSources });
 			ToggleCanvas(EInGameCanvases_LoadingScreen);
 			myMenuCamera = nullptr;
 			
@@ -327,7 +338,7 @@ void CInGameState::Receive(const SMessage& aMessage)
 
 		case EMessageType::StartGame:
 		{
-			IRONWROUGHT->GetActiveScene().ToggleSections(0);// Disable when single level loading.
+			//IRONWROUGHT->GetActiveScene().ToggleSections(0);// Disable when single level loading.
 			ToggleCanvas(EInGameCanvases_HUD);
 		}break;
 
@@ -363,6 +374,8 @@ void CInGameState::Receive(const SMessage& aMessage)
 
 		case EMessageType::MainMenu:
 		{
+			bool isPaused = false;
+			CMainSingleton::PostMaster().Send({ EMessageType::PauseMenu, &isPaused });
 			myStateStack.PopTopAndPush(CStateStack::EState::InGame);
 		}break;
 
@@ -370,7 +383,7 @@ void CInGameState::Receive(const SMessage& aMessage)
 		{
 #ifdef INGAME_USE_MENU
 			int index = *static_cast<int*>(aMessage.data);
-			if (index < 0 || index > myMenuCameraPositions.size() - 1)
+			if (index < 1 || index > myMenuCameraPositions.size() - 1 || myMenuCameraTargetPosition == myMenuCameraPositions[index])
 				break;
 
 			myMenuCameraTargetPosition = myMenuCameraPositions[index];
@@ -380,6 +393,8 @@ void CInGameState::Receive(const SMessage& aMessage)
 				, DirectX::XMConvertToRadians(myMenuCameraRotations[index].x)
 				, DirectX::XMConvertToRadians(myMenuCameraRotations[index].z)
 			);
+
+			CMainSingleton::PostMaster().SendLate({ EMessageType::UICameraWoosh, nullptr });
 #endif
 		}break;
 
@@ -522,7 +537,6 @@ void CInGameState::ToggleCanvas(EInGameCanvases anEInGameCanvases)
 		scene.UpdateOnlyCanvas(true);
 		scene.CanvasIsHUD(false);
 		scene.MainCamera(ESceneCamera::PlayerFirstPerson);
-		CMainSingleton::PostMaster().SendLate({ EMessageType::PauseMenu, nullptr });
 		IRONWROUGHT->ShowCursor(false);
 		IRONWROUGHT->SetIsMenu(true);
 	}
@@ -540,6 +554,7 @@ void CInGameState::ToggleCanvas(EInGameCanvases anEInGameCanvases)
 		IRONWROUGHT->HideCursor(false);
 		scene.SetCanvas(myCanvases[myCurrentCanvas]);
 		scene.UpdateOnlyCanvas(true);
+		IRONWROUGHT->SetIsMenu(false);
 	}
 #else
 	if (myCurrentCanvas == EInGameCanvases_HUD)

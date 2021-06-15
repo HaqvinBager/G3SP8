@@ -42,10 +42,13 @@ CEnemyComponent::CEnemyComponent(CGameObject& aParent, const SEnemySetting& some
 	, mySqrdDistanceToPlayer(FLT_MAX)
 	, myCloseToPlayerThreshold(FLT_MAX)
 	, myAttackPlayerTimer(0.0f)
-	, myAttackPlayerTimerMax(2.0f)
+	, myAttackPlayerTimerMax(1.8f)
 	, myNavMesh(aNavMesh)
 	, myDetectionTimer(0.0f)
 	, myHasScreamed(false)
+	, myDetachedPlayerHead(nullptr)
+	, myCurrentVignetteBlend(0.0f)
+	, myTargetVignetteBlend(0.0f)
 
 {
 	//myController = CEngine::GetInstance()->GetPhysx().CreateCharacterController(GameObject().myTransform->Position(), 0.6f * 0.5f, 1.8f * 0.5f, GameObject().myTransform, aHitReport);
@@ -155,11 +158,12 @@ void CEnemyComponent::Update()//får bestämma vilket behaviour vi vill köra i 
 		return;
 	}
 
+	UpdateVignette();
 	if (!myMovementLocked) {
 		mySqrdDistanceToPlayer = Vector3::DistanceSquared(myPlayer->myTransform->Position(), GameObject().myTransform->Position());
 
 		float range = 6.0f;
-		myCloseToPlayerThreshold = range * 0.8f;
+		myCloseToPlayerThreshold = range * 1.0f;
 		//std::cout << __FUNCTION__ << " SqrDist: " << mySqrdDistanceToPlayer << " threshold: " << myCloseToPlayerThreshold << std::endl;
 		Vector3 dir = GameObject().myTransform->Transform().Forward();
 		Vector3 enemyPos = GameObject().myTransform->Position();
@@ -194,17 +198,10 @@ void CEnemyComponent::Update()//får bestämma vilket behaviour vi vill köra i 
 					myHasReachedAlertedTarget = true;
 					myHasFoundPlayer = true;
 					myHasReachedLastPlayerPosition = false;
-					/*myDetectionTimer += CTimer::Dt();
-					if (myDetectionTimer >= 0.1f) {*/
-					if (!myHasScreamed) {
-						myHasScreamed = true;
-						CMainSingleton::PostMaster().Send({ EMessageType::EnemyFoundPlayerScream });
-					}
 					CMainSingleton::PostMaster().Send({ EMessageType::EnemyFoundPlayer });
-					//}
 				}
 			}
-		}
+		}	
 		else if (myHasFoundPlayer)//Out of View
 		{
 			myIdlingTimer = 0.0f;
@@ -226,20 +223,20 @@ void CEnemyComponent::Update()//får bestämma vilket behaviour vi vill köra i 
 		}
 		else {
 
-			if (mySqrdDistanceToPlayer <= 2.0f) {
+			// is compared to sqrd distance => != 3m
+			if ((mySqrdDistanceToPlayer <= myGrabRange && myHasFoundPlayer) || mySqrdDistanceToPlayer <= (myGrabRange * 0.6f)) {
 				myHasFoundPlayer = false;
 				myHeardSound = false;
 				myIsIdle = false;
 				myHasReachedAlertedTarget = true;
 				myHasReachedLastPlayerPosition = true;
 				SetState(EBehaviour::Attack);
+				return;
 			}
 			else if (myHasFoundPlayer) {
 
 				if (myCurrentState != EBehaviour::Detection && myCurrentState != EBehaviour::Seek)
 					SetState(EBehaviour::Detection);
-				//mySettings.mySpeed = 3.0f;
-				//SetState(EBehaviour::Seek);
 			}
 			else if (!myHasFoundPlayer && !myHasReachedLastPlayerPosition /*&& !myHeardSound && myHasReachedAlertedTarget*/) {
 				mySettings.mySpeed = 3.0f;
@@ -270,33 +267,34 @@ void CEnemyComponent::Update()//får bestämma vilket behaviour vi vill köra i 
 
 		switch (myCurrentState)
 		{
-			case EBehaviour::Seek:
-			{
-				myCurrentStateBlend = PercentileDistanceToPlayer();
-			}break;
+		case EBehaviour::Seek:
+		{
+			myCurrentStateBlend = PercentileDistanceToPlayer();
+		}break;
 
-			case EBehaviour::Alerted:
-			{
-				CAlerted* alertedBehaviour = static_cast<CAlerted*>(myBehaviours[static_cast<int>(EBehaviour::Alerted)]);
-				myCurrentStateBlend = alertedBehaviour->PercentileAlertedTimer();
-			}break;
+		case EBehaviour::Alerted:
+		{
+			CAlerted* alertedBehaviour = static_cast<CAlerted*>(myBehaviours[static_cast<int>(EBehaviour::Alerted)]);
+			myCurrentStateBlend = alertedBehaviour->PercentileAlertedTimer();
+		}break;
 
-			case EBehaviour::Detection:
+		case EBehaviour::Detection:
+		{
+			
+			CDetection* detectedBehaviour = static_cast<CDetection*>(myBehaviours[static_cast<int>(EBehaviour::Detection)]);
+			myCurrentStateBlend = detectedBehaviour->PercentileOfTimer();
+			if (myCurrentStateBlend <= 0.0f)
 			{
-				CDetection* detectedBehaviour = static_cast<CDetection*>(myBehaviours[static_cast<int>(EBehaviour::Detection)]);
-				myCurrentStateBlend = detectedBehaviour->PercentileOfTimer();
-				if (myCurrentStateBlend <= 0.0f)
-				{
-					mySettings.mySpeed = 3.0f;
-					SetState(EBehaviour::Seek);
-					myCurrentStateBlend = 1.0f;
-				}
-			}break;
+				mySettings.mySpeed = 3.0f;
+				SetState(EBehaviour::Seek);
+				myCurrentStateBlend = 1.0f;
+			}
+		}break;
 
-			default:
-			{
-				myCurrentStateBlend = 0.0f;
-			}break;
+		default:
+		{
+			myCurrentStateBlend = 0.0f;
+		}break;
 		}
 
 		CMainSingleton::PostMaster().Send({ EMessageType::EnemyUpdateCurrentState, this });
@@ -308,8 +306,6 @@ void CEnemyComponent::Update()//får bestämma vilket behaviour vi vill köra i 
 			myWakeUpTimer = 0.f;
 		}
 	}
-
-	UpdateVignette();
 }
 
 void CEnemyComponent::FixedUpdate()
@@ -325,10 +321,13 @@ void CEnemyComponent::SetState(EBehaviour aState)
 	myCurrentState = aState;
 	myBehaviours[static_cast<int>(myCurrentState)]->Enter(GameObject().myTransform->Position());
 	EMessageType msgType = EMessageType::Count;
+	bool aggro = false;
 	switch (myCurrentState)
 	{
 	case EBehaviour::Patrol:
 	{
+		aggro = false;
+		CMainSingleton::PostMaster().Send({ EMessageType::EnemyAggro, &aggro });
 		msgType = EMessageType::EnemyPatrolState;
 	}break;
 
@@ -354,6 +353,9 @@ void CEnemyComponent::SetState(EBehaviour aState)
 
 	case EBehaviour::Detection:
 	{
+		aggro = true;
+		CMainSingleton::PostMaster().Send({EMessageType::EnemyAggro, &aggro} );
+		/*CMainSingleton::PostMaster().Send({ EMessageType::EnemyFoundPlayerScream });*/
 		msgType = EMessageType::EnemyDetectionState;
 	}break;
 
@@ -374,46 +376,42 @@ const CEnemyComponent::EBehaviour CEnemyComponent::GetState() const
 void CEnemyComponent::Receive(const SStringMessage& /*aMsg*/)
 {
 }
-CTransformComponent* gcamera = nullptr;
+
 void CEnemyComponent::Receive(const SMessage& aMsg)
 {
 	if (aMsg.myMessageType == EMessageType::EnemyAttackedPlayer)
 	{
-		// Lock enemy movement
-		// Player copies enemies rotation + rotate 180
-		// Lock player movement for attack state time + some more
-		// ? Rotate player so it better sees the enemy (i.e up or down)?
-		// Set attack state timer to time of animation (2s?)
-		// Start camera fade at half time
-		// End of timer: enemy->spawn pos, fade camera in!
-
+		//std::cout << __FUNCTION__ << " ATTACK PLAYER " << std::endl;
 		myMovementLocked = true;
 		bool lockCamera = true;
 		CMainSingleton::PostMaster().Send({ EMessageType::LockFPSCamera, &lockCamera });
 		CPlayerControllerComponent* plCtrl = myPlayer->GetComponent<CPlayerControllerComponent>();
 		plCtrl->ForceStand();
 		plCtrl->LockMovementFor(myAttackPlayerTimerMax + 0.75f);
+		//CMainSingleton::PostMaster().Send({ PostMaster::SMSG_DISABLE_GLOVE, nullptr });// Doing this did not work out well
+		CMainSingleton::PostMaster().Send({ PostMaster::SMSG_DISABLE_CANVAS, nullptr });
 
-		// Face player
 		Vector3 targetDirection = myPlayer->myTransform->Position() - this->GameObject().myTransform->Position();
 		targetDirection.Normalize();
 		float targetOrientation = WrapAngle(atan2f(targetDirection.x, targetDirection.z));
 		GameObject().myTransform->Rotation({ 0, targetOrientation + 180.f, 0 });
-		//myPlayer->myTransform->FetchChildren()[0]->Rotation({ 25.0f, 0.0f, 0.0f });
-		
-		// Detach player face
-		gcamera = myPlayer->myTransform->FetchChildren()[0];
-		gcamera->RemoveParent();
-		// adding height of camera
-		gcamera->Position({ gcamera->Position().x, GameObject().myTransform->Position().y + 1.5f, gcamera->Position().z });
 
-		IRONWROUGHT->GetActiveScene().MainCamera()->SetTrauma(1.0f);
+		// Detach player head
+		myDetachedPlayerHead = myPlayer->myTransform->FetchChildren()[0];
+		myDetachedPlayerHead->RemoveParent();
+		//float a = atan2f(GameObject().myTransform->Position().x - myDetachedPlayerHead->Position().x, GameObject().myTransform->Position().z - myDetachedPlayerHead->Position().z);
+		//myDetachedPlayerHead->Rotation({ 0.f, DirectX::XMConvertToDegrees(a), 0.f });
 
 		myAttackPlayerTimer = myAttackPlayerTimerMax;
+		IRONWROUGHT->GetActiveScene().MainCamera()->Fade(false, myAttackPlayerTimerMax + 1.f, true);
 		return;
 	}
 
 	if (aMsg.myMessageType == EMessageType::PropCollided) {
+		
+		if (myDetachedPlayerHead)// Return if the enemy is attacking the players head.
+			return;
+		
 		CGameObject* gameobject = reinterpret_cast<CGameObject*>(aMsg.data);
 		if (gameobject) {
 			std::vector<Vector3> path = myNavMesh->CalculatePath(GameObject().myTransform->Position(), gameobject->myTransform->Position(), myNavMesh);
@@ -457,7 +455,7 @@ void CEnemyComponent::Receive(const SMessage& aMsg)
 
 	if (aMsg.myMessageType == EMessageType::EnemyReachedLastPlayerPosition) {
 		//std::cout << " REACHED " << std::endl;
-		myHasScreamed = false;
+		
 		myHasReachedLastPlayerPosition = true;
 		myIsIdle = true;
 		SetState(EBehaviour::Idle);
@@ -485,20 +483,26 @@ const float CEnemyComponent::CurrentStateBlendValue() const
 
 void CEnemyComponent::UpdateAttackEvent()
 {
+	//std::cout << __FUNCTION__ << "." << std::endl;
 	UpdateVignette();
 	myAttackPlayerTimer -= CTimer::Dt();
 	if (myAttackPlayerTimer <= 0.0f)
 	{
+		IRONWROUGHT->GetActiveScene().MainCamera()->Fade(false, 0.1f, false);
 		float damageToPlayer = 34.0f;
 		CMainSingleton::PostMaster().Send({ EMessageType::PlayerTakeDamage, &damageToPlayer });
-
 		CPlayerControllerComponent* plCtrl = myPlayer->GetComponent<CPlayerControllerComponent>();
-		gcamera->SetParent(myPlayer->myTransform);
-		plCtrl->Crouch();
+		myDetachedPlayerHead->SetParent(myPlayer->myTransform);
+		plCtrl->ForceCrouch();
 		//plCtrl->OnCrouch();
+
 		bool lockCamera = false;
 		CMainSingleton::PostMaster().Send({ EMessageType::LockFPSCamera, &lockCamera });
-		IRONWROUGHT->GetActiveScene().MainCamera()->Fade(true, 0.75f);
+		//CMainSingleton::PostMaster().Send({ PostMaster::SMSG_ENABLE_GLOVE, nullptr });// Only needs to be re-enabled if it has been disabled
+		CMainSingleton::PostMaster().Send({ PostMaster::SMSG_ENABLE_CANVAS, nullptr });
+
+		IRONWROUGHT->GetActiveScene().MainCamera()->Fade(true, 1.0f);
+
 		float previousDistance = 0.0f;
 		if (!mySettings.mySpawnPoints.empty())
 		{
@@ -514,39 +518,107 @@ void CEnemyComponent::UpdateAttackEvent()
 		}
 		GameObject().myTransform->Position(mySpawnPosition);
 		myMovementLocked = false;
-		
+		myDetachedPlayerHead = nullptr;
 		SetState(EBehaviour::Idle);
 		//std::cout << __FUNCTION__ << " Attack event end." << std::endl;
+		UpdateVignette(0.0f);
 		return;
 	}
 
-	//Quaternion targetRotCamera = Quaternion::CreateFromYawPitchRoll(DirectX::XMConvertToRadians(25.0f), 0.0f, 0.0f);
-	Quaternion targetRotPlayer = this->GameObject().myTransform->Rotation();
-
-	//Quaternion slerp = Quaternion::Slerp(myPlayer->myTransform->FetchChildren()[0]->Rotation(), targetRotCamera, 0.4f);
-	//myPlayer->myTransform->FetchChildren()[0]->Rotation(slerp);
-	Quaternion slerp = Quaternion::Slerp(gcamera->Rotation(), targetRotPlayer, 0.4f);
-	gcamera->Rotation(slerp);
-
-	if (myAttackPlayerTimer <= myAttackPlayerTimerMax * 0.55f && myAttackPlayerTimer >= myAttackPlayerTimerMax * 0.5f)
-	{
-		// Fade out
-		//std::cout << __FUNCTION__ << " Camera fade out." << std::endl;
-		IRONWROUGHT->GetActiveScene().MainCamera()->Fade(false, myAttackPlayerTimerMax * 0.4f, true);
-		IRONWROUGHT->GetActiveScene().MainCamera()->SetTrauma(2.0f);
-	}
+	float a = atan2f(GameObject().myTransform->Position().x - myDetachedPlayerHead->Position().x, GameObject().myTransform->Position().z - myDetachedPlayerHead->Position().z);
+	Quaternion targetRotCamera = Quaternion::CreateFromYawPitchRoll(a, 0.0f, 0.0f);
+	Quaternion rotCamera = myDetachedPlayerHead->Rotation();
+	Quaternion slerp = Quaternion::Slerp(rotCamera, targetRotCamera, 7.0f * CTimer::Dt());
+	myDetachedPlayerHead->Rotation(slerp);
+	myPlayer->myTransform->Rotation(slerp);
 }
 
-void CEnemyComponent::UpdateVignette()
+float CEnemyComponent::SmoothStep(float a, float b, float t)
 {
-	CFullscreenRenderer::SPostProcessingBufferData data = CEngine::GetInstance()->GetPostProcessingBufferData();
-	float timeVariationAmplitude = 0.05f;
-	float timeVariationSpeed = 1.4f;
-	float timeVariation = abs(sinf(CTimer::Time() * timeVariationSpeed) * sinf(CTimer::Time() * timeVariationSpeed)) * timeVariationAmplitude;
-	float normalizedBlend = std::clamp(((myCloseToPlayerThreshold * myCloseToPlayerThreshold) / mySqrdDistanceToPlayer), 0.0f, 1.0f);
-	normalizedBlend += timeVariation;
-	data.myVignetteStrength = Lerp(0.11f, 0.25f, normalizedBlend);
-	data.myVignetteColor = Vector4::Lerp({ 0.0f, 0.0f, 0.0f, 1.0f }, { 1.0f, 0.0f, 0.0f, 1.0f }, normalizedBlend);
-	CEngine::GetInstance()->SetPostProcessingBufferData(data);
+	float x = std::clamp((t - a) / (b - a), 0.0f, 1.0f);
+	return x * x * (3.0f - 2.0f * x);
+}
+
+float CEnemyComponent::InverseLerp(float a, float b, float v)
+{
+	return (v - a) / (b - a);
+}
+
+#include "CameraComponent.h"
+void CEnemyComponent::UpdateVignette(const float aDotOverload)
+{
+	if (aDotOverload >= 0.0f)
+	{
+		CFullscreenRenderer::SPostProcessingBufferData data = CEngine::GetInstance()->GetPostProcessingBufferData();
+		float normalizedBlend = SmoothStep(0.0f, 1.0f, aDotOverload);
+
+		data.myVignetteStrength = Lerp(0.35f, 5.0f, normalizedBlend);
+		CEngine::GetInstance()->SetPostProcessingBufferData(data);
+		IRONWROUGHT_ACTIVE_SCENE.MainCamera()->SetTrauma(normalizedBlend, CCameraComponent::ECameraShakeState::EnemySway);
+
+		//std::cout << __FUNCTION__ << " update overload" << std::endl;
+		return;
+	}
+
+	float range = 100.0f;
+	Vector3 enemyPos = GameObject().myTransform->Position();
+	Vector3 playerPos = myPlayer->myTransform->WorldPosition();
+	enemyPos.y = playerPos.y;
+
+	Vector3 direction = playerPos - enemyPos;
+	direction.Normalize();
+	PxRaycastBuffer hit = CEngine::GetInstance()->GetPhysx().Raycast(enemyPos, direction, range, CPhysXWrapper::ELayerMask::STATIC_ENVIRONMENT | CPhysXWrapper::ELayerMask::PLAYER);
+	if (hit.getNbAnyHits() > 0) {
+		CTransformComponent* transform = (CTransformComponent*)hit.getAnyHit(0).actor->userData;
+		if (!transform)
+		{
+			float dot = myPlayer->myTransform->GetLocalMatrix().Forward().Dot(direction);
+
+			//std::cout << "Enemy pos " << enemyPos.x << " " << enemyPos.y << " " <<  enemyPos.z << std::endl;
+			//std::cout << "Player Pos " << playerPos.x << " " << playerPos.y << " " <<  playerPos.z << std::endl;
+
+			//std::cout << __FUNCTION__ << " Dot: " << dot << std::endl;
+			dot = InverseLerp(0.8f, 1.0f, dot);
+			dot = std::clamp(dot, 0.0f, 1.0f);
+			dot *= dot * dot;
+
+			float timeVariationAmplitude = 0.1f;
+			timeVariationAmplitude *= dot;
+			float timeVariationSpeed = 10.0f;
+			float timeVariation = abs(sinf(CTimer::Time() * timeVariationSpeed)) * timeVariationAmplitude * -1.0f;
+			dot += timeVariation;
+
+			CFullscreenRenderer::SPostProcessingBufferData data = CEngine::GetInstance()->GetPostProcessingBufferData();
+			float normalizedBlend = SmoothStep(0.0f, 1.0f, dot);
+
+			myTargetVignetteBlend = normalizedBlend;
+
+			/*myCurrentVignetteBlend = Lerp(0.0f, 1.0f, CTimer::Dt() * normalizedBlend);*/
+			myCurrentVignetteBlend += CTimer::Dt() * 0.5f;
+			if (myCurrentVignetteBlend > myTargetVignetteBlend)
+				myCurrentVignetteBlend = myTargetVignetteBlend;
+
+			data.myVignetteStrength = Lerp(0.35f, 3.0f, myCurrentVignetteBlend);
+			CEngine::GetInstance()->SetPostProcessingBufferData(data);
+
+			IRONWROUGHT_ACTIVE_SCENE.MainCamera()->SetTrauma(myCurrentVignetteBlend, CCameraComponent::ECameraShakeState::EnemySway);
+
+			//std::cout << __FUNCTION__ << " Current: " << myCurrentVignetteBlend << std::endl;
+		}
+		else {
+			CFullscreenRenderer::SPostProcessingBufferData data = CEngine::GetInstance()->GetPostProcessingBufferData();
+			myCurrentVignetteBlend -= CTimer::Dt() * 0.5f;
+			if (myCurrentVignetteBlend <= 0.0f)
+				myCurrentVignetteBlend = 0.0f;
+			float normalizedBlend = myCurrentVignetteBlend;
+
+			data.myVignetteStrength = Lerp(0.35f, 3.0f, normalizedBlend);
+			CEngine::GetInstance()->SetPostProcessingBufferData(data);
+
+			IRONWROUGHT_ACTIVE_SCENE.MainCamera()->SetTrauma(normalizedBlend, CCameraComponent::ECameraShakeState::IdleSway);
+		
+			//std::cout << __FUNCTION__ << " update no hit" << std::endl;
+		}
+	}
 }
 

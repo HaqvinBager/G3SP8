@@ -81,7 +81,7 @@ enum class EMessageType
 	EnemyFoundPlayer,
 	EnemyLostPlayer,
 	EnemyReachedLastPlayerPosition,
-	EnemyFoundPlayerScream,
+	EnemyAggro,
 
 	FuseCreated,
 	FusePickedUp,
@@ -121,6 +121,9 @@ enum class EMessageType
 	EnemyDetectionState,
 
 	LevelSelectLoadLevel,
+
+	UIHoverButton,
+	UICameraWoosh,
 
 	Count
 };

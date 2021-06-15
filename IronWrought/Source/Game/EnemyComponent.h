@@ -77,7 +77,9 @@ public:
 
 private:
 	void UpdateAttackEvent();
-	void UpdateVignette();
+	float SmoothStep(float a, float b, float t);
+	float InverseLerp(float a, float b, float v);
+	void UpdateVignette(const float aDotOverload = -1.0f);
 
 private:
 	friend class CEnemyAnimationController;
@@ -100,6 +102,8 @@ private:
 	bool myHasScreamed;
 
 	float myCurrentStateBlend;
+	float myCurrentVignetteBlend;
+	float myTargetVignetteBlend;
 	float mySqrdDistanceToPlayer;
 	float myCloseToPlayerThreshold;
 	float myAttackPlayerTimer;
@@ -110,4 +114,7 @@ private:
 	SNavMesh* myNavMesh;
 	CIdle* myIdleState;
 	float myDetectionTimer;
+
+	CTransformComponent* myDetachedPlayerHead;
+	const float myGrabRange = 3.0f;
 };

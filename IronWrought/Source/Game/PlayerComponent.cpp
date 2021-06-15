@@ -156,8 +156,16 @@ void CPlayerComponent::CheckIfAlive()
 
 inline void CPlayerComponent::SendHealthChangedMessage()
 {
-	float healthPercentage = CurrentHealthPercent();
-	CMainSingleton::PostMaster().Send({ EMessageType::PlayerHealthChanged, &healthPercentage });
+	float percent = myHealth / myMaxHealth;
+	int levelIndex = 27;
+	if (percent < 0.3f)
+		levelIndex = 29;
+	else if (percent < 0.6f)
+		levelIndex = 28;
+
+	CMainSingleton::PostMaster().Send({ EMessageType::LoadDialogue, &levelIndex });
+	//float healthPercentage = CurrentHealthPercent();
+	//CMainSingleton::PostMaster().Send({ EMessageType::PlayerHealthChanged, &healthPercentage });
 }
 
 void CPlayerComponent::Receive(const SStringMessage& aMessage)

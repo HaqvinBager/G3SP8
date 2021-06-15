@@ -8,10 +8,6 @@ public class PrefabProtector : MonoBehaviour
     //public bool smartAddCollider = false;
 
     private bool myHasCollider = false;
-    private void OnValidate()
-    {
-
-    }
 
     private void Update()
     {

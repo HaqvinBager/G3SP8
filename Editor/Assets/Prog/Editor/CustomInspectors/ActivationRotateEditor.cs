@@ -8,17 +8,17 @@ public class ActivationRotateEditor : Editor
 {
     public override void OnInspectorGUI()
     {
+        GUI.enabled = true;
         serializedObject.Update();
         base.OnInspectorGUI();
-
-        this.ShowValueAndButton<ActivationRotate>("start", "Rotation Start", SaveRotation);
-        this.ShowValueAndButton<ActivationRotate>("end", "Rotation End", SaveRotation);
+       
+        this.ShowValueAndButton<ActivationRotate>("start", "Save Start", SaveRotation);
+        this.ShowValueAndButton<ActivationRotate>("end", "Save End", SaveRotation);
 
         GUI.backgroundColor = Color.green;
         this.SetValueButtonCallback<ActivationRotate>("start", "Rotate to Start", SetRotation);
         GUI.backgroundColor = Color.cyan;
-        this.SetValueButtonCallback<ActivationRotate>("end", "Rotate to End", SetRotation);
-        
+        this.SetValueButtonCallback<ActivationRotate>("end", "Rotate to End", SetRotation);       
         serializedObject.ApplyModifiedProperties();
     }
 

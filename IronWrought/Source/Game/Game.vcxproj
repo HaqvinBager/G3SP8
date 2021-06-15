@@ -162,7 +162,11 @@
     <ClInclude Include="AIBehaviorComponent.h" />
     <ClInclude Include="AIController.h" />
     <ClInclude Include="AudioActivation.h" />
+    <ClInclude Include="EndEventComponent.h" />
+    <ClInclude Include="EndEventData.h" />
     <ClInclude Include="LightActivation.h" />
+    <ClInclude Include="PlayVFXActivation.h" />
+    <ClInclude Include="PlayVFXResponse.h" />
     <ClInclude Include="PuzzleSetting.h" />
     <ClInclude Include="RotateActivation.h" />
     <ClInclude Include="AudioResponse.h" />
@@ -213,7 +217,10 @@
     <ClCompile Include="ActivationBehavior.cpp" />
     <ClCompile Include="AIController.cpp" />
     <ClCompile Include="AudioActivation.cpp" />
+    <ClCompile Include="EndEventComponent.cpp" />
     <ClCompile Include="LightActivation.cpp" />
+    <ClCompile Include="PlayVFXActivation.cpp" />
+    <ClCompile Include="PlayVFXResponse.cpp" />
     <ClCompile Include="RotateActivation.cpp" />
     <ClCompile Include="AudioResponse.cpp" />
     <ClCompile Include="BootUpState.cpp" />

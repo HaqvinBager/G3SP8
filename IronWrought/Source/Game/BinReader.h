@@ -1,4 +1,5 @@
 #pragma once
+#include "EndEventData.h"
 
 struct SVertexPaintColorData {
 	std::vector<Vector3> myColors;
@@ -124,6 +125,7 @@ namespace Binary {
 		std::vector<SSpotLight> mySpotLights;
 		std::vector<SCollider> myColliders;
 		std::vector<SInstancedModel> myInstancedModels;
+		SEndEventData myEndEventData;
 		//std::vector<SInstanceName> myInstanceNames;
 	};
 
@@ -284,6 +286,58 @@ namespace Binary {
 				ptr += ReadCharBuffer(ptr, someData[i].name);
 				ptr += ReadCharBuffer(ptr, someData[i].tag);
 			}
+			return ptr - aPtr;
+		}
+	};
+
+	template<>
+	struct CopyBin<SEndEventData> {
+
+		template<typename T>
+		size_t Copy(T& aData, char* aStreamPtr, const unsigned int aCount = 1)
+		{
+			memcpy(&aData, aStreamPtr, sizeof(T) * aCount);
+			return sizeof(T) * aCount;
+		}
+
+
+		size_t ReadCharBuffer(char* aPtr, std::string& outString)
+		{
+			char buffer[128];// = new char[aPtr[0]];
+			memcpy(&buffer[0], aPtr + 1, aPtr[0]);
+			buffer[aPtr[0]] = '\0';
+			outString.resize(aPtr[0]);
+			memcpy(&outString.data()[0], &aPtr[1], aPtr[0]);
+			return sizeof(char) * aPtr[0] + 1;
+		}
+
+		size_t operator()(SEndEventData& someData, char* aPtr)
+		{
+			char* ptr = aPtr;
+
+			int existsCode = 0;
+			ptr += Copy(existsCode, ptr);
+			if (existsCode == 0)
+				return ptr - aPtr;		
+
+			ptr += Copy(someData.myEnemyInstanceID, ptr);
+			ptr += Copy(someData.myPlayerInstanceID, ptr);
+			ptr += Copy(someData.instanceID, ptr);
+			ptr += Copy(someData.myLockPlayerDuration, ptr);
+
+			int count = 0;
+			ptr += Copy(count, ptr);
+			someData.myEnemyPath.resize(count);
+			ptr += Copy(someData.myEnemyPath.data()[0], ptr, count);
+
+			//ptr += Copy(count, ptr);
+			//someData.myVFX.resize(count);
+			//for (int i = 0; i < count; ++i)
+			//{
+			//	ptr += ReadCharBuffer(ptr, someData.myVFX[i].myVfxPath);
+			//	ptr += Copy(someData.myVFX[i].myDelay, ptr);
+			//	ptr += Copy(someData.myVFX[i].myInstanceID, ptr);
+			//}
 			return ptr - aPtr;
 		}
 	};
