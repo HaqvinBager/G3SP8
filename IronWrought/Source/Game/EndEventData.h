@@ -4,8 +4,9 @@
 
 struct SPathPoint {
 	Vector3 myPosition;
-	Vector3 rotation;
+	Quaternion myRotation;
 	float myDuration;
+	float myVingetteStrength;
 };
 
 struct SEndEventData {

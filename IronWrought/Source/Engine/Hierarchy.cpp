@@ -42,6 +42,8 @@ ImGui::CHierarchy::CHierarchy(const char* aName)
 	myComponentMap[typeid(COnTriggerLock)] = [&](CComponent* aComponent) { Edit(dynamic_cast<COnTriggerLock*>(aComponent)); };
 	myComponentMap[typeid(CListenerBehavior)] = [&](CComponent* aComponent) { Edit(dynamic_cast<CListenerBehavior*>(aComponent)); };
 	myComponentMap[typeid(CKeyBehavior)] = [&](CComponent* aComponent) { Edit(dynamic_cast<CKeyBehavior*>(aComponent)); };
+	myComponentMap[typeid(CEndEventComponent)] = [&](CComponent* aComponent) { Edit(dynamic_cast<CEndEventComponent*>(aComponent)); };
+
 		
 	//myCurrentFilter.push_back(typeid(CTransformComponent).hash_code());
 	//myCurrentFilter.push_back(typeid(CLeftClickDownLock));
@@ -376,6 +378,17 @@ void ImGui::CHierarchy::Edit(CKeyBehavior* aComponent)
 {
 	aComponent;
 	ImGui::Text(" WIP CKeyBehavior");
+}
+
+void ImGui::CHierarchy::Edit(CEndEventComponent* aComponent)
+{
+	ImGui::Text("Path Point");
+	const SPathPoint& point = aComponent->CurrentPoint();
+	ImGui::Text("Duration %f", point.myDuration);
+	ImGui::Text("Vingette Strength: %f", point.myVingetteStrength);
+
+	ImGui::Text("Actual Vingette: %f", aComponent->ActualVingetteStrength());
+	ImGui::Text("Vingette Normalized Blend: %f", aComponent->VingetteNormalizedBlend());
 }
 
 	//static bool plState = false;

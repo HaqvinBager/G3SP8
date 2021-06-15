@@ -32,3 +32,4 @@
 #include <MoveResponse.h>
 #include <RotateResponse.h>
 #include <ToggleResponse.h>
+#include <EndEventComponent.h>

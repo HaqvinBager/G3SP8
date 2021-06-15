@@ -58,6 +58,20 @@ public static class BinaryWriterExtensions
     }
 
     /// <summary>  
+    /// <list type="bullet">X</list>
+    /// <list type="bullet">Y</list>
+    /// <list type="bullet">Z</list>
+    /// </summary>
+    public static void Write(this BinaryWriter aBinWriter, Quaternion aData)
+    {
+        aBinWriter.Write(aData.x);
+        aBinWriter.Write(aData.y);
+        aBinWriter.Write(aData.z);
+        aBinWriter.Write(aData.w);
+    }
+
+
+    /// <summary>  
     /// <list type="Bullet">Array Of </list>
     /// <list type="bullet">X</list>
     /// <list type="bullet">Y</list>
@@ -388,11 +402,12 @@ public static class BinaryWriterExtensions
         aBinWriter.Write(data.endEvent.lockPlayerDuration);
 
         aBinWriter.Write(data.endEvent.path.Count);
-        foreach(PathPoint pathPoint in data.endEvent.path)
+        foreach(PathPoint p in data.endEvent.path)
         {
-            aBinWriter.Write(pathPoint.position);
-            aBinWriter.Write(pathPoint.rotation);
-            aBinWriter.Write(pathPoint.duration);
+            aBinWriter.Write(p.position);
+            aBinWriter.Write(p.rotation);
+            aBinWriter.Write(p.duration);
+            aBinWriter.Write(p.playerVingetteStrength);
         }
         return "";
     }
