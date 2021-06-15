@@ -284,6 +284,17 @@ void CGravityGloveComponent::OnEnable()
 
 void CGravityGloveComponent::OnDisable()
 {
+// The following code was a test for when the enemy grabs the player while it is holding an item.
+	//if (myCurrentTarget.myRigidBodyPtr)
+	//{
+	//	Push(myCurrentTarget.myRigidBodyPtr->GameObject().myTransform, myCurrentTarget.myRigidBodyPtr);
+	//	//Release();
+	//}
+	//myHoldingAItem = false;
+	//
+	//myCurrentTarget.myRigidBodyPtr = nullptr;
+	//myCrosshairData.myTargetStatus = PostMaster::SCrossHairData::ETargetStatus::None;
+	//CMainSingleton::PostMaster().SendLate({ EMessageType::UpdateCrosshair, &myCrosshairData });
 }
 
 void CGravityGloveComponent::Receive(const SStringMessage& aMessage)
@@ -291,15 +302,18 @@ void CGravityGloveComponent::Receive(const SStringMessage& aMessage)
 	if (PostMaster::DisableGravityGlove(aMessage.myMessageType))
 	{
 		this->Enabled(false);
+		return;
 	}
 	if (PostMaster::EnableGravityGlove(aMessage.myMessageType))
 	{
 		this->Enabled(true);
+		return;
 	}
 }
 
 void CGravityGloveComponent::InteractionLogicContinuous()
 {
+	std::cout << __FUNCTION__ << std::endl;
 	// -4FPS! with continuous raycasts :S (compared to InteractionLogicOnInput() in Cottage) // Aki 2021 05 26
 	Vector3 start = GameObject().myTransform->GetWorldMatrix().Translation();
 	Vector3 dir = -GameObject().myTransform->GetWorldMatrix().Forward();

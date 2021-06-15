@@ -462,8 +462,11 @@ void CPlayerControllerComponent::LockMovementFor(const float& someSeconds)
 
 void CPlayerControllerComponent::ForceStand()
 {
-	myIsCrouching = true;
-	Crouch();
+	myIsCrouching = false;
+	myController->GetController().resize(myColliderHeightStanding);
+	GameObject().myTransform->FetchChildren()[0]->Position({ 0.0f, myCameraPosYStanding, myCameraPosZ });// Equivalent to myCamera->GameObject().myTransform->Position
+	mySpeed = myWalkSpeed;
+	//Crouch();
 }
 
 void CPlayerControllerComponent::UpdateMovementLock()
