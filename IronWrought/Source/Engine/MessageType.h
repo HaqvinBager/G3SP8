@@ -124,6 +124,8 @@ enum class EMessageType
 
 	UIHoverButton,
 	UICameraWoosh,
+	
+	EndOfGameEvent,
 
 	Count
 };
