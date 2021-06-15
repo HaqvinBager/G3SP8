@@ -8,7 +8,7 @@ using Object = UnityEngine.Object;
 using UnityEditor;
 #endif
 
-public static class EditorExtensions 
+public static class EditorExtensions
 {
     public static void Ping(this Object aObject)
     {
@@ -20,7 +20,8 @@ public static class EditorExtensions
         bool buttonUsed = false;
         SerializedProperty prop = anEditor.serializedObject.FindProperty(vector3MemberName);
         EditorGUILayout.BeginHorizontal();
-        EditorGUILayout.Vector3Field("", prop.vector3Value);
+        EditorGUILayout.PropertyField(prop);
+        // EditorGUILayout.Vector3Field("", prop.vector3Value);
         if (GUILayout.Button(buttonLabel))
         {
             T script = (T)anEditor.target;
@@ -37,7 +38,8 @@ public static class EditorExtensions
         bool buttonUsed = false;
         SerializedProperty prop = anEditor.serializedObject.FindProperty(vector3MemberName);
         EditorGUILayout.BeginHorizontal();
-        EditorGUILayout.Vector3Field("", prop.vector3Value);
+        EditorGUILayout.PropertyField(prop);
+        //EditorGUILayout.Vector3Field("", prop.vector3Value);
         if (GUILayout.Button(buttonLabel))
         {
             T script = (T)anEditor.target;
@@ -56,7 +58,8 @@ public static class EditorExtensions
         if (viewVector3)
         {
             EditorGUILayout.BeginHorizontal();
-            EditorGUILayout.Vector3Field("", prop.vector3Value);
+            EditorGUILayout.PropertyField(prop);
+            //EditorGUILayout.Vector3Field("", prop.vector3Value);
         }
 
         if (GUILayout.Button(buttonLabel))

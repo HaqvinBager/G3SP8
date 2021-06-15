@@ -13,6 +13,7 @@ public class ActivationMoveEditor : Editor
         
         this.ShowValueAndButton<ActivationMove>("start", "Save Start", SavePosition);
         this.ShowValueAndButton<ActivationMove>("end", "Save End", SavePosition);
+        
         GUI.backgroundColor = Color.green;
         this.SetValueButtonCallback<ActivationMove>("start", "Move To Start", SetPosition);
         GUI.backgroundColor = Color.cyan;
