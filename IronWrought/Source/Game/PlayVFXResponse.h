@@ -13,7 +13,9 @@ public:
 	};
 
 	CPlayVFXResponse(CGameObject& aParent, const SSettings& someSettings);
-	~CPlayVFXResponse() override { }
+	~CPlayVFXResponse() override { 
+		myVFXSystemComponent = nullptr;
+	}
 	void Start() override;
 	void Update() override;
 	void OnRespond() override;
@@ -22,5 +24,6 @@ private:
 	SSettings mySettings;
 	CVFXSystemComponent* myVFXSystemComponent;
 	float myTime;
+	bool myHasVFX;
 };
 

@@ -21,5 +21,6 @@ private:
 	SSettings mySettings;
 	CVFXSystemComponent* myVFXSystemComponent;
 	float myTime;
+	bool myHasVFX;
 };
 

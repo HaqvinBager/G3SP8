@@ -8,25 +8,30 @@ CPlayVFXActivation::CPlayVFXActivation(CGameObject& aParent, SSettings someSetti
 	, mySettings(someSettings)
 	, myTime(0.0f)
 	, myVFXSystemComponent(nullptr)
+	, myHasVFX(false)
 {
 }
 
 CPlayVFXActivation::~CPlayVFXActivation()
 {
+	myVFXSystemComponent = nullptr;
 }
 
 void CPlayVFXActivation::Start()
 {
-	const auto& vfxComponent = GameObject().GetComponent<CVFXSystemComponent>();
-	if (!vfxComponent)
-		Enabled(false);
+	myVFXSystemComponent = GameObject().GetComponent<CVFXSystemComponent>();
+	if (myVFXSystemComponent)
+		myHasVFX = true;
 }
 
 void CPlayVFXActivation::OnActivation()
 {
-	myIsInteracted = true;
-	for (auto& effect : myVFXSystemComponent->GetVFXEffects())
-		effect.get()->Enable();
+	if (myHasVFX)
+	{
+		myIsInteracted = true;
+		for (auto& effect : myVFXSystemComponent->GetVFXEffects())
+			effect.get()->Enable();
+	}
 }
 
 void CPlayVFXActivation::Update()
@@ -39,7 +44,7 @@ void CPlayVFXActivation::Update()
 		{
 			for (auto& effect : myVFXSystemComponent->GetVFXEffects())
 				effect.get()->Disable();
-			
+
 			Enabled(false);
 		}
 	}
