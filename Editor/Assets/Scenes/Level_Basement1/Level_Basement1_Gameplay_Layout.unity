@@ -152,7 +152,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4850539984213012352, guid: 0e0366691d74258469ef4e24c0e0e0ce, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -5.736
+      value: -5.89
       objectReference: {fileID: 0}
     - target: {fileID: 4850539984213012352, guid: 0e0366691d74258469ef4e24c0e0e0ce, type: 3}
       propertyPath: m_LocalPosition.y
@@ -221,20 +221,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 4850539984213012352, guid: 0e0366691d74258469ef4e24c0e0e0ce, type: 3}
   m_PrefabInstance: {fileID: 94914053}
   m_PrefabAsset: {fileID: 0}
---- !u!134 &129736725
-PhysicMaterial:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_Name: ' (Instance) (Instance) (Instance) (Instance) (Instance) (Instance) (Instance)
-    (Instance) (Instance) (Instance) (Instance) (Instance) (Instance) (Instance)
-    (Instance) (Instance) (Instance) (Instance) (Instance) (Instance) (Instance)'
-  dynamicFriction: 0.6
-  staticFriction: 0.6
-  bounciness: 0
-  frictionCombine: 0
-  bounceCombine: 0
 --- !u!1001 &179809501
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -654,7 +640,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 4608143524816658754, guid: 8cf35b5fd9883b74689590a4c3e92a16, type: 3}
       propertyPath: myInterestValue
-      value: 30
+      value: 15
       objectReference: {fileID: 0}
     - target: {fileID: 4892072807050136625, guid: 8cf35b5fd9883b74689590a4c3e92a16, type: 3}
       propertyPath: m_Name
@@ -666,7 +652,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6904281142836632070, guid: 8cf35b5fd9883b74689590a4c3e92a16, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -11.562
+      value: -14.72
       objectReference: {fileID: 0}
     - target: {fileID: 6904281142836632070, guid: 8cf35b5fd9883b74689590a4c3e92a16, type: 3}
       propertyPath: m_LocalPosition.y
@@ -674,7 +660,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6904281142836632070, guid: 8cf35b5fd9883b74689590a4c3e92a16, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 5.152
+      value: 17.52
       objectReference: {fileID: 0}
     - target: {fileID: 6904281142836632070, guid: 8cf35b5fd9883b74689590a4c3e92a16, type: 3}
       propertyPath: m_LocalRotation.w
@@ -769,6 +755,21 @@ PhysicMaterial:
   bounciness: 0
   frictionCombine: 0
   bounceCombine: 0
+--- !u!134 &1304891049
+PhysicMaterial:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: ' (Instance) (Instance) (Instance) (Instance) (Instance) (Instance) (Instance)
+    (Instance) (Instance) (Instance) (Instance) (Instance) (Instance) (Instance)
+    (Instance) (Instance) (Instance) (Instance) (Instance) (Instance) (Instance)
+    (Instance) (Instance)'
+  dynamicFriction: 0.6
+  staticFriction: 0.6
+  bounciness: 0
+  frictionCombine: 0
+  bounceCombine: 0
 --- !u!1001 &1311942011
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -778,7 +779,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 4608143524816658754, guid: 8cf35b5fd9883b74689590a4c3e92a16, type: 3}
       propertyPath: myInterestValue
-      value: 20
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 4892072807050136625, guid: 8cf35b5fd9883b74689590a4c3e92a16, type: 3}
       propertyPath: m_Name
@@ -927,7 +928,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 4608143524816658754, guid: 8cf35b5fd9883b74689590a4c3e92a16, type: 3}
       propertyPath: myInterestValue
-      value: 10
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 4892072807050136625, guid: 8cf35b5fd9883b74689590a4c3e92a16, type: 3}
       propertyPath: m_Name
@@ -999,7 +1000,7 @@ PrefabInstance:
     - target: {fileID: 561798480929507129, guid: 24dc741bd847f244aa1ecec19fd14017, type: 3}
       propertyPath: m_Material
       value: 
-      objectReference: {fileID: 129736725}
+      objectReference: {fileID: 1304891049}
     - target: {fileID: 3512818939265636537, guid: 24dc741bd847f244aa1ecec19fd14017, type: 3}
       propertyPath: m_Name
       value: LevelTeleporter
