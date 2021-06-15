@@ -7,6 +7,7 @@ struct SPathPoint {
 	Quaternion myRotation;
 	float myDuration;
 	float myVingetteStrength;
+	int myAnimationIndex;
 };
 
 //struct SVFXPoint {
