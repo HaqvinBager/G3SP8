@@ -11730,6 +11730,18 @@ PhysicMaterial:
   bounciness: 0
   frictionCombine: 0
   bounceCombine: 0
+--- !u!134 &490234569
+PhysicMaterial:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: 
+  dynamicFriction: 0.6
+  staticFriction: 0.6
+  bounciness: 0
+  frictionCombine: 0
+  bounceCombine: 0
 --- !u!134 &490460362
 PhysicMaterial:
   m_ObjectHideFlags: 0
@@ -26661,43 +26673,43 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1115721133848160320, guid: 46ad4b979c081174284fb77c1819db51, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -8.029
+      value: 3.677
       objectReference: {fileID: 0}
     - target: {fileID: 1115721133848160320, guid: 46ad4b979c081174284fb77c1819db51, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -1.972
+      value: -2.005
       objectReference: {fileID: 0}
     - target: {fileID: 1115721133848160320, guid: 46ad4b979c081174284fb77c1819db51, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -2.7100005
+      value: -4.196
       objectReference: {fileID: 0}
     - target: {fileID: 1115721133848160320, guid: 46ad4b979c081174284fb77c1819db51, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.99972165
+      value: 0.91190916
       objectReference: {fileID: 0}
     - target: {fileID: 1115721133848160320, guid: 46ad4b979c081174284fb77c1819db51, type: 3}
       propertyPath: m_LocalRotation.x
-      value: -0
+      value: 0.009670179
       objectReference: {fileID: 0}
     - target: {fileID: 1115721133848160320, guid: 46ad4b979c081174284fb77c1819db51, type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0
+      value: 0.4097134
       objectReference: {fileID: 0}
     - target: {fileID: 1115721133848160320, guid: 46ad4b979c081174284fb77c1819db51, type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0.023595726
+      value: -0.02152315
       objectReference: {fileID: 0}
     - target: {fileID: 1115721133848160320, guid: 46ad4b979c081174284fb77c1819db51, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
+      value: 2.021
       objectReference: {fileID: 0}
     - target: {fileID: 1115721133848160320, guid: 46ad4b979c081174284fb77c1819db51, type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
+      value: 48.356
       objectReference: {fileID: 0}
     - target: {fileID: 1115721133848160320, guid: 46ad4b979c081174284fb77c1819db51, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
-      value: -2.704
+      value: -1.797
       objectReference: {fileID: 0}
     - target: {fileID: 4374909479407503717, guid: 46ad4b979c081174284fb77c1819db51, type: 3}
       propertyPath: m_Materials.Array.data[0]
@@ -28498,6 +28510,18 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 4968221727031350067, guid: fc3f57fdcd7fdbb4aa925b46f13f07d1, type: 3}
   m_PrefabInstance: {fileID: 1184076821}
   m_PrefabAsset: {fileID: 0}
+--- !u!134 &1184488901
+PhysicMaterial:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: 
+  dynamicFriction: 0.6
+  staticFriction: 0.6
+  bounciness: 0
+  frictionCombine: 0
+  bounceCombine: 0
 --- !u!1001 &1185476588
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -45234,6 +45258,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3833944700615854081, guid: 1237172ed47fcff419fed68a1e93e003, type: 3}
+      propertyPath: m_Material
+      value: 
+      objectReference: {fileID: 1184488901}
     - target: {fileID: 4186025185082529159, guid: 1237172ed47fcff419fed68a1e93e003, type: 3}
       propertyPath: m_Name
       value: En_P_Chair (1)
@@ -45258,6 +45286,10 @@ PrefabInstance:
       propertyPath: m_StaticEditorFlags
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6451611050174721550, guid: 1237172ed47fcff419fed68a1e93e003, type: 3}
+      propertyPath: m_Material
+      value: 
+      objectReference: {fileID: 490234569}
     - target: {fileID: 6621057272200136721, guid: 1237172ed47fcff419fed68a1e93e003, type: 3}
       propertyPath: m_Materials.Array.data[1]
       value: 
