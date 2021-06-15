@@ -409,6 +409,14 @@ public static class BinaryWriterExtensions
             aBinWriter.Write(p.duration);
             aBinWriter.Write(p.playerVingetteStrength);
         }
+
+        //aBinWriter.Write(data.endEvent.vfx.Count);
+        //foreach(VFXPoint p in data.endEvent.vfx)
+        //{
+        //    aBinWriter.Write(p.vfxPath);
+        //    aBinWriter.Write(p.delay);
+        //    aBinWriter.Write(p.instanceID);
+        //}
         return "";
     }
 
