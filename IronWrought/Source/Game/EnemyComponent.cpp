@@ -434,6 +434,27 @@ void CEnemyComponent::Receive(const SMessage& aMsg)
 		return;
 	}
 
+	if (aMsg.myMessageType == EMessageType::FoundKey) {
+		CGameObject* gameobject = reinterpret_cast<CGameObject*>(aMsg.data);
+		if (gameobject) {
+			std::vector<Vector3> path = myNavMesh->CalculatePath(GameObject().myTransform->Position(), gameobject->myTransform->Position(), myNavMesh);
+			if (!myHasFoundPlayer && myHasReachedLastPlayerPosition) {
+				/*SetState(EBehaviour::Idle);*/
+				//myIsIdle = true;
+				mySettings.mySpeed = 3.0f;
+				//play heardsound sound
+				CAlerted* alertedBehaviour = static_cast<CAlerted*>(myBehaviours[static_cast<int>(EBehaviour::Alerted)]);
+				if (alertedBehaviour) {
+					alertedBehaviour->SetAlertedPosition(gameobject->myTransform->Position());
+					myHasReachedAlertedTarget = false;
+					myHeardSound = true;
+				}
+				SetState(EBehaviour::Alerted);
+			}
+		}
+		return;
+	}
+
 	if (aMsg.myMessageType == EMessageType::EnemyReachedLastPlayerPosition) {
 		//std::cout << " REACHED " << std::endl;
 		myHasScreamed = false;
