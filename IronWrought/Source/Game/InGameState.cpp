@@ -211,6 +211,8 @@ void CInGameState::Update()
 #ifdef INGAME_USE_MENU
 	if (Input::GetInstance()->IsKeyPressed(VK_ESCAPE))
 	{
+		CMainSingleton::PostMaster().SendLate({ EMessageType::UIButtonPress });
+
 		bool isPaused = false;
 		if (myCurrentCanvas == EInGameCanvases_HUD)
 		{
@@ -367,6 +369,8 @@ void CInGameState::Receive(const SMessage& aMessage)
 
 		case EMessageType::MainMenu:
 		{
+			bool isPaused = false;
+			CMainSingleton::PostMaster().Send({ EMessageType::PauseMenu, &isPaused });
 			myStateStack.PopTopAndPush(CStateStack::EState::InGame);
 		}break;
 
@@ -385,7 +389,7 @@ void CInGameState::Receive(const SMessage& aMessage)
 				, DirectX::XMConvertToRadians(myMenuCameraRotations[index].z)
 			);
 
-			CMainSingleton::PostMaster().Send({ EMessageType::UICameraWoosh, nullptr });
+			CMainSingleton::PostMaster().SendLate({ EMessageType::UICameraWoosh, nullptr });
 #endif
 		}break;
 
