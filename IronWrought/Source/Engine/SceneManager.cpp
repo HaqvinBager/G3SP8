@@ -723,7 +723,6 @@ void CSceneManager::AddPuzzleActivationRotate(CScene& aScene, RapidArray someDat
 		SSettings<Quaternion> settings = {};
 
 		settings.myDuration = activation["duration"].GetFloat();
-		settings.myDelay = activation["delay"].GetFloat();
 		settings.myOrigin = gameObject->myTransform->Rotation();
 		settings.myStart = Quaternion::CreateFromYawPitchRoll(start.y, start.x, start.z);
 		settings.myEnd = Quaternion::CreateFromYawPitchRoll(end.y, end.x, end.z);
