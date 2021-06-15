@@ -8,15 +8,16 @@ CPlayVFXResponse::CPlayVFXResponse(CGameObject& aParent, const SSettings& someSe
 	, mySettings(someSettings)
 	, myTime(0.0f)
 	, myVFXSystemComponent(nullptr)
+	, myHasVFX(false)
 {
 }
 
 void CPlayVFXResponse::Start()
 {
-	Enabled(true);
 	myVFXSystemComponent = GameObject().GetComponent<CVFXSystemComponent>();
-	if (!myVFXSystemComponent)
-		Enabled(false);
+	HasBeenActivated(false);
+	if (myVFXSystemComponent)
+		myHasVFX = true;
 }
 
 void CPlayVFXResponse::Update()
@@ -31,7 +32,7 @@ void CPlayVFXResponse::Update()
 		if (mySettings.myDelay >= myTime)
 			return;
 		ToggleHasBeenDelayed();
-		
+
 		for (auto& effect : myVFXSystemComponent->GetVFXEffects())
 			effect.get()->Enable();
 
@@ -51,5 +52,6 @@ void CPlayVFXResponse::Update()
 
 void CPlayVFXResponse::OnRespond()
 {
-	HasBeenActivated(true);
+	if (myHasVFX)
+		HasBeenActivated(true);
 }
