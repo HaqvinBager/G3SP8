@@ -47,6 +47,8 @@ CEnemyComponent::CEnemyComponent(CGameObject& aParent, const SEnemySetting& some
 	, myDetectionTimer(0.0f)
 	, myHasScreamed(false)
 	, myDetachedPlayerHead(nullptr)
+	, myCurrentVignetteBlend(0.0f)
+	, myTargetVignetteBlend(0.0f)
 
 {
 	//myController = CEngine::GetInstance()->GetPhysx().CreateCharacterController(GameObject().myTransform->Position(), 0.6f * 0.5f, 1.8f * 0.5f, GameObject().myTransform, aHitReport);
@@ -156,6 +158,7 @@ void CEnemyComponent::Update()//får bestämma vilket behaviour vi vill köra i 
 		return;
 	}
 
+	UpdateVignette();
 	if (!myMovementLocked) {
 		mySqrdDistanceToPlayer = Vector3::DistanceSquared(myPlayer->myTransform->Position(), GameObject().myTransform->Position());
 
@@ -303,8 +306,6 @@ void CEnemyComponent::Update()//får bestämma vilket behaviour vi vill köra i 
 			myWakeUpTimer = 0.f;
 		}
 	}
-
-	UpdateVignette();
 }
 
 void CEnemyComponent::FixedUpdate()
@@ -431,6 +432,27 @@ void CEnemyComponent::Receive(const SMessage& aMsg)
 		return;
 	}
 
+	if (aMsg.myMessageType == EMessageType::FoundKey) {
+		CGameObject* gameobject = reinterpret_cast<CGameObject*>(aMsg.data);
+		if (gameobject) {
+			std::vector<Vector3> path = myNavMesh->CalculatePath(GameObject().myTransform->Position(), gameobject->myTransform->Position(), myNavMesh);
+			if (!myHasFoundPlayer && myHasReachedLastPlayerPosition) {
+				/*SetState(EBehaviour::Idle);*/
+				//myIsIdle = true;
+				mySettings.mySpeed = 3.0f;
+				//play heardsound sound
+				CAlerted* alertedBehaviour = static_cast<CAlerted*>(myBehaviours[static_cast<int>(EBehaviour::Alerted)]);
+				if (alertedBehaviour) {
+					alertedBehaviour->SetAlertedPosition(gameobject->myTransform->Position());
+					myHasReachedAlertedTarget = false;
+					myHeardSound = true;
+				}
+				SetState(EBehaviour::Alerted);
+			}
+		}
+		return;
+	}
+
 	if (aMsg.myMessageType == EMessageType::EnemyReachedLastPlayerPosition) {
 		//std::cout << " REACHED " << std::endl;
 		
@@ -471,9 +493,6 @@ void CEnemyComponent::UpdateAttackEvent()
 		CMainSingleton::PostMaster().Send({ EMessageType::PlayerTakeDamage, &damageToPlayer });
 		CPlayerControllerComponent* plCtrl = myPlayer->GetComponent<CPlayerControllerComponent>();
 		myDetachedPlayerHead->SetParent(myPlayer->myTransform);
-		if (myDetachedPlayerHead)
-		{
-		}
 		plCtrl->ForceCrouch();
 		//plCtrl->OnCrouch();
 
@@ -536,6 +555,8 @@ void CEnemyComponent::UpdateVignette(const float aDotOverload)
 		data.myVignetteStrength = Lerp(0.35f, 5.0f, normalizedBlend);
 		CEngine::GetInstance()->SetPostProcessingBufferData(data);
 		IRONWROUGHT_ACTIVE_SCENE.MainCamera()->SetTrauma(normalizedBlend, CCameraComponent::ECameraShakeState::EnemySway);
+
+		//std::cout << __FUNCTION__ << " update overload" << std::endl;
 		return;
 	}
 
@@ -557,10 +578,9 @@ void CEnemyComponent::UpdateVignette(const float aDotOverload)
 			//std::cout << "Player Pos " << playerPos.x << " " << playerPos.y << " " <<  playerPos.z << std::endl;
 
 			//std::cout << __FUNCTION__ << " Dot: " << dot << std::endl;
-			dot = InverseLerp(0.9f, 1.0f, dot);
+			dot = InverseLerp(0.8f, 1.0f, dot);
 			dot = std::clamp(dot, 0.0f, 1.0f);
 			dot *= dot * dot;
-
 
 			float timeVariationAmplitude = 0.1f;
 			timeVariationAmplitude *= dot;
@@ -571,10 +591,33 @@ void CEnemyComponent::UpdateVignette(const float aDotOverload)
 			CFullscreenRenderer::SPostProcessingBufferData data = CEngine::GetInstance()->GetPostProcessingBufferData();
 			float normalizedBlend = SmoothStep(0.0f, 1.0f, dot);
 
-			data.myVignetteStrength = Lerp(0.35f, 5.0f, normalizedBlend);
+			myTargetVignetteBlend = normalizedBlend;
+
+			/*myCurrentVignetteBlend = Lerp(0.0f, 1.0f, CTimer::Dt() * normalizedBlend);*/
+			myCurrentVignetteBlend += CTimer::Dt() * 0.5f;
+			if (myCurrentVignetteBlend > myTargetVignetteBlend)
+				myCurrentVignetteBlend = myTargetVignetteBlend;
+
+			data.myVignetteStrength = Lerp(0.35f, 3.0f, myCurrentVignetteBlend);
 			CEngine::GetInstance()->SetPostProcessingBufferData(data);
 
-			IRONWROUGHT_ACTIVE_SCENE.MainCamera()->SetTrauma(normalizedBlend, CCameraComponent::ECameraShakeState::EnemySway);
+			IRONWROUGHT_ACTIVE_SCENE.MainCamera()->SetTrauma(myCurrentVignetteBlend, CCameraComponent::ECameraShakeState::EnemySway);
+
+			//std::cout << __FUNCTION__ << " Current: " << myCurrentVignetteBlend << std::endl;
+		}
+		else {
+			CFullscreenRenderer::SPostProcessingBufferData data = CEngine::GetInstance()->GetPostProcessingBufferData();
+			myCurrentVignetteBlend -= CTimer::Dt() * 0.5f;
+			if (myCurrentVignetteBlend <= 0.0f)
+				myCurrentVignetteBlend = 0.0f;
+			float normalizedBlend = myCurrentVignetteBlend;
+
+			data.myVignetteStrength = Lerp(0.35f, 3.0f, normalizedBlend);
+			CEngine::GetInstance()->SetPostProcessingBufferData(data);
+
+			IRONWROUGHT_ACTIVE_SCENE.MainCamera()->SetTrauma(normalizedBlend, CCameraComponent::ECameraShakeState::IdleSway);
+		
+			//std::cout << __FUNCTION__ << " update no hit" << std::endl;
 		}
 	}
 }

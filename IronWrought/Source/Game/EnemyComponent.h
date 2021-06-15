@@ -102,6 +102,8 @@ private:
 	bool myHasScreamed;
 
 	float myCurrentStateBlend;
+	float myCurrentVignetteBlend;
+	float myTargetVignetteBlend;
 	float mySqrdDistanceToPlayer;
 	float myCloseToPlayerThreshold;
 	float myAttackPlayerTimer;
