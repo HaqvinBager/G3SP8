@@ -69,7 +69,7 @@ void CInteractionBehavior::UpdateEyes()
 
 	Vector3 origin = GameObject().myTransform->WorldPosition();
 	Vector3 direction = -GameObject().myTransform->GetWorldMatrix().Forward();
-	auto hit = CEngine::GetInstance()->GetPhysx().Raycast(origin, direction, 2.0f, CPhysXWrapper::ELayerMask::DYNAMIC_OBJECTS);
+	auto hit = CEngine::GetInstance()->GetPhysx().Raycast(origin, direction, 2.0f, CPhysXWrapper::ELayerMask::WORLD);
 	if (Input::GetInstance()->IsMousePressed(Input::EMouseButton::Left))
 	{
 		if (hit.hasAnyHits())
@@ -85,6 +85,7 @@ void CInteractionBehavior::UpdateEyes()
 					if (key->GameObject().TryGetComponent(&boxCollider))
 					{
 						if (boxCollider->Enabled())
+							CMainSingleton::PostMaster().SendLate({ EMessageType::FoundKey, &key->GameObject() });
 							key->TriggerActivations();
 					}
 				}
