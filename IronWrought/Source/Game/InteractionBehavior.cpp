@@ -115,7 +115,7 @@ void CInteractionBehavior::UpdateEyes()
 			if (hitTransform != nullptr)
 			{
 				COnLookLock* onLookLock = nullptr;
-				if (hitTransform->GameObject().TryGetComponentAny(&onLookLock))
+				if (hitTransform->GameObject().TryGetComponentAny(&onLookLock)){
 					onLookLock->ActivateEvent();
 				}
 			}

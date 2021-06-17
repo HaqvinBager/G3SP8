@@ -74,7 +74,9 @@ public:
 	void LockMovementFor(const float& someSeconds);
 	void ForceStand();
 
-	inline const float GetCameraPosYStanding() const { return myCameraPosYStanding; }
+	const float GetCameraPosY() const;
+	const float GetCameraPosYStanding() const;
+	const float GetCameraPosYCrouching() const;
 
 private:
 	void RayCastWorld();

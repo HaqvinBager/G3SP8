@@ -107,6 +107,8 @@ void CPlayerControllerComponent::Update()
 #endif
 
 	GameObject().myTransform->Position(myController->GetPosition());
+	//std::cout << "pl " << GameObject().myTransform->Position().y << std::endl;
+	//std::cout << "c " << myCamera->GameObject().myTransform->WorldPosition().y << std::endl;
 
 	switch (myPlayerMovementLock)
 	{
@@ -473,7 +475,29 @@ void CPlayerControllerComponent::ForceStand()
 	myController->GetController().resize(myColliderHeightStanding);
 	GameObject().myTransform->FetchChildren()[0]->Position({ 0.0f, myCameraPosYStanding, myCameraPosZ });// Equivalent to myCamera->GameObject().myTransform->Position
 	mySpeed = myWalkSpeed;
+	// ||
+	//myIsCrouching = true;
 	//Crouch();
+}
+
+const float CPlayerControllerComponent::GetCameraPosY() const
+{
+	float cameraPosY = 0.0f;
+	if (myIsCrouching)
+		cameraPosY = GameObject().myTransform->Position().y - myColliderHeightCrouched + myCameraPosYCrouching;
+	else
+		cameraPosY = GameObject().myTransform->Position().y - myColliderHeightStanding + myCameraPosYStanding;
+	return cameraPosY;
+}
+
+const float CPlayerControllerComponent::GetCameraPosYStanding() const
+{
+	return GameObject().myTransform->Position().y /*+ myColliderHeightStanding*/ + myCameraPosYStanding;
+}
+
+const float CPlayerControllerComponent::GetCameraPosYCrouching() const
+{
+	return GameObject().myTransform->Position().y /*+ myColliderHeightCrouched*/ + myCameraPosYCrouching;;
 }
 
 void CPlayerControllerComponent::UpdateMovementLock()

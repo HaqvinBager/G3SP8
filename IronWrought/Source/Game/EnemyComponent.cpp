@@ -415,12 +415,11 @@ void CEnemyComponent::Receive(const SMessage& aMsg)
 {
 	if (aMsg.myMessageType == EMessageType::EnemyAttackedPlayer)
 	{
-		//std::cout << __FUNCTION__ << " ATTACK PLAYER " << std::endl;
 		myMovementLocked = true;
 		bool lockCamera = true;
-		CMainSingleton::PostMaster().Send({ EMessageType::LockFPSCamera, &lockCamera });
 		CPlayerControllerComponent* plCtrl = myPlayer->GetComponent<CPlayerControllerComponent>();
-		plCtrl->ForceStand();
+		CMainSingleton::PostMaster().Send({ EMessageType::LockFPSCamera, &lockCamera });
+		//plCtrl->ForceStand();// Does not work due to how LateUpdate works
 		plCtrl->LockMovementFor(myAttackPlayerTimerMax + 0.75f);
 		//CMainSingleton::PostMaster().Send({ PostMaster::SMSG_DISABLE_GLOVE, nullptr });// Doing this did not work out well
 		CMainSingleton::PostMaster().Send({ PostMaster::SMSG_DISABLE_CANVAS, nullptr });
@@ -433,8 +432,10 @@ void CEnemyComponent::Receive(const SMessage& aMsg)
 		// Detach player head
 		myDetachedPlayerHead = myPlayer->myTransform->FetchChildren()[0];
 		myDetachedPlayerHead->RemoveParent();
-		//float a = atan2f(GameObject().myTransform->Position().x - myDetachedPlayerHead->Position().x, GameObject().myTransform->Position().z - myDetachedPlayerHead->Position().z);
-		//myDetachedPlayerHead->Rotation({ 0.f, DirectX::XMConvertToDegrees(a), 0.f });
+		Vector3 playerEyePos = myDetachedPlayerHead->Position();
+		const float heightOfEnemyHeadInAnimation = 1.5f;
+		playerEyePos.y = this->GameObject().myTransform->Position().y + heightOfEnemyHeadInAnimation;
+		myDetachedPlayerHead->Position(playerEyePos);
 
 		myAttackPlayerTimer = myAttackPlayerTimerMax;
 		IRONWROUGHT->GetActiveScene().MainCamera()->Fade(false, myAttackPlayerTimerMax + 1.f, true);
@@ -443,7 +444,7 @@ void CEnemyComponent::Receive(const SMessage& aMsg)
 
 	if (aMsg.myMessageType == EMessageType::PropCollided) {
 		
-		if (myDetachedPlayerHead)// Return if the enemy is attacking the players head.
+		if (myDetachedPlayerHead)// Return if the enemy is attacking the players head. Could also check against state to see if enemy is in attack state
 			return;
 		
 		CGameObject* gameobject = reinterpret_cast<CGameObject*>(aMsg.data);
