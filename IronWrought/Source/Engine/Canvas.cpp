@@ -274,6 +274,19 @@ void CCanvas::ForceEnabled(const bool& anIsEnabled)
 		myBackground->SetShouldRender(myIsEnabled);
 }
 
+void CCanvas::DisableWidget(const int anIndex)
+{
+	if (myWidgets.empty())
+		return;
+	if (anIndex >= myWidgets.size())
+		return;
+	if (anIndex < 0)
+		return;
+
+	myWidgets[anIndex]->SetEnabled(false);
+	myWidgets[anIndex]->DisableWidgets();
+}
+
 void CCanvas::DisableWidgets(const int& anExceptionIndex)
 {
 	for (int i = 0; i < myWidgets.size(); ++i)
@@ -284,6 +297,31 @@ void CCanvas::DisableWidgets(const int& anExceptionIndex)
 		auto& widget = *myWidgets[i];
 		widget.SetEnabled(false);
 		widget.DisableWidgets();
+	}
+}
+
+void CCanvas::EnableWidget(const int anIndex)
+{
+	if (myWidgets.empty())
+		return;
+	if (anIndex >= myWidgets.size())
+		return;
+	if (anIndex < 0)
+		return;
+
+	myWidgets[anIndex]->SetEnabled(true);
+	myWidgets[anIndex]->EnableWidgets();
+
+}
+
+void CCanvas::EnableWidgets()
+{
+	for (int i = 0; i < myWidgets.size(); ++i)
+	{
+
+		auto& widget = *myWidgets[i];
+		widget.SetEnabled(true);
+		widget.EnableWidgets();
 	}
 }
 

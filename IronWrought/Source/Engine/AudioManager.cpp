@@ -1023,6 +1023,12 @@ std::string CAudioManager::TranslateEnum(ESFX enumerator) const {
 		return "InsertFuse";
 	case ESFX::MechanicalDoorOpen:
 		return "MechanicalDoorOpen";
+	case ESFX::DoorCreak:
+		return "DoorCreak";
+	case ESFX::DoorClose:
+		return "DoorClose";
+	case ESFX::ChestCreak:
+		return "ChestCreak";
 	default:
 		return "";
 	}
