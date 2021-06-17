@@ -72,5 +72,7 @@ private:
 	float myNormalizedBlend = 0.0f;
 	float myActualVingetteStrength = 0.0f;
 	float myHalfTime;
+	float myVignetteStrength;
+	bool myHasStartedPostEvent;
 };
 

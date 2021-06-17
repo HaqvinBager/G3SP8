@@ -16,6 +16,8 @@ CEndEventComponent::CEndEventComponent(CGameObject& aParent, const SEndEventData
 	, myLastVignetteStrength(0.0f)
 	, myLastAnimationIndex(-1) //5 == Idle
 	, myEventHasCompleted(false)
+	, myHasStartedPostEvent(false)
+	, myVignetteStrength(0.0f)
 {
 }
 
@@ -160,33 +162,25 @@ void CEndEventComponent::UpdateAnimation(const SPathPoint& aPoint)
 
 void CEndEventComponent::UpdateVignette(const SPathPoint& /*aPoint*/)
 {
-	static bool hasStartedPostEvent = false;
-	static float vignetteStrength = 0.0f;
-
-
 	CFullscreenRenderer::SPostProcessingBufferData data = CEngine::GetInstance()->GetPostProcessingBufferData();
 	if (myVignetteTime <= myHalfTime)
 	{
-		vignetteStrength = myVignetteTime / myHalfTime;
-		//myNormalizedBlend = SmoothStep(myLastVignetteStrength, vignetteStrength, vignetteStrength);
-		data.myVignetteStrength = Lerp(0.35f, 7.0f, vignetteStrength);
+		myVignetteStrength = myVignetteTime / myHalfTime;
+		data.myVignetteStrength = Lerp(0.35f, 7.0f, myVignetteStrength);
 
 		myLastVignetteStrength = data.myVignetteStrength;
-		std::cout << __FUNCTION__ << "Lerping\n" << "Vignette strength: " << data.myVignetteStrength << std::endl;
 	}
 	else
 	{
-		vignetteStrength += CTimer::Dt();
+		myVignetteStrength += CTimer::Dt();
 		data.myVignetteStrength = 7.0f;
-		std::cout << __FUNCTION__ << "Set strength\n" << "Vignette strength: " << data.myVignetteStrength << std::endl;
-		if (!hasStartedPostEvent)
+		if (!myHasStartedPostEvent)
 		{
 			StartPostEvent();
-			hasStartedPostEvent = true;
+			myHasStartedPostEvent = true;
 		}
 	}
-	//myActualVingetteStrength = data.myVignetteStrength;
 	CEngine::GetInstance()->SetPostProcessingBufferData(data);
 
-		IRONWROUGHT_ACTIVE_SCENE.MainCamera()->SetTrauma(vignetteStrength, CCameraComponent::ECameraShakeState::EnemySway);
+	IRONWROUGHT_ACTIVE_SCENE.MainCamera()->SetTrauma(myVignetteStrength, CCameraComponent::ECameraShakeState::EnemySway);
 }
