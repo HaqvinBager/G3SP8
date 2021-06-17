@@ -276,6 +276,7 @@ void CAlerted::Enter(const Vector3& aPosition)
 	aPosition;
 
 	myPath.clear();
+	myAlertedPosition.y = aPosition.y;
 	SetPath(myNavMesh->CalculatePath(aPosition, myAlertedPosition, myNavMesh), myAlertedPosition);
 	myHasNewTartget = false;
 	myAlertedTimer = myAlertedTimerMax;
@@ -285,6 +286,7 @@ Vector3 CAlerted::Update(const Vector3& aPosition)
 {
 	if (myHasNewTartget) {
 		myPath.clear();
+		myAlertedPosition.y = aPosition.y;
 		SetPath(myNavMesh->CalculatePath(aPosition, myAlertedPosition, myNavMesh), myAlertedPosition);
 		myAlertedTimer = myAlertedTimerMax;
 		myHasNewTartget = false;
@@ -340,6 +342,7 @@ void CAlerted::SetPath(std::vector<Vector3> aPath, Vector3 aFinalPosition)
 	myPath.clear();
 	myPath.push_back(aFinalPosition);
 	for (unsigned int i = 0; i < aPath.size(); ++i) {
+		aPath[i].y = aFinalPosition.y;
 		if (aPath[i] != aFinalPosition) {
 			myPath.push_back(aPath[i]);
 		}
