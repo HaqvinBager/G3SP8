@@ -437,6 +437,9 @@ void CInGameState::OnSceneLoadCompleteMenu(std::string /*aMsg*/)
 	myEnemyAnimationController->Activate();
 	CEngine::GetInstance()->SetActiveScene(myState);// Might be redundant.
 
+	int levelIndex = 0;
+	CMainSingleton::PostMaster().Send({ EMessageType::SetAmbience, &levelIndex });
+
 	myExitTo = EExitTo::None;
 }
 
