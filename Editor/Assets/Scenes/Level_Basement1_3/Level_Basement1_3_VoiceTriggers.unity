@@ -123,6 +123,18 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!134 &815317424
+PhysicMaterial:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: 
+  dynamicFriction: 0.6
+  staticFriction: 0.6
+  bounciness: 0
+  frictionCombine: 0
+  bounceCombine: 0
 --- !u!1001 &2109219441
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -174,6 +186,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5870580155986294078, guid: 3f84232a6a8e3ea45ba5024dd0e18116, type: 3}
+      propertyPath: m_Material
+      value: 
+      objectReference: {fileID: 815317424}
     - target: {fileID: 6422795178679717016, guid: 3f84232a6a8e3ea45ba5024dd0e18116, type: 3}
       propertyPath: dialogueScene
       value: 20
@@ -181,6 +197,10 @@ PrefabInstance:
     - target: {fileID: 6738539357066539599, guid: 3f84232a6a8e3ea45ba5024dd0e18116, type: 3}
       propertyPath: m_Name
       value: VoiceTrigger
+      objectReference: {fileID: 0}
+    - target: {fileID: 6738539357066539599, guid: 3f84232a6a8e3ea45ba5024dd0e18116, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3f84232a6a8e3ea45ba5024dd0e18116, type: 3}

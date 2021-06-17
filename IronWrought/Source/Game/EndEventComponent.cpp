@@ -11,11 +11,14 @@ CEndEventComponent::CEndEventComponent(CGameObject& aParent, const SEndEventData
 	, myData(aData)
 	, myPathIndex(-1)
 	, myTime(0.0f)
-	, myLastVingetteStrength(0.0f)
+	, myVignetteTime(0.0f)
+	, myHalfTime(0.0f)
+	, myLastVignetteStrength(0.0f)
 	, myLastAnimationIndex(-1) //5 == Idle
 	, myEventHasCompleted(false)
+	, myHasStartedPostEvent(false)
+	, myVignetteStrength(0.0f)
 {
-
 }
 
 CEndEventComponent::~CEndEventComponent()
@@ -32,24 +35,42 @@ void CEndEventComponent::Start()
 {
 	myLastPos = GameObject().myTransform->Position();
 	myLastRotation = GameObject().myTransform->Rotation();
+
+	for (size_t i = 0; i < myData.myEnemyPath.size(); ++i)
+	{
+		myHalfTime += myData.myEnemyPath[i].myDuration;
+	}
+	myHalfTime *= 0.4f;
 }
 
 void CEndEventComponent::Update()
 {
 	if (myEventHasCompleted)
 	{
-		OnEndEventComplete();
-		return;
-	}
+		myTime += CTimer::Dt();
 
-	if (IsValidPathIndex(myPathIndex))
+		if (myHalfTime < myTime)
+		{
+
+			OnEndEventComplete();
+			return;
+		}
+	}
+	else
 	{
-		myTime += CTimer::Dt();	
-		const SPathPoint& point = myData.myEnemyPath[myPathIndex];
-		MoveAlongPath(point);
-		UpdateAnimation(point);
-		UpdateVingette(point);
-		UpdatePathIndex(point);
+		if (IsValidPathIndex(myPathIndex))
+		{
+			myTime += CTimer::Dt();
+			if (myPathIndex > 1)
+			{
+				myVignetteTime += CTimer::Dt();
+			}
+			const SPathPoint& point = myData.myEnemyPath[myPathIndex];
+			MoveAlongPath(point);
+			UpdateAnimation(point);
+			UpdateVignette(point);
+			UpdatePathIndex(point);
+		}
 	}
 }
 
@@ -59,20 +80,26 @@ void CEndEventComponent::UpdatePathIndex(const SPathPoint& point)
 	{
 		myLastPos = point.myPosition;
 		myLastRotation = point.myRotation;
-		myLastVingetteStrength = point.myVingetteStrength;
+		//myLastVingetteStrength = point.myVingetteStrength;
 		myLastAnimationIndex = point.myAnimationIndex;
-		//std::cout << __FUNCTION__ << " Next Index! " << std::endl;
 		myTime = 0.0f;
-		//std::cout << CTimer::Time() << " /tTime" << std::endl;
-		myPathIndex = (myPathIndex + static_cast<int>(1)) % myData.myEnemyPath.size();	
+		myPathIndex = (myPathIndex + static_cast<int>(1)) % myData.myEnemyPath.size();
 
-		if (myPathIndex == myData.myEnemyPath.size() - 1)
+
+		if (myPathIndex > (myData.myEnemyPath.size() - 3))
 		{
-			StartPostEvent();
+			myData.myEnemyPath[myPathIndex].myPosition = { myPlayer->myTransform->Position().x, myData.myEnemyPath[myPathIndex].myPosition.y, myPlayer->myTransform->Position().z };
 		}
 
-		if (myPathIndex == 0) //PathIndex will only equal Zero when it has played the entire sequence, and would then re-start. We dont want it to restart <3 /Axel Savage 2021-06-14 16:54
+		//if (myPathIndex == myData.myEnemyPath.size() - 1)
+		//{
+		//	StartPostEvent();
+		//}
+
+		if (myPathIndex == 0)
 		{
+			myTime = 0.0f;
+			myHalfTime = 3.0f;
 			myEventHasCompleted = true;
 			//Enabled(false);
 		}
@@ -82,7 +109,7 @@ void CEndEventComponent::UpdatePathIndex(const SPathPoint& point)
 void CEndEventComponent::StartPostEvent()
 {
 	CCameraComponent* camera = CEngine::GetInstance()->GetActiveScene().MainCamera();
-	camera->Fade(false, 1.142f, true);
+	camera->Fade(false, 2.5f, true);
 
 	Vector3 playerPos = myPlayer->myTransform->Position();
 	Vector3 enemyPos = myEnemy->myTransform->Position();
@@ -90,9 +117,7 @@ void CEndEventComponent::StartPostEvent()
 	enemyPos.x = playerPos.x;
 	enemyPos.z = playerPos.z;
 
-	IRONWROUGHT_ACTIVE_SCENE.MainCamera()->SetTrauma(myNormalizedBlend, CCameraComponent::ECameraShakeState::EnemySway);
-
-	myData.myEnemyPath[myPathIndex].myPosition = enemyPos;
+	//myData.myEnemyPath[myPathIndex].myPosition = enemyPos;
 }
 
 void CEndEventComponent::OnEndEventComplete()
@@ -135,14 +160,27 @@ void CEndEventComponent::UpdateAnimation(const SPathPoint& aPoint)
 	}
 }
 
-void CEndEventComponent::UpdateVingette(const SPathPoint& aPoint)
+void CEndEventComponent::UpdateVignette(const SPathPoint& /*aPoint*/)
 {
-	if (aPoint.myVingetteStrength > 0.01f)
+	CFullscreenRenderer::SPostProcessingBufferData data = CEngine::GetInstance()->GetPostProcessingBufferData();
+	if (myVignetteTime <= myHalfTime)
 	{
-		CFullscreenRenderer::SPostProcessingBufferData data = CEngine::GetInstance()->GetPostProcessingBufferData();
-		myNormalizedBlend = SmoothStep(myLastVingetteStrength, aPoint.myVingetteStrength, myTime / aPoint.myDuration);
-		data.myVignetteStrength = Lerp(0.35f, 3.0f, myNormalizedBlend);
-		myActualVingetteStrength = data.myVignetteStrength;
-		CEngine::GetInstance()->SetPostProcessingBufferData(data);
+		myVignetteStrength = myVignetteTime / myHalfTime;
+		data.myVignetteStrength = Lerp(0.35f, 7.0f, myVignetteStrength);
+
+		myLastVignetteStrength = data.myVignetteStrength;
 	}
+	else
+	{
+		myVignetteStrength += CTimer::Dt();
+		data.myVignetteStrength = 7.0f;
+		if (!myHasStartedPostEvent)
+		{
+			StartPostEvent();
+			myHasStartedPostEvent = true;
+		}
+	}
+	CEngine::GetInstance()->SetPostProcessingBufferData(data);
+
+	IRONWROUGHT_ACTIVE_SCENE.MainCamera()->SetTrauma(myVignetteStrength, CCameraComponent::ECameraShakeState::EnemySway);
 }

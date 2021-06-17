@@ -25,7 +25,7 @@ private:
 	const bool IsValidPathIndex(const int aPathIndex);
 	void MoveAlongPath(const SPathPoint& aPoint);
 	void UpdateAnimation(const SPathPoint& aPoint);
-	void UpdateVingette(const SPathPoint& aPoint);
+	void UpdateVignette(const SPathPoint& aPoint);
 	void UpdatePathIndex(const SPathPoint& point);
 	void StartPostEvent();
 	void OnEndEventComplete();
@@ -51,10 +51,11 @@ private:
 	SEndEventData myData;
 	Quaternion myLastRotation;
 	Vector3 myLastPos;
-	float myLastVingetteStrength;
+	float myLastVignetteStrength;
 	int myLastAnimationIndex;
 	int myPathIndex;
 	float myTime;
+	float myVignetteTime;
 	bool myEventHasCompleted;
 
 	CGameObject* myPlayer;
@@ -70,5 +71,8 @@ public:
 private:
 	float myNormalizedBlend = 0.0f;
 	float myActualVingetteStrength = 0.0f;
+	float myHalfTime;
+	float myVignetteStrength;
+	bool myHasStartedPostEvent;
 };
 

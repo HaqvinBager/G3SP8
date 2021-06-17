@@ -1247,6 +1247,7 @@ void CSceneManager::AddAudioSources(CScene& aScene, RapidArray someData)
 				, m["maxAttenuationDistance"].GetFloat()
 				, m["soundIndex"].GetInt()
 				, instanceId
+				, 0.0f
 			};
 			CMainSingleton::PostMaster().Send({ EMessageType::AddStaticAudioSource, &data });
 		}
@@ -1255,7 +1256,7 @@ void CSceneManager::AddAudioSources(CScene& aScene, RapidArray someData)
 			PostMaster::SAudioSourceInitData data =
 			{
 				  gameObject->myTransform->Position()
-				, { 0.0f, 0.0f, 1.0f }
+				, { 0.0f, 0.0f, 0.0f }
 				, 360.0f
 				, 360.0f
 				, 1.0f
@@ -1263,6 +1264,7 @@ void CSceneManager::AddAudioSources(CScene& aScene, RapidArray someData)
 				, 10000.0f
 				, m["soundIndex"].GetInt()
 				, instanceId
+				, 0.0f
 			};
 			gameObject->AddComponent<CPhysicsPropAudioComponent>(*gameObject, data);
 		}
