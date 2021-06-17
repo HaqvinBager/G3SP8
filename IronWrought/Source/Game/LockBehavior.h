@@ -8,6 +8,9 @@ enum class ELockInteractionTypes
 	OnLeftClickDown
 };
 
+class CListenerBehavior;
+class CKeyBehavior;
+
 class CLockBehavior : public CBehavior, public IMessageObserver
 {
 public:
@@ -21,6 +24,14 @@ public:
 	};
 
 	CLockBehavior(CGameObject& aParent, const SSettings someSettings);
+
+	void Register(CListenerBehavior* aListener);
+	void Unregister(CListenerBehavior* aListener);
+
+	void AddKey(CKeyBehavior* aKey);
+	void RemoveKey(CKeyBehavior* aKey);
+	void OnKeyActivated(CKeyBehavior* aKey);
+
 	virtual ~CLockBehavior() override;
 	void Destroy() {}
 
@@ -37,7 +48,7 @@ public:
 	virtual void ActivateEvent() = 0;
 
 	const int MaxAmountOfKeys() const { return myMaxAmountOfKeys; }
-	const int AmountOfKeys() const { return myAmountOfKeys; }
+	const size_t AmountOfKeys() const { return myAmountOfKeys; }
 
 	const bool IsUnlocked() const { return myAmountOfKeys >= myMaxAmountOfKeys; }
 
@@ -50,7 +61,11 @@ private:
 	SSettings mySettings;
 	bool myHasSubscribed;
 	int myMaxAmountOfKeys;
-	int myAmountOfKeys;
+	size_t myAmountOfKeys;
+	std::vector<CListenerBehavior*> myListeners;
+	std::vector<CKeyBehavior*> myKeys;
+
+
 
 public:
 	bool myHasTriggered;

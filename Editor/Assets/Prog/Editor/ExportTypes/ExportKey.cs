@@ -11,6 +11,7 @@ public struct KeyData
     public int onKeyCreateNotify;
     public int onKeyInteractNotify;
     public int hasLock;
+    public int lockInstanceID;
     public int instanceID;
 }
 
@@ -126,6 +127,7 @@ public class ExportKey
                 data.onKeyInteractNotifyName = key.myLock.onKeyInteractNotify.name;
                 data.onKeyCreateNotify = key.myLock.onKeyCreateNotify.GetInstanceID();
                 data.onKeyInteractNotify = key.myLock.onKeyInteractNotify.GetInstanceID();
+                data.lockInstanceID = key.myLock.transform.GetInstanceID();
             }
 
             data.instanceID = key.transform.GetInstanceID();

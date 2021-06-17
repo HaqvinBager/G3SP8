@@ -17,7 +17,9 @@ public:
 	void Update() override;
 	void OnActivation() override;
 	void OnDisable() override;
-	void ToggleAudioClip();
+	bool ToggleAudioClip();
+
+	const int GetAudioIndex() const;
 
 private:
 	PostMaster::SAudioSourceInitData mySettings;

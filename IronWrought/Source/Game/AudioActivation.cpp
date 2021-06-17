@@ -63,7 +63,10 @@ void CAudioActivation::Update()
 		{
 			if (Complete(rotator->Complete()))
 			{
-				ToggleAudioClip();
+				if (!ToggleAudioClip())
+				{
+					Complete(!myAudioChannel->IsPlaying());
+				}
 			}
 		}
 		else
@@ -80,7 +83,7 @@ void CAudioActivation::Update()
 	}
 }
 
-void CAudioActivation::ToggleAudioClip()
+bool CAudioActivation::ToggleAudioClip()
 {
 	//std::cout << "Toggle Audio Bool" << std::endl;
 	// Open
@@ -88,13 +91,22 @@ void CAudioActivation::ToggleAudioClip()
 	{
 		my3DPlayMessage.mySoundIndex = 12;
 		my2DPlayMessage = 12;
+		return true;
 	}
 	// Close
 	else if (my3DPlayMessage.mySoundIndex == 12)
 	{
 		my3DPlayMessage.mySoundIndex = 35;
 		my2DPlayMessage = 35;
+		return true;
 	}
+
+	return false;
+}
+
+const int CAudioActivation::GetAudioIndex() const
+{
+	return mySettings.mySoundIndex;
 }
 
 void CAudioActivation::OnActivation()

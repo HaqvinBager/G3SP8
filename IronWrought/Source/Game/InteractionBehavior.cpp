@@ -79,10 +79,10 @@ void CInteractionBehavior::UpdateEyes()
 			if (hitTransform != nullptr)
 			{
 				CKeyBehavior* key = nullptr;
-				if (hitTransform->GameObject().TryGetComponent(&key))
+				if (hitTransform->GameObject().TryGetComponentAny(&key))
 				{
 					CBoxColliderComponent* boxCollider = nullptr;
-					if (key->GameObject().TryGetComponent(&boxCollider))
+					if (key->GameObject().TryGetComponentAny(&boxCollider))
 					{
 						if (boxCollider->Enabled())
 							key->TriggerActivations();
@@ -90,10 +90,10 @@ void CInteractionBehavior::UpdateEyes()
 				}
 
 				CLeftClickDownLock* leftClickDownLock = nullptr;
-				if (hitTransform->GameObject().TryGetComponent(&leftClickDownLock))
+				if (hitTransform->GameObject().TryGetComponentAny(&leftClickDownLock))
 				{
 					CBoxColliderComponent* boxCollider = nullptr;
-					if (leftClickDownLock->GameObject().TryGetComponent(&boxCollider))
+					if (leftClickDownLock->GameObject().TryGetComponentAny(&boxCollider))
 					{
 						if(boxCollider->Enabled())
 							leftClickDownLock->ActivateEvent();
@@ -111,7 +111,7 @@ void CInteractionBehavior::UpdateEyes()
 			if (hitTransform != nullptr)
 			{
 				COnLookLock* onLookLock = nullptr;
-				if (hitTransform->GameObject().TryGetComponent(&onLookLock))
+				if (hitTransform->GameObject().TryGetComponentAny(&onLookLock))
 					onLookLock->ActivateEvent();
 			}
 		}

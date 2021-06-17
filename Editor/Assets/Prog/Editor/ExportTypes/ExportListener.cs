@@ -7,6 +7,7 @@ using UnityEditor;
 public struct ListenerData
 {
     public int onResponseNotify;
+    public int lockInstanceID;
     public int instanceID;
 }
 
@@ -139,6 +140,7 @@ public class ExportListener
             ListenerData data = new ListenerData();
             data.onResponseNotify = listener.myLock.onLockNotify.GetInstanceID();
             data.instanceID = listener.transform.GetInstanceID();
+            data.lockInstanceID = listener.myLock.transform.GetInstanceID();
             collection.listeners.Add(data);
 
             ExportRotateResponses(ref collection.responseRotates, listener);

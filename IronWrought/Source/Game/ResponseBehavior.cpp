@@ -5,7 +5,7 @@
 IResponseBehavior::IResponseBehavior(CGameObject& aParent)
 	: CBehavior(aParent), myHasBeenDelayed(false), myHasBeenActivated(true)
 {
-	GetComponent<CListenerBehavior>()->Register(this);
+	GetComponentAny<CListenerBehavior>()->Register(this);
 }
 
 IResponseBehavior::~IResponseBehavior()

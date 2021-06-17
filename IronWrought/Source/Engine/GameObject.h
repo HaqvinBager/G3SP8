@@ -43,10 +43,17 @@ public:
 	T* GetComponent() const;
 
 	template<class T>
+	T* GetComponentAny() const;
+
+
+	template<class T>
 	std::vector<T*> GetComponents() const;
 
 	template<class T>
 	bool TryGetComponent(T** outComponent) const;
+
+	template<class T>
+	bool TryGetComponentAny(T** outComponent) const;
 
 	CTransformComponent* myTransform;
 
@@ -107,12 +114,28 @@ inline T* CGameObject::GetComponent() const
 	const std::type_info& type = typeid(T);
 	for (size_t i = 0; i < myComponents.size(); ++i)
 	{		
+		//T* component = dynamic_cast<T*>(myComponents[i].get());
+		//if (dynamic_cast<T*>(myComponents[i].get()))
+		//	return static_cast<T*>(myComponents[i].get());
+
 		if (type == typeid(*myComponents[i]))
 		{
 			return static_cast<T*>(myComponents[i].get());
 		}
 	}
 	//throw std::exception("Component is missing.");
+	return nullptr;
+}
+
+template<class T>
+inline T* CGameObject::GetComponentAny() const
+{
+	for (size_t i = 0; i < myComponents.size(); ++i)
+	{
+		//T* component = dynamic_cast<T*>(myComponents[i].get());
+		if (dynamic_cast<T*>(myComponents[i].get()))
+			return static_cast<T*>(myComponents[i].get());
+	}
 	return nullptr;
 }
 
@@ -136,5 +159,12 @@ template<class T>
 inline bool CGameObject::TryGetComponent(T** outComponent) const
 {
 	*outComponent = GetComponent<T>();
+	return *outComponent != nullptr;
+}
+
+template<class T>
+inline bool CGameObject::TryGetComponentAny(T** outComponent) const
+{
+	*outComponent = GetComponentAny<T>();
 	return *outComponent != nullptr;
 }

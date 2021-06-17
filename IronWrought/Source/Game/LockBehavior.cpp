@@ -1,5 +1,9 @@
 #include "stdafx.h"
 #include "LockBehavior.h"
+#include "ListenerBehavior.h"
+#include "KeyBehavior.h"
+#include "AudioActivation.h"
+#include "AudioManager.h"
 
 CLockBehavior::CLockBehavior(CGameObject& aParent, const SSettings someSettings) :
 	CBehavior(aParent),
@@ -9,9 +13,84 @@ CLockBehavior::CLockBehavior(CGameObject& aParent, const SSettings someSettings)
 	myHasTriggered(false),
 	myHasSubscribed(false)
 {
-	CMainSingleton::PostMaster().Subscribe(mySettings.myOnKeyCreateNotify, this);
-	CMainSingleton::PostMaster().Subscribe(mySettings.myOnKeyInteractNotify, this);
-	myHasSubscribed = true;
+	//CMainSingleton::PostMaster().Subscribe(mySettings.myOnKeyCreateNotify, this);
+	//CMainSingleton::PostMaster().Subscribe(mySettings.myOnKeyInteractNotify, this);
+	//myHasSubscribed = true;
+}
+
+void CLockBehavior::Register(CListenerBehavior* aListener)
+{
+	auto it = std::find(myListeners.begin(), myListeners.end(), aListener);
+	if (it == myListeners.end())
+	{
+		myListeners.push_back(aListener);
+	}
+}
+
+void CLockBehavior::Unregister(CListenerBehavior* aListener)
+{
+	auto it = std::find(myListeners.begin(), myListeners.end(), aListener);
+	if (it != myListeners.end())
+	{
+		myListeners.erase(it);
+	}
+}
+
+void CLockBehavior::AddKey(CKeyBehavior* aKey)
+{
+	auto it = std::find(myKeys.begin(), myKeys.end(), aKey);
+	if (it == myKeys.end())
+	{
+		myKeys.push_back(aKey);
+		myMaxAmountOfKeys = static_cast<int>(myKeys.size());
+	}
+}
+
+void CLockBehavior::RemoveKey(CKeyBehavior* aKey)
+{
+	auto it = std::find(myKeys.begin(), myKeys.end(), aKey);
+	if (it != myKeys.end())
+	{
+		myKeys.erase(it);
+		myMaxAmountOfKeys = static_cast<int>(myKeys.size());
+	}
+}
+
+void CLockBehavior::OnKeyActivated(CKeyBehavior* aKey)
+{
+	CAudioActivation* audioActivation = nullptr;
+	if (aKey->GameObject().TryGetComponent(&audioActivation))
+	{
+		if (audioActivation->GetAudioIndex() == (int)ESFX::MovePainting)
+		{
+			if (myMaxAmountOfKeys == 1)
+			{
+				int soundIndex = 30;
+				CMainSingleton::PostMaster().Send({ EMessageType::PlaySFX, &soundIndex });
+			}
+			else if (myMaxAmountOfKeys <= 3)
+			{
+				int soundIndex = 29;
+				CMainSingleton::PostMaster().Send({ EMessageType::PlaySFX, &soundIndex });
+			}
+		}
+	}
+
+
+	//myAmountOfKeys++;
+	//if (myMaxAmountOfKeys == 3)
+	//{
+	//	if (myAmountOfKeys < myMaxAmountOfKeys)
+	//	{
+	//		int soundIndex = 29;
+	//		CMainSingleton::PostMaster().Send({ EMessageType::PlaySFX, &soundIndex });
+	//	}
+	//	else if (myAmountOfKeys >= myMaxAmountOfKeys)
+	//	{
+	//		int soundIndex = 30;
+	//		CMainSingleton::PostMaster().Send({ EMessageType::PlaySFX, &soundIndex });
+	//	}
+	//}
 }
 
 CLockBehavior::~CLockBehavior()
@@ -21,18 +100,22 @@ CLockBehavior::~CLockBehavior()
 
 void CLockBehavior::OnEnable()
 {
-	if (!myHasSubscribed)
-	{
-		CMainSingleton::PostMaster().Subscribe(mySettings.myOnKeyCreateNotify, this);
-		CMainSingleton::PostMaster().Subscribe(mySettings.myOnKeyInteractNotify, this);
-		myHasSubscribed = true;
-	}
+	
+
+	
+	//if (!myHasSubscribed)
+	//{
+	//	CMainSingleton::PostMaster().Subscribe(mySettings.myOnKeyCreateNotify, this);
+	//	CMainSingleton::PostMaster().Subscribe(mySettings.myOnKeyInteractNotify, this);
+	//	myHasSubscribed = true;
+	//}
 }
 
 void CLockBehavior::OnDisable()
 {
-	CMainSingleton::PostMaster().Unsubscribe(mySettings.myOnKeyCreateNotify, this);
-	CMainSingleton::PostMaster().Unsubscribe(mySettings.myOnKeyInteractNotify, this);
+
+	//CMainSingleton::PostMaster().Unsubscribe(mySettings.myOnKeyCreateNotify, this);
+	//CMainSingleton::PostMaster().Unsubscribe(mySettings.myOnKeyInteractNotify, this);
 	myAmountOfKeys = 0;
 	myHasSubscribed = false;
 }
@@ -43,9 +126,14 @@ void CLockBehavior::RunEvent()
 	{
 		if (myAmountOfKeys >= myMaxAmountOfKeys)
 		{
+			for (auto& listener : myListeners)
+			{
+				listener->TriggerResponses();
+			}
+
 			std::cout << __FUNCTION__ << "----< \tLock Activated \t" << GameObject().Name() << std::endl;
 			myHasTriggered = true;
-			CMainSingleton::PostMaster().Send({ mySettings.myOnNotifyName.c_str(), mySettings.myOnNotify });
+			//CMainSingleton::PostMaster().Send({ mySettings.myOnNotifyName.c_str(), mySettings.myOnNotify });
 		}
 	}
 }
@@ -54,39 +142,43 @@ void CLockBehavior::RunEventEditor()
 {
 	if (!myHasTriggered)
 	{
+		for (auto& listener : myListeners)
+		{
+			listener->TriggerResponses();
+		}
 		myHasTriggered = true;
-		CMainSingleton::PostMaster().Send({ mySettings.myOnNotifyName.c_str(), mySettings.myOnNotify });
+		//CMainSingleton::PostMaster().Send({ mySettings.myOnNotifyName.c_str(), mySettings.myOnNotify });
 	}
 }
 
 
-void CLockBehavior::Receive(const SIDMessage& aMessage)
+void CLockBehavior::Receive(const SIDMessage& /*aMessage*/)
 {
-	if (mySettings.myOnKeyCreateNotify == aMessage.myMessageID)
-	{
-		++myMaxAmountOfKeys;
-		std::cout << __FUNCTION__ << "----| \t" << GameObject().Name() << " Keys: " << myMaxAmountOfKeys << "   Message: " << aMessage.myName << std::endl;
-	}
-	else
-	{
-		++myAmountOfKeys;
-		
-		if (myMaxAmountOfKeys == 3)
-		{
-			if (myAmountOfKeys < myMaxAmountOfKeys)
-			{
-				int soundIndex = 29;
-				CMainSingleton::PostMaster().Send({ EMessageType::PlaySFX, &soundIndex });
-			}
-			else if (myAmountOfKeys >= myMaxAmountOfKeys)
-			{
-				int soundIndex = 30;
-				CMainSingleton::PostMaster().Send({ EMessageType::PlaySFX, &soundIndex });
-			}
-		}
+	//if (mySettings.myOnKeyCreateNotify == aMessage.myMessageID)
+	//{
+	//	++myMaxAmountOfKeys;
+	//	std::cout << __FUNCTION__ << "----| \t" << GameObject().Name() << " Keys: " << myMaxAmountOfKeys << "   Message: " << aMessage.myName << std::endl;
+	//}
+	//else
+	//{
+	//	++myAmountOfKeys;
+	//	
+	//	if (myMaxAmountOfKeys == 3)
+	//	{
+	//		if (myAmountOfKeys < myMaxAmountOfKeys)
+	//		{
+	//			int soundIndex = 29;
+	//			CMainSingleton::PostMaster().Send({ EMessageType::PlaySFX, &soundIndex });
+	//		}
+	//		else if (myAmountOfKeys >= myMaxAmountOfKeys)
+	//		{
+	//			int soundIndex = 30;
+	//			CMainSingleton::PostMaster().Send({ EMessageType::PlaySFX, &soundIndex });
+	//		}
+	//	}
 
-		std::cout << __FUNCTION__ << "----> \t" << GameObject().Name() << " Key Pickup: " << myAmountOfKeys << std::endl;
-	}
+	//	std::cout << __FUNCTION__ << "----> \t" << GameObject().Name() << " Key Pickup: " << myAmountOfKeys << std::endl;
+	//}
 }
 
 

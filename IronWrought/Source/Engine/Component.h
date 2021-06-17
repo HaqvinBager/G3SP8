@@ -25,6 +25,9 @@ public:
 	T* GetComponent();
 
 	template<class T>
+	T* GetComponentAny();
+
+	template<class T>
 	std::vector<T*> GetComponents();
 
 	CGameObject& GameObject() const;
@@ -37,6 +40,12 @@ template<class T>
 inline T* CComponent::GetComponent()
 {
 	return myParent.GetComponent<T>();
+}
+
+template<class T>
+inline T* CComponent::GetComponentAny()
+{
+	return myParent.GetComponentAny<T>();
 }
 
 template<class T>

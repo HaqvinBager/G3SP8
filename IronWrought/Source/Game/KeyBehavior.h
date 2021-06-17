@@ -20,6 +20,7 @@ public:
 		int myOnCreateNotify;
 		int myInteractNotify;
 		int myHasLock;
+		int myLockInstanceID;
 
 		void* myData;
 	};
