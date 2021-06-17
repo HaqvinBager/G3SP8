@@ -669,6 +669,7 @@ void CSceneManager::AddPuzzleKey(CScene& aScene, RapidArray someData)
 			key["onKeyCreateNotify"].GetInt(),
 			key["onKeyInteractNotify"].GetInt(),
 			key["hasLock"].GetInt(),
+			key["lockInstanceID"].GetInt(),
 			nullptr
 		};
 
@@ -905,9 +906,14 @@ void CSceneManager::AddPuzzleListener(CScene& aScene, RapidArray someData)
 	for (const auto& listener : someData)
 	{
 		int onResponseNotify = listener["onResponseNotify"].GetInt();
-		CGameObject* gameObject = aScene.FindObjectWithID(listener["instanceID"].GetInt());
+		int lockInstanceID = -1;
+		if(listener.HasMember("lockInstanceID"))
+			lockInstanceID = listener["lockInstanceID"].GetInt();
 
-		gameObject->AddComponent<CListenerBehavior>(*gameObject, onResponseNotify);
+		CGameObject* gameObject = aScene.FindObjectWithID(listener["instanceID"].GetInt());
+		
+		if(gameObject != nullptr)
+			gameObject->AddComponent<CListenerBehavior>(*gameObject, onResponseNotify, lockInstanceID);
 	}
 }
 
