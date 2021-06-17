@@ -39,7 +39,7 @@ private:
 class CSeek: public CAIController, public IObserver
 {
 public:
-	CSeek(SNavMesh* aNavMesh);
+	CSeek(SNavMesh* aNavMesh, float aEnemyPositionY);
 	~CSeek()override; 
 	void Enter(const Vector3& aPosition)override;
 	Vector3 Update(const Vector3& aPosition) override;
@@ -49,6 +49,7 @@ public:
 	void Receive(const SMessage& aMsg) override;
 
 private:
+	float myPositionY;
 	int myPathTarget;
 	CTransformComponent* myTarget;
 	SNavMesh* myNavMesh;
