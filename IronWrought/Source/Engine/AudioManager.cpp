@@ -307,6 +307,7 @@ void CAudioManager::Receive(const SMessage& aMessage) {
 	case EMessageType::EnemyAttackState:
 	{
 		myDynamicSource->Stop();
+		myDelayedAudio.clear();
 		myWrapper.Play(myEnemyVoiceSounds[CAST(EEnemyVoiceLine::EnemyDamagePlayer)], myDynamicSource);
 
 	}break;
