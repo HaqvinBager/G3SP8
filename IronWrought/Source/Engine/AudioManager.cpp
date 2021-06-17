@@ -314,6 +314,7 @@ void CAudioManager::Receive(const SMessage& aMessage) {
 	case EMessageType::EnemyPatrolState:
 	{
 		myDynamicSource->Stop();
+		myDelayedAudio.clear();
 		myWrapper.Play(myEnemyVoiceSounds[CAST(EEnemyVoiceLine::EnemyPatrol)], myDynamicSource);
 	}break;
 
@@ -1034,6 +1035,8 @@ std::string CAudioManager::TranslateEnum(ESFX enumerator) const {
 		return "MovePainting2";
 	case ESFX::MovePainting3:
 		return "MovePainting3";
+	case ESFX::InsertHandle:
+		return "InsertHandle";
 	default:
 		return "";
 	}

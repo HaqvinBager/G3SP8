@@ -58,17 +58,36 @@ void CLockBehavior::RemoveKey(CKeyBehavior* aKey)
 
 void CLockBehavior::OnKeyActivated(CKeyBehavior* aKey)
 {
-	CAudioActivation* audioActivation = nullptr;
-	if (aKey->GameObject().TryGetComponent(&audioActivation))
+	//CAudioActivation* audioActivation = nullptr;
+	//if (aKey->GameObject().TryGetComponent(&audioActivation))
+	//{
+	//	//if (audioActivation->GetAudioIndex() == (int)ESFX::MovePainting)
+	//	//{
+	//		if (myMaxAmountOfKeys == 1)
+	//		{
+	//			int soundIndex = 30;
+	//			CMainSingleton::PostMaster().Send({ EMessageType::PlaySFX, &soundIndex });
+	//		}
+	//		else if (myMaxAmountOfKeys <= 3)
+	//		{
+	//			int soundIndex = 29;
+	//			CMainSingleton::PostMaster().Send({ EMessageType::PlaySFX, &soundIndex });
+	//		}
+	//	//}
+	//}
+
+	myAmountOfKeys++;
+	if (myMaxAmountOfKeys == 3)
 	{
-		if (audioActivation->GetAudioIndex() == (int)ESFX::MovePainting)
+		CAudioActivation* audioActivation = nullptr;
+		if (aKey->GameObject().TryGetComponent(&audioActivation))
 		{
-			if (myMaxAmountOfKeys == 1)
+			if (myAmountOfKeys < myMaxAmountOfKeys)
 			{
 				int soundIndex = 30;
 				CMainSingleton::PostMaster().Send({ EMessageType::PlaySFX, &soundIndex });
 			}
-			else if (myMaxAmountOfKeys <= 3)
+			else if (myAmountOfKeys >= myMaxAmountOfKeys)
 			{
 				int soundIndex = 29;
 				CMainSingleton::PostMaster().Send({ EMessageType::PlaySFX, &soundIndex });
