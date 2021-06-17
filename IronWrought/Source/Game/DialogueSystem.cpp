@@ -45,6 +45,7 @@ bool CDialogueSystem::Init()
 {
 	CMainSingleton::PostMaster().Subscribe(EMessageType::LoadDialogue, this);
 	CMainSingleton::PostMaster().Subscribe(EMessageType::IntroStarted, this);
+	CMainSingleton::PostMaster().Subscribe(EMessageType::StopDialogue, this);
 	CMainSingleton::PostMaster().Subscribe("DELevel1", this);
 	CMainSingleton::PostMaster().Subscribe("DELevel2", this);
 	CMainSingleton::PostMaster().Subscribe("DELevel3", this);
@@ -107,6 +108,8 @@ void CDialogueSystem::Receive(const SMessage& aMessage)
 		PostMaster::SPlayDynamicAudioData data = *static_cast<PostMaster::SPlayDynamicAudioData*>(aMessage.data);
 		LoadDialogue(data.mySoundIndex, data.myChannel);
 		break;
+	case EMessageType::StopDialogue:
+		ExitDialogue();
 	default:
 		break;
 	}
@@ -166,7 +169,15 @@ void CDialogueSystem::LoadDialogue(int aSceneIndex, CAudioChannel* a3DChannel) {
 	myIsActive = !myDialogueBuffer.empty();
 }
 
-void CDialogueSystem::ExitDialogue() {
+#include "AudioChannel.h"
+void CDialogueSystem::ExitDialogue() 
+{
+	if (!myDialogueBuffer.empty())
+	{
+		if (myDialogueBuffer[myCurrentDialogueIndex].myChannel)
+			myDialogueBuffer[myCurrentDialogueIndex].myChannel->Stop();
+	}
+
 	myIsActive = false;
 	myCurrentDialogueIndex = 0;
 	myLastDialogueIndex = -1;

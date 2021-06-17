@@ -492,7 +492,8 @@ void CAudioManager::Receive(const SMessage& aMessage) {
 	case EMessageType::SetAmbience:
 	{
 		PostMaster::ELevelName level = *reinterpret_cast<PostMaster::ELevelName*>(aMessage.data);
-
+		myChannels[CAST(EChannel::VOX)]->Stop();
+		CMainSingleton::PostMaster().Send({ EMessageType::StopDialogue, nullptr });
 		switch (level)
 		{
 		case PostMaster::ELevelName::Level_Cottage_1:
