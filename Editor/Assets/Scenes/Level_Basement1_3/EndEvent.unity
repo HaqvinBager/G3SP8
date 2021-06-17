@@ -123,14 +123,14 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 23800000, guid: 5d9c7d1ea37c32243b377bab6a08f22c, type: 2}
---- !u!134 &475030104
+--- !u!134 &275553757
 PhysicMaterial:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: ' (Instance) (Instance) (Instance) (Instance) (Instance) (Instance) (Instance)
-    (Instance)'
+    (Instance) (Instance)'
   dynamicFriction: 0.6
   staticFriction: 0.6
   bounciness: 0
@@ -233,12 +233,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 822772853}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9219059e0b5c1ef4f912d596336a5711, type: 3}
+  m_Script: {fileID: 11500000, guid: c4658c45421bee243b23126e64318e12, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  start: {x: -0, y: -270, z: -0}
-  end: {x: -0, y: 0, z: 0}
-  duration: 1.85
+  start: {x: -8.75, y: -4.511, z: -17}
+  end: {x: -8.75, y: -2.306, z: -17}
+  duration: 2.75
 --- !u!114 &822772856
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -251,8 +251,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a773d588b90225c42a6c299e9ff92366, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  soundEffect: 12
-  myIs3D: 1
+  soundEffect: 33
+  myIs3D: 0
   myConeDirection: {x: 1, y: 0, z: 0}
   myMinAttenuationAngle: 90
   myMaxAttenuationAngle: 180
@@ -267,7 +267,7 @@ BoxCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 822772853}
-  m_Material: {fileID: 2104875614}
+  m_Material: {fileID: 1920768211}
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
@@ -346,7 +346,7 @@ BoxCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 930581105}
-  m_Material: {fileID: 475030104}
+  m_Material: {fileID: 275553757}
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
@@ -418,14 +418,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   myLock: {fileID: 930581110}
   responseType: 1
---- !u!134 &2104875614
+--- !u!134 &1920768211
 PhysicMaterial:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: ' (Instance) (Instance) (Instance) (Instance) (Instance) (Instance) (Instance)
-    (Instance) (Instance)'
+    (Instance) (Instance) (Instance)'
   dynamicFriction: 0.6
   staticFriction: 0.6
   bounciness: 0

@@ -271,27 +271,11 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 1479945126323203571, guid: 7966be724a3db8c419921c10c88fbb37, type: 3}
   m_PrefabInstance: {fileID: 79527615}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &79527617
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
+--- !u!4 &79527617 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 1581632734201683519, guid: 7966be724a3db8c419921c10c88fbb37, type: 3}
+  m_PrefabInstance: {fileID: 79527615}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 79527616}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a773d588b90225c42a6c299e9ff92366, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  soundEffect: 12
-  myIs3D: 1
-  myConeDirection: {x: 1, y: 0, z: 0}
-  myMinAttenuationAngle: 90
-  myMaxAttenuationAngle: 180
-  myMinAttenuationDistance: 1
-  myMaxAttenuationDistance: 10000
-  myMinimumVolume: 10
-  myDelay: 0
 --- !u!114 &79527618
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -301,11 +285,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 79527616}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 612d23f628453ef479b54a4a0238406c, type: 3}
+  m_Script: {fileID: 11500000, guid: 0bcdc97ffdbb7a24082fd03dc460e7e4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  myLock: {fileID: 0}
-  activationType: 1
+  enabledOnStart: 1
+  enableOnNotify: 0
+  aTarget: {fileID: 79527617}
+  aTargetType: {fileID: 79527620}
 --- !u!114 &79527619
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -315,12 +301,17 @@ MonoBehaviour:
   m_GameObject: {fileID: 79527616}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9219059e0b5c1ef4f912d596336a5711, type: 3}
+  m_Script: {fileID: 11500000, guid: 6f418c9cc94020d40bf79196ff2e99e0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  start: {x: -0, y: 180, z: 0}
-  end: {x: -0, y: 270, z: 0}
-  duration: 2
+  dialogueScene: 17
+  myIs3D: 0
+  myConeDirection: {x: 0, y: 0, z: 0}
+  myMinAttenuationAngle: 0
+  myMaxAttenuationAngle: 0
+  myMinAttenuationDistance: 1
+  myMaxAttenuationDistance: 10000
+  myMinimumVolume: 0
 --- !u!65 &79527620
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -328,7 +319,7 @@ BoxCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 79527616}
-  m_Material: {fileID: 1868023863}
+  m_Material: {fileID: 249970780}
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
@@ -359,17 +350,90 @@ MonoBehaviour:
   m_GameObject: {fileID: 79527616}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7378230467a50d848a9fd18fdad76f09, type: 3}
+  m_Script: {fileID: 11500000, guid: f573c0162a19b3d439a274b0e0888abc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  dialogueScene: 17
-  myIs3D: 0
-  myConeDirection: {x: 0, y: 0, z: 0}
-  myMinAttenuationAngle: 0
-  myMaxAttenuationAngle: 0
+  soundEffect: 12
+  myIs3D: 1
+  myConeDirection: {x: 0, y: 0, z: 1}
+  myMinAttenuationAngle: 90
+  myMaxAttenuationAngle: 180
   myMinAttenuationDistance: 1
   myMaxAttenuationDistance: 10000
-  myMinimumVolume: 0
+  myMinimumVolume: 10
+  myDelay: 0
+--- !u!114 &79527623
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 79527616}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 78401c498873be44ca92c01e55d20585, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  start: {x: -0, y: 180, z: 0}
+  end: {x: -0, y: 270, z: 0}
+  duration: 0.5
+  delay: 0
+--- !u!114 &79527624
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 79527616}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8093bf0719793424d8e82fd738dba18d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  myLock: {fileID: 79527625}
+  responseType: 1
+--- !u!114 &79527625
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 79527616}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 237cfffbe2748d74cb3f937f17147ce5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  onKeyCreateNotify: {fileID: 11400000, guid: 2dc4b6d7e374a1148a37c33a23d21415, type: 2}
+  onKeyInteractNotify: {fileID: 11400000, guid: 56cfc44cd3401434ea0a5f7d8315b0b2, type: 2}
+  onLockNotify: {fileID: 11400000, guid: 6ac97cffe09ea4045b00bcf2ce2e016b, type: 2}
+  interactionType: 1
+--- !u!134 &249970780
+PhysicMaterial:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: ' (Instance) (Instance) (Instance) (Instance) (Instance) (Instance) (Instance)
+    (Instance) (Instance) (Instance)'
+  dynamicFriction: 0.6
+  staticFriction: 0.6
+  bounciness: 0
+  frictionCombine: 0
+  bounceCombine: 0
+--- !u!134 &264452629
+PhysicMaterial:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: ' (Instance) (Instance) (Instance) (Instance) (Instance) (Instance) (Instance)
+    (Instance) (Instance) (Instance)'
+  dynamicFriction: 0.6
+  staticFriction: 0.6
+  bounciness: 0
+  frictionCombine: 0
+  bounceCombine: 0
 --- !u!1001 &282378520
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -444,43 +508,6 @@ PrefabInstance:
     m_RemovedComponents:
     - {fileID: 2005558277879865816, guid: 04a5fc57e73e31f4e996581c5b52a590, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 04a5fc57e73e31f4e996581c5b52a590, type: 3}
---- !u!134 &292643802
-PhysicMaterial:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_Name: ' (Instance) (Instance) (Instance) (Instance) (Instance) (Instance) (Instance)
-    (Instance)'
-  dynamicFriction: 0.6
-  staticFriction: 0.6
-  bounciness: 0
-  frictionCombine: 0
-  bounceCombine: 0
---- !u!134 &372838123
-PhysicMaterial:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_Name: 
-  dynamicFriction: 0.6
-  staticFriction: 0.6
-  bounciness: 0
-  frictionCombine: 0
-  bounceCombine: 0
---- !u!134 &568897451
-PhysicMaterial:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_Name: ' (Instance) (Instance) (Instance) (Instance) (Instance) (Instance) (Instance)'
-  dynamicFriction: 0.6
-  staticFriction: 0.6
-  bounciness: 0
-  frictionCombine: 0
-  bounceCombine: 0
 --- !u!134 &657237680
 PhysicMaterial:
   m_ObjectHideFlags: 0
@@ -488,18 +515,6 @@ PhysicMaterial:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: ' (Instance)'
-  dynamicFriction: 0.6
-  staticFriction: 0.6
-  bounciness: 0
-  frictionCombine: 0
-  bounceCombine: 0
---- !u!134 &686079770
-PhysicMaterial:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_Name: ' (Instance) (Instance) (Instance) (Instance) (Instance) (Instance) (Instance)'
   dynamicFriction: 0.6
   staticFriction: 0.6
   bounciness: 0
@@ -587,6 +602,19 @@ PrefabInstance:
     m_RemovedComponents:
     - {fileID: 184930710390048763, guid: 77aca74521b9da64fbe71cfb79b383db, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 77aca74521b9da64fbe71cfb79b383db, type: 3}
+--- !u!134 &830275551
+PhysicMaterial:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: ' (Instance) (Instance) (Instance) (Instance) (Instance) (Instance) (Instance)
+    (Instance) (Instance)'
+  dynamicFriction: 0.6
+  staticFriction: 0.6
+  bounciness: 0
+  frictionCombine: 0
+  bounceCombine: 0
 --- !u!1001 &849269237
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -863,7 +891,7 @@ BoxCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 942056435}
-  m_Material: {fileID: 1234388855}
+  m_Material: {fileID: 1085246373}
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
@@ -885,6 +913,19 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!134 &1085246373
+PhysicMaterial:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: ' (Instance) (Instance) (Instance) (Instance) (Instance) (Instance) (Instance)
+    (Instance) (Instance)'
+  dynamicFriction: 0.6
+  staticFriction: 0.6
+  bounciness: 0
+  frictionCombine: 0
+  bounceCombine: 0
 --- !u!1001 &1179616199
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -979,18 +1020,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5c562e108cc65394cb59634177042694, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!134 &1234388855
-PhysicMaterial:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_Name: ' (Instance) (Instance) (Instance) (Instance) (Instance) (Instance) (Instance)'
-  dynamicFriction: 0.6
-  staticFriction: 0.6
-  bounciness: 0
-  frictionCombine: 0
-  bounceCombine: 0
 --- !u!1001 &1250483854
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1122,7 +1151,7 @@ BoxCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1250483855}
-  m_Material: {fileID: 292643802}
+  m_Material: {fileID: 264452629}
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
@@ -1178,6 +1207,19 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!134 &1329520802
+PhysicMaterial:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: ' (Instance) (Instance) (Instance) (Instance) (Instance) (Instance) (Instance)
+    (Instance) (Instance)'
+  dynamicFriction: 0.6
+  staticFriction: 0.6
+  bounciness: 0
+  frictionCombine: 0
+  bounceCombine: 0
 --- !u!1001 &1727195249
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1346,28 +1388,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f573c0162a19b3d439a274b0e0888abc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  soundEffect: 0
+  soundEffect: 32
   myIs3D: 0
-  myConeDirection: {x: 0, y: 0, z: 0}
-  myMinAttenuationAngle: 0
-  myMaxAttenuationAngle: 0
+  myConeDirection: {x: 0, y: 0, z: -1}
+  myMinAttenuationAngle: 360
+  myMaxAttenuationAngle: 360
   myMinAttenuationDistance: 1
   myMaxAttenuationDistance: 10000
-  myMinimumVolume: 0
-  myDelay: 0
---- !u!134 &1868023863
-PhysicMaterial:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_Name: ' (Instance) (Instance) (Instance) (Instance) (Instance) (Instance) (Instance)
-    (Instance)'
-  dynamicFriction: 0.6
-  staticFriction: 0.6
-  bounciness: 0
-  frictionCombine: 0
-  bounceCombine: 0
+  myMinimumVolume: 1
+  myDelay: 1
 --- !u!134 &2003444611
 PhysicMaterial:
   m_ObjectHideFlags: 0
@@ -1501,6 +1530,18 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1, y: 2, z: 0.3}
   m_Center: {x: -0.5, y: 1, z: 0}
+--- !u!134 &2143776320
+PhysicMaterial:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: ' (Instance) (Instance)'
+  dynamicFriction: 0.6
+  staticFriction: 0.6
+  bounciness: 0
+  frictionCombine: 0
+  bounceCombine: 0
 --- !u!1001 &406547622860585526
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1612,7 +1653,7 @@ BoxCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 406547622860585527}
-  m_Material: {fileID: 686079770}
+  m_Material: {fileID: 1329520802}
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
@@ -1805,7 +1846,7 @@ BoxCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2118541223123314273}
-  m_Material: {fileID: 568897451}
+  m_Material: {fileID: 830275551}
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
@@ -1922,7 +1963,7 @@ BoxCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7583396419264505222}
-  m_Material: {fileID: 372838123}
+  m_Material: {fileID: 2143776320}
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2

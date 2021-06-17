@@ -351,6 +351,7 @@ void CAudioManager::Receive(const SMessage& aMessage) {
 		}
 		else
 		{
+			myDynamicSource->Stop();
 			myWrapper.Play(myEnemyVoiceSounds[CAST(EEnemyVoiceLine::EnemyLostPlayer)], myDynamicSource);
 			FadeChannelOverSeconds(EChannel::DynamicChannel3, 4.0f, false);
 			FadeChannelOverSeconds(EChannel::DynamicChannel4, 4.0f);
@@ -496,6 +497,8 @@ void CAudioManager::Receive(const SMessage& aMessage) {
 		{
 		case PostMaster::ELevelName::Level_Cottage_1:
 		{
+			myChannels[CAST(EChannel::DynamicChannel1)]->Stop();
+			myWrapper.Play(myAmbienceAudio[CAST(EAmbience::Cottage1)], myChannels[CAST(EChannel::DynamicChannel1)]);
 			FadeChannelOverSeconds(EChannel::DynamicChannel1, 1.0f, false);
 			FadeChannelOverSeconds(EChannel::DynamicChannel2, 1.0f);
 			FadeChannelOverSeconds(EChannel::DynamicChannel3, 1.0f);
@@ -1018,6 +1021,14 @@ std::string CAudioManager::TranslateEnum(ESFX enumerator) const {
 		return "PuzzleKey";
 	case ESFX::InsertFuse:
 		return "InsertFuse";
+	case ESFX::MechanicalDoorOpen:
+		return "MechanicalDoorOpen";
+	case ESFX::DoorCreak:
+		return "DoorCreak";
+	case ESFX::DoorClose:
+		return "DoorClose";
+	case ESFX::ChestCreak:
+		return "ChestCreak";
 	default:
 		return "";
 	}
