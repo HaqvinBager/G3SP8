@@ -66,20 +66,5 @@ private:
 	EInGameCanvases myCurrentCanvas;
 	float myMenuCameraSpeed;
 	std::string myCurrentLevel;
-
-	enum class EEndCreditsState
-	{
-		Init,
-		FadeInEndCredits,
-		ShowCredits,
-		FadeOutCredits,
-		FadeInMenu,
-		None
-	};
-	EEndCreditsState myEndCreditsState;
-	float myEndCreditsTimer;
-	const float myEndCreditsFadeInTimer;
-	const float myEndCreditsShowForTimer;
-	const float myEndCreditsFadeOutTimer;
-	const float myMenuFadeInTimer;
+	bool myShowCreditsFromEnd;
 };

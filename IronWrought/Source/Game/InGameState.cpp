@@ -58,12 +58,7 @@ CInGameState::CInGameState(CStateStack& aStateStack, const CStateStack::EState a
 	, myCanvases({ nullptr, nullptr, nullptr })
 	, myCurrentCanvas(EInGameCanvases_Count)
 	, myMenuCameraSpeed(2.0f)
-	, myEndCreditsState(EEndCreditsState::None)
-	, myEndCreditsTimer(0.0f)
-	, myEndCreditsFadeInTimer(1.5f)
-	, myEndCreditsShowForTimer(5.0f)
-	, myEndCreditsFadeOutTimer(3.0f)
-	, myMenuFadeInTimer(3.0f)
+	, myShowCreditsFromEnd(false)
 {
 }
 
@@ -210,50 +205,17 @@ void CInGameState::Stop()
 	CMainSingleton::PostMaster().Unsubscribe(EMessageType::EndOfGameEvent, this);
 
 
-	myMenuCamera = nullptr; // Deleted by Scene on IRONWROUGHT->RemoveScene(..), as it is added as a gameobject.
+	myMenuCamera = nullptr; // Has been deleted by Scene when IRONWROUGHT->RemoveScene(..) was called, as it is added as a gameobject.
 }
 
 void CInGameState::Update()
 {
-#ifdef INGAME_USE_MENU
-	switch (myEndCreditsState)
+	if (Input::GetInstance()->IsKeyPressed('K'))
 	{
-		case EEndCreditsState::FadeInEndCredits:
-		{
-			myEndCreditsTimer -= CTimer::Dt();
-			if (myEndCreditsTimer <= 0.0f)
-			{
-				myEndCreditsTimer = myEndCreditsShowForTimer;
-				myEndCreditsState = EEndCreditsState::ShowCredits;
-			}
-		}break;
-
-		case EEndCreditsState::ShowCredits:
-		{
-			myEndCreditsTimer -= CTimer::Dt();
-			if (myEndCreditsTimer <= 0.0f)
-			{
-				myEndCreditsState = EEndCreditsState::FadeOutCredits;
-				myEndCreditsTimer = myEndCreditsFadeOutTimer;
-				myMenuCamera->GetComponent<CCameraComponent>()->Fade(false, myEndCreditsFadeOutTimer, true);
-			}
-		}break;
-
-		case EEndCreditsState::FadeOutCredits:
-		{
-			myEndCreditsTimer -= CTimer::Dt();
-			if (myEndCreditsTimer <= 0.0f)
-			{
-				myEndCreditsState = EEndCreditsState::FadeInMenu;
-				myEndCreditsTimer = myMenuFadeInTimer;
-				myMenuCamera->GetComponent<CCameraComponent>()->Fade(true, myMenuFadeInTimer);
-				myCanvases[myCurrentCanvas]->DisableWidget(3);
-			}
-		}break;
-
-		default:break;
+		CMainSingleton::PostMaster().Send({ "KeyDown_K", nullptr });
 	}
 
+#ifdef INGAME_USE_MENU
 	if (Input::GetInstance()->IsKeyPressed(VK_ESCAPE))
 	{
 		CMainSingleton::PostMaster().SendLate({ EMessageType::UIButtonPress });
@@ -451,7 +413,7 @@ void CInGameState::Receive(const SMessage& aMessage)
 
 		case EMessageType::EndOfGameEvent:
 		{
-				myEndCreditsState = EEndCreditsState::Init;
+				myShowCreditsFromEnd = true;
 				myStateStack.PopTopAndPush(CStateStack::EState::InGame);
 		}break;
 
@@ -466,6 +428,11 @@ void CInGameState::OnSceneLoadCompleteMenu(std::string /*aMsg*/)
 	CreateMenuCamera(scene);
 
 	ToggleCanvas(EInGameCanvases_MainMenu);
+
+	//myCurrentCanvas = EInGameCanvases_MainMenu;
+	//scene.SetCanvas(myCanvases[myCurrentCanvas]);
+	//scene.UpdateOnlyCanvas(false);
+	//IRONWROUGHT->ShowCursor(true);
 
 	myEnemyAnimationController->Activate();
 	CEngine::GetInstance()->SetActiveScene(myState);// Might be redundant.
@@ -584,16 +551,14 @@ void CInGameState::ToggleCanvas(EInGameCanvases anEInGameCanvases)
 		IRONWROUGHT->SetIsMenu(true);
 		myCanvases[myCurrentCanvas]->DisableWidgets();
 
-		if (myEndCreditsState == EEndCreditsState::Init)
+		if (myShowCreditsFromEnd == true)
 		{
-			myEndCreditsState = EEndCreditsState::FadeInEndCredits;
-			myEndCreditsTimer = myEndCreditsFadeInTimer;
-			myCanvases[myCurrentCanvas]->EnableWidget(3);
+			myShowCreditsFromEnd = false;
+			myCanvases[EInGameCanvases_MainMenu]->ForceEnabled(true);
+			myCanvases[EInGameCanvases_MainMenu]->DisableWidgets(0);
 
-			myMenuCamera->Awake();
-			myMenuCamera->GetComponent<CCameraComponent>()->Fade(true, myEndCreditsFadeInTimer);
 			CFullscreenRenderer::SPostProcessingBufferData data = CEngine::GetInstance()->GetPostProcessingBufferData();
-			data.myVignetteStrength = 0.0f;
+			data.myVignetteStrength = 0.35f;
 			CEngine::GetInstance()->SetPostProcessingBufferData(data);
 		}
 		

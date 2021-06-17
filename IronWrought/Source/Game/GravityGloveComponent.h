@@ -154,7 +154,6 @@ private:
 	PostMaster::SCrossHairData myCrosshairData;
 	bool myIsRotatingmode;
 	bool myHoldingAItem;
-	bool myLockedCamera;
 	float myExtendedOffsetArm;
 	Vector2 myObjectRotation;
 };

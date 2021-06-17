@@ -38,10 +38,7 @@ public:
 	bool GetEnabled();
 	void SetEnabled(bool isEnabled);
 	void ForceEnabled(const bool& anIsEnabled);
-	void DisableWidget(const int anIndex);
 	void DisableWidgets(const int& anExceptionIndex = 999);
-	void EnableWidget(const int anIndex);
-	void EnableWidgets();
 	
 	// CCanvas takes ownership of the sprite.
 	void AddSpriteToCanvas(CSpriteInstance* aSprite);

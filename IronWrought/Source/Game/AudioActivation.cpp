@@ -51,15 +51,13 @@ void CAudioActivation::Update()
 		ToggleHasBeenDelayed();
 		myTime -= mySettings.myDelay;
 	}
-	
-	if (myIs3D)
-		Complete(!myAudioChannel->IsPlaying());
 
 	if (myIsInteracted && myIs3D)
 	{
 		const Matrix& matrix = GameObject().myTransform->GetWorldMatrix();
 		myAudioChannel->Set3DAttributes(matrix.Translation());
 		myAudioChannel->Set3DConeAttributes(matrix.Forward(), mySettings.myStartAttenuationAngle, mySettings.myMaxAttenuationAngle, mySettings.myMinimumVolume);
+		Complete(!myAudioChannel->IsPlaying());
 	}
 }
 
@@ -69,22 +67,9 @@ void CAudioActivation::OnActivation()
 	myIsInteracted = true;
 
 	if (myIs3D)
-		CMainSingleton::PostMaster().Send({ EMessageType::PlayDynamicAudioSource, &my3DPlayMessage });
+		CMainSingleton::PostMaster().SendLate({ EMessageType::PlayDynamicAudioSource, &my3DPlayMessage });
 	else
-		CMainSingleton::PostMaster().Send({EMessageType::PlaySFX, &my2DPlayMessage});
-
-	// Open
-	if (my3DPlayMessage.mySoundIndex == 35)
-	{
-		my3DPlayMessage.mySoundIndex = 12;
-		my2DPlayMessage = 12;
-	}
-	// Close
-	else if (my3DPlayMessage.mySoundIndex == 12)
-	{
-		my3DPlayMessage.mySoundIndex = 35;
-		my2DPlayMessage = 35;
-	}
+		CMainSingleton::PostMaster().SendLate({EMessageType::PlaySFX, &my2DPlayMessage});
 }
 
 void CAudioActivation::OnDisable()

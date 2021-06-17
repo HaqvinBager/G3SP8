@@ -24,7 +24,6 @@ CGravityGloveComponent::CGravityGloveComponent(CGameObject& aParent, CTransformC
 	, myHoldingAItem(false)
 	, myExtendedOffsetArm(0.f)
 	, myIsRotatingmode(false)
-	, myLockedCamera(false)
 {
 	mySettings.myPushForce = 10.f;
 	//mySettings.myDistanceToMaxLinearVelocity = 2.5f;
@@ -394,25 +393,26 @@ void CGravityGloveComponent::InteractionLogicContinuous()
 	if (Input::GetInstance()->IsKeyDown('R') && myHoldingAItem && myCurrentTarget.myRigidBodyPtr) {
 		myIsRotatingmode = true;
 		myCurrentTarget.myRigidBodyPtr->LockAngular(false);
-		myLockedCamera = true;
+		bool lockCamera = true;
 		myObjectRotation = Vector2::Zero;
-		CMainSingleton::PostMaster().Send({ EMessageType::LockFPSCamera, &myLockedCamera });
+		CMainSingleton::PostMaster().Send({ EMessageType::LockFPSCamera, &lockCamera });
 		myObjectRotation = Input::GetInstance()->GetAxisRaw();
 		CEngine::GetInstance()->GetWindowHandler()->HidLockCursor(false);
+		lockCamera = true;
 	}
 	else if (myHoldingAItem && myCurrentTarget.myRigidBodyPtr) {
 		myIsRotatingmode = false;
 		myObjectRotation = Vector2::Zero;
 		myCurrentTarget.myRigidBodyPtr->LockAngular(true);
-		myLockedCamera = false;
+		bool lockCamera = false;
 		CEngine::GetInstance()->GetWindowHandler()->HidLockCursor(true);
-		CMainSingleton::PostMaster().Send({ EMessageType::LockFPSCamera, &myLockedCamera });
+		CMainSingleton::PostMaster().Send({ EMessageType::LockFPSCamera, &lockCamera });
 	}
-	else if(myLockedCamera == true){ // This ruins the camera shake :/ - Not anymore HAHAHAH Alexander Matthäi 2021-06-16
-		myObjectRotation = Vector2::Zero;
-		myLockedCamera = false;
-		CMainSingleton::PostMaster().Send({ EMessageType::LockFPSCamera, &myLockedCamera });
-	}
+	//else { // This ruins the camera shake :/
+	//	myObjectRotation = Vector2::Zero;
+	//	bool lockCamera = false;
+	//	CMainSingleton::PostMaster().Send({ EMessageType::LockFPSCamera, &lockCamera });
+	//}
 
 	CMainSingleton::PostMaster().SendLate({ EMessageType::UpdateCrosshair, &myCrosshairData });
 }
