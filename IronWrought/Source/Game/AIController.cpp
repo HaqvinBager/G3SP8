@@ -74,15 +74,18 @@ Vector3 CPatrol::Update(const Vector3& aPosition)
 
 	size_t pathSize = myPath.size();
 	if (pathSize > 0) {
-		Vector3 newPos;
+		//Vector3 newPos;
 		Vector3 dir;
 
+		CDebug::GetInstance()->DrawLine(aPosition, myPath[pathSize - 1], 1.0f);
+		
 		dir = (myPath[pathSize - 1] - aPosition);
 		dir.Normalize();
 
 		if (CheckIfOverlap(aPosition, myPath[pathSize - 1])) {
 			myPath.pop_back();
 		}
+
 		return dir;
 	}
 	return Vector3();
@@ -102,12 +105,15 @@ void CPatrol::SetPath(std::vector<Vector3> aPath, Vector3 aFinalPosition)
 	myPath.push_back(aFinalPosition);
 
 	for (unsigned int i = 1; i < aPath.size(); ++i) {
+		aPath[i].y = aFinalPosition.y;
+		
 		if (aPath[i] != aFinalPosition) {
 			myPath.push_back(aPath[i]);
 #ifdef _DEBUG
-			CDebug::GetInstance()->DrawLine(aPath[i - 1], aPath[i], 60.0f);
+			//CDebug::GetInstance()->DrawLine(aPath[i - 1], aPath[i], 25.0f);
 #endif
 		}
+
 	}
 }
 
@@ -138,7 +144,7 @@ CPatrolPointComponent* CPatrol::FindBestPatrolPoint(const Vector3& aPosition)
 	return nullptr;
 }
 
-CSeek::CSeek(SNavMesh* aNavMesh) : myNavMesh(aNavMesh), myTarget(nullptr) {
+CSeek::CSeek(SNavMesh* aNavMesh, float aEnemyPositionY) : myNavMesh(aNavMesh), myTarget(nullptr), myPositionY(aEnemyPositionY) {
 	CMainSingleton::PostMaster().Subscribe(EMessageType::EnemyFoundPlayer, this);
 	CMainSingleton::PostMaster().Subscribe(EMessageType::EnemyLostPlayer, this);
 }
@@ -153,7 +159,9 @@ CSeek::~CSeek()
 void CSeek::Enter(const Vector3& aPosition)
 {
 	myPath.clear();
-	SetPath(myNavMesh->CalculatePath(aPosition, myTarget->Position(), myNavMesh), myTarget->Position());
+	Vector3 targetPosition = myTarget->Position();
+	targetPosition.y = myPositionY;
+	SetPath(myNavMesh->CalculatePath(aPosition, targetPosition, myNavMesh), targetPosition);
 	aPosition;
 }
 
@@ -211,6 +219,7 @@ void CSeek::SetPath(std::vector<Vector3> aPath, Vector3 aFinalPosition)
 	myPath.clear();
 	myPath.push_back(aFinalPosition);
 	for (unsigned int i = 0; i < aPath.size(); ++i) {
+		aPath[i].y = myPositionY;
 		if (aPath[i] != aFinalPosition) {
 			myPath.push_back(aPath[i]);
 		}
@@ -233,6 +242,7 @@ void CSeek::Receive(const SMessage& aMsg)
 		myFoundPlayer = false;
 		amount = 0;
 		myLastPlayerPosition = *static_cast<Vector3*>(aMsg.data);
+		myLastPlayerPosition.y = myPositionY;
 	}
 }
 
@@ -247,7 +257,7 @@ void CAttack::Enter(const Vector3& aPosition)
 
 Vector3 CAttack::Update(const Vector3& /*aPosition*/)
 {
-	return  Vector3();
+	return Vector3();
 }
 
 void CAttack::ClearPath() {
@@ -360,7 +370,8 @@ void CIdle::Enter(const Vector3& /*aPosition*/)
 Vector3 CIdle::Update(const Vector3& aPosition)
 {
 	//myTarget is not set so we crash... See fix in EnemyComponent.cpp row 129 - 132 maybe I broke its direction so please check it out - Alexander Matthäi 2021-06-13
-	Vector3 dir =  myTarget->Position() - aPosition ;
+	Vector3 dir =  myTarget->Position() - aPosition;
+	dir.Normalize();
 	return dir;
 }
 

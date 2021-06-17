@@ -14,18 +14,24 @@ public:
 	void SetHasLock(const bool aHasLock) { myHasLock = aHasLock; }
 	const bool HasBeenDelayed() const { return myHasBeenDelayed; }
 	void ToggleHasBeenDelayed() { myHasBeenDelayed = !myHasBeenDelayed; }
-
-	bool Complete(const bool aCompletePredicate);
+	
+	/// <summary>
+	/// This will let you know if this specefic Activation has reached the
+	/// end of its behavior since being activated.
+	/// </summary>
+	const bool Complete() const;
 
 	virtual void OnActivation() 
 	{ 
 		std::cout << __FUNCTION__ << " Key Activated " << std::endl;
 		myIsInteracted = true; 
-
 	};
 
 protected:
-	bool myHasLock;
+	bool Complete(const bool aCompletePredicate);
+
+	bool myHasCompleted;
 	bool myIsInteracted;
+	bool myHasLock;
 	bool myHasBeenDelayed;
 };

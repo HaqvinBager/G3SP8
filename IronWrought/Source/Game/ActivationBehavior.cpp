@@ -7,6 +7,7 @@ IActivationBehavior::IActivationBehavior(CGameObject& aParent)
 	, myIsInteracted(false)
 	, myHasLock(true)
 	, myHasBeenDelayed(false)
+	, myHasCompleted(false)
 {
 }
 
@@ -29,7 +30,13 @@ void IActivationBehavior::OnDisable()
 bool IActivationBehavior::Complete(const bool aCompletePredicate)
 {
 	myIsInteracted = aCompletePredicate ? false : myIsInteracted;
+	myHasCompleted = aCompletePredicate;
 	if (aCompletePredicate)
 		Enabled(!myHasLock);
 	return aCompletePredicate;
+}
+
+const bool IActivationBehavior::Complete() const
+{
+	return myHasCompleted;
 }

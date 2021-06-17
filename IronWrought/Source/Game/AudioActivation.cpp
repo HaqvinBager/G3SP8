@@ -2,6 +2,7 @@
 #include "AudioActivation.h"
 #include "AudioChannel.h"
 #include "TransformComponent.h"
+#include "RotateActivation.h"
 
 CAudioActivation::CAudioActivation(CGameObject& aParent, const PostMaster::SAudioSourceInitData& someSettings, bool aShouldBe3D)
 	: IActivationBehavior(aParent)
@@ -53,7 +54,23 @@ void CAudioActivation::Update()
 	}
 	
 	if (myIs3D)
-		Complete(!myAudioChannel->IsPlaying());
+	{
+		//This AudioActivation's Specific AudioClip is Toggled Between soundeIndex 12 and 35
+		//This switch is dependant on when a Rotator Component (attached to the same GameObject)
+		//has fully completed its rotate activation.
+		CRotateActivation* rotator = nullptr;
+		if (GameObject().TryGetComponent(&rotator)) 
+		{
+			if (Complete(rotator->Complete()))
+			{
+				ToggleAudioClip();
+			}
+		}
+		else
+		{
+			Complete(!myAudioChannel->IsPlaying());
+		}
+	}
 
 	if (myIsInteracted && myIs3D)
 	{
@@ -63,16 +80,9 @@ void CAudioActivation::Update()
 	}
 }
 
-void CAudioActivation::OnActivation()
+void CAudioActivation::ToggleAudioClip()
 {
-	std::cout << __FUNCTION__ << "Play Audio" << std::endl;
-	myIsInteracted = true;
-
-	if (myIs3D)
-		CMainSingleton::PostMaster().Send({ EMessageType::PlayDynamicAudioSource, &my3DPlayMessage });
-	else
-		CMainSingleton::PostMaster().Send({EMessageType::PlaySFX, &my2DPlayMessage});
-
+	//std::cout << "Toggle Audio Bool" << std::endl;
 	// Open
 	if (my3DPlayMessage.mySoundIndex == 35)
 	{
@@ -87,6 +97,18 @@ void CAudioActivation::OnActivation()
 	}
 }
 
+void CAudioActivation::OnActivation()
+{
+	//std::cout << __FUNCTION__ << "Play Audio" << std::endl;
+	myIsInteracted = true;
+
+	if (myIs3D)
+		CMainSingleton::PostMaster().Send({ EMessageType::PlayDynamicAudioSource, &my3DPlayMessage });
+	else
+		CMainSingleton::PostMaster().Send({EMessageType::PlaySFX, &my2DPlayMessage});
+}
+
 void CAudioActivation::OnDisable()
 {
 }
+

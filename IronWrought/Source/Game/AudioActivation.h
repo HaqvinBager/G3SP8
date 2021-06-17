@@ -17,6 +17,7 @@ public:
 	void Update() override;
 	void OnActivation() override;
 	void OnDisable() override;
+	void ToggleAudioClip();
 
 private:
 	PostMaster::SAudioSourceInitData mySettings;
