@@ -418,6 +418,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   myLock: {fileID: 930581110}
   responseType: 1
+--- !u!134 &1022465893
+PhysicMaterial:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: 
+  dynamicFriction: 0.6
+  staticFriction: 0.6
+  bounciness: 0
+  frictionCombine: 0
+  bounceCombine: 0
 --- !u!1 &1411840687
 GameObject:
   m_ObjectHideFlags: 0
@@ -443,7 +455,7 @@ BoxCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1411840687}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 1781448247}
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
@@ -504,7 +516,7 @@ BoxCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1584262100}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 1022465893}
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
@@ -540,6 +552,18 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!134 &1781448247
+PhysicMaterial:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: 
+  dynamicFriction: 0.6
+  staticFriction: 0.6
+  bounciness: 0
+  frictionCombine: 0
+  bounceCombine: 0
 --- !u!134 &2113930161
 PhysicMaterial:
   m_ObjectHideFlags: 0
@@ -658,7 +682,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8786087640639600365, guid: 335e9e41e72c78f4d99aad977e627743, type: 3}
       propertyPath: path.Array.data[0].position.x
-      value: 6.18
+      value: 8.66
       objectReference: {fileID: 0}
     - target: {fileID: 8786087640639600365, guid: 335e9e41e72c78f4d99aad977e627743, type: 3}
       propertyPath: path.Array.data[0].position.y
@@ -666,7 +690,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8786087640639600365, guid: 335e9e41e72c78f4d99aad977e627743, type: 3}
       propertyPath: path.Array.data[0].position.z
-      value: -33.28
+      value: -17.18
       objectReference: {fileID: 0}
     - target: {fileID: 8786087640639600365, guid: 335e9e41e72c78f4d99aad977e627743, type: 3}
       propertyPath: path.Array.data[0].rotation.w
@@ -1050,7 +1074,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8786087641193350450, guid: 335e9e41e72c78f4d99aad977e627743, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 6.18
+      value: 8.66
       objectReference: {fileID: 0}
     - target: {fileID: 8786087641193350450, guid: 335e9e41e72c78f4d99aad977e627743, type: 3}
       propertyPath: m_LocalPosition.y
@@ -1058,7 +1082,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8786087641193350450, guid: 335e9e41e72c78f4d99aad977e627743, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -33.28
+      value: -17.18
       objectReference: {fileID: 0}
     - target: {fileID: 8786087641193350450, guid: 335e9e41e72c78f4d99aad977e627743, type: 3}
       propertyPath: m_LocalRotation.w
