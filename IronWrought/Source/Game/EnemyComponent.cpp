@@ -256,7 +256,7 @@ void CEnemyComponent::Update()//får bestämma vilket behaviour vi vill köra i 
 		}
 
 		Vector3 targetDirection = myBehaviours[static_cast<int>(myCurrentState)]->Update(GameObject().myTransform->Position());
-		targetDirection.y = 0;
+		//targetDirection.y = 0.0f;
 		if (myCurrentState != EBehaviour::Idle) {
 			GameObject().myTransform->Move(targetDirection * mySettings.mySpeed * CTimer::Dt());
 		}
