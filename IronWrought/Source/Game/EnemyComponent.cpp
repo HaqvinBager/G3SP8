@@ -167,6 +167,7 @@ void CEnemyComponent::Update()//får bestämma vilket behaviour vi vill köra i 
 		//std::cout << __FUNCTION__ << " SqrDist: " << mySqrdDistanceToPlayer << " threshold: " << myCloseToPlayerThreshold << std::endl;
 		Vector3 dir = GameObject().myTransform->Transform().Forward();
 		Vector3 enemyPos = GameObject().myTransform->Position();
+		enemyPos.y += 1.8f;
 		Vector3 furthestLookingPoint = GameObject().myTransform->WorldPosition() + (GameObject().myTransform->Transform().Forward() * range);
 		Vector3 furthestLookingPointToEnemy = furthestLookingPoint - enemyPos;
 		Vector3 playerPos = myPlayer->myTransform->WorldPosition();
@@ -181,6 +182,9 @@ void CEnemyComponent::Update()//får bestämma vilket behaviour vi vill köra i 
 			Vector3 direction = playerPos - enemyPos;
 			//PxRaycastBuffer hit = CEngine::GetInstance()->GetPhysx().Raycast(enemyPos, direction, range, CPhysXWrapper::ELayerMask::STATIC_ENVIRONMENT | CPhysXWrapper::ELayerMask::PLAYER);
 			PxRaycastBuffer hit = CEngine::GetInstance()->GetPhysx().Raycast(enemyPos, direction, range, CPhysXWrapper::ELayerMask::WORLD | CPhysXWrapper::ELayerMask::PLAYER);
+			//CDebug::GetInstance()->DrawLine(enemyPos, direction * range, 0.0f);
+			//CDebug::GetInstance()->DrawLine(enemyPos + Vector3(0.0f, 1.8f, 0.0f), direction * range, 0.0f);
+
 
 			if (hit.getNbAnyHits() > 0) {
 				CTransformComponent* transform = (CTransformComponent*)hit.getAnyHit(0).actor->userData;
