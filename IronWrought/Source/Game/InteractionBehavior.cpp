@@ -84,8 +84,10 @@ void CInteractionBehavior::UpdateEyes()
 					CBoxColliderComponent* boxCollider = nullptr;
 					if (key->GameObject().TryGetComponentAny(&boxCollider))
 					{
-						if (boxCollider->Enabled())
+						if (boxCollider->Enabled()) {
+							CMainSingleton::PostMaster().SendLate({ EMessageType::FoundKey, &key->GameObject() });
 							key->TriggerActivations();
+						}
 					}
 				}
 
@@ -95,8 +97,10 @@ void CInteractionBehavior::UpdateEyes()
 					CBoxColliderComponent* boxCollider = nullptr;
 					if (leftClickDownLock->GameObject().TryGetComponentAny(&boxCollider))
 					{
-						if(boxCollider->Enabled())
+						if (boxCollider->Enabled()) {
+							CMainSingleton::PostMaster().SendLate({ EMessageType::FoundKey, &leftClickDownLock->GameObject() });
 							leftClickDownLock->ActivateEvent();
+						}
 					}
 				}
 			}
@@ -113,6 +117,7 @@ void CInteractionBehavior::UpdateEyes()
 				COnLookLock* onLookLock = nullptr;
 				if (hitTransform->GameObject().TryGetComponentAny(&onLookLock))
 					onLookLock->ActivateEvent();
+				}
 			}
 		}
 	}

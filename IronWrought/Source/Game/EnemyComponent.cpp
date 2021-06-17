@@ -58,6 +58,7 @@ CEnemyComponent::CEnemyComponent(CGameObject& aParent, const SEnemySetting& some
 	CMainSingleton::PostMaster().Subscribe(EMessageType::PropCollided, this);
 	CMainSingleton::PostMaster().Subscribe(EMessageType::EnemyReachedTarget, this);
 	CMainSingleton::PostMaster().Subscribe(EMessageType::EnemyReachedLastPlayerPosition, this);
+	CMainSingleton::PostMaster().Subscribe(EMessageType::FoundKey, this);
 }
 
 CEnemyComponent::~CEnemyComponent()
@@ -71,6 +72,7 @@ CEnemyComponent::~CEnemyComponent()
 	CMainSingleton::PostMaster().Unsubscribe(EMessageType::PropCollided, this);
 	CMainSingleton::PostMaster().Unsubscribe(EMessageType::EnemyReachedTarget, this);
 	CMainSingleton::PostMaster().Unsubscribe(EMessageType::EnemyReachedLastPlayerPosition, this);
+	CMainSingleton::PostMaster().Unsubscribe(EMessageType::FoundKey, this);
 	myNavMesh = nullptr;
 }
 
@@ -148,6 +150,11 @@ void CEnemyComponent::Start()
 	myBehaviours.push_back(new CDetection());
 
 	mySpawnPosition = GameObject().myTransform->Position();
+
+	myHeardSound = false;
+	myHasReachedAlertedTarget = true;
+	myHasFoundPlayer = false;
+	myHasReachedLastPlayerPosition = true;
 }
 
 void CEnemyComponent::Update()//får bestämma vilket behaviour vi vill köra i denna Update()!!!
