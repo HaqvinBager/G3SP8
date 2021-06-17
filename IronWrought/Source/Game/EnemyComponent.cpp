@@ -119,7 +119,7 @@ void CEnemyComponent::Start()
 	}
 	myBehaviours.push_back(new CPatrol(patrolPositions, myNavMesh));
 
-	CSeek* seekBehaviour = new CSeek(myNavMesh);
+	CSeek* seekBehaviour = new CSeek(myNavMesh, GameObject().myTransform->Position().y);
 	myBehaviours.push_back(seekBehaviour);
 	if (myPlayer != nullptr)
 	{
@@ -179,9 +179,25 @@ void CEnemyComponent::Update()//får bestämma vilket behaviour vi vill köra i 
 
 		if (degrees <= viewAngle) {
 			Vector3 direction = playerPos - enemyPos;
-			PxRaycastBuffer hit = CEngine::GetInstance()->GetPhysx().Raycast(enemyPos, direction, range, CPhysXWrapper::ELayerMask::STATIC_ENVIRONMENT | CPhysXWrapper::ELayerMask::PLAYER);
+			//PxRaycastBuffer hit = CEngine::GetInstance()->GetPhysx().Raycast(enemyPos, direction, range, CPhysXWrapper::ELayerMask::STATIC_ENVIRONMENT | CPhysXWrapper::ELayerMask::PLAYER);
+			PxRaycastBuffer hit = CEngine::GetInstance()->GetPhysx().Raycast(enemyPos, direction, range, CPhysXWrapper::ELayerMask::WORLD | CPhysXWrapper::ELayerMask::PLAYER);
+
 			if (hit.getNbAnyHits() > 0) {
 				CTransformComponent* transform = (CTransformComponent*)hit.getAnyHit(0).actor->userData;
+
+				if (transform != nullptr)
+				{
+					CPlayerComponent* player = nullptr;
+					if (transform->GameObject().TryGetComponent(&player))
+					{
+						//std::cout << "Player has been found!" << std::endl;
+					}
+					else
+					{
+						//std::cout << "Enemy Has found something else that is NOT the player ;))" << std::endl;
+					}
+				}
+			
 				if (!transform && !myHasFoundPlayer) {
 					if (myHasReachedLastPlayerPosition == true) {
 						myIsIdle = true;
@@ -326,6 +342,7 @@ void CEnemyComponent::SetState(EBehaviour aState)
 	{
 	case EBehaviour::Patrol:
 	{
+		std::cout << "Patrol State" << std::endl;
 		aggro = false;
 		CMainSingleton::PostMaster().Send({ EMessageType::EnemyAggro, &aggro });
 		msgType = EMessageType::EnemyPatrolState;
@@ -333,26 +350,31 @@ void CEnemyComponent::SetState(EBehaviour aState)
 
 	case EBehaviour::Seek:
 	{
+		std::cout << "Seek State" << std::endl;
 		msgType = EMessageType::EnemySeekState;
 	}break;
 
 	case EBehaviour::Attack:
 	{
+		std::cout << "Attack State" << std::endl;
 		msgType = EMessageType::EnemyAttackState;
 	}break;
 
 	case EBehaviour::Alerted:
 	{
+		std::cout << "Alerted State" << std::endl;
 		msgType = EMessageType::EnemyAlertedState;
 	}break;
 
 	case EBehaviour::Idle:
 	{
+		std::cout << "Idle State" << std::endl;
 		msgType = EMessageType::EnemyIdleState;
 	}break;
 
 	case EBehaviour::Detection:
 	{
+		std::cout << "Detection State" << std::endl;
 		aggro = true;
 		CMainSingleton::PostMaster().Send({EMessageType::EnemyAggro, &aggro} );
 		/*CMainSingleton::PostMaster().Send({ EMessageType::EnemyFoundPlayerScream });*/
@@ -360,6 +382,7 @@ void CEnemyComponent::SetState(EBehaviour aState)
 	}break;
 
 	default:
+		std::cout << "Default Case" << std::endl;
 		break;
 	}
 	if (msgType == EMessageType::Count)

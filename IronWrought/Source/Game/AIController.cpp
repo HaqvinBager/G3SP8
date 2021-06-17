@@ -144,7 +144,7 @@ CPatrolPointComponent* CPatrol::FindBestPatrolPoint(const Vector3& aPosition)
 	return nullptr;
 }
 
-CSeek::CSeek(SNavMesh* aNavMesh) : myNavMesh(aNavMesh), myTarget(nullptr) {
+CSeek::CSeek(SNavMesh* aNavMesh, float aEnemyPositionY) : myNavMesh(aNavMesh), myTarget(nullptr), myPositionY(aEnemyPositionY) {
 	CMainSingleton::PostMaster().Subscribe(EMessageType::EnemyFoundPlayer, this);
 	CMainSingleton::PostMaster().Subscribe(EMessageType::EnemyLostPlayer, this);
 }
@@ -159,7 +159,9 @@ CSeek::~CSeek()
 void CSeek::Enter(const Vector3& aPosition)
 {
 	myPath.clear();
-	SetPath(myNavMesh->CalculatePath(aPosition, myTarget->Position(), myNavMesh), myTarget->Position());
+	Vector3 targetPosition = myTarget->Position();
+	targetPosition.y = myPositionY;
+	SetPath(myNavMesh->CalculatePath(aPosition, targetPosition, myNavMesh), targetPosition);
 	aPosition;
 }
 
@@ -217,6 +219,7 @@ void CSeek::SetPath(std::vector<Vector3> aPath, Vector3 aFinalPosition)
 	myPath.clear();
 	myPath.push_back(aFinalPosition);
 	for (unsigned int i = 0; i < aPath.size(); ++i) {
+		aPath[i].y = myPositionY;
 		if (aPath[i] != aFinalPosition) {
 			myPath.push_back(aPath[i]);
 		}
@@ -239,6 +242,7 @@ void CSeek::Receive(const SMessage& aMsg)
 		myFoundPlayer = false;
 		amount = 0;
 		myLastPlayerPosition = *static_cast<Vector3*>(aMsg.data);
+		myLastPlayerPosition.y = myPositionY;
 	}
 }
 
@@ -253,7 +257,7 @@ void CAttack::Enter(const Vector3& aPosition)
 
 Vector3 CAttack::Update(const Vector3& /*aPosition*/)
 {
-	return  Vector3();
+	return Vector3();
 }
 
 void CAttack::ClearPath() {
