@@ -1030,6 +1030,10 @@ std::string CAudioManager::TranslateEnum(ESFX enumerator) const {
 		return "DoorClose";
 	case ESFX::ChestCreak:
 		return "ChestCreak";
+	case ESFX::MovePainting2:
+		return "MovePainting2";
+	case ESFX::MovePainting3:
+		return "MovePainting3";
 	default:
 		return "";
 	}
