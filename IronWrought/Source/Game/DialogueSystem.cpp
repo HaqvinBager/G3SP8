@@ -94,6 +94,9 @@ bool CDialogueSystem::Init()
 		myAnimatedDialogue = myText1920x1080;
 	if (resolution.x == 2560.0f || resolution.y == 1440.0f)
 		myAnimatedDialogue = myText2560x1440;
+	
+	if(myAnimatedDialogue == nullptr)
+		myAnimatedDialogue = myText2560x1440;
 
 	myLineBreakDialogue = document["Dialogue Line Break After Characters"].GetInt();
 
