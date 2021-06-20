@@ -86,13 +86,13 @@ bool CDialogueSystem::Init()
 	myText2560x1440->SetPosition({ document["Dialogue Text Position X"].GetFloat(), document["Dialogue Text Position Y"].GetFloat() });
 	myText2560x1440->SetColor({ document["Dialogue Text Color R"].GetFloat(), document["Dialogue Text Color G"].GetFloat(), document["Dialogue Text Color B"].GetFloat(), 1.0f });
 
-	float resolutionY = CEngine::GetInstance()->GetWindowHandler()->GetResolution().y;
+	Vector2 resolution = CEngine::GetInstance()->GetWindowHandler()->GetResolution();
 
-	if (resolutionY == 900.0f)
+	if (resolution.x == 1600.0f || resolution.y == 900.0f)
 		myAnimatedDialogue = myText1600x900;
-	if (resolutionY == 1080.0f)
+	if (resolution.x == 1920.0f || resolution.y == 1080.0f)
 		myAnimatedDialogue = myText1920x1080;
-	if (resolutionY == 1440.0f)
+	if (resolution.x == 2560.0f || resolution.y == 1440.0f)
 		myAnimatedDialogue = myText2560x1440;
 
 	myLineBreakDialogue = document["Dialogue Line Break After Characters"].GetInt();
