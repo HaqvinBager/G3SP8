@@ -420,6 +420,10 @@ void CInGameState::Receive(const SMessage& aMessage)
 
 		case EMessageType::MainMenu:
 		{
+			CFullscreenRenderer::SPostProcessingBufferData data = CEngine::GetInstance()->GetPostProcessingBufferData();
+			data.myVignetteStrength = 0.35f;
+			CEngine::GetInstance()->SetPostProcessingBufferData(data);
+
 			bool isPaused = false;
 			CMainSingleton::PostMaster().Send({ EMessageType::PauseMenu, &isPaused });
 			myStateStack.PopTopAndPush(CStateStack::EState::InGame);
