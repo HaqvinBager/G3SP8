@@ -52,30 +52,12 @@ void CLockBehavior::RemoveKey(CKeyBehavior* aKey)
 	if (it != myKeys.end())
 	{
 		myKeys.erase(it);
-		myMaxAmountOfKeys = static_cast<int>(myKeys.size());
+		//myMaxAmountOfKeys = static_cast<int>(myKeys.size());
 	}
 }
 
 void CLockBehavior::OnKeyActivated(CKeyBehavior* aKey)
 {
-	//CAudioActivation* audioActivation = nullptr;
-	//if (aKey->GameObject().TryGetComponent(&audioActivation))
-	//{
-	//	//if (audioActivation->GetAudioIndex() == (int)ESFX::MovePainting)
-	//	//{
-	//		if (myMaxAmountOfKeys == 1)
-	//		{
-	//			int soundIndex = 30;
-	//			CMainSingleton::PostMaster().Send({ EMessageType::PlaySFX, &soundIndex });
-	//		}
-	//		else if (myMaxAmountOfKeys <= 3)
-	//		{
-	//			int soundIndex = 29;
-	//			CMainSingleton::PostMaster().Send({ EMessageType::PlaySFX, &soundIndex });
-	//		}
-	//	//}
-	//}
-
 	myAmountOfKeys++;
 	if (myMaxAmountOfKeys == 3)
 	{
@@ -84,32 +66,16 @@ void CLockBehavior::OnKeyActivated(CKeyBehavior* aKey)
 		{
 			if (myAmountOfKeys < myMaxAmountOfKeys)
 			{
-				int soundIndex = 30;
+				int soundIndex = 29;
 				CMainSingleton::PostMaster().Send({ EMessageType::PlaySFX, &soundIndex });
 			}
 			else if (myAmountOfKeys >= myMaxAmountOfKeys)
 			{
-				int soundIndex = 29;
+				int soundIndex = 30;
 				CMainSingleton::PostMaster().Send({ EMessageType::PlaySFX, &soundIndex });
 			}
 		}
 	}
-
-
-	//myAmountOfKeys++;
-	//if (myMaxAmountOfKeys == 3)
-	//{
-	//	if (myAmountOfKeys < myMaxAmountOfKeys)
-	//	{
-	//		int soundIndex = 29;
-	//		CMainSingleton::PostMaster().Send({ EMessageType::PlaySFX, &soundIndex });
-	//	}
-	//	else if (myAmountOfKeys >= myMaxAmountOfKeys)
-	//	{
-	//		int soundIndex = 30;
-	//		CMainSingleton::PostMaster().Send({ EMessageType::PlaySFX, &soundIndex });
-	//	}
-	//}
 }
 
 CLockBehavior::~CLockBehavior()
@@ -118,10 +84,7 @@ CLockBehavior::~CLockBehavior()
 }
 
 void CLockBehavior::OnEnable()
-{
-	
-
-	
+{	
 	//if (!myHasSubscribed)
 	//{
 	//	CMainSingleton::PostMaster().Subscribe(mySettings.myOnKeyCreateNotify, this);
