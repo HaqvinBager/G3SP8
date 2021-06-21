@@ -13,7 +13,7 @@ enum class EMusic { Count };
 enum class EAmbience { Cottage1, Cottage2, Basement1, Basement2, Count };
 enum class EPropAmbience { GrandfatherClock, TVStatic, ElectricalCabinet, Boiler, Refrigerator, Toilet, PhoneCalling, PhoneDead, Count };
 enum class ESFX { Unused, Grab, Throw, LetGo, Unused1, EnemyHit, SwitchPull, PickupGravityGlove, PickupHeal, EnemyAttack, CardboardBox, MovePainting, DoorOpen, PhoneDead, WoodImpactMedium, WoodImpactSmall, CeramicImpactLarge, CeramicImpactMedium, CeramicImpactSmall, PlasticImpact, PaperImpact, SilverwareImpact, AshtrayImpact, CanImpact, BookImpact, ToiletPaperRollImpact, CameraImpact, ViolinImpact, DoorRattle, PuzzleProgress, PuzzleSolved, PuzzleKey, InsertFuse, MechanicalDoorOpen, DoorCreak, DoorClose, ChestCreak, MovePainting2, MovePainting3, InsertHandle, Count };
-enum class ESFXCollection { StepWood, StepWoodFast, StepCarpet, StepCarpetFast, StepConcrete, StepConcreteFast, Count };
+enum class ESFXCollection { StepWood, StepWoodFast, StepCarpet, StepCarpetFast, StepConcrete, StepConcreteFast, StepEnemy, StepEnemyFast, Count };
 enum class EUI { ButtonClick, PlayClick, HoverButton, CameraWoosh, Count };
 enum class EVOX { Line0, Line1, Line2, Line3, Line4, Line5, Line6, Line7, Line8, Line9, Line10, Line11, Line12, Line13, Line14, Line15, Line16, Line17, Line18, Line19, Line20, Line21, Line22, Line23, Line24, Line25, Line26, Line27, Line28, Line29, Line30, Line31, Line32, Line33, Line34, Line35, Line36, Line37, Line38, Line39, Line40, Heal1, Heal2, Heal3, LeaveCottage, PickUpPhone, WakeUpAfterDamage1, WakeUpAfterDamage2, WakeUpAfterDamage3, Count };
 enum class EEnemyVoiceLine { EnemyDamagePlayer, EnemyHeardNoise, EnemyLostPlayer, EnemyBackToPatrol, EnemyPatrol, EnemyFoundPlayer, EnemyChasing, Count };
@@ -71,6 +71,7 @@ private:
 private:
 	void PlayRandomSoundFromCollection(const std::vector<CAudio*>& aCollection, const EChannel& aChannel, const int& aMaxNrOfChannelsActive = 5);
 	void PlayCyclicRandomSoundFromCollection(const std::vector<CAudio*>& aCollection, const EChannel& aChannel, std::vector<int>& someCollectionIndices, const int& aMaxNrOfChannelsActive = 5);
+	void PlayCyclicRandomSoundFromCollection(const std::vector<CAudio*>& aCollection, CAudioChannel* aChannel, std::vector<int>& someCollectionIndices, const int& aMaxNrOfChannelsActive = 2);
 
 	void FadeChannelOverSeconds(const EChannel& aChannel, const float& aNumberOfSeconds, const bool& aShouldFadeOut = true);
 	void SetDynamicTrack(const EAmbience& aFirstTrack, const EAmbience& aSecondTrack, const EAmbience& aThirdTrack, const EAmbience& aFourthTrack);
@@ -102,6 +103,8 @@ private:
 	std::vector<CAudio*> myCarpetFastStepSounds;
 	std::vector<CAudio*> myConcreteStepSounds;
 	std::vector<CAudio*> myConcreteFastStepSounds;
+	std::vector<CAudio*> myEnemyStepSounds;
+	std::vector<CAudio*> myEnemyFastStepSounds;
 
 	std::vector<CAudio*> myVoiceEventSounds;
 
@@ -121,6 +124,7 @@ private:
 	std::vector<int> myIdleSoundIndices;
 	std::vector<int> myPatrollingSoundIndices;
 	std::vector<int> mySearchingSoundIndices;
+	std::vector<int> myEnemyStepSoundIndices;
 
 	std::vector<CAudioChannel*> myChannels;
 

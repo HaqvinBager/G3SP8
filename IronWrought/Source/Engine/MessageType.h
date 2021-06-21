@@ -127,5 +127,7 @@ enum class EMessageType
 	
 	EndOfGameEvent,
 
+	EnemyStep,
+
 	Count
 };
