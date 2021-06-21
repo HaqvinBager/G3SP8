@@ -116,6 +116,7 @@ private:
 	float myDetectionTimer;
 	float myAggroTimer;
 	float myAggroTime;
+	float myStepTimer;
 
 	CTransformComponent* myDetachedPlayerHead;
 	const float myGrabRange = 3.0f;
