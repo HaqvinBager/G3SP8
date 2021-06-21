@@ -117,6 +117,15 @@ namespace Binary {
 		std::vector<int> materialIDs;
 		std::vector<SInstancedTransform> transforms;
 	};
+	
+	struct SFlickerData {
+		int myInstanceID;
+		float mySpeed;
+		Vector2 myMinMaxIntensity;
+		//int myType; //0 == PointLight, 1 == Spotlight
+		
+
+	};
 	struct SLevelData {
 		std::vector<SInstanceID> myInstanceIDs;
 		std::vector<STransform> myTransforms;
@@ -125,6 +134,7 @@ namespace Binary {
 		std::vector<SSpotLight> mySpotLights;
 		std::vector<SCollider> myColliders;
 		std::vector<SInstancedModel> myInstancedModels;
+		std::vector<SFlickerData> myFlickerData;
 		SEndEventData myEndEventData;
 		//std::vector<SInstanceName> myInstanceNames;
 	};

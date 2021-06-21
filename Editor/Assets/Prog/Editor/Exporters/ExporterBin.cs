@@ -12,7 +12,7 @@ public class ExporterBin
 {
     //private static string Base { get => "Assets/Generated/"; }
 
-    BinaryWriter binWriter = null;
+    public BinaryWriter binWriter = null;
 
     public ExporterBin(string aFileName)
     {
@@ -49,22 +49,16 @@ public class ExporterBin
         ids.Ids.ForEach(e => exportedInstanceIDs.Add(e.instanceID));
 
         ExporterBin exporter = new ExporterBin(directoryInfo.Parent.Name);
+       
         exporter.binWriter.Write(ids);
-        infoLog.AppendLine(
-            exporter.binWriter.Write(ExportTransform.Export(level.name, exportedInstanceIDs)
-            ) + "\n");
-        infoLog.AppendLine(
-            exporter.binWriter.Write(ExportModel.Export(level.name, exportedInstanceIDs)
-            ));
+        infoLog.AppendLine(exporter.binWriter.Write(ExportTransform.Export(level.name, exportedInstanceIDs)) + "\n");
+        infoLog.AppendLine(exporter.binWriter.Write(ExportModel.Export(level.name, exportedInstanceIDs)));
         exporter.binWriter.Write(ExportPointlights.ExportPointlight(level.name));
         exporter.binWriter.Write(ExportSpotLight.Export());
         exporter.binWriter.Write(ExportCollider.Export(level.name, exportedInstanceIDs));
-        infoLog.AppendLine(
-            exporter.binWriter.Write(ExportInstancedModel.Export(level.name))
-            );
+        infoLog.AppendLine(exporter.binWriter.Write(ExportInstancedModel.Export(level.name)));
 
         Player playerData = ExporterJson.ExportPlayer(level.name);
-
         if(ExportEndEvent.TryExport(playerData.player, out EndEventCollection outData))
         {
             exporter.binWriter.Write(1);
@@ -75,8 +69,10 @@ public class ExporterBin
             exporter.binWriter.Write(0);
         }
 
-        exporter.binWriter.Close();
+        ListenerCollection listeners = ExportListener.Export();
+        listeners.Export(exporter);
 
+        exporter.binWriter.Close();
         Debug.Log(infoLog.ToString(), level);
     }
 }

@@ -33,3 +33,4 @@
 #include <RotateResponse.h>
 #include <ToggleResponse.h>
 #include <EndEventComponent.h>
+#include <LightFlickerResponse.h>

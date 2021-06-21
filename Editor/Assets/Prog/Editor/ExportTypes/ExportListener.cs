@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
+using System.Runtime.InteropServices;
 
 [System.Serializable]
 public struct ListenerData
@@ -94,6 +95,22 @@ public struct ResponsePlayVFXData
 }
 
 [System.Serializable]
+public struct ResponseFlickerData
+{
+    public int instanceID;
+    public float speed;
+    public Vector2 minMaxIntensity;
+
+    public void Export(ExporterBin aExporter)
+    {
+        aExporter.binWriter.Write(instanceID);
+        aExporter.binWriter.Write(speed);
+        aExporter.binWriter.Write(minMaxIntensity);
+    }
+}
+
+
+[System.Serializable]
 public struct ListenerCollection
 {
     public List<ListenerData> listeners;
@@ -105,6 +122,14 @@ public struct ListenerCollection
     public List<ResponsePlayVoiceData> responseVoices;
     public List<ResponseNextLevelData> responseNextLevel;
     public List<ResponsePlayVFXData> responsePlayVFXes;
+    public List<ResponseFlickerData> responseFlicker;
+
+    public void Export(ExporterBin aBin)
+    {
+        aBin.binWriter.Write(responseFlicker.Count);
+        foreach (var flickerData in responseFlicker)
+            flickerData.Export(aBin);
+    }
 }
 
 public class ExportListener
@@ -121,6 +146,7 @@ public class ExportListener
         collection.responseVoices = new List<ResponsePlayVoiceData>();
         collection.responseNextLevel = new List<ResponseNextLevelData>();
         collection.responsePlayVFXes = new List<ResponsePlayVFXData>();
+        collection.responseFlicker = new List<ResponseFlickerData>();
 
         Listener[] listeners = GameObject.FindObjectsOfType<Listener>();
         foreach (Listener listener in listeners)
@@ -151,8 +177,22 @@ public class ExportListener
             ExportPlayVoiceResponses(ref collection.responseVoices, listener);
             ExportNextLevelResponses(ref collection.responseNextLevel, listener);
             ExportPlayVFXResponses(ref collection.responsePlayVFXes, listener);
+            ExportFlickerResponses(ref collection.responseFlicker, listener);
         }
         return collection;
+    }
+
+    private static void ExportFlickerResponses(ref List<ResponseFlickerData> responseFlicker, Listener listener)
+    {
+        if(listener.TryGetComponent(out ResponseFlicker obj))
+        {
+            ResponseFlickerData data = new ResponseFlickerData();
+            data.instanceID = obj.transform.GetInstanceID();
+            data.speed = obj.mySpeed;
+            data.minMaxIntensity = obj.myMinMaxIntensity;
+
+            responseFlicker.Add(data);
+        }
     }
 
     private static void ExportToggleResponses(ref List<ResponseToggleData> toggles, Listener listener)

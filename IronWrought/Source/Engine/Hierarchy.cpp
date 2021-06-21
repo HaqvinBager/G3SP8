@@ -43,6 +43,7 @@ ImGui::CHierarchy::CHierarchy(const char* aName)
 	myComponentMap[typeid(CListenerBehavior)] = [&](CComponent* aComponent) { Edit(dynamic_cast<CListenerBehavior*>(aComponent)); };
 	myComponentMap[typeid(CKeyBehavior)] = [&](CComponent* aComponent) { Edit(dynamic_cast<CKeyBehavior*>(aComponent)); };
 	myComponentMap[typeid(CEndEventComponent)] = [&](CComponent* aComponent) { Edit(dynamic_cast<CEndEventComponent*>(aComponent)); };
+	myComponentMap[typeid(CLightFlickerResponse)] = [&](CComponent* aComponent) { Edit(dynamic_cast<CLightFlickerResponse*>(aComponent)); };
 
 		
 	//myCurrentFilter.push_back(typeid(CTransformComponent).hash_code());
@@ -389,6 +390,12 @@ void ImGui::CHierarchy::Edit(CEndEventComponent* aComponent)
 
 	ImGui::Text("Actual Vingette: %f", aComponent->ActualVingetteStrength());
 	ImGui::Text("Vingette Normalized Blend: %f", aComponent->VingetteNormalizedBlend());
+}
+
+void ImGui::CHierarchy::Edit(CLightFlickerResponse* aComponent)
+{
+	float noise = aComponent->Noise();
+	ImGui::DragFloat("Noise Value", &noise, 0.01f, -1.0f, 1.0f);
 }
 
 	//static bool plState = false;
