@@ -55,5 +55,5 @@ void CGame::InitRealGame()
 			CStateStack::EState::BootUp,
 			CStateStack::EState::InGame
 		},
-		CStateStack::EState::BootUp);
+		CStateStack::EState::InGame);
 }
