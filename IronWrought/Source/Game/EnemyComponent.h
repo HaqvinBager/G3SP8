@@ -114,6 +114,8 @@ private:
 	SNavMesh* myNavMesh;
 	CIdle* myIdleState;
 	float myDetectionTimer;
+	float myAggroTimer;
+	float myAggroTime;
 
 	CTransformComponent* myDetachedPlayerHead;
 	const float myGrabRange = 3.0f;
