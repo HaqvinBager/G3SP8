@@ -65,6 +65,7 @@
 #include "PuzzleSetting.h"
 #include <LightActivation.h>
 #include <EndEventComponent.h>
+#include <LightFlickerResponse.h>
 
 
 CScene* CSceneManager::ourLastInstantiatedScene = nullptr;
@@ -294,6 +295,7 @@ bool CSceneManager::AddToScene(CScene& aScene, Binary::SLevelData& aBinLevelData
 			}
 		}
 
+		AddPuzzleResponseFlicker(aScene, aBinLevelData.myFlickerData);
 		AddEndEventComponent(aScene, aBinLevelData.myEndEventData);
 	}
 
@@ -1085,6 +1087,22 @@ void CSceneManager::AddPuzzleResponsePlayVFX(CScene& aScene, RapidArray someData
 		settings.myDuration = response["duration"].GetFloat();
 
 		gameObject->AddComponent<CPlayVFXResponse>(*gameObject, settings);
+	}
+}
+
+void CSceneManager::AddPuzzleResponseFlicker(CScene& aScene, const std::vector<Binary::SFlickerData>& someData)
+{
+	for (const auto& data : someData)
+	{
+		CGameObject* gameObject = aScene.FindObjectWithID(data.myInstanceID);
+
+		if (gameObject != nullptr)
+		{
+			CLightFlickerResponse::SSettings settings = {};
+			settings.myIntensity = data.myMinMaxIntensity;
+			settings.mySpeed = data.mySpeed;
+			gameObject->AddComponent<CLightFlickerResponse>(*gameObject, settings);
+		}
 	}
 }
 

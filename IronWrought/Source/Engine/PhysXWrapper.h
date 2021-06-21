@@ -35,8 +35,9 @@ public:
 
 		ENEMY = (1 << 8),
 		PLAYER = (1 << 9),
+		COVER = (1 << 10),
 		//Om man l�gger tilll ELayerMask Layers vill man addera dom nedan s� att "all" alltid representerar alla layers //Axel Savage 2021-05-07
-		ALL = STATIC_ENVIRONMENT | DYNAMIC_OBJECTS | PLAYER | ENEMY /* | NyttLayer  */ //Axel Savage 2021-05-07
+		ALL = STATIC_ENVIRONMENT | DYNAMIC_OBJECTS | PLAYER | ENEMY | COVER /* | NyttLayer  */ //Axel Savage 2021-05-07
 	};
 
 public:

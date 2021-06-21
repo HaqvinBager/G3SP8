@@ -37,6 +37,7 @@ class CMoveActivation;
 class CMoveResponse;
 class CToggleResponse;
 class CEndEventComponent;
+class CLightFlickerResponse;
 
 namespace ImGui {
 	class CHierarchy : public CWindow
@@ -84,6 +85,7 @@ namespace ImGui {
 		void Edit(CListenerBehavior* aComponent);
 		void Edit(CKeyBehavior* aComponent);
 		void Edit(CEndEventComponent* aComponent);
+		void Edit(CLightFlickerResponse* aComponent);
 
 
 	private:
