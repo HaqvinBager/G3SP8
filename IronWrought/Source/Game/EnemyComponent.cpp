@@ -206,19 +206,6 @@ void CEnemyComponent::Update()//får bestämma vilket behaviour vi vill köra i 
 			if (hit.getNbAnyHits() > 0) 
 			{
 				CTransformComponent* transform = (CTransformComponent*)hit.getAnyHit(0).actor->userData;
-
-				if (transform != nullptr)
-				{
-					CPlayerComponent* player = nullptr;
-					if (transform->GameObject().TryGetComponent(&player))
-					{
-						//std::cout << "Player has been found!" << std::endl;
-					}
-					else
-					{
-						//std::cout << "Enemy Has found something else that is NOT the player ;))" << std::endl;
-					}
-				}
 				
 				if (!transform && !myHasFoundPlayer) 
 				{
@@ -296,8 +283,11 @@ void CEnemyComponent::Update()//får bestämma vilket behaviour vi vill köra i 
 				myHasReachedAlertedTarget = false;
 			}
 			else if (!myHasReachedAlertedTarget) {
-				//mySettings.mySpeed = 3.0f;
-				//SetState(EBehaviour::Alerted);
+			}
+			else // Test to see if it resolves stuck at Idle
+			{
+				mySettings.mySpeed = myWalkSpeed;
+				SetState(EBehaviour::Patrol);
 			}
 		}
 
@@ -556,9 +546,12 @@ void CEnemyComponent::Receive(const SMessage& aMsg)
 				std::cout << __FUNCTION__ << " Heard Step Sound: Is not in Idle, Patrol or Alerte -state!" <<  std::endl;
 				return;
 			}
-
+			if (myHeardSound)
+			{
+				return;
+			}
 			PostMaster::SStepSoundData stepData = *static_cast<PostMaster::SStepSoundData*>(aMsg.data);
-			const float hearingRange = (stepData.myIsSprint ? 7.0f : 3.0f);
+			const float hearingRange = (stepData.myIsSprint ? 10.0f : 5.0f);
 			Vector3 playerPos = myPlayer->myTransform->Position();
 			playerPos.y = GameObject().myTransform->Position().y;
 			float distSqrd = Vector3::DistanceSquared(GameObject().myTransform->Position(), playerPos);
