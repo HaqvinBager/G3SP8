@@ -199,7 +199,7 @@ void CEnemyComponent::Update()//får bestämma vilket behaviour vi vill köra i 
 		if (degrees <= viewAngle) {
 			Vector3 direction = playerPos - enemyPos;
 			//PxRaycastBuffer hit = CEngine::GetInstance()->GetPhysx().Raycast(enemyPos, direction, range, CPhysXWrapper::ELayerMask::STATIC_ENVIRONMENT | CPhysXWrapper::ELayerMask::PLAYER);
-			PxRaycastBuffer hit = CEngine::GetInstance()->GetPhysx().Raycast(enemyPos, direction, range, CPhysXWrapper::ELayerMask::WORLD | CPhysXWrapper::ELayerMask::PLAYER);
+			PxRaycastBuffer hit = CEngine::GetInstance()->GetPhysx().Raycast(enemyPos, direction, range, CPhysXWrapper::ELayerMask::WORLD | CPhysXWrapper::ELayerMask::PLAYER | CPhysXWrapper::ELayerMask::COVER);
 			//CDebug::GetInstance()->DrawLine(enemyPos, direction * range, 0.0f);
 			//CDebug::GetInstance()->DrawLine(enemyPos + Vector3(0.0f, 1.8f, 0.0f), direction * range, 0.0f);
 
@@ -679,7 +679,7 @@ void CEnemyComponent::UpdateVignette(const float aDotOverload)
 
 	Vector3 direction = playerPos - enemyPos;
 	direction.Normalize();
-	PxRaycastBuffer hit = CEngine::GetInstance()->GetPhysx().Raycast(enemyPos, direction, range, CPhysXWrapper::ELayerMask::STATIC_ENVIRONMENT | CPhysXWrapper::ELayerMask::PLAYER);
+	PxRaycastBuffer hit = CEngine::GetInstance()->GetPhysx().Raycast(enemyPos, direction, range, CPhysXWrapper::ELayerMask::STATIC_ENVIRONMENT | CPhysXWrapper::ELayerMask::PLAYER | CPhysXWrapper::ELayerMask::COVER);
 	if (hit.getNbAnyHits() > 0) {
 		CTransformComponent* transform = (CTransformComponent*)hit.getAnyHit(0).actor->userData;
 		if (!transform)
