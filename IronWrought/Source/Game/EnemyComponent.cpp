@@ -45,6 +45,8 @@ CEnemyComponent::CEnemyComponent(CGameObject& aParent, const SEnemySetting& some
 	, myAttackPlayerTimerMax(1.8f)
 	, myNavMesh(aNavMesh)
 	, myDetectionTimer(0.0f)
+	, myAggroTimer(0.0f)
+	, myAggroTime(1.0f)
 	, myHasScreamed(false)
 	, myDetachedPlayerHead(nullptr)
 	, myCurrentVignetteBlend(0.0f)
@@ -147,7 +149,10 @@ void CEnemyComponent::Start()
 		myRigidBodyComponent->GetDynamicRigidBody()->GetBody().setMaxLinearVelocity(mySettings.mySpeed);
 	}
 
-	myBehaviours.push_back(new CDetection());
+	CDetection* detectionState = new CDetection();
+	myBehaviours.push_back(detectionState);
+	if (myPlayer)
+		detectionState->SetTarget(myPlayer->myTransform);
 
 	mySpawnPosition = GameObject().myTransform->Position();
 
@@ -171,6 +176,8 @@ void CEnemyComponent::Update()//får bestämma vilket behaviour vi vill köra i 
 
 		float range = 6.0f;
 		myCloseToPlayerThreshold = range * 1.0f;
+		range *= (myAggroTimer == 0.0f) ? 1.0f : 2.0f;
+
 		//std::cout << __FUNCTION__ << " SqrDist: " << mySqrdDistanceToPlayer << " threshold: " << myCloseToPlayerThreshold << std::endl;
 		Vector3 dir = GameObject().myTransform->Transform().Forward();
 		Vector3 enemyPos = GameObject().myTransform->Position();
@@ -192,8 +199,8 @@ void CEnemyComponent::Update()//får bestämma vilket behaviour vi vill köra i 
 			//CDebug::GetInstance()->DrawLine(enemyPos, direction * range, 0.0f);
 			//CDebug::GetInstance()->DrawLine(enemyPos + Vector3(0.0f, 1.8f, 0.0f), direction * range, 0.0f);
 
-
-			if (hit.getNbAnyHits() > 0) {
+			if (hit.getNbAnyHits() > 0) 
+			{
 				CTransformComponent* transform = (CTransformComponent*)hit.getAnyHit(0).actor->userData;
 
 				if (transform != nullptr)
@@ -208,24 +215,31 @@ void CEnemyComponent::Update()//får bestämma vilket behaviour vi vill köra i 
 						//std::cout << "Enemy Has found something else that is NOT the player ;))" << std::endl;
 					}
 				}
-			
-				if (!transform && !myHasFoundPlayer) {
-					if (myHasReachedLastPlayerPosition == true) {
-						myIsIdle = true;
-						if (myPlayer != nullptr)
-						{
-							myIdleState->SetTarget(myPlayer->myTransform);
-						}
-						SetState(EBehaviour::Idle);
+				
+				if (!transform && !myHasFoundPlayer) 
+				{
+					myAggroTimer += CTimer::Dt();
+
+					myIsIdle = true;
+					if (myPlayer != nullptr)
+					{
+						myIdleState->SetTarget(myPlayer->myTransform);
 					}
-					else {
-						myIsIdle = false;
+					SetState(EBehaviour::Idle);
+
+					if (myAggroTimer >= myAggroTime)
+					{
+						myAggroTimer = 0.0f;
+
+						if (!myHasReachedLastPlayerPosition)
+							myIsIdle = false;
+
+						myHeardSound = false;
+						myHasReachedAlertedTarget = true;
+						myHasFoundPlayer = true;
+						myHasReachedLastPlayerPosition = false;
+						CMainSingleton::PostMaster().Send({ EMessageType::EnemyFoundPlayer });
 					}
-					myHeardSound = false;
-					myHasReachedAlertedTarget = true;
-					myHasFoundPlayer = true;
-					myHasReachedLastPlayerPosition = false;
-					CMainSingleton::PostMaster().Send({ EMessageType::EnemyFoundPlayer });
 				}
 			}
 		}	
@@ -233,6 +247,7 @@ void CEnemyComponent::Update()//får bestämma vilket behaviour vi vill köra i 
 		{
 			myIdlingTimer = 0.0f;
 			myDetectionTimer = 0.0f;
+			myAggroTimer = 0.0f;
 			myHasFoundPlayer = false;
 			myHasReachedLastPlayerPosition = false;
 			SMessage msg;
@@ -243,7 +258,7 @@ void CEnemyComponent::Update()//får bestämma vilket behaviour vi vill köra i 
 
 		if (myIsIdle) {
 			myIdlingTimer += CTimer::Dt();
-			if (myIdlingTimer >= 0.5f) {
+			if (myIdlingTimer >= 2.0f) {
 				myIdlingTimer = 0.0f;
 				myIsIdle = false;
 			}

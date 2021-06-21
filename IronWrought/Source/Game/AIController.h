@@ -114,9 +114,11 @@ public:
 	void Enter(const Vector3& aPosition) override;
 	Vector3 Update(const Vector3& aPosition) override;
 	void ClearPath() override;
+	void SetTarget(CTransformComponent* aTarget);
 
 	const float PercentileOfTimer() const;
 private:
+	CTransformComponent* myTarget;
 	float myDetectionTimer;
 	const float myDetectionTimerMax = 1.733f;// either 2.167 or 1.733
 	const float myDetectionFactor = 0.95f;// Roughly half of the alerted-animation time? (It is roughly 2.0s @ 2021 06 09)
