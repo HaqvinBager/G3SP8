@@ -109,6 +109,21 @@ public struct ResponseFlickerData
     }
 }
 
+[System.Serializable]
+public struct ResponseAddForceData
+{
+    public Vector3 direction;
+    public float force;
+    public int instanceID;
+
+    internal void Export(ExporterBin aExporter)
+    {
+        aExporter.binWriter.Write(direction);
+        aExporter.binWriter.Write(force);
+        aExporter.binWriter.Write(instanceID);
+    }
+}
+
 
 [System.Serializable]
 public struct ListenerCollection
@@ -123,12 +138,17 @@ public struct ListenerCollection
     public List<ResponseNextLevelData> responseNextLevel;
     public List<ResponsePlayVFXData> responsePlayVFXes;
     public List<ResponseFlickerData> responseFlicker;
+    public List<ResponseAddForceData> responseAddForce;
 
     public void Export(ExporterBin aBin)
     {
         aBin.binWriter.Write(responseFlicker.Count);
         foreach (var flickerData in responseFlicker)
             flickerData.Export(aBin);
+
+        aBin.binWriter.Write(responseAddForce.Count);
+        foreach (var forceData in responseAddForce)
+            forceData.Export(aBin);
     }
 }
 
@@ -147,6 +167,7 @@ public class ExportListener
         collection.responseNextLevel = new List<ResponseNextLevelData>();
         collection.responsePlayVFXes = new List<ResponsePlayVFXData>();
         collection.responseFlicker = new List<ResponseFlickerData>();
+        collection.responseAddForce = new List<ResponseAddForceData>();
 
         Listener[] listeners = GameObject.FindObjectsOfType<Listener>();
         foreach (Listener listener in listeners)
@@ -178,8 +199,21 @@ public class ExportListener
             ExportNextLevelResponses(ref collection.responseNextLevel, listener);
             ExportPlayVFXResponses(ref collection.responsePlayVFXes, listener);
             ExportFlickerResponses(ref collection.responseFlicker, listener);
+            ExportAddForceResponse(ref collection.responseAddForce, listener);
         }
         return collection;
+    }
+
+    private static void ExportAddForceResponse(ref List<ResponseAddForceData> responseAddForce, Listener listener)
+    {
+        if (listener.TryGetComponent(out ResponseAddForce obj))
+        {
+            ResponseAddForceData data = new ResponseAddForceData();
+            data.direction = obj.worldDirection;
+            data.force = obj.force;
+            data.instanceID = obj.transform.GetInstanceID();
+            responseAddForce.Add(data);
+        }
     }
 
     private static void ExportFlickerResponses(ref List<ResponseFlickerData> responseFlicker, Listener listener)

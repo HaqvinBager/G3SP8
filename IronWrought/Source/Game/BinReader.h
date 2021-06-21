@@ -123,8 +123,12 @@ namespace Binary {
 		float mySpeed;
 		Vector2 myMinMaxIntensity;
 		//int myType; //0 == PointLight, 1 == Spotlight
-		
+	};
 
+	struct SAddForceData {
+		Vector3 myDirection;
+		float myForce;
+		int myInstanceID;
 	};
 	struct SLevelData {
 		std::vector<SInstanceID> myInstanceIDs;
@@ -135,6 +139,7 @@ namespace Binary {
 		std::vector<SCollider> myColliders;
 		std::vector<SInstancedModel> myInstancedModels;
 		std::vector<SFlickerData> myFlickerData;
+		std::vector<SAddForceData> myAddForceData;
 		SEndEventData myEndEventData;
 		//std::vector<SInstanceName> myInstanceNames;
 	};

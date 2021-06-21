@@ -81,6 +81,7 @@ Binary::SLevelData CBinReader::Load(const std::string& aPath)
 	ptr += CopyBin<SInstancedModel>()(data.myInstancedModels, ptr);
 	ptr += CopyBin<SEndEventData>()(data.myEndEventData, ptr);
 	ptr += CopyBin<SFlickerData>()(data.myFlickerData, ptr);
+	ptr += CopyBin<SAddForceData>()(data.myAddForceData, ptr);
 
 	return std::move(data);
 }

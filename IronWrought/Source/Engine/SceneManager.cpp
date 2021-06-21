@@ -66,7 +66,7 @@
 #include <LightActivation.h>
 #include <EndEventComponent.h>
 #include <LightFlickerResponse.h>
-
+#include <AddForceResponse.h>
 
 CScene* CSceneManager::ourLastInstantiatedScene = nullptr;
 CSceneManager::CSceneManager()
@@ -295,6 +295,7 @@ bool CSceneManager::AddToScene(CScene& aScene, Binary::SLevelData& aBinLevelData
 			}
 		}
 
+		AddPuzzleResponseAddForce(aScene, aBinLevelData.myAddForceData);
 		AddPuzzleResponseFlicker(aScene, aBinLevelData.myFlickerData);
 		AddEndEventComponent(aScene, aBinLevelData.myEndEventData);
 	}
@@ -1102,6 +1103,21 @@ void CSceneManager::AddPuzzleResponseFlicker(CScene& aScene, const std::vector<B
 			settings.myIntensity = data.myMinMaxIntensity;
 			settings.mySpeed = data.mySpeed;
 			gameObject->AddComponent<CLightFlickerResponse>(*gameObject, settings);
+		}
+	}
+}
+
+void CSceneManager::AddPuzzleResponseAddForce(CScene& aScene, const std::vector<Binary::SAddForceData>& someData)
+{
+	for (const auto& data : someData)
+	{
+		CGameObject* gameObject = aScene.FindObjectWithID(data.myInstanceID);
+		if (gameObject != nullptr)
+		{
+			CAddForceResponse::SSettings settings = {};
+			settings.myForce = data.myForce;
+			settings.myDirection = data.myDirection;
+			gameObject->AddComponent<CAddForceResponse>(*gameObject, settings);
 		}
 	}
 }

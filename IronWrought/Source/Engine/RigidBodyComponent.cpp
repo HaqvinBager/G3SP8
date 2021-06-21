@@ -57,6 +57,7 @@ void CRigidBodyComponent::Start()
 
 void CRigidBodyComponent::Update()
 {
+
 	if (myDynamicRigidBody != nullptr) {
 		if(myIsKinematic) {
 			SetGlobalPose(GameObject().myTransform->Position(), GameObject().myTransform->Rotation());
@@ -115,6 +116,10 @@ const float CRigidBodyComponent::GetLinearVelocityLengthSqr() const
 
 void CRigidBodyComponent::AddForce(const physx::PxVec3& aDirectionAndForce, const EForceMode aForceMode)
 {
+	if (myDynamicRigidBody->GetBody().isSleeping())
+	{
+		myDynamicRigidBody->GetBody().wakeUp();
+	}
 	myDynamicRigidBody->GetBody().addForce(aDirectionAndForce, (PxForceMode::Enum)aForceMode);
 }
 

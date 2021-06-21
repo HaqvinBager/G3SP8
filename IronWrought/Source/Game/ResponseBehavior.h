@@ -10,6 +10,7 @@ public:
 	void Awake() override {}
 	void Start() override {}
 	virtual void Update() override {}
+	virtual void FixedUpdate() override {}
 	void OnEnable() override;
 	void OnDisable() override; 
 	virtual void OnRespond() = 0;

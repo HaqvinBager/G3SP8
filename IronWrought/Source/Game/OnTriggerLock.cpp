@@ -11,8 +11,11 @@ COnTriggerLock::~COnTriggerLock()
 
 void COnTriggerLock::ActivateEvent()
 {
+	if (Enabled())
+	{
+		RunEvent();
+	}
 	//do some check
 	//then
-	RunEvent();
 }
 

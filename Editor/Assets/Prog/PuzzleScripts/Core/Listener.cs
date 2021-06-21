@@ -19,6 +19,7 @@ public enum ListenerType
     Teleport,
     PlayVFX,
     Flicker,
+    AddForce,
 }
 
 public interface IListener
@@ -72,6 +73,9 @@ public class Listener : MonoBehaviour
                     break;
                 case ListenerType.Flicker:
                     AddType<ResponseFlicker>(gameObject);
+                    break;
+                case ListenerType.AddForce:
+                    AddType<ResponseAddForce>(gameObject);
                     break;
                 case ListenerType.Clear:
                     {

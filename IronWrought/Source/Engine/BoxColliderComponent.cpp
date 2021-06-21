@@ -11,6 +11,7 @@
 
 #include "LineFactory.h"
 #include "LineInstance.h"
+#include <OnTriggerLock.h>
 
 CBoxColliderComponent::CBoxColliderComponent(CGameObject& aParent, const Vector3& aPositionOffset, const Vector3& aBoxSize, const bool aIsTrigger, const unsigned int aLayerValue, PxMaterial* aMaterial)
 	: CBehavior(aParent)
@@ -178,6 +179,18 @@ void CBoxColliderComponent::OnTriggerEnter(CTransformComponent* aOther)
 
 		myHasTriggered = true;
 	}
+
+	
+	if (aOther->GetComponent<CPlayerControllerComponent>() != nullptr)
+	{
+		COnTriggerLock* lockTrigger = nullptr;
+		if (GameObject().TryGetComponent(&lockTrigger))
+		{
+			if (!lockTrigger->IsTriggered() && lockTrigger->IsUnlocked())
+				lockTrigger->ActivateEvent();
+		}
+	}
+
 
 	if (myTriggerOnce)
 		if (myHasTriggered)

@@ -54,6 +54,9 @@ void CGameObject::FixedUpdate()
 {
 	for (const auto& component : myComponents)
 	{
+		if (!component->Enabled())
+			continue;
+
 		component->FixedUpdate();
 	}
 }
