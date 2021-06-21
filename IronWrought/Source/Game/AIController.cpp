@@ -77,8 +77,9 @@ Vector3 CPatrol::Update(const Vector3& aPosition)
 		//Vector3 newPos;
 		Vector3 dir;
 
+#ifdef _DEBUG
 		CDebug::GetInstance()->DrawLine(aPosition, myPath[pathSize - 1], 1.0f);
-		
+#endif
 		dir = (myPath[pathSize - 1] - aPosition);
 		dir.Normalize();
 
