@@ -12,7 +12,8 @@ public class ExporterBin
 {
     //private static string Base { get => "Assets/Generated/"; }
 
-    BinaryWriter binWriter = null;
+    public BinaryWriter Writer { get => binWriter; }
+    private BinaryWriter binWriter = null;
 
     public ExporterBin(string aFileName)
     {
@@ -64,7 +65,6 @@ public class ExporterBin
             );
 
         Player playerData = ExporterJson.ExportPlayer(level.name);
-
         if(ExportEndEvent.TryExport(playerData.player, out EndEventCollection outData))
         {
             exporter.binWriter.Write(1);
@@ -74,6 +74,8 @@ public class ExporterBin
         {
             exporter.binWriter.Write(0);
         }
+
+        infoLog.AppendLine(ExportIEvent.Export(exporter));
 
         exporter.binWriter.Close();
 

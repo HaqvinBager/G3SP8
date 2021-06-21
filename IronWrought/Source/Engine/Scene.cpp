@@ -40,6 +40,8 @@
 #include "NavmeshLoader.h"
 #include "Canvas.h"
 
+#include <EventManager.h>
+
 #include "Debug.h"
 //SETUP START
 CScene::CScene(const int aNumberOfSections, const unsigned int aGameObjectCount)
@@ -119,6 +121,9 @@ CScene::~CScene()
 
 bool CScene::Init()
 {
+	CGameObject* eventManagerGameObject = new CGameObject(EVENT_MANAGER_ID, "Event Manager");
+	myEventManager = eventManagerGameObject->AddComponent<CEventManager>(*eventManagerGameObject);
+	AddInstance(eventManagerGameObject);
 	return true;
 }
 

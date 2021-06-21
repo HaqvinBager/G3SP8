@@ -316,6 +316,7 @@ void CEngine::SetActiveScene(const CStateStack::EState aState)
 	if (mySceneMap.find(myActiveState) == mySceneMap.end())
 	{
 		AddScene(myActiveState, CSceneManager::CreateEmpty());
+	
 	}
 
 	CTimer::Mark();

@@ -15,25 +15,25 @@ public struct InstanceID
 public struct InstanceIDCollection
 {
     public string sceneName;
-    public List<InstanceID> Ids; 
+    public List<InstanceID> Ids;
 }
 
 
 
-public class ExportInstanceID 
+public class ExportInstanceID
 {
     public static InstanceIDCollection Export(string aSceneName)
     {
         Transform[] transforms = GameObject.FindObjectsOfType<Transform>();
         InstanceIDCollection sceneIDCollection = new InstanceIDCollection();
         sceneIDCollection.Ids = new List<InstanceID>();
- 
-        foreach(Transform transform in transforms)
+
+        foreach (Transform transform in transforms)
         {
             //Denna funktion tar in det objekt vi loopar igenom just nu, kan t.ex vara en "pointLight" från en GameObject.FindObjectsOfType<Light>();
             //out GameObject prefabParent == Parenten (prefab-parent) som denna tillhör! Alltså ska pointlights ligga som children i en tom Prefab! 
             //(Som med alla andra objekt!)
-            if(transform.TryGetComponent(out Collider collider))
+            if (transform.TryGetComponent(out Collider collider))
             {
                 if (sceneIDCollection.Ids.Exists(e => e.instanceID == transform.GetInstanceID()))
                     continue;
@@ -44,7 +44,7 @@ public class ExportInstanceID
                 id.tag = transform.tag;
 
                 sceneIDCollection.Ids.Add(id);//transform.GetInstanceID());
-            }   
+            }
             else if (Json.TryIsValidExport(transform, out GameObject prefabParent))
             {
                 //Kollar bara om vi redan har lagt till denna id (Eftersom vi kollar Parent & Child objekt,
@@ -60,7 +60,7 @@ public class ExportInstanceID
 
                 if (prefabParent.name.Contains("BP_"))
                 {
-                    foreach(Transform childTransform in prefabParent.transform)
+                    foreach (Transform childTransform in prefabParent.transform)
                     {
                         InstanceID childID = new InstanceID();
                         id.instanceID = childTransform.GetInstanceID();
@@ -69,6 +69,11 @@ public class ExportInstanceID
                         sceneIDCollection.Ids.Add(childID);
                     }
                 }
+            }
+            else if (transform.TryGetComponent(out IEventListener listener))
+            {
+                Debug.Log("Adding to Export", listener);
+                SaveToExport(transform.gameObject, ref sceneIDCollection);
             }
         }
 

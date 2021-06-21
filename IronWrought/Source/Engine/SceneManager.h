@@ -103,6 +103,9 @@ private:
 	static void AddAudioSources(CScene& aScene, RapidArray someData);
 	static void AddVFX(CScene& aScene, RapidArray someData);
 	static void AddEndEventComponent(CScene& aScene, const SEndEventData& aData);
+
+	static void AddIEvents(CScene& aScene, const std::vector<Binary::SGameEvent>& someData);
+
 	static SNavMesh* InitNavMesh(const std::string& aPath);
 	static CScene* ourLastInstantiatedScene;
 };

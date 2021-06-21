@@ -123,6 +123,42 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!134 &8476146
+PhysicMaterial:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: ' (Instance) (Instance) (Instance)'
+  dynamicFriction: 0.6
+  staticFriction: 0.6
+  bounciness: 0
+  frictionCombine: 0
+  bounceCombine: 0
+--- !u!134 &24445087
+PhysicMaterial:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: ' (Instance) (Instance)'
+  dynamicFriction: 0.6
+  staticFriction: 0.6
+  bounciness: 0
+  frictionCombine: 0
+  bounceCombine: 0
+--- !u!134 &33121779
+PhysicMaterial:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: 
+  dynamicFriction: 0.6
+  staticFriction: 0.6
+  bounciness: 0
+  frictionCombine: 0
+  bounceCombine: 0
 --- !u!1001 &250177689
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -132,7 +168,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1117991978317291218, guid: 194925144615dc3439cb512b90e1fed1, type: 3}
       propertyPath: m_RootOrder
-      value: 5
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 1117991978317291218, guid: 194925144615dc3439cb512b90e1fed1, type: 3}
       propertyPath: m_LocalPosition.x
@@ -198,6 +234,10 @@ PrefabInstance:
       propertyPath: m_Center.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5897895507786433534, guid: 194925144615dc3439cb512b90e1fed1, type: 3}
+      propertyPath: m_Material
+      value: 
+      objectReference: {fileID: 33121779}
     - target: {fileID: 6450191594220255832, guid: 194925144615dc3439cb512b90e1fed1, type: 3}
       propertyPath: eventFilter
       value: 0
@@ -209,6 +249,10 @@ PrefabInstance:
     - target: {fileID: 6712031321680381071, guid: 194925144615dc3439cb512b90e1fed1, type: 3}
       propertyPath: m_Name
       value: VolumeTrigger
+      objectReference: {fileID: 0}
+    - target: {fileID: 6712031321680381071, guid: 194925144615dc3439cb512b90e1fed1, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 194925144615dc3439cb512b90e1fed1, type: 3}
@@ -271,6 +315,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7042304329911094865, guid: 9a1d7dbd82c43544caa94fe9a5552770, type: 3}
+      propertyPath: m_Material
+      value: 
+      objectReference: {fileID: 1829887912}
     - target: {fileID: 9012099018393399178, guid: 9a1d7dbd82c43544caa94fe9a5552770, type: 3}
       propertyPath: m_Name
       value: En_P_PendulumClock (1)
@@ -361,19 +409,20 @@ BoxCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 399345825}
-  m_Material: {fileID: 471384309}
+  m_Material: {fileID: 8476146}
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
   m_Size: {x: 0.52, y: 2.22, z: 0.42}
   m_Center: {x: 0, y: 0.93, z: 0}
---- !u!134 &471384309
+--- !u!134 &438113060
 PhysicMaterial:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: ' (Instance) (Instance)'
+  m_Name: ' (Instance) (Instance) (Instance) (Instance) (Instance) (Instance) (Instance)
+    (Instance) (Instance) (Instance) (Instance)'
   dynamicFriction: 0.6
   staticFriction: 0.6
   bounciness: 0
@@ -508,6 +557,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7042304329911094865, guid: 9a1d7dbd82c43544caa94fe9a5552770, type: 3}
+      propertyPath: m_Material
+      value: 
+      objectReference: {fileID: 1815280631}
     - target: {fileID: 9012099018393399178, guid: 9a1d7dbd82c43544caa94fe9a5552770, type: 3}
       propertyPath: m_Name
       value: En_P_PendulumClock
@@ -585,25 +638,12 @@ BoxCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 531384360}
-  m_Material: {fileID: 1397198556}
+  m_Material: {fileID: 24445087}
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
   m_Size: {x: 0.52, y: 2.22, z: 0.42}
   m_Center: {x: 0, y: 0.93, z: 0}
---- !u!134 &781637489
-PhysicMaterial:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_Name: ' (Instance) (Instance) (Instance) (Instance) (Instance) (Instance) (Instance)
-    (Instance) (Instance) (Instance)'
-  dynamicFriction: 0.6
-  staticFriction: 0.6
-  bounciness: 0
-  frictionCombine: 0
-  bounceCombine: 0
 --- !u!1001 &1050722216
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -714,11 +754,11 @@ PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
-    m_TransformParent: {fileID: 0}
+    m_TransformParent: {fileID: 1282146763}
     m_Modifications:
     - target: {fileID: 429787783560923061, guid: 2d6b4b6f5dfdbbf4eb05473276e6dcdf, type: 3}
       propertyPath: m_RootOrder
-      value: 4
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 429787783560923061, guid: 2d6b4b6f5dfdbbf4eb05473276e6dcdf, type: 3}
       propertyPath: m_LocalPosition.x
@@ -803,7 +843,7 @@ PrefabInstance:
     - target: {fileID: 4392674735594319598, guid: 2d6b4b6f5dfdbbf4eb05473276e6dcdf, type: 3}
       propertyPath: m_Material
       value: 
-      objectReference: {fileID: 1673786767}
+      objectReference: {fileID: 1192676961}
     - target: {fileID: 8480936645670850351, guid: 2d6b4b6f5dfdbbf4eb05473276e6dcdf, type: 3}
       propertyPath: m_Name
       value: First_Moose_1 (1)
@@ -890,6 +930,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   myLock: {fileID: 531384361}
   responseType: 1
+--- !u!134 &1192676961
+PhysicMaterial:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: ' (Instance) (Instance) (Instance) (Instance) (Instance) (Instance) (Instance)
+    (Instance) (Instance) (Instance) (Instance) (Instance)'
+  dynamicFriction: 0.6
+  staticFriction: 0.6
+  bounciness: 0
+  frictionCombine: 0
+  bounceCombine: 0
 --- !u!1 &1282146762
 GameObject:
   m_ObjectHideFlags: 0
@@ -919,6 +972,8 @@ Transform:
   m_Children:
   - {fileID: 531384359}
   - {fileID: 399345826}
+  - {fileID: 1706386731}
+  - {fileID: 1156397631}
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1027,31 +1082,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   myLock: {fileID: 531384361}
   responseType: 1
---- !u!134 &1397198556
-PhysicMaterial:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_Name: ' (Instance)'
-  dynamicFriction: 0.6
-  staticFriction: 0.6
-  bounciness: 0
-  frictionCombine: 0
-  bounceCombine: 0
---- !u!134 &1673786767
-PhysicMaterial:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_Name: ' (Instance) (Instance) (Instance) (Instance) (Instance) (Instance) (Instance)
-    (Instance) (Instance) (Instance) (Instance)'
-  dynamicFriction: 0.6
-  staticFriction: 0.6
-  bounciness: 0
-  frictionCombine: 0
-  bounceCombine: 0
 --- !u!1001 &1677294317
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1197,11 +1227,11 @@ PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
-    m_TransformParent: {fileID: 0}
+    m_TransformParent: {fileID: 1282146763}
     m_Modifications:
     - target: {fileID: 429787783560923061, guid: 2d6b4b6f5dfdbbf4eb05473276e6dcdf, type: 3}
       propertyPath: m_RootOrder
-      value: 3
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 429787783560923061, guid: 2d6b4b6f5dfdbbf4eb05473276e6dcdf, type: 3}
       propertyPath: m_LocalPosition.x
@@ -1221,7 +1251,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 429787783560923061, guid: 2d6b4b6f5dfdbbf4eb05473276e6dcdf, type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 429787783560923061, guid: 2d6b4b6f5dfdbbf4eb05473276e6dcdf, type: 3}
       propertyPath: m_LocalRotation.y
@@ -1229,7 +1259,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 429787783560923061, guid: 2d6b4b6f5dfdbbf4eb05473276e6dcdf, type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 429787783560923061, guid: 2d6b4b6f5dfdbbf4eb05473276e6dcdf, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -1253,7 +1283,7 @@ PrefabInstance:
       objectReference: {fileID: 531384361}
     - target: {fileID: 4392674735594319585, guid: 2d6b4b6f5dfdbbf4eb05473276e6dcdf, type: 3}
       propertyPath: activationType
-      value: 2
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4392674735594319585, guid: 2d6b4b6f5dfdbbf4eb05473276e6dcdf, type: 3}
       propertyPath: interactionType
@@ -1286,7 +1316,7 @@ PrefabInstance:
     - target: {fileID: 4392674735594319598, guid: 2d6b4b6f5dfdbbf4eb05473276e6dcdf, type: 3}
       propertyPath: m_Material
       value: 
-      objectReference: {fileID: 781637489}
+      objectReference: {fileID: 438113060}
     - target: {fileID: 8480936645670850351, guid: 2d6b4b6f5dfdbbf4eb05473276e6dcdf, type: 3}
       propertyPath: m_Name
       value: First_Moose_1
@@ -1333,6 +1363,35 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!4 &1706386731 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 429787783560923061, guid: 2d6b4b6f5dfdbbf4eb05473276e6dcdf, type: 3}
+  m_PrefabInstance: {fileID: 1706386727}
+  m_PrefabAsset: {fileID: 0}
+--- !u!134 &1815280631
+PhysicMaterial:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: 
+  dynamicFriction: 0.6
+  staticFriction: 0.6
+  bounciness: 0
+  frictionCombine: 0
+  bounceCombine: 0
+--- !u!134 &1829887912
+PhysicMaterial:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: 
+  dynamicFriction: 0.6
+  staticFriction: 0.6
+  bounciness: 0
+  frictionCombine: 0
+  bounceCombine: 0
 --- !u!1001 &1835043035
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1499,3 +1558,61 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f0eea0eec377b9b42b3fab993932c19d, type: 3}
+--- !u!1 &99472459631350910
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8153163405247421668}
+  - component: {fileID: 99472459631350911}
+  - component: {fileID: 99472459631350912}
+  m_Layer: 7
+  m_Name: IEventListener
+  m_TagString: WoodFloor
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &99472459631350911
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 99472459631350910}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c7e2d56ce3283b74a9b8caaad3fe75d8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  myEvent: {fileID: 11400000, guid: 9081aa1a63ee1dd419e303831f5e6d79, type: 2}
+--- !u!114 &99472459631350912
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 99472459631350910}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 15241eb760dd6cb45b4ead0216054ffc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  message: MooseClicked!
+--- !u!4 &8153163405247421668
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 99472459631350910}
+  m_LocalRotation: {x: -0, y: 0.9091214, z: -0, w: 0.41653132}
+  m_LocalPosition: {x: -0.24, y: 1.5799301, z: -0.229}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 4
+  m_LocalEulerAnglesHint: {x: 13.755, y: 128.766, z: -16.493}

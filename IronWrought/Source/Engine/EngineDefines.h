@@ -1,6 +1,7 @@
 #pragma once
 #define LIGHTCOUNT 32
 #define SAFE_DELETE(aPointer) delete aPointer; aPointer = nullptr;
+#define EVENT_MANAGER_ID 64
 
 // Uncomment before release.
 //#ifdef NDEBUG

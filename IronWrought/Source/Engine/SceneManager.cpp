@@ -65,6 +65,8 @@
 #include "PuzzleSetting.h"
 #include <LightActivation.h>
 #include <EndEventComponent.h>
+#include <IListenerComponent.h>
+#include <EventManager.h>
 
 
 CScene* CSceneManager::ourLastInstantiatedScene = nullptr;
@@ -182,9 +184,9 @@ CScene* CSceneManager::Instantiate(const int aNumberOfSections)
 
 	ourLastInstantiatedScene = new CScene(aNumberOfSections); //Creates a New scene and Leaves total ownership of the Previous scene over to the hands of Engine!
 
-	//Create Cameras
-
 	CMainSingleton::PostMaster().Subscribe(EMessageType::ComponentAdded, ourLastInstantiatedScene);
+	ourLastInstantiatedScene->Init();
+
 	return ourLastInstantiatedScene;
 }
 
@@ -202,7 +204,7 @@ bool CSceneManager::AddToScene(CScene& aScene, Binary::SLevelData& aBinLevelData
 		AddModelComponents(aScene, aBinLevelData.myModels);
 		AddCollider(aScene, aBinLevelData.myColliders);
 		AddSpotLights(aScene, aBinLevelData.mySpotLights);
-
+		AddIEvents(aScene, aBinLevelData.myGameEvents);
 
 		for (const auto& sceneData : scenes)
 		{
@@ -1303,6 +1305,30 @@ void CSceneManager::AddEndEventComponent(CScene& aScene, const SEndEventData& aD
 		//	}
 		//}
 	}
+}
+
+void CSceneManager::AddIEvents(CScene& aScene, const std::vector<Binary::SGameEvent>& someData)
+{
+	//CEventManager* eventManager = aScene.GetEventManager();
+
+	for (const auto& data : someData)
+	{
+		CGameObject* eventGameObject = new CGameObject(data.myInstanceID, std::to_string(data.myInstanceID), "GameEvent");
+		//eventManager->InitilizeGameEvent(data);
+		aScene.AddInstance(eventGameObject);
+
+		for (const auto& listenerID : data.myListenerInstanceIDs)
+		{
+			CGameObject* gameObject = aScene.FindObjectWithID(listenerID);
+			if (gameObject != nullptr)
+				gameObject->AddComponent<IListenerComponent>(*gameObject);
+		}
+	}
+
+	//for (const auto& data : someData)
+	//{
+	//	eventManager->InitilizeGameEvent(data);
+	//}
 }
 
 void CSceneManager::AddNextLevelActivation(CScene& aScene, RapidArray someData)

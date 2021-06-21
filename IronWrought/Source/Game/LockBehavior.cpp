@@ -58,24 +58,6 @@ void CLockBehavior::RemoveKey(CKeyBehavior* aKey)
 
 void CLockBehavior::OnKeyActivated(CKeyBehavior* aKey)
 {
-	//CAudioActivation* audioActivation = nullptr;
-	//if (aKey->GameObject().TryGetComponent(&audioActivation))
-	//{
-	//	//if (audioActivation->GetAudioIndex() == (int)ESFX::MovePainting)
-	//	//{
-	//		if (myMaxAmountOfKeys == 1)
-	//		{
-	//			int soundIndex = 30;
-	//			CMainSingleton::PostMaster().Send({ EMessageType::PlaySFX, &soundIndex });
-	//		}
-	//		else if (myMaxAmountOfKeys <= 3)
-	//		{
-	//			int soundIndex = 29;
-	//			CMainSingleton::PostMaster().Send({ EMessageType::PlaySFX, &soundIndex });
-	//		}
-	//	//}
-	//}
-
 	myAmountOfKeys++;
 	if (myMaxAmountOfKeys == 3)
 	{
@@ -94,6 +76,15 @@ void CLockBehavior::OnKeyActivated(CKeyBehavior* aKey)
 			}
 		}
 	}
+
+	//// vvvv Detta saknades hehe vvvv
+	//if (myAmountOfKeys >= myMaxAmountOfKeys)
+	//{
+	//	for (auto& listener : myListeners)
+	//	{
+	//		listener->TriggerResponses();
+	//	}
+	//}
 
 
 	//myAmountOfKeys++;

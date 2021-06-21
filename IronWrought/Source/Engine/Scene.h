@@ -25,6 +25,7 @@ class CModel;
 class IAIBehavior;
 class CInstancedModelComponent;
 class CPatrolPointComponent;
+class CEventManager;
 //class CPointLightComponent;
 
 class CPlayerControllerComponent;
@@ -153,6 +154,11 @@ public:
 	template<class T>
 	std::vector<CComponent*>* GetAllComponents();
 
+	CEventManager* GetEventManager() { return myEventManager; }
+
+	template<class T>
+	T* FindComponentWithID(int aInstanceID);
+
 	//CULLING END
 public:
 	//POPULATE SCENE START
@@ -238,7 +244,7 @@ private:
 	ESceneCamera myActiveCamera;
 	CCameraComponent* myMainCamera;
 	std::unordered_map<ESceneCamera, CCameraComponent*> myCameras;
-
+	CEventManager* myEventManager;
 	PxScene* myPXScene;
 	CGameObject* myPlayer;
 	std::unordered_map<int, CGameObject*> myEnemies;
@@ -282,6 +288,24 @@ inline std::vector<CComponent*>* CScene::GetAllComponents()
 		return nullptr;
 
 	return &myComponentMap[hashCode];
+}
+
+template<class T>
+inline T* CScene::FindComponentWithID(int /*aInstanceID*/) 
+{
+	return nullptr;
+	//auto gameObject = FindObjectWithID(aInstanceID);
+	//if (gameObject != nullptr)
+	//{
+	//	T* component = gameObject->GetComponent<T>();
+	//	if (component != nullptr)
+	//		return component;
+	//}
+	//return nullptr;
+	//if (gameObject->TryGetComponentAny<T>(&component))
+	//	return component;	
+	//
+	//return nullptr;
 }
 
 template<class T>

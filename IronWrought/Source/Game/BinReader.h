@@ -117,6 +117,12 @@ namespace Binary {
 		std::vector<int> materialIDs;
 		std::vector<SInstancedTransform> transforms;
 	};
+
+	struct SGameEvent {
+		int myInstanceID;
+		std::vector<int> myListenerInstanceIDs;
+	};
+
 	struct SLevelData {
 		std::vector<SInstanceID> myInstanceIDs;
 		std::vector<STransform> myTransforms;
@@ -126,6 +132,7 @@ namespace Binary {
 		std::vector<SCollider> myColliders;
 		std::vector<SInstancedModel> myInstancedModels;
 		SEndEventData myEndEventData;
+		std::vector<SGameEvent> myGameEvents;
 		//std::vector<SInstanceName> myInstanceNames;
 	};
 
@@ -160,7 +167,6 @@ namespace Binary {
 			return ptr - aPtr;
 		}
 	};
-
 	template<>
 	struct CopyBin<SModel> {
 		template<typename T>
@@ -193,7 +199,6 @@ namespace Binary {
 			return ptr - aPtr;
 		}
 	};
-
 	template<>
 	struct CopyBin<SInstancedModel> {
 
@@ -241,7 +246,6 @@ namespace Binary {
 			return ptr - aPtr;
 		}
 	};
-
 	template<>
 	struct CopyBin<SInstanceID> {
 
@@ -289,7 +293,6 @@ namespace Binary {
 			return ptr - aPtr;
 		}
 	};
-
 	template<>
 	struct CopyBin<SEndEventData> {
 
@@ -338,6 +341,32 @@ namespace Binary {
 			//	ptr += Copy(someData.myVFX[i].myDelay, ptr);
 			//	ptr += Copy(someData.myVFX[i].myInstanceID, ptr);
 			//}
+			return ptr - aPtr;
+		}
+	};
+	template<>
+	struct CopyBin<SGameEvent> {
+		template<typename T>
+		size_t Copy(T& aData, char* aStreamPtr, const unsigned int aCount = 1)
+		{
+			memcpy(&aData, aStreamPtr, sizeof(T) * aCount);
+			return sizeof(T) * aCount;
+		}
+
+		size_t operator()(std::vector<SGameEvent>& someData, char* aPtr)
+		{
+			char* ptr = aPtr;
+			int count = 0;
+			ptr += Copy(count, ptr);
+			someData.resize(count);
+			for (int i = 0; i < count; ++i)
+			{
+				ptr += Copy(someData[i].myInstanceID, ptr);
+				int listenerCount = 0;
+				ptr += Copy(listenerCount, ptr);
+				someData[i].myListenerInstanceIDs.resize(listenerCount);
+				ptr += Copy(someData[i].myListenerInstanceIDs.data()[0], ptr, listenerCount);
+			}
 			return ptr - aPtr;
 		}
 	};

@@ -222,6 +222,15 @@
     <ClInclude Include="PlayVFXResponse.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="GameEvent.h">
+      <Filter>Puzzle</Filter>
+    </ClInclude>
+    <ClInclude Include="EventManager.h">
+      <Filter>Puzzle</Filter>
+    </ClInclude>
+    <ClInclude Include="IListenerComponent.h">
+      <Filter>Puzzle</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Game.cpp">
@@ -378,6 +387,15 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="PlayVFXResponse.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="EventManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GameEvent.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="IListenerComponent.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
