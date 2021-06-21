@@ -382,47 +382,10 @@ void CAudioManager::Receive(const SMessage& aMessage) {
 		{
 			myWrapper.Play(myUIAudio[CAST(EUI::PlayClick)], myChannels[CAST(EChannel::UI)]);
 		}
-
-		//std::string scene = *reinterpret_cast<std::string*>(aMessage.data);
-		//if (strcmp(scene.c_str(), "VerticalSlice") == 0)
-		//{
-		//	myChannels[CAST(EChannel::Ambience)]->Stop();
-		//	myWrapper.Play(myAmbienceAudio[CAST(EAmbience::Inside)], myChannels[CAST(EChannel::Ambience)]);
-		//	return;
-		//}
-
-		//if (strcmp(scene.c_str(), "Level_1-1") == 0)
-		//{
-		//	myChannels[CAST(EChannel::Ambience)]->Stop();
-		//	myWrapper.Play(myAmbienceAudio[CAST(EAmbience::Inside)], myChannels[CAST(EChannel::Ambience)]);
-		//	return;
-		//}
-
-		//if (strcmp(scene.c_str(), "Level_1-2") == 0)
-		//{
-		//	myChannels[CAST(EChannel::Ambience)]->Stop();
-		//	myWrapper.Play(myAmbienceAudio[CAST(EAmbience::Inside)], myChannels[CAST(EChannel::Ambience)]);
-		//	return;
-		//}
-
-		//if (strcmp(scene.c_str(), "Level_2-1") == 0)
-		//{
-		//	myChannels[CAST(EChannel::Ambience)]->Stop();
-		//	myWrapper.Play(myAmbienceAudio[CAST(EAmbience::Outside)], myChannels[CAST(EChannel::Ambience)]);
-		//	return;
-		//}
-
-		//if (strcmp(scene.c_str(), "Level_2-2") == 0)
-		//{
-		//	myChannels[CAST(EChannel::Ambience)]->Stop();
-		//	myWrapper.Play(myAmbienceAudio[CAST(EAmbience::Outside)], myChannels[CAST(EChannel::Ambience)]);
-		//	return;
-		//}
 	}break;
 
 	case EMessageType::BootUpState:
 	{
-		//myWrapper.Play(myAmbienceAudio[CAST(EAmbience::Inside)], myChannels[CAST(EChannel::Ambience)]);
 		myWrapper.Play(myVoiceEventSounds[CAST(EVOX::Line0)], myChannels[CAST(EChannel::VOX)]);
 	}break;
 
@@ -543,6 +506,15 @@ void CAudioManager::Receive(const SMessage& aMessage) {
 	case EMessageType::ClearStaticAudioSources:
 	{
 		ClearSources();
+	}break;
+
+	case EMessageType::EnemyStep:
+	{
+		PostMaster::SStepSoundData data = *static_cast<PostMaster::SStepSoundData*>(aMessage.data);
+		if (data.myIsSprint)
+			PlayCyclicRandomSoundFromCollection(myEnemyFastStepSounds, myDynamicSource, myEnemyStepSoundIndices);
+		else
+			PlayCyclicRandomSoundFromCollection(myEnemyStepSounds, myDynamicSource, myEnemyStepSoundIndices);
 	}break;
 
 	case EMessageType::PauseMenu:
@@ -764,6 +736,8 @@ void CAudioManager::SubscribeToMessages()
 	CMainSingleton::PostMaster().Subscribe(EMessageType::PlayDynamicAudioSource, this);
 	CMainSingleton::PostMaster().Subscribe(EMessageType::Play3DVoiceLine, this);
 	CMainSingleton::PostMaster().Subscribe(EMessageType::Play2DVoiceLine, this);
+
+	CMainSingleton::PostMaster().Subscribe(EMessageType::EnemyStep, this);
 }
 
 void CAudioManager::UnsubscribeToMessages()
@@ -830,6 +804,8 @@ void CAudioManager::UnsubscribeToMessages()
 	CMainSingleton::PostMaster().Unsubscribe(EMessageType::PlayDynamicAudioSource, this);
 	CMainSingleton::PostMaster().Unsubscribe(EMessageType::Play3DVoiceLine, this);
 	CMainSingleton::PostMaster().Unsubscribe(EMessageType::Play2DVoiceLine, this);
+
+	CMainSingleton::PostMaster().Unsubscribe(EMessageType::EnemyStep, this);
 }
 
 std::string CAudioManager::GetPath(EMusic type) const
@@ -1058,6 +1034,8 @@ std::string CAudioManager::TranslateEnum(ESFXCollection enumerator) const
 		return "StepConcrete";
 	case ESFXCollection::StepConcreteFast:
 		return "StepConcreteFast";
+	case ESFXCollection::StepEnemy:
+		return "StepEnemy";
 	default:
 		return "";
 	}
@@ -1279,6 +1257,26 @@ void CAudioManager::FillCollection(ESFXCollection enumerator)
 		}
 	}
 	break;
+	case ESFXCollection::StepEnemy:
+	{
+		CAudio* sound = myWrapper.TryGetSound(mySFXPath + GetCollectionPath(enumerator, ++counter));
+
+		while (sound != nullptr)
+		{
+			myEnemyStepSounds.push_back(sound);
+			sound = myWrapper.TryGetSound(mySFXPath + GetCollectionPath(enumerator, ++counter));
+		}
+	}
+	case ESFXCollection::StepEnemyFast:
+	{
+		CAudio* sound = myWrapper.TryGetSound(mySFXPath + GetCollectionPath(enumerator, ++counter));
+
+		while (sound != nullptr)
+		{
+			myEnemyFastStepSounds.push_back(sound);
+			sound = myWrapper.TryGetSound(mySFXPath + GetCollectionPath(enumerator, ++counter));
+		}
+	}
 	default:
 		break;
 	}
@@ -1345,6 +1343,18 @@ void CAudioManager::PlayCyclicRandomSoundFromCollection(const std::vector<CAudio
 
 	unsigned int randomIndex = Random(0, static_cast<int>(aCollection.size()) - 1, someCollectionIndices);
 	myWrapper.Play(aCollection[randomIndex], myChannels[CAST(aChannel)]);
+}
+
+void CAudioManager::PlayCyclicRandomSoundFromCollection(const std::vector<CAudio*>& aCollection, CAudioChannel* aChannel, std::vector<int>& someCollectionIndices, const int& aMaxNrOfChannelsActive)
+{
+	if (aCollection.empty())
+		return;
+
+	if (aChannel->PlayCount() > aMaxNrOfChannelsActive)
+		return;
+
+	unsigned int randomIndex = Random(0, static_cast<int>(aCollection.size()) - 1, someCollectionIndices);
+	myWrapper.Play(aCollection[randomIndex], aChannel);
 }
 
 void CAudioManager::FadeChannelOverSeconds(const EChannel& aChannel, const float& aNumberOfSeconds, const bool& aShouldFadeOut)
