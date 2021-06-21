@@ -51,6 +51,7 @@ CEnemyComponent::CEnemyComponent(CGameObject& aParent, const SEnemySetting& some
 	, myDetachedPlayerHead(nullptr)
 	, myCurrentVignetteBlend(0.0f)
 	, myTargetVignetteBlend(0.0f)
+	, myStepTimer(0.0f)
 	, myWalkSpeed(1.5f)
 	, mySeekSpeed(3.0f)
 {
@@ -350,6 +351,31 @@ void CEnemyComponent::Update()//får bestämma vilket behaviour vi vill köra i 
 			myMovementLocked = false;
 			myWakeUpTimer = 0.f;
 		}
+	}
+
+	myStepTimer += CTimer::Dt();
+	float timerThreshold = 100000.0f;
+	switch (myCurrentState)
+	{
+	case CEnemyComponent::EBehaviour::Patrol:
+		timerThreshold = 0.375f;
+		break;
+	case CEnemyComponent::EBehaviour::Seek:
+		timerThreshold = 0.25f;
+		break;
+	case CEnemyComponent::EBehaviour::Alerted:
+		timerThreshold = 0.25f;
+		break;
+	default:
+		break;
+	}
+	if (myStepTimer >= timerThreshold)
+	{
+		myStepTimer -= timerThreshold;
+		PostMaster::SStepSoundData data;
+		data.myGroundMaterial = 0;
+		data.myIsSprint = false;
+		CMainSingleton::PostMaster().Send({ EMessageType::EnemyStep, &data });
 	}
 }
 
