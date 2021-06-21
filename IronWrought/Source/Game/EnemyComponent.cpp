@@ -139,7 +139,7 @@ void CEnemyComponent::Start()
 	myBehaviours.push_back(myIdleState);
 	if (myPlayer != nullptr)
 	{
-		myIdleState->SetTarget(myPlayer->myTransform);
+		myIdleState->SetTarget(myPlayer->myTransform->Position());
 	}
 
 	CAttack* attack = new CAttack();
@@ -214,7 +214,7 @@ void CEnemyComponent::Update()//får bestämma vilket behaviour vi vill köra i 
 					myIsIdle = true;
 					if (myPlayer != nullptr)
 					{
-						myIdleState->SetTarget(myPlayer->myTransform);
+						myIdleState->SetTarget(myPlayer->myTransform->Position());
 					}
 					SetState(EBehaviour::Idle);
 
@@ -493,6 +493,7 @@ void CEnemyComponent::Receive(const SMessage& aMsg)
 					CAlerted* alertedBehaviour = static_cast<CAlerted*>(myBehaviours[static_cast<int>(EBehaviour::Alerted)]);
 					if (alertedBehaviour) {
 						alertedBehaviour->SetAlertedPosition(gameobject->myTransform->Position());
+						myIdleState->SetTarget(gameobject->myTransform->Position());
 						myHasReachedAlertedTarget = false;
 						myHeardSound = true;
 					}
@@ -514,6 +515,7 @@ void CEnemyComponent::Receive(const SMessage& aMsg)
 					CAlerted* alertedBehaviour = static_cast<CAlerted*>(myBehaviours[static_cast<int>(EBehaviour::Alerted)]);
 					if (alertedBehaviour) {
 						alertedBehaviour->SetAlertedPosition(gameobject->myTransform->Position());
+						myIdleState->SetTarget(gameobject->myTransform->Position());
 						myHasReachedAlertedTarget = false;
 						myHeardSound = true;
 					}
@@ -561,6 +563,7 @@ void CEnemyComponent::Receive(const SMessage& aMsg)
 				CAlerted* alertedBehaviour = static_cast<CAlerted*>(myBehaviours[static_cast<int>(EBehaviour::Alerted)]);
 				if (alertedBehaviour) {
 					alertedBehaviour->SetAlertedPosition(playerPos);
+					myIdleState->SetTarget(playerPos);
 					myHasReachedAlertedTarget = false;
 					myHeardSound = true;
 				}
