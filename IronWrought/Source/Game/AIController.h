@@ -102,9 +102,9 @@ public:
 	void Enter(const Vector3& aPosition) override;
 	Vector3 Update(const Vector3& aPosition) override;
 	void ClearPath() override;
-	void SetTarget(CTransformComponent* aTarget);
+	void SetTarget(const Vector3& aTargetPosition);
 private:
-	CTransformComponent* myTarget;
+	Vector3 myTargetPosition;
 };
 
 class CDetection : public CAIController {

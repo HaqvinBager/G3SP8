@@ -364,6 +364,7 @@ const float CAlerted::PercentileAlertedTimer() const
 }
 
 CIdle::CIdle()
+	: myTargetPosition(Vector3::Zero)
 {
 }
 
@@ -374,7 +375,7 @@ void CIdle::Enter(const Vector3& /*aPosition*/)
 Vector3 CIdle::Update(const Vector3& aPosition)
 {
 	//myTarget is not set so we crash... See fix in EnemyComponent.cpp row 129 - 132 maybe I broke its direction so please check it out - Alexander Matthäi 2021-06-13
-	Vector3 targetPosition = myTarget->Position();
+	Vector3 targetPosition = myTargetPosition;
 	targetPosition.y = aPosition.y;
 	Vector3 dir = targetPosition - aPosition;
 	dir.Normalize();
@@ -385,9 +386,9 @@ void CIdle::ClearPath()
 {
 }
 
-void CIdle::SetTarget(CTransformComponent* aTarget)
+void CIdle::SetTarget(const Vector3& aTargetPosition)
 {
-	myTarget = aTarget;
+	myTargetPosition = aTargetPosition;
 }
 
 CDetection::CDetection()
