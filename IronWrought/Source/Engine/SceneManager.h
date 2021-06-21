@@ -71,6 +71,8 @@ private:
 	static void AddPuzzleResponseAudio(CScene& aScene, RapidArray someData);
 	static void AddPuzzleResponseVoice(CScene& aScene, RapidArray someData);
 	static void AddPuzzleResponsePlayVFX(CScene& aScene, RapidArray someData);
+	static void AddPuzzleResponseFlicker(CScene& aScene, const std::vector<Binary::SFlickerData>& someData);
+
 	//static void AddPuzzleResponseTeleporter(CScene& aScene, RapidArray someData);
 
 	static void AddNextLevelActivation(CScene& aScene, RapidArray someData);
