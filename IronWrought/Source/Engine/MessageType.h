@@ -129,5 +129,7 @@ enum class EMessageType
 
 	EnemyStep,
 
+	EnemyMakesSound,
+
 	Count
 };

@@ -66,6 +66,7 @@ CEnemyComponent::CEnemyComponent(CGameObject& aParent, const SEnemySetting& some
 	CMainSingleton::PostMaster().Subscribe(EMessageType::EnemyReachedLastPlayerPosition, this);
 	CMainSingleton::PostMaster().Subscribe(EMessageType::FoundKey, this);
 	CMainSingleton::PostMaster().Subscribe(EMessageType::PlayStepSound, this);
+	CMainSingleton::PostMaster().Subscribe(EMessageType::EnemyMakesSound, this);
 }
 
 CEnemyComponent::~CEnemyComponent()
@@ -81,6 +82,7 @@ CEnemyComponent::~CEnemyComponent()
 	CMainSingleton::PostMaster().Unsubscribe(EMessageType::EnemyReachedLastPlayerPosition, this);
 	CMainSingleton::PostMaster().Unsubscribe(EMessageType::FoundKey, this);
 	CMainSingleton::PostMaster().Unsubscribe(EMessageType::PlayStepSound, this);
+	CMainSingleton::PostMaster().Unsubscribe(EMessageType::EnemyMakesSound, this);
 	myNavMesh = nullptr;
 }
 
@@ -583,10 +585,15 @@ void CEnemyComponent::Receive(const SMessage& aMsg)
 				{
 					//std::cout << __FUNCTION__ << " Heard Step Sound. Is already Alerted" << std::endl;
 				}
-					
+
 			}
 			//std::cout << __FUNCTION__ << " Heard Step Sound. Range: " <<  hearingRange << std::endl;
-		}
+		}break;
+
+		case EMessageType::EnemyMakesSound:
+		{
+			myMakesSound = *static_cast<bool*>(aMsg.data);
+		}break;
 	}
 }
 
@@ -598,6 +605,11 @@ const float CEnemyComponent::PercentileDistanceToPlayer() const
 const float CEnemyComponent::CurrentStateBlendValue() const
 {
 	return myCurrentStateBlend;
+}
+
+const bool CEnemyComponent::MakesSound() const
+{
+	return myMakesSound;
 }
 
 void CEnemyComponent::UpdateAttackEvent()

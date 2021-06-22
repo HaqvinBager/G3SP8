@@ -21,15 +21,15 @@ public class ResponseFlicker : MonoBehaviour, IListener
 
     private void OnValidate()
     {
-        if (TryGetComponent(out Light light))
-        {
-            SDefaultSettings settings = mySettings;
-            light.range = settings.myRange;
-            light.spotAngle = settings.mySpotAngles.y;
-            light.innerSpotAngle = settings.mySpotAngles.x;
-            light.color = settings.myColor;
-            light.type = settings.myLightType;
-        }
+        //if (TryGetComponent(out Light light))
+        //{
+        //    SDefaultSettings settings = mySettings;
+        //    light.range = settings.myRange;
+        //    light.spotAngle = settings.mySpotAngles.y;
+        //    light.innerSpotAngle = settings.mySpotAngles.x;
+        //    light.color = settings.myColor;
+        //    light.type = settings.myLightType;
+        //}
     }
 
 

@@ -7,6 +7,7 @@
 #include "JsonReader.h"
 #include "RandomNumberGenerator.h"
 #include "GameObject.h"
+#include <EnemyComponent.h>
 
 using namespace rapidjson;
 
@@ -306,6 +307,9 @@ void CAudioManager::Receive(const SMessage& aMessage) {
 
 	case EMessageType::EnemyAttackState:
 	{
+		if (!myDynamicObject->GetComponent<CEnemyComponent>()->MakesSound())
+			return;
+
 		myDynamicSource->Stop();
 		myDelayedAudio.clear();
 		myWrapper.Play(myEnemyVoiceSounds[CAST(EEnemyVoiceLine::EnemyDamagePlayer)], myDynamicSource);
@@ -314,6 +318,9 @@ void CAudioManager::Receive(const SMessage& aMessage) {
 
 	case EMessageType::EnemyPatrolState:
 	{
+		if (!myDynamicObject->GetComponent<CEnemyComponent>()->MakesSound())
+			return;
+
 		myDynamicSource->Stop();
 		myDelayedAudio.clear();
 		myWrapper.Play(myEnemyVoiceSounds[CAST(EEnemyVoiceLine::EnemyPatrol)], myDynamicSource);
@@ -328,12 +335,18 @@ void CAudioManager::Receive(const SMessage& aMessage) {
 
 	case EMessageType::EnemyAlertedState:
 	{
+		if (!myDynamicObject->GetComponent<CEnemyComponent>()->MakesSound())
+			return;
+
 		myDynamicSource->Stop();
 		myWrapper.Play(myEnemyVoiceSounds[CAST(EEnemyVoiceLine::EnemyHeardNoise)], myDynamicSource);
 	}break;
 
 	case EMessageType::EnemyIdleState:
 	{
+		if (!myDynamicObject->GetComponent<CEnemyComponent>()->MakesSound())
+			return;
+
 		myDynamicSource->Stop();
 		myWrapper.Play(myEnemyVoiceSounds[CAST(EEnemyVoiceLine::EnemyLostPlayer)], myDynamicSource);
 	}break;
@@ -342,6 +355,9 @@ void CAudioManager::Receive(const SMessage& aMessage) {
 
 	case EMessageType::EnemyAggro:
 	{
+		if (!myDynamicObject->GetComponent<CEnemyComponent>()->MakesSound())
+			return;
+
 		myDynamicSource->Stop();
 		bool aggro = *static_cast<bool*>(aMessage.data);
 		if (aggro) 
@@ -363,11 +379,11 @@ void CAudioManager::Receive(const SMessage& aMessage) {
 
 	case EMessageType::EnemyAttack:
 	{
-		if (myChannels[CAST(EChannel::VOX)]->IsPlaying())
-			return;
+		//if (myChannels[CAST(EChannel::VOX)]->IsPlaying())
+		//	return;
 
-		if (mySFXAudio[CAST(ESFX::EnemyAttack)])
-			myWrapper.Play(mySFXAudio[CAST(ESFX::EnemyAttack)], myChannels[CAST(EChannel::SFX)]);
+		//if (mySFXAudio[CAST(ESFX::EnemyAttack)])
+		//	myWrapper.Play(mySFXAudio[CAST(ESFX::EnemyAttack)], myChannels[CAST(EChannel::SFX)]);
 	}break;
 
 	case EMessageType::GameStarted:
@@ -450,6 +466,16 @@ void CAudioManager::Receive(const SMessage& aMessage) {
 
 		myChannels[CAST(EChannel::VOX)]->Stop();
 		int data = *static_cast<int*>(aMessage.data);
+
+		if (data == 27)
+		{
+			bool makeSound = true;
+			CMainSingleton::PostMaster().Send({ EMessageType::EnemyMakesSound, &makeSound });
+			myDynamicSource->Stop();
+			myDelayedAudio.clear();
+			myWrapper.Play(myEnemyVoiceSounds[CAST(EEnemyVoiceLine::EnemyPatrol)], myDynamicSource);
+		}
+
 		if (data >= 0)
 			myWrapper.Play(myVoiceEventSounds[data], myChannels[CAST(EChannel::VOX)]);
 	}break;
@@ -459,6 +485,7 @@ void CAudioManager::Receive(const SMessage& aMessage) {
 		PostMaster::ELevelName level = *reinterpret_cast<PostMaster::ELevelName*>(aMessage.data);
 		myChannels[CAST(EChannel::VOX)]->Stop();
 		CMainSingleton::PostMaster().Send({ EMessageType::StopDialogue, nullptr });
+		bool enemyMakeSound = true;
 		switch (level)
 		{
 		case PostMaster::ELevelName::Level_Cottage_1:
@@ -483,6 +510,10 @@ void CAudioManager::Receive(const SMessage& aMessage) {
 			FadeChannelOverSeconds(EChannel::DynamicChannel2, 1.0f);
 			FadeChannelOverSeconds(EChannel::DynamicChannel3, 1.0f, false);
 			FadeChannelOverSeconds(EChannel::DynamicChannel4, 1.0f);
+
+			myDynamicSource->Stop();
+			enemyMakeSound = false;
+			CMainSingleton::PostMaster().Send({ EMessageType::EnemyMakesSound, &enemyMakeSound });
 		}break;
 		case PostMaster::ELevelName::Level_Basement1_3:
 		{
@@ -490,6 +521,7 @@ void CAudioManager::Receive(const SMessage& aMessage) {
 			FadeChannelOverSeconds(EChannel::DynamicChannel2, 1.0f);
 			FadeChannelOverSeconds(EChannel::DynamicChannel3, 1.0f, false);
 			FadeChannelOverSeconds(EChannel::DynamicChannel4, 1.0f);
+			CMainSingleton::PostMaster().Send({ EMessageType::EnemyMakesSound, &enemyMakeSound });
 		}break;
 		case PostMaster::ELevelName::Level_Basement2:
 		{
@@ -497,6 +529,7 @@ void CAudioManager::Receive(const SMessage& aMessage) {
 			FadeChannelOverSeconds(EChannel::DynamicChannel2, 1.0f);
 			FadeChannelOverSeconds(EChannel::DynamicChannel3, 1.0f, false);
 			FadeChannelOverSeconds(EChannel::DynamicChannel4, 1.0f);
+			CMainSingleton::PostMaster().Send({ EMessageType::EnemyMakesSound, &enemyMakeSound });
 		}break;
 		default:
 			break;
@@ -510,6 +543,9 @@ void CAudioManager::Receive(const SMessage& aMessage) {
 
 	case EMessageType::EnemyStep:
 	{
+		if (!myDynamicObject->GetComponent<CEnemyComponent>()->MakesSound())
+			return;
+
 		PostMaster::SStepSoundData data = *static_cast<PostMaster::SStepSoundData*>(aMessage.data);
 		if (data.myIsSprint)
 			PlayCyclicRandomSoundFromCollection(myEnemyFastStepSounds, myDynamicSource, myEnemyStepSoundIndices);
