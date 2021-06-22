@@ -82,7 +82,7 @@ std::vector<DirectX::SimpleMath::Vector3> CAStar::GetPath(const Vector3& aStartP
 			}
 		}
 	}
-
+	
 	return path;
 }
 

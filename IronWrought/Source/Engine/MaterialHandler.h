@@ -37,6 +37,8 @@ public:
 	std::array<ID3D11ShaderResourceView*, 3> RequestMaterial(const int aMaterialID, const std::string& aModelPath);
 	std::array<ID3D11ShaderResourceView*, 3> RequestMaterial(const int aMaterialID);
 	std::array<ID3D11ShaderResourceView*, 3> RequestMaterial(const std::string& aMaterialName);
+	std::array<ID3D11ShaderResourceView*, 3> RequestMaterial(const std::string& aMaterialName, int& anOutMaterialID);
+	std::array<ID3D11ShaderResourceView*, 3> RequestDefualtMaterial(int& anOutMaterialID);
 
 	//std::array<ID3D11ShaderResourceView*, 3> RequestMaterial(const std::string& aMaterialName);
 	std::array<ID3D11ShaderResourceView*, 3> RequestDecal(const std::string& aDecalName);

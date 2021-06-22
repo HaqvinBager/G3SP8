@@ -12,6 +12,19 @@
 #include "EnemyComponent.h"
 #include "PatrolPointComponent.h"
 
+#ifdef _DEBUG
+#include "ModelComponent.h"
+namespace EnemyNavMesh_PathVisualisers
+{
+	std::vector<CGameObject*> gVisualisers;
+	void Reset();
+	void Init();
+	void AddToScene();
+	void SetToPositions(const std::vector<DirectX::SimpleMath::Vector3>& somePositions);
+}
+
+#endif
+
 bool CheckIfOverlap(const Vector3& aFirstPosition, const Vector3& aSecondPosition)
 {
 	float xDifference = fabs(aFirstPosition.x - aSecondPosition.x);
@@ -29,6 +42,11 @@ CPatrol::CPatrol(const std::vector<CPatrolPointComponent*>& somePositions, SNavM
 	myTarget = 0;
 	myPathTarget = 0;
 	myNavMesh = aNavMesh;
+
+#ifdef  _DEBUG
+	EnemyNavMesh_PathVisualisers::Init();
+#endif //  _DEBUG
+
 }
 
 void CPatrol::Enter(const Vector3& aPosition)
@@ -116,6 +134,10 @@ void CPatrol::SetPath(std::vector<Vector3> aPath, Vector3 aFinalPosition)
 		}
 
 	}
+
+#ifdef _DEBUG
+	EnemyNavMesh_PathVisualisers::SetToPositions(myPath);
+#endif
 }
 
 CPatrolPointComponent* CPatrol::FindBestPatrolPoint(const Vector3& aPosition)
@@ -173,17 +195,24 @@ Vector3 CSeek::Update(const Vector3& aPosition)//aPostion == EnemyRobot Position
 
 	myPathTarget = 0;
 	float epsilon = 0.5f;
-	if (myFoundPlayer == true) {
-		Vector3 playerPos = myTarget->Position();
-		playerPos.y = aPosition.y;
-		SetPath(myNavMesh->CalculatePath(aPosition, playerPos, myNavMesh), playerPos);
-	}
-	else {
-		float dist = DirectX::SimpleMath::Vector2::DistanceSquared({ myLastPlayerPosition.x, myLastPlayerPosition.z }, { aPosition.x, aPosition.z });
-		myLastPlayerPosition.y = aPosition.y;
-		SetPath(myNavMesh->CalculatePath(aPosition, myLastPlayerPosition, myNavMesh), myLastPlayerPosition);
-		if (dist < epsilon) {
-			CMainSingleton::PostMaster().Send({ EMessageType::EnemyReachedLastPlayerPosition });
+	if (myPath.size() <= 1)
+	{
+		if (myFoundPlayer == true) 
+		{
+			Vector3 playerPos = myTarget->Position();
+			playerPos.y = aPosition.y;
+			SetPath(myNavMesh->CalculatePath(aPosition, playerPos, myNavMesh), playerPos);
+			
+		}
+		else 
+		{
+			float dist = DirectX::SimpleMath::Vector2::DistanceSquared({ myLastPlayerPosition.x, myLastPlayerPosition.z }, { aPosition.x, aPosition.z });
+			myLastPlayerPosition.y = aPosition.y;
+			SetPath(myNavMesh->CalculatePath(aPosition, myLastPlayerPosition, myNavMesh), myLastPlayerPosition);
+			if (dist < epsilon) 
+			{
+				CMainSingleton::PostMaster().Send({ EMessageType::EnemyReachedLastPlayerPosition });
+			}
 		}
 	}
 
@@ -211,20 +240,27 @@ void CSeek::ClearPath() {
 	myPath.clear();
 }
 
-void CSeek::SetPath(std::vector<Vector3> aPath, Vector3 aFinalPosition)
+void CSeek::SetPath(std::vector<Vector3> aPath, const Vector3& /*aFinalPosition*/)
 {
-	if (aPath.empty()) {
+	if (aPath.empty()) 
+	{
 		return;
 	}
 
+	// Den här raden gjorde vi inte innan
+	//Vector3 finalPosInNavmesh = myNavMesh->GetClosestPointInsideTriangle( myNavMesh->ReturnClosestTriangle(aFinalPosition, myNavMesh), aFinalPosition);
+
 	myPath.clear();
-	myPath.push_back(aFinalPosition);
-	for (unsigned int i = 0; i < aPath.size(); ++i) {
-		aPath[i].y = myPositionY;
-		if (aPath[i] != aFinalPosition) {
-			myPath.push_back(aPath[i]);
-		}
+	myPath = std::move(aPath);
+	for (unsigned int i = 0; i < myPath.size(); ++i) {
+		myPath[i].y = myPositionY;
+		//if (aPath[i] != aFinalPosition) {
+		//	myPath.push_back(aPath[i]);
+		//}
 	}
+#ifdef _DEBUG
+	EnemyNavMesh_PathVisualisers::SetToPositions(myPath);
+#endif
 }
 
 void CSeek::SetTarget(CTransformComponent* aTarget) {
@@ -351,6 +387,10 @@ void CAlerted::SetPath(std::vector<Vector3> aPath, Vector3 aFinalPosition)
 			CDebug::GetInstance()->DrawLine(aPath[i - 1], aPath[i], 60.0f);
 		}*/
 	}
+
+#ifdef _DEBUG
+	EnemyNavMesh_PathVisualisers::SetToPositions(myPath);
+#endif
 }
 
 const float CAlerted::PercentileAlertedTimer() const
@@ -430,3 +470,47 @@ const float CDetection::PercentileOfTimer() const
 	percentile = std::clamp(percentile, 0.0f, 1.0f);
 	return percentile;
 }
+
+#ifdef _DEBUG
+namespace EnemyNavMesh_PathVisualisers
+{
+	void Reset()
+	{
+		for (auto& go : gVisualisers)
+		{
+			go->myTransform->Position({ 0xDEAD, 0xDEAD, 0xDead });
+			go->Active(false);
+		}
+	}
+	void Init()
+	{
+		gVisualisers.reserve(100);
+		for (auto i = 0; i < 100; ++i)
+		{
+			gVisualisers.push_back(new CGameObject(987 + i));
+			gVisualisers.back()->AddComponent<CModelComponent>(*gVisualisers.back(), "Assets/IronWrought/DebugModels/Sphere.fbx", std::vector<int>());
+		}
+		AddToScene();
+		Reset();
+	}
+
+	void AddToScene()
+	{
+		IRONWROUGHT->GetActiveScene().AddInstances(gVisualisers);
+	}
+
+	void SetToPositions(const std::vector<DirectX::SimpleMath::Vector3>& somePositions)
+	{
+		std::cout << __FUNCTION__ << " Setting gVisualisers to somePositions, count: [ " << somePositions.size() << " ] " << std::endl;
+		Reset();
+		for (int i = 0; i < somePositions.size(); ++i)
+		{
+			if (i >= gVisualisers.size())
+				break;
+
+			gVisualisers[i]->myTransform->Position(somePositions[i]);
+			gVisualisers[i]->Active(true);
+		}
+	}
+}
+#endif

@@ -121,6 +121,18 @@ std::array<ID3D11ShaderResourceView*, 3> CMaterialHandler::RequestMaterial(const
 	return RequestMaterial(materialID);
 }
 
+std::array<ID3D11ShaderResourceView*, 3> CMaterialHandler::RequestMaterial(const std::string& aMaterialName, int& anOutMaterialID)
+{
+	anOutMaterialID = 0;
+	CJsonReader::Get()->TryGetMaterialID(aMaterialName, anOutMaterialID);
+	return RequestMaterial(anOutMaterialID);
+}
+
+std::array<ID3D11ShaderResourceView*, 3> CMaterialHandler::RequestDefualtMaterial(int& anOutMaterialID)
+{
+	return RequestMaterial("DefaultMaterial", anOutMaterialID);
+}
+
 //if (myMaterials.find(aMaterialName) == myMaterials.end())
 //{
 //	std::array<Microsoft::WRL::ComPtr<ID3D11ShaderResourceView>, 3> newTextures;
