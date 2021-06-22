@@ -53,7 +53,7 @@ CEnemyComponent::CEnemyComponent(CGameObject& aParent, const SEnemySetting& some
 	, myTargetVignetteBlend(0.0f)
 	, myStepTimer(0.0f)
 	, myWalkSpeed(1.5f)//1.5f - 2021 06 22
-	, mySeekSpeed(3.0f)//3.0f- 2021 06 22
+	, mySeekSpeed(3.0f)//3.0f - 2021 06 22
 {
 	//myController = CEngine::GetInstance()->GetPhysx().CreateCharacterController(GameObject().myTransform->Position(), 0.6f * 0.5f, 1.8f * 0.5f, GameObject().myTransform, aHitReport);
 	//myController->GetController().getActor()->setRigidBodyFlag(PxRigidBodyFlag::eUSE_KINEMATIC_TARGET_FOR_SCENE_QUERIES, true);
