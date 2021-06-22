@@ -19,8 +19,8 @@ CDecalComponent::CDecalComponent(CGameObject& aParent, const SSettings& someSett
 {
     myDecal = CDecalFactory::GetInstance()->GetDecal(mySettings.myFBXPath); 
     myDecal->RenderAlbedo(someSettings.myShouldRenderAlbedo == 1 ? true : false);
-    myDecal->RenderAlbedo(someSettings.myShouldRenderMaterial == 1 ? true : false);
-    myDecal->RenderAlbedo(someSettings.myShouldRenderNormals == 1 ? true : false);
+    myDecal->RenderMaterial(someSettings.myShouldRenderMaterial == 1 ? true : false);
+    myDecal->RenderNormal(someSettings.myShouldRenderNormals == 1 ? true : false);
     SetAlphaThreshold(0.3f);
 }
 
