@@ -19,6 +19,10 @@ public:
 	void Init(SDecalData data);
 	SDecalData& GetDecalData();
 
+	void RenderAlbedo(const bool aShouldRender) { myDecalData.myShouldRenderAlbedo = aShouldRender; }
+	void RenderMaterial(const bool aShouldRender) { myDecalData.myShouldRenderMaterial = aShouldRender; }
+	void RenderNormal(const bool aShouldRender) { myDecalData.myShouldRenderNormals = aShouldRender; }
+
 private:
 	SDecalData myDecalData;
 };

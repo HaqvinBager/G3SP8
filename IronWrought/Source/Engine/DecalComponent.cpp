@@ -5,17 +5,28 @@
 #include "GameObject.h"
 #include "Decal.h"
 
-CDecalComponent::CDecalComponent(CGameObject& aParent, const std::string& aFBXPath)
+//CDecalComponent::CDecalComponent(CGameObject& aParent, const std::string& aFBXPath)
+//    : CBehavior(aParent)
+//{
+//    myDecal = CDecalFactory::GetInstance()->GetDecal(aFBXPath);
+//    myDecalPath = aFBXPath;
+//    SetAlphaThreshold(0.3f);
+//}
+
+CDecalComponent::CDecalComponent(CGameObject& aParent, const SSettings& someSettings)
     : CBehavior(aParent)
+    , mySettings(someSettings)  
 {
-    myDecal = CDecalFactory::GetInstance()->GetDecal(aFBXPath);
-    myDecalPath = aFBXPath;
+    myDecal = CDecalFactory::GetInstance()->GetDecal(mySettings.myFBXPath); 
+    myDecal->RenderAlbedo(someSettings.myShouldRenderAlbedo);
+    myDecal->RenderAlbedo(someSettings.myShouldRenderMaterial);
+    myDecal->RenderAlbedo(someSettings.myShouldRenderNormals);
     SetAlphaThreshold(0.3f);
 }
 
 CDecalComponent::~CDecalComponent()
 {
-    CDecalFactory::GetInstance()->ClearDecal(myDecalPath);
+    CDecalFactory::GetInstance()->ClearDecal(mySettings.myFBXPath);
 }
 
 void CDecalComponent::Awake()

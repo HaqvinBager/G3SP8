@@ -7,7 +7,13 @@ class CDecal;
 class CDecalComponent : public CBehavior
 {
 public:
-	CDecalComponent(CGameObject& aParent, const std::string& aFBXPath);
+	struct SSettings {
+		std::string myFBXPath;
+		int myShouldRenderAlbedo;
+		int myShouldRenderMaterial;
+		int myShouldRenderNormals;
+	};
+	CDecalComponent(CGameObject& aParent, const SSettings& someSettings);
 	~CDecalComponent() override;
 
 	void Awake() override;
@@ -22,6 +28,7 @@ public:
 
 private:
 	CDecal* myDecal;
-	std::string myDecalPath;
+	SSettings mySettings;
+	//std::string myDecalPath;
 };
 

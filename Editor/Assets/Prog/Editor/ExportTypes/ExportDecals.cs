@@ -7,16 +7,18 @@ using System.Text;
 using UnityEngine.SceneManagement;
 
 [System.Serializable]
-public struct Decal
+public struct DecalData
 {
-    public int instanceID;
     public string materialName;
-
+    public int instanceID;
+    public int shouldRenderAlbedo;
+    public int shouldRenderMaterial;
+    public int shouldRenderNormals;
 }
 [System.Serializable]
 public struct DecalCollection
 {
-    public List<Decal> decals;
+    public List<DecalData> decals;
 }
 
 //static bool IsDecalMaterial(Material material)
@@ -30,7 +32,7 @@ public class ExportDecals
     public static DecalCollection Export(string aSceneName)
     {
         DecalCollection decalCollection = new DecalCollection();
-        decalCollection.decals = new List<Decal>();
+        decalCollection.decals = new List<DecalData>();
 
         Renderer[] renderers = GameObject.FindObjectsOfType<Renderer>();
 
@@ -47,11 +49,21 @@ public class ExportDecals
             {
                 if (decal.TryGetComponent(out MeshFilter meshFilter))
                 {
-                    //GameObject asset = PrefabUtility.GetCorrespondingObjectFromOriginalSource(meshFilter).gameObject;
-                    //if (asset == null)
-                    //    continue;
+                    DecalData aDecal = new DecalData();
 
-                    Decal aDecal = new Decal();
+                    if(prefabParent.TryGetComponent(out Decal obj))
+                    {
+                        aDecal.shouldRenderAlbedo = obj.renderAlbedo ? 1 : 0;
+                        aDecal.shouldRenderMaterial = obj.renderMaterial ? 1 : 0;
+                        aDecal.shouldRenderNormals = obj.renderNormal ? 1 : 0;
+                    }
+                    else
+                    {
+                        aDecal.shouldRenderAlbedo = 1;
+                        aDecal.shouldRenderMaterial = 1;
+                        aDecal.shouldRenderNormals = 1;
+                    }
+
                     aDecal.materialName = ExtractMaterialName(decal.sharedMaterials);
                     aDecal.instanceID = prefabParent.transform.GetInstanceID();
                     decalCollection.decals.Add(aDecal);
