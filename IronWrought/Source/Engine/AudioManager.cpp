@@ -467,7 +467,7 @@ void CAudioManager::Receive(const SMessage& aMessage) {
 		myChannels[CAST(EChannel::VOX)]->Stop();
 		int data = *static_cast<int*>(aMessage.data);
 
-		if (data == 27)
+		if (data == 27) // Enemy Introduction
 		{
 			bool makeSound = true;
 			CMainSingleton::PostMaster().Send({ EMessageType::EnemyMakesSound, &makeSound });
