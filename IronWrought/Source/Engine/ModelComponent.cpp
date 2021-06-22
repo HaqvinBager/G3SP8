@@ -26,22 +26,23 @@ CModelComponent::CModelComponent(CGameObject& aParent, const Binary::SModel& aDa
 		myModel->AddMaterial(CMainSingleton::MaterialHandler().RequestMaterial(materialID));	
 }
 
-//CModelComponent::CModelComponent(CGameObject& aParent, const std::string& aFBXPath) : CBehaviour(aParent) {
-//	myModel = CModelFactory::GetInstance()->GetModel(aFBXPath);
-//	//myModel->SetMaterials(CMainSingleton::MaterialHandler().RequestMaterial())
-//	std::cout << "Add - ModelComponent: " << aFBXPath << std::endl;
-//	myModelPath = aFBXPath;
-//	//myRenderWithAlpha = false;
-//	std::vector<std::string> materialNames = myModel->GetModelData().myMaterialNames;
-//	for (auto& materialName : materialNames)
-//	{
-//		if (materialName.substr(materialName.size() - 2, 2) == "AL")
-//		{
-//			myRenderWithAlpha = true;
-//			break;
-//		}
-//	}
-//}
+CModelComponent::CModelComponent(CGameObject& aParent, const std::string& aFBXPath, const std::vector<int>& someMaterialID) 
+	: CBehavior(aParent) 
+{
+	myModelPath = aFBXPath;
+	myModel = CModelFactory::GetInstance()->GetModel(ASSETPATH(myModelPath));
+
+	myMaterialIDs = someMaterialID;
+	if (someMaterialID.empty())
+	{
+		int matID = 0;
+		myModel->AddMaterial(CMainSingleton::MaterialHandler().RequestDefualtMaterial(matID));
+		myMaterialIDs.push_back(matID);
+		return;
+	}
+	for(const auto materialID : someMaterialID)
+		myModel->AddMaterial(CMainSingleton::MaterialHandler().RequestMaterial(materialID));
+}
 
 CModelComponent::~CModelComponent()
 {

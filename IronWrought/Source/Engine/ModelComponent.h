@@ -33,7 +33,7 @@ class CModelComponent : public CBehavior
 public:
 	CModelComponent(CGameObject& aParent, const Binary::SModel& aData);
 
-	//CModelComponent(CGameObject& aParent, const std::string& aFBXPath);
+	CModelComponent(CGameObject& aParent, const std::string& aFBXPath, const std::vector<int>& someMaterialID);
 	//CModelComponent(CGameObject& aParent, const std::string& aFBXPath, const int aVertexColorsID);
 	~CModelComponent() override;
 

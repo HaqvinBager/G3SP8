@@ -52,8 +52,8 @@ CEnemyComponent::CEnemyComponent(CGameObject& aParent, const SEnemySetting& some
 	, myCurrentVignetteBlend(0.0f)
 	, myTargetVignetteBlend(0.0f)
 	, myStepTimer(0.0f)
-	, myWalkSpeed(1.5f)
-	, mySeekSpeed(3.0f)
+	, myWalkSpeed(1.5f)//1.5f - 2021 06 22
+	, mySeekSpeed(3.0f)//3.0f- 2021 06 22
 {
 	//myController = CEngine::GetInstance()->GetPhysx().CreateCharacterController(GameObject().myTransform->Position(), 0.6f * 0.5f, 1.8f * 0.5f, GameObject().myTransform, aHitReport);
 	//myController->GetController().getActor()->setRigidBodyFlag(PxRigidBodyFlag::eUSE_KINEMATIC_TARGET_FOR_SCENE_QUERIES, true);
@@ -545,7 +545,7 @@ void CEnemyComponent::Receive(const SMessage& aMsg)
 		{
 			if (myCurrentState != EBehaviour::Idle && myCurrentState != EBehaviour::Patrol && myCurrentState != EBehaviour::Alerted)
 			{
-				std::cout << __FUNCTION__ << " Heard Step Sound: Is not in Idle, Patrol or Alerte -state!" <<  std::endl;
+				//std::cout << __FUNCTION__ << " Heard Step Sound: Is not in Idle, Patrol or Alerte -state!" <<  std::endl;
 				return;
 			}
 			if (myHeardSound)
@@ -569,16 +569,16 @@ void CEnemyComponent::Receive(const SMessage& aMsg)
 				}
 				if (myCurrentState != EBehaviour::Alerted)
 				{
-					std::cout << __FUNCTION__ << " Heard Step Sound. Switching to Alerted" << std::endl;
+					//std::cout << __FUNCTION__ << " Heard Step Sound. Switching to Alerted" << std::endl;
 					SetState(EBehaviour::Alerted);
 				}
 				else
 				{
-					std::cout << __FUNCTION__ << " Heard Step Sound. Is already Alerted" << std::endl;
+					//std::cout << __FUNCTION__ << " Heard Step Sound. Is already Alerted" << std::endl;
 				}
 					
 			}
-			std::cout << __FUNCTION__ << " Heard Step Sound. Range: " <<  hearingRange << std::endl;
+			//std::cout << __FUNCTION__ << " Heard Step Sound. Range: " <<  hearingRange << std::endl;
 		}
 	}
 }
