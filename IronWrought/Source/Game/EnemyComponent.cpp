@@ -47,6 +47,8 @@ CEnemyComponent::CEnemyComponent(CGameObject& aParent, const SEnemySetting& some
 	, myDetectionTimer(0.0f)
 	, myAggroTimer(0.0f)
 	, myAggroTime(1.0f)
+	, myDeAggroTimer(0.0f)
+	, myDeAggroTime(0.5f)
 	, myHasScreamed(false)
 	, myDetachedPlayerHead(nullptr)
 	, myCurrentVignetteBlend(0.0f)
@@ -236,15 +238,20 @@ void CEnemyComponent::Update()//får bestämma vilket behaviour vi vill köra i 
 		}	
 		else if (myHasFoundPlayer)//Out of View
 		{
-			myIdlingTimer = 0.0f;
-			myDetectionTimer = 0.0f;
-			myAggroTimer = 0.0f;
-			myHasFoundPlayer = false;
-			myHasReachedLastPlayerPosition = false;
-			SMessage msg;
-			msg.data = static_cast<void*>(&playerPos);
-			msg.myMessageType = EMessageType::EnemyLostPlayer;
-			CMainSingleton::PostMaster().Send(msg);
+			myDeAggroTimer += CTimer::Dt();
+			if (myDeAggroTimer >= myDeAggroTime)
+			{
+				myDeAggroTimer = 0.0f;
+				myIdlingTimer = 0.0f;
+				myDetectionTimer = 0.0f;
+				myAggroTimer = 0.0f;
+				myHasFoundPlayer = false;
+				myHasReachedLastPlayerPosition = false;
+				SMessage msg;
+				msg.data = static_cast<void*>(&playerPos);
+				msg.myMessageType = EMessageType::EnemyLostPlayer;
+				CMainSingleton::PostMaster().Send(msg);
+			}
 		}
 
 		if (myIsIdle) {
