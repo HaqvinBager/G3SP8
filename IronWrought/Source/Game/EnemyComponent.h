@@ -60,6 +60,8 @@ public:
 
 	const float CurrentStateBlendValue() const;
 
+	const bool MakesSound() const;
+
 public:
 	float WrapAngle(float anAngleRadians)
 	{
@@ -100,6 +102,7 @@ private:
 	bool myHeardSound;
 	bool myIsIdle;
 	bool myHasScreamed;
+	bool myMakesSound;
 
 	float myCurrentStateBlend;
 	float myCurrentVignetteBlend;
