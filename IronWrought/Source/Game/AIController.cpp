@@ -195,7 +195,7 @@ Vector3 CSeek::Update(const Vector3& aPosition)//aPostion == EnemyRobot Position
 
 	myPathTarget = 0;
 	float epsilon = 0.5f;
-	if (myPath.size() <= 1)
+	if (myPath.size() <= 0)
 	{
 		if (myFoundPlayer == true) 
 		{
