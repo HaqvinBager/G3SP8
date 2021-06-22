@@ -48,7 +48,7 @@ CEnemyComponent::CEnemyComponent(CGameObject& aParent, const SEnemySetting& some
 	, myAggroTimer(0.0f)
 	, myAggroTime(1.0f)
 	, myDeAggroTimer(0.0f)
-	, myDeAggroTime(0.5f)
+	, myDeAggroTime(2.0f)
 	, myHasScreamed(false)
 	, myDetachedPlayerHead(nullptr)
 	, myCurrentVignetteBlend(0.0f)
@@ -211,9 +211,19 @@ void CEnemyComponent::Update()//får bestämma vilket behaviour vi vill köra i 
 			{
 				CTransformComponent* transform = (CTransformComponent*)hit.getAnyHit(0).actor->userData;
 				
+				if (myHasFoundPlayer)
+				{
+					myDeAggroTimer = 0.0f;
+				}
+
 				if (!transform && !myHasFoundPlayer) 
 				{
 					myAggroTimer += CTimer::Dt();
+					float aggroTime = myAggroTime;
+					if (myHeardSound == true)
+					{
+						aggroTime *= 0.33f;
+					}
 
 					myIsIdle = true;
 					if (myPlayer != nullptr)
@@ -221,8 +231,8 @@ void CEnemyComponent::Update()//får bestämma vilket behaviour vi vill köra i 
 						myIdleState->SetTarget(myPlayer->myTransform->Position());
 					}
 					SetState(EBehaviour::Idle);
-
-					if (myAggroTimer >= myAggroTime)
+	
+					if (myAggroTimer >= aggroTime)
 					{
 						myAggroTimer = 0.0f;
 
@@ -241,6 +251,7 @@ void CEnemyComponent::Update()//får bestämma vilket behaviour vi vill köra i 
 		else if (myHasFoundPlayer)//Out of View
 		{
 			myDeAggroTimer += CTimer::Dt();
+			//std::cout << __FUNCTION__ << " " << myDeAggroTimer << std::endl;
 			if (myDeAggroTimer >= myDeAggroTime)
 			{
 				myDeAggroTimer = 0.0f;
@@ -303,7 +314,10 @@ void CEnemyComponent::Update()//får bestämma vilket behaviour vi vill köra i 
 		Vector3 targetDirection = myBehaviours[static_cast<int>(myCurrentState)]->Update(GameObject().myTransform->Position());
 		//targetDirection.y = 0.0f;
 		if (myCurrentState != EBehaviour::Idle) {
-			GameObject().myTransform->Move(targetDirection * mySettings.mySpeed * CTimer::Dt());
+			if (myCurrentState != EBehaviour::Detection)
+			{
+				GameObject().myTransform->Move(targetDirection * mySettings.mySpeed * CTimer::Dt());
+			}
 		}
 
 		float targetOrientation = WrapAngle(atan2f(targetDirection.x, targetDirection.z));
@@ -398,6 +412,14 @@ void CEnemyComponent::FixedUpdate()
 
 void CEnemyComponent::SetState(EBehaviour aState)
 {
+	// Only patrol
+	//if (aState != EBehaviour::Patrol)
+	//{
+	//	myCurrentState = EBehaviour::Patrol;
+	//	CMainSingleton::PostMaster().Send({ EMessageType::EnemyPatrolState, this });
+	//	return;
+	//}
+
 	if (myCurrentState == aState)
 		return;
 

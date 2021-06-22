@@ -50,5 +50,6 @@ private:
 	float myIntensity;
 	CBehavior* myLight;
 	FastNoise::SmartNode<FastNoise::Simplex> myNoise;
+	int32_t mySeed;
 };
 
