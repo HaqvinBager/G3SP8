@@ -116,6 +116,8 @@ private:
 	float myDetectionTimer;
 	float myAggroTimer;
 	float myAggroTime;
+	float myDeAggroTimer;
+	float myDeAggroTime;
 	float myStepTimer;
 
 	CTransformComponent* myDetachedPlayerHead;
