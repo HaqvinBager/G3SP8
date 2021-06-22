@@ -47,13 +47,15 @@ CEnemyComponent::CEnemyComponent(CGameObject& aParent, const SEnemySetting& some
 	, myDetectionTimer(0.0f)
 	, myAggroTimer(0.0f)
 	, myAggroTime(1.0f)
+	, myDeAggroTimer(0.0f)
+	, myDeAggroTime(0.5f)
 	, myHasScreamed(false)
 	, myDetachedPlayerHead(nullptr)
 	, myCurrentVignetteBlend(0.0f)
 	, myTargetVignetteBlend(0.0f)
 	, myStepTimer(0.0f)
-	, myWalkSpeed(1.5f)
-	, mySeekSpeed(3.0f)
+	, myWalkSpeed(1.5f)//1.5f - 2021 06 22
+	, mySeekSpeed(3.0f)//3.0f - 2021 06 22
 {
 	//myController = CEngine::GetInstance()->GetPhysx().CreateCharacterController(GameObject().myTransform->Position(), 0.6f * 0.5f, 1.8f * 0.5f, GameObject().myTransform, aHitReport);
 	//myController->GetController().getActor()->setRigidBodyFlag(PxRigidBodyFlag::eUSE_KINEMATIC_TARGET_FOR_SCENE_QUERIES, true);
@@ -236,15 +238,20 @@ void CEnemyComponent::Update()//får bestämma vilket behaviour vi vill köra i 
 		}	
 		else if (myHasFoundPlayer)//Out of View
 		{
-			myIdlingTimer = 0.0f;
-			myDetectionTimer = 0.0f;
-			myAggroTimer = 0.0f;
-			myHasFoundPlayer = false;
-			myHasReachedLastPlayerPosition = false;
-			SMessage msg;
-			msg.data = static_cast<void*>(&playerPos);
-			msg.myMessageType = EMessageType::EnemyLostPlayer;
-			CMainSingleton::PostMaster().Send(msg);
+			myDeAggroTimer += CTimer::Dt();
+			if (myDeAggroTimer >= myDeAggroTime)
+			{
+				myDeAggroTimer = 0.0f;
+				myIdlingTimer = 0.0f;
+				myDetectionTimer = 0.0f;
+				myAggroTimer = 0.0f;
+				myHasFoundPlayer = false;
+				myHasReachedLastPlayerPosition = false;
+				SMessage msg;
+				msg.data = static_cast<void*>(&playerPos);
+				msg.myMessageType = EMessageType::EnemyLostPlayer;
+				CMainSingleton::PostMaster().Send(msg);
+			}
 		}
 
 		if (myIsIdle) {
@@ -545,7 +552,7 @@ void CEnemyComponent::Receive(const SMessage& aMsg)
 		{
 			if (myCurrentState != EBehaviour::Idle && myCurrentState != EBehaviour::Patrol && myCurrentState != EBehaviour::Alerted)
 			{
-				std::cout << __FUNCTION__ << " Heard Step Sound: Is not in Idle, Patrol or Alerte -state!" <<  std::endl;
+				//std::cout << __FUNCTION__ << " Heard Step Sound: Is not in Idle, Patrol or Alerte -state!" <<  std::endl;
 				return;
 			}
 			if (myHeardSound)
@@ -569,16 +576,16 @@ void CEnemyComponent::Receive(const SMessage& aMsg)
 				}
 				if (myCurrentState != EBehaviour::Alerted)
 				{
-					std::cout << __FUNCTION__ << " Heard Step Sound. Switching to Alerted" << std::endl;
+					//std::cout << __FUNCTION__ << " Heard Step Sound. Switching to Alerted" << std::endl;
 					SetState(EBehaviour::Alerted);
 				}
 				else
 				{
-					std::cout << __FUNCTION__ << " Heard Step Sound. Is already Alerted" << std::endl;
+					//std::cout << __FUNCTION__ << " Heard Step Sound. Is already Alerted" << std::endl;
 				}
 					
 			}
-			std::cout << __FUNCTION__ << " Heard Step Sound. Range: " <<  hearingRange << std::endl;
+			//std::cout << __FUNCTION__ << " Heard Step Sound. Range: " <<  hearingRange << std::endl;
 		}
 	}
 }

@@ -44,7 +44,7 @@ public:
 	void Enter(const Vector3& aPosition)override;
 	Vector3 Update(const Vector3& aPosition) override;
 	void ClearPath() override;
-	void SetPath(std::vector<Vector3> aPath, Vector3 aFinalPosition);
+	void SetPath(std::vector<Vector3> aPath, const Vector3& aFinalPosition);
 	void SetTarget(CTransformComponent* aTarget);
 	void Receive(const SMessage& aMsg) override;
 
