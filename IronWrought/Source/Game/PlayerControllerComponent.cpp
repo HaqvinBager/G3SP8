@@ -60,7 +60,8 @@ CPlayerControllerComponent::CPlayerControllerComponent(CGameObject& gameObject, 
 	shape->setFlag(PxShapeFlag::Enum::eSCENE_QUERY_SHAPE, true);
 
 	PxFilterData filterData;
-	filterData.word0 = static_cast<PxU32>(CPhysXWrapper::ELayerMask::PLAYER);
+	filterData.word0 = CPhysXWrapper::ELayerMask::PLAYER | CPhysXWrapper::ELayerMask::PLAYER_TRIGGER;
+		//static_cast<PxU32>(CPhysXWrapper::ELayerMask::PLAYER );
 	shape->setQueryFilterData(filterData);
 
 	GameObject().myTransform->Position(myController->GetPosition());// This is a test / Aki 2021 03 12

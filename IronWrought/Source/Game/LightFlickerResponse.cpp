@@ -11,6 +11,7 @@ CLightFlickerResponse::CLightFlickerResponse(CGameObject& aParent, const SSettin
 	, mySettings(someSettings)
 {
 	myNoise = FastNoise::New<FastNoise::Simplex>();
+	mySeed = abs(rand());
 }
 
 CLightFlickerResponse::~CLightFlickerResponse()
@@ -33,6 +34,8 @@ void CLightFlickerResponse::Awake()
 		myLightType = 1;
 		myLight = static_cast<CBehavior*>(spot);
 	}
+
+	std::cout << __FUNCTION__ << " Seed = " << mySeed << std::endl;
 }
 
 void CLightFlickerResponse::Update()
@@ -73,7 +76,7 @@ float CLightFlickerResponse::Noise() const
 void CLightFlickerResponse::UpdateNoise() 
 {
 	float time = CTimer::Time() * mySettings.mySpeed;
-	int32_t seed = 1462;
-	float noiseValue = InverseLerp(-1.0f, 1.0f, myNoise->GenSingle2D(time, time, seed));
+	//int32_t seed = 1462;
+	float noiseValue = InverseLerp(-1.0f, 1.0f, myNoise->GenSingle2D(time, time, mySeed));
 	myIntensity = Remap(-1.0f, 1.0f, mySettings.myIntensity.x, mySettings.myIntensity.y, noiseValue);	
 }
