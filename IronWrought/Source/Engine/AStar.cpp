@@ -78,12 +78,12 @@ std::vector<DirectX::SimpleMath::Vector3> CAStar::GetPath(const Vector3& aStartP
 						continue;
 
 				path.push_back(GetPointOAnCircle(newPath[i], degrees + 180.0f, 0.5f));
-				break;
+				break; 
 			}
 		}
 	}
 	
-	return path;
+	return path; 
 }
 
 std::vector<DirectX::SimpleMath::Vector3> CAStar::GetPath(const Vector3& aStartPosition, const Vector3& anEndPosition, SNavMesh* aNavMesh/*, STriangle* aStartTriangle, STriangle* anEndTriangle*/)
@@ -271,8 +271,8 @@ std::vector<DirectX::SimpleMath::Vector3> CAStar::StringPull(Vector3 aStart, Vec
 		return points;
 	}
 
-	somePortals.push_back(aEnd);
-	somePortals.push_back(aEnd);
+	somePortals.push_back(aEnd);// Varför 2 gånger?
+	somePortals.push_back(aEnd);// Unknown why we did this. --> We start on i = 2
 
 	Vector3 portalApex, portalLeft, portalRight, left, right;
 	int apexIndex = 0, leftIndex = 0, rightIndex = 0;

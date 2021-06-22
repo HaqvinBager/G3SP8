@@ -21,6 +21,7 @@ namespace EnemyNavMesh_PathVisualisers
 	void Init();
 	void AddToScene();
 	void SetToPositions(const std::vector<DirectX::SimpleMath::Vector3>& somePositions);
+	void PrintPositions(const std::vector<DirectX::SimpleMath::Vector3>& somePositions);
 }
 
 #endif
@@ -57,6 +58,8 @@ void CPatrol::Enter(const Vector3& aPosition)
 
 	if (myPatrolPoints.empty())
 		return;
+
+	std::cout << __FUNCTION__ << std::endl;
 
 	CPatrolPointComponent* patrolPoint = myPatrolPoints[myTarget];
 	if (patrolPoint != nullptr) {
@@ -96,7 +99,7 @@ Vector3 CPatrol::Update(const Vector3& aPosition)
 		Vector3 dir;
 
 #ifdef _DEBUG
-		CDebug::GetInstance()->DrawLine(aPosition, myPath[pathSize - 1], 1.0f);
+		//CDebug::GetInstance()->DrawLine(aPosition, myPath[pathSize - 1], 1.0f);
 #endif
 		dir = (myPath[pathSize - 1] - aPosition);
 		dir.Normalize();
@@ -195,7 +198,7 @@ Vector3 CSeek::Update(const Vector3& aPosition)//aPostion == EnemyRobot Position
 
 	myPathTarget = 0;
 	float epsilon = 0.5f;
-	if (myPath.size() <= 0)
+	if (myPath.size() <= 1)
 	{
 		if (myFoundPlayer == true) 
 		{
@@ -501,7 +504,7 @@ namespace EnemyNavMesh_PathVisualisers
 
 	void SetToPositions(const std::vector<DirectX::SimpleMath::Vector3>& somePositions)
 	{
-		std::cout << __FUNCTION__ << " Setting gVisualisers to somePositions, count: [ " << somePositions.size() << " ] " << std::endl;
+		//std::cout << __FUNCTION__ << " Setting gVisualisers to somePositions, count: [ " << somePositions.size() << " ] " << std::endl;
 		Reset();
 		for (int i = 0; i < somePositions.size(); ++i)
 		{
@@ -510,6 +513,22 @@ namespace EnemyNavMesh_PathVisualisers
 
 			gVisualisers[i]->myTransform->Position(somePositions[i]);
 			gVisualisers[i]->Active(true);
+		}
+		if (gVisualisers.size() > 0)
+		{
+			Vector3 lastPositionOffset = { 0.0f, 0.5f, 0.0f };
+			gVisualisers[0]->myTransform->Position(gVisualisers[0]->myTransform->Position() + lastPositionOffset);
+		}
+		//PrintPositions(somePositions);
+	}
+
+	void PrintPositions(const std::vector<DirectX::SimpleMath::Vector3>& somePositions)
+	{
+		std::cout << __FUNCTION__ << " Printing positions. Count: [ " << somePositions.size() << " ] " << std::endl;
+		for (int i = 0; i < somePositions.size(); ++i)
+		{
+			auto& pos = somePositions[i];
+			std::cout << "\t L  " << "# " << i << " : | x: " << pos.x << " | y: " << pos.y << " | z: " << pos.z << std::endl;
 		}
 	}
 }
