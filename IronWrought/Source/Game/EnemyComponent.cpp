@@ -307,6 +307,19 @@ void CEnemyComponent::Update()//får bestämma vilket behaviour vi vill köra i 
 		}
 
 		float targetOrientation = WrapAngle(atan2f(targetDirection.x, targetDirection.z));
+
+		float altAngle = targetOrientation;
+		
+		if (targetOrientation < 0.0f)
+		{
+			altAngle = 360.0f - abs(targetOrientation);
+			float angleDif1 = abs(myCurrentOrientation - targetOrientation);
+			float angleDif2 = abs(myCurrentOrientation - altAngle);
+			if (angleDif2 < angleDif1)
+				targetOrientation = altAngle;
+		}
+		
+		std::cout << __FUNCTION__ << " Angle: " << targetOrientation << std::endl;
 		myCurrentOrientation = Lerp(myCurrentOrientation, targetOrientation, 10.0f * CTimer::Dt());
 		GameObject().myTransform->Rotation({ 0, myCurrentOrientation + 180.f, 0 });
 
