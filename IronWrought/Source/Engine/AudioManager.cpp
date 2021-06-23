@@ -104,8 +104,14 @@ CAudioManager::CAudioManager()
 		myChannels[CAST(EChannel::VOX)]->SetVolume(value);
 	}
 
+	myEnemyMinDistance = 8.0f;
+	myEnemyMaxDistance = 1000.0f;
+	myEnemyMinAngle = 65.0f;
+	myEnemyMaxAngle = 160.0f;
+	myEnemyMinVolume = 0.4f;
+
 	myDynamicSource = myWrapper.RequestAudioSource("Enemy");
-	myDynamicSource->Set3DMinMaxDistance(10.0f, 1000.0f);
+	myDynamicSource->Set3DMinMaxDistance(myEnemyMinDistance, myEnemyMaxDistance);
 	//myDynamicSource->SetVolume(0.2f);
 
 	SetDynamicTrack(EAmbience::Cottage1, EAmbience::Cottage2, EAmbience::Basement1, EAmbience::Basement2);
@@ -339,7 +345,7 @@ void CAudioManager::Receive(const SMessage& aMessage) {
 			return;
 
 		myDynamicSource->Stop();
-		myWrapper.Play(myEnemyVoiceSounds[CAST(EEnemyVoiceLine::EnemyHeardNoise)], myDynamicSource);
+		myWrapper.Play(myEnemyVoiceSounds[CAST(EEnemyVoiceLine::EnemyHeardNoise)], myChannels[CAST(EChannel::SFX)]/*myDynamicSource*/);
 	}break;
 
 	case EMessageType::EnemyIdleState:
@@ -620,7 +626,7 @@ void CAudioManager::Update()
 	if (myDynamicObject)
 	{
 		myDynamicSource->Set3DAttributes(myDynamicObject->myTransform->WorldPosition(), { 0.0f, 0.0f, 0.0f });
-		myDynamicSource->Set3DConeAttributes(myDynamicObject->myTransform->Transform().Forward(), 90.0f, 300.0f, 0.3f);
+		myDynamicSource->Set3DConeAttributes(myDynamicObject->myTransform->Transform().Forward(), myEnemyMinAngle, myEnemyMaxAngle, myEnemyMinVolume);
 	}
 
 	myWrapper.Update();
@@ -1052,6 +1058,8 @@ std::string CAudioManager::TranslateEnum(ESFX enumerator) const {
 		return "InsertHandle";
 	case ESFX::FastDoorOpen:
 		return "FastDoorOpen";
+	case ESFX::PizzaImpact:
+		return "PizzaImpact";
 	default:
 		return "";
 	}
@@ -1195,6 +1203,12 @@ std::string CAudioManager::TranslateEnum(EVOX enumerator) const
 		return "WakeUpAfterDamage2";
 	case EVOX::WakeUpAfterDamage3:
 		return "WakeUpAfterDamage3";
+	case EVOX::Lee1Tip:
+		return "Lee1Tip";
+	case EVOX::Lee2Tip:
+		return "Lee2Tip";
+	case EVOX::Lee3Tip:
+		return "Lee3Tip";
 	default:
 		return "";
 	}

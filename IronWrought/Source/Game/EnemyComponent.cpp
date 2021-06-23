@@ -45,9 +45,9 @@ CEnemyComponent::CEnemyComponent(CGameObject& aParent, const SEnemySetting& some
 	, myNavMesh(aNavMesh)
 	, myDetectionTimer(0.0f)
 	, myAggroTimer(0.0f)
-	, myAggroTime(1.0f)
+	, myAggroTime(3.0f)
 	, myDeAggroTimer(0.0f)
-	, myDeAggroTime(2.0f)
+	, myDeAggroTime(2.5f)
 	, myHasScreamed(false)
 	, myDetachedPlayerHead(nullptr)
 	, myCurrentVignetteBlend(0.0f)
@@ -55,6 +55,7 @@ CEnemyComponent::CEnemyComponent(CGameObject& aParent, const SEnemySetting& some
 	, myStepTimer(0.0f)
 	, myWalkSpeed(1.5f)//1.5f - 2021 06 22
 	, mySeekSpeed(3.0f)//3.0f - 2021 06 22
+	, myGrabRange(2.0f)// was 3.0f pre 2021 06 23
 {
 	//myController = CEngine::GetInstance()->GetPhysx().CreateCharacterController(GameObject().myTransform->Position(), 0.6f * 0.5f, 1.8f * 0.5f, GameObject().myTransform, aHitReport);
 	//myController->GetController().getActor()->setRigidBodyFlag(PxRigidBodyFlag::eUSE_KINEMATIC_TARGET_FOR_SCENE_QUERIES, true);
@@ -201,18 +202,35 @@ void CEnemyComponent::Update()//får bestämma vilket behaviour vi vill köra i 
 
 		if (degrees <= viewAngle) {
 			Vector3 direction = playerPos - enemyPos;
-			//PxRaycastBuffer hit = CEngine::GetInstance()->GetPhysx().Raycast(enemyPos, direction, range, CPhysXWrapper::ELayerMask::STATIC_ENVIRONMENT | CPhysXWrapper::ELayerMask::PLAYER);
 			PxRaycastBuffer hit = CEngine::GetInstance()->GetPhysx().Raycast(enemyPos, direction, range, CPhysXWrapper::ELayerMask::WORLD | CPhysXWrapper::ELayerMask::PLAYER | CPhysXWrapper::ELayerMask::COVER);
-			//CDebug::GetInstance()->DrawLine(enemyPos, direction * range, 0.0f);
-			//CDebug::GetInstance()->DrawLine(enemyPos + Vector3(0.0f, 1.8f, 0.0f), direction * range, 0.0f);
 
 			if (hit.getNbAnyHits() > 0) 
 			{
 				CTransformComponent* transform = (CTransformComponent*)hit.getAnyHit(0).actor->userData;
 				
-				if (myHasFoundPlayer)
+				if (!transform && myHasFoundPlayer)
 				{
 					myDeAggroTimer = 0.0f;
+
+					SMessage msg;
+					msg.data = static_cast<void*>(&playerPos);
+					msg.myMessageType = EMessageType::EnemyFoundPlayer;
+					CMainSingleton::PostMaster().Send(msg);
+
+					if (mySqrdDistanceToPlayer <= myGrabRange ) 
+					{
+						myHasFoundPlayer = false;
+						myHeardSound = false;
+						myHasReachedAlertedTarget = true;
+						myHasReachedLastPlayerPosition = true;
+						SetState(EBehaviour::Attack);
+						return;
+					}
+				}
+				else if (myHasFoundPlayer)
+				{
+					myDeAggroTimer += CTimer::Dt();
+					std::cout << __FUNCTION__ << " " << __LINE__ << " INSIDE RAY CAST DEAGGROTIMER " << myDeAggroTimer << std::endl;
 				}
 
 				if (!transform && !myHasFoundPlayer) 
@@ -238,7 +256,11 @@ void CEnemyComponent::Update()//får bestämma vilket behaviour vi vill köra i 
 						myHasReachedAlertedTarget = true;
 						myHasFoundPlayer = true;
 						myHasReachedLastPlayerPosition = false;
-						CMainSingleton::PostMaster().Send({ EMessageType::EnemyFoundPlayer });
+
+						SMessage msg;
+						msg.data = static_cast<void*>(&playerPos);
+						msg.myMessageType = EMessageType::EnemyFoundPlayer;
+						CMainSingleton::PostMaster().Send(msg);
 					}
 				}
 			}
@@ -246,33 +268,56 @@ void CEnemyComponent::Update()//får bestämma vilket behaviour vi vill köra i 
 		else if (myHasFoundPlayer)//Out of View
 		{
 			myDeAggroTimer += CTimer::Dt();
-			//std::cout << __FUNCTION__ << " " << myDeAggroTimer << std::endl;
-			if (myDeAggroTimer >= myDeAggroTime)
-			{
-				myDeAggroTimer = 0.0f;
-				myIdlingTimer = 0.0f;
-				myDetectionTimer = 0.0f;
-				myAggroTimer = 0.0f;
-				myHasFoundPlayer = false;
-				myHasReachedLastPlayerPosition = false;
-				SMessage msg;
-				msg.data = static_cast<void*>(&playerPos);
-				msg.myMessageType = EMessageType::EnemyLostPlayer;
-				CMainSingleton::PostMaster().Send(msg);
-			}
+			std::cout << __FUNCTION__ << " " << __LINE__ << " OUT OF CONE DEAGGROTIMER " << myDeAggroTimer << std::endl;
+			
+			//if (myDeAggroTimer >= myDeAggroTime)// Pre 2021 06 23
+			//{
+			//	myDeAggroTimer = 0.0f;
+			//	myIdlingTimer = 0.0f;
+			//	myDetectionTimer = 0.0f;
+			//	myAggroTimer = 0.0f;
+			//	myHasFoundPlayer = false;
+			//	myHasReachedLastPlayerPosition = false;
+			//	SMessage msg;
+			//	//msg.data = static_cast<void*>(&playerPos);
+			//	msg.myMessageType = EMessageType::EnemyLostPlayer;
+			//	CMainSingleton::PostMaster().Send(msg);
+			//}
 		}
 
-		if (myCurrentState == EBehaviour::Idle) {
+		if (myDeAggroTimer >= myDeAggroTime)
+		{
+			myDeAggroTimer = 0.0f;
+			myIdlingTimer = 0.0f;
+			myDetectionTimer = 0.0f;
+			myAggroTimer = 0.0f;
+			myHasFoundPlayer = false;
+			myHasReachedLastPlayerPosition = false;
+			SMessage msg;
+			//msg.data = static_cast<void*>(&playerPos);
+			msg.myMessageType = EMessageType::EnemyLostPlayer;
+			CMainSingleton::PostMaster().Send(msg);
+		}
+
+		if (myCurrentState == EBehaviour::Idle) 
+		{
+			if (myHasFoundPlayer)
+			{
+				myIdlingTimer = 0.0f;
+				SetState(EBehaviour::Detection);
+			}
+			
 			myIdlingTimer += CTimer::Dt();
-			if (myIdlingTimer >= 2.0f) {
+			//std::cout << "IDLING Aggro timer: " << myAggroTimer << std::endl;
+
+			if (myIdlingTimer >= 6.0f) {
 				myIdlingTimer = 0.0f;
 				SetState(EBehaviour::Patrol);
 			}
 		}
 		else {
 
-			// is compared to sqrd distance => != 3m
-			if ((mySqrdDistanceToPlayer <= myGrabRange && myHasFoundPlayer) || mySqrdDistanceToPlayer <= (myGrabRange * 0.6f)) {
+			if (mySqrdDistanceToPlayer <= (myGrabRange * 0.5f)) {
 				myHasFoundPlayer = false;
 				myHeardSound = false;
 				myHasReachedAlertedTarget = true;
@@ -286,11 +331,9 @@ void CEnemyComponent::Update()//får bestämma vilket behaviour vi vill köra i 
 					SetState(EBehaviour::Detection);
 			}
 			else if (!myHasFoundPlayer && !myHasReachedLastPlayerPosition /*&& !myHeardSound && myHasReachedAlertedTarget*/) {
-				mySettings.mySpeed = mySeekSpeed;
 				SetState(EBehaviour::Seek);
 			}
 			else if (!myHeardSound && !myHasFoundPlayer && myHasReachedLastPlayerPosition) {
-				mySettings.mySpeed = myWalkSpeed;
 				SetState(EBehaviour::Patrol);
 			}
 			else if (myHasReachedAlertedTarget) {
@@ -300,7 +343,6 @@ void CEnemyComponent::Update()//får bestämma vilket behaviour vi vill köra i 
 			}
 			else // Test to see if it resolves stuck at Idle
 			{
-				mySettings.mySpeed = myWalkSpeed;
 				SetState(EBehaviour::Patrol);
 			}
 		}
@@ -351,7 +393,6 @@ void CEnemyComponent::Update()//får bestämma vilket behaviour vi vill köra i 
 			myCurrentStateBlend = detectedBehaviour->PercentileOfTimer();
 			if (myCurrentStateBlend <= 0.0f)
 			{
-				mySettings.mySpeed = mySeekSpeed;
 				SetState(EBehaviour::Seek);
 				myCurrentStateBlend = 1.0f;
 			}
@@ -429,12 +470,14 @@ void CEnemyComponent::SetState(EBehaviour aState)
 		aggro = false;
 		CMainSingleton::PostMaster().Send({ EMessageType::EnemyAggro, &aggro });
 		msgType = EMessageType::EnemyPatrolState;
+		mySettings.mySpeed = myWalkSpeed;
 	}break;
 
 	case EBehaviour::Seek:
 	{
 		std::cout << "Seek State" << std::endl;
 		msgType = EMessageType::EnemySeekState;
+		mySettings.mySpeed = mySeekSpeed;
 	}break;
 
 	case EBehaviour::Attack:

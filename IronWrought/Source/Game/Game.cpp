@@ -58,6 +58,6 @@ void CGame::InitRealGame()
 #ifdef EXCELSIOR_BUILD
 		CStateStack::EState::BootUp);
 #else
-		CStateStack::EState::BootUp);
+		CStateStack::EState::InGame);
 #endif
 }
