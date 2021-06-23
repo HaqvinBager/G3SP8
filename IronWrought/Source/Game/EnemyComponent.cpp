@@ -55,6 +55,7 @@ CEnemyComponent::CEnemyComponent(CGameObject& aParent, const SEnemySetting& some
 	, myStepTimer(0.0f)
 	, myWalkSpeed(1.5f)//1.5f - 2021 06 22
 	, mySeekSpeed(3.0f)//3.0f - 2021 06 22
+	, myGrabRange(2.0f)// was 3.0f pre 2021 06 23
 {
 	//myController = CEngine::GetInstance()->GetPhysx().CreateCharacterController(GameObject().myTransform->Position(), 0.6f * 0.5f, 1.8f * 0.5f, GameObject().myTransform, aHitReport);
 	//myController->GetController().getActor()->setRigidBodyFlag(PxRigidBodyFlag::eUSE_KINEMATIC_TARGET_FOR_SCENE_QUERIES, true);
@@ -213,6 +214,16 @@ void CEnemyComponent::Update()//får bestämma vilket behaviour vi vill köra i 
 				if (myHasFoundPlayer)
 				{
 					myDeAggroTimer = 0.0f;
+
+					if (mySqrdDistanceToPlayer <= myGrabRange ) 
+					{
+						myHasFoundPlayer = false;
+						myHeardSound = false;
+						myHasReachedAlertedTarget = true;
+						myHasReachedLastPlayerPosition = true;
+						SetState(EBehaviour::Attack);
+						return;
+					}
 				}
 
 				if (!transform && !myHasFoundPlayer) 
@@ -271,8 +282,7 @@ void CEnemyComponent::Update()//får bestämma vilket behaviour vi vill köra i 
 		}
 		else {
 
-			// is compared to sqrd distance => != 3m
-			if ((mySqrdDistanceToPlayer <= myGrabRange && myHasFoundPlayer) || mySqrdDistanceToPlayer <= (myGrabRange * 0.6f)) {
+			if (mySqrdDistanceToPlayer <= (myGrabRange * 0.5f)) {
 				myHasFoundPlayer = false;
 				myHeardSound = false;
 				myHasReachedAlertedTarget = true;
@@ -286,11 +296,9 @@ void CEnemyComponent::Update()//får bestämma vilket behaviour vi vill köra i 
 					SetState(EBehaviour::Detection);
 			}
 			else if (!myHasFoundPlayer && !myHasReachedLastPlayerPosition /*&& !myHeardSound && myHasReachedAlertedTarget*/) {
-				mySettings.mySpeed = mySeekSpeed;
 				SetState(EBehaviour::Seek);
 			}
 			else if (!myHeardSound && !myHasFoundPlayer && myHasReachedLastPlayerPosition) {
-				mySettings.mySpeed = myWalkSpeed;
 				SetState(EBehaviour::Patrol);
 			}
 			else if (myHasReachedAlertedTarget) {
@@ -300,7 +308,6 @@ void CEnemyComponent::Update()//får bestämma vilket behaviour vi vill köra i 
 			}
 			else // Test to see if it resolves stuck at Idle
 			{
-				mySettings.mySpeed = myWalkSpeed;
 				SetState(EBehaviour::Patrol);
 			}
 		}
@@ -327,7 +334,7 @@ void CEnemyComponent::Update()//får bestämma vilket behaviour vi vill köra i 
 				targetOrientation = altAngle;
 		}
 		
-		std::cout << __FUNCTION__ << " Angle: " << targetOrientation << std::endl;
+		/*std::cout << __FUNCTION__ << " Angle: " << targetOrientation << std::endl;*/
 		myCurrentOrientation = Lerp(myCurrentOrientation, targetOrientation, 10.0f * CTimer::Dt());
 		GameObject().myTransform->Rotation({ 0, myCurrentOrientation + 180.f, 0 });
 
@@ -351,7 +358,6 @@ void CEnemyComponent::Update()//får bestämma vilket behaviour vi vill köra i 
 			myCurrentStateBlend = detectedBehaviour->PercentileOfTimer();
 			if (myCurrentStateBlend <= 0.0f)
 			{
-				mySettings.mySpeed = mySeekSpeed;
 				SetState(EBehaviour::Seek);
 				myCurrentStateBlend = 1.0f;
 			}
@@ -429,12 +435,14 @@ void CEnemyComponent::SetState(EBehaviour aState)
 		aggro = false;
 		CMainSingleton::PostMaster().Send({ EMessageType::EnemyAggro, &aggro });
 		msgType = EMessageType::EnemyPatrolState;
+		mySettings.mySpeed = myWalkSpeed;
 	}break;
 
 	case EBehaviour::Seek:
 	{
 		std::cout << "Seek State" << std::endl;
 		msgType = EMessageType::EnemySeekState;
+		mySettings.mySpeed = mySeekSpeed;
 	}break;
 
 	case EBehaviour::Attack:

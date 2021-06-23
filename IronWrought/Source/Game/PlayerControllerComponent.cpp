@@ -397,7 +397,7 @@ void CPlayerControllerComponent::OnCrouch()
 		start.y += (myColliderHeightStanding / 2);
 		Vector3 dir = GameObject().myTransform->GetWorldMatrix().Up();
 		//checks if we can stand up 
-		PxRaycastBuffer hit = CEngine::GetInstance()->GetPhysx().Raycast(start, dir, (myColliderHeightStanding), CPhysXWrapper::ELayerMask::STATIC_ENVIRONMENT);
+		PxRaycastBuffer hit = CEngine::GetInstance()->GetPhysx().Raycast(start, dir, (myColliderHeightStanding), CPhysXWrapper::ELayerMask::COVER | CPhysXWrapper::ELayerMask::WORLD | CPhysXWrapper::ELayerMask::DYNAMIC_OBJECTS);
 		if (hit.getNbAnyHits() <= 0)
 		{
 			myCanStand = true;
