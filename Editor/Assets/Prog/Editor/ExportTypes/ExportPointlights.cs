@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 
 [System.Serializable]
@@ -31,9 +32,21 @@ public class ExportPointlights
             Transform idTransform = null;
             PointLight lightValue = new PointLight();
             if (allLights[i].transform.parent == null)
+            {
                 idTransform = allLights[i].transform;
-            else
-                idTransform = allLights[i].transform.parent;
+            }
+            else 
+            {
+                PrefabAssetType type = PrefabUtility.GetPrefabAssetType(allLights[i].transform.parent.gameObject);
+                if (type == PrefabAssetType.NotAPrefab)
+                {
+                    idTransform = allLights[i].transform;
+                }
+                else
+                {
+                    idTransform = allLights[i].transform.parent;
+                }
+            }
 
             lightValue.instanceID = idTransform.GetInstanceID();
             lightValue.range = allLights[i].range;
