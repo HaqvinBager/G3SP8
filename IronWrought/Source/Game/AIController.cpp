@@ -275,14 +275,19 @@ void CSeek::Receive(const SMessage& aMsg)
 
 	if (aMsg.myMessageType == EMessageType::EnemyFoundPlayer) {
 		myFoundPlayer = true;
+		myLastPlayerPosition = *static_cast<Vector3*>(aMsg.data);
+		myLastPlayerPosition.y = myPositionY;
 		std::cout << "Amount Seen Player: " << ++amount << std::endl;
+		std::cout << __FUNCTION__ << " ENEMY FOUND PLAYER Player Pos: " << myLastPlayerPosition.x << " " << myLastPlayerPosition.y << " " << myLastPlayerPosition.z  << std::endl;
 	}
 
 	if (aMsg.myMessageType == EMessageType::EnemyLostPlayer) {
 		myFoundPlayer = false;
 		amount = 0;
-		myLastPlayerPosition = *static_cast<Vector3*>(aMsg.data);
-		myLastPlayerPosition.y = myPositionY;
+		//myLastPlayerPosition = *static_cast<Vector3*>(aMsg.data);
+		//myLastPlayerPosition.y = myPositionY;
+		Vector3 plPos = IRONWROUGHT->GetActiveScene().Player()->myTransform->Position();
+		std::cout << __FUNCTION__ << " ENEMY LOST PLAYER  Player Pos: " << plPos.x << " " << plPos.y << " " << plPos.z  << std::endl;
 	}
 }
 

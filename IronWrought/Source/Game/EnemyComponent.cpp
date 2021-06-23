@@ -47,7 +47,7 @@ CEnemyComponent::CEnemyComponent(CGameObject& aParent, const SEnemySetting& some
 	, myAggroTimer(0.0f)
 	, myAggroTime(3.0f)
 	, myDeAggroTimer(0.0f)
-	, myDeAggroTime(2.0f)
+	, myDeAggroTime(2.5f)
 	, myHasScreamed(false)
 	, myDetachedPlayerHead(nullptr)
 	, myCurrentVignetteBlend(0.0f)
@@ -202,18 +202,20 @@ void CEnemyComponent::Update()//får bestämma vilket behaviour vi vill köra i 
 
 		if (degrees <= viewAngle) {
 			Vector3 direction = playerPos - enemyPos;
-			//PxRaycastBuffer hit = CEngine::GetInstance()->GetPhysx().Raycast(enemyPos, direction, range, CPhysXWrapper::ELayerMask::STATIC_ENVIRONMENT | CPhysXWrapper::ELayerMask::PLAYER);
 			PxRaycastBuffer hit = CEngine::GetInstance()->GetPhysx().Raycast(enemyPos, direction, range, CPhysXWrapper::ELayerMask::WORLD | CPhysXWrapper::ELayerMask::PLAYER | CPhysXWrapper::ELayerMask::COVER);
-			//CDebug::GetInstance()->DrawLine(enemyPos, direction * range, 0.0f);
-			//CDebug::GetInstance()->DrawLine(enemyPos + Vector3(0.0f, 1.8f, 0.0f), direction * range, 0.0f);
 
 			if (hit.getNbAnyHits() > 0) 
 			{
 				CTransformComponent* transform = (CTransformComponent*)hit.getAnyHit(0).actor->userData;
 				
-				if (myHasFoundPlayer)
+				if (!transform && myHasFoundPlayer)
 				{
 					myDeAggroTimer = 0.0f;
+
+					SMessage msg;
+					msg.data = static_cast<void*>(&playerPos);
+					msg.myMessageType = EMessageType::EnemyFoundPlayer;
+					CMainSingleton::PostMaster().Send(msg);
 
 					if (mySqrdDistanceToPlayer <= myGrabRange ) 
 					{
@@ -224,6 +226,11 @@ void CEnemyComponent::Update()//får bestämma vilket behaviour vi vill köra i 
 						SetState(EBehaviour::Attack);
 						return;
 					}
+				}
+				else if (myHasFoundPlayer)
+				{
+					myDeAggroTimer += CTimer::Dt();
+					std::cout << __FUNCTION__ << " " << __LINE__ << " INSIDE RAY CAST DEAGGROTIMER " << myDeAggroTimer << std::endl;
 				}
 
 				if (!transform && !myHasFoundPlayer) 
@@ -249,7 +256,11 @@ void CEnemyComponent::Update()//får bestämma vilket behaviour vi vill köra i 
 						myHasReachedAlertedTarget = true;
 						myHasFoundPlayer = true;
 						myHasReachedLastPlayerPosition = false;
-						CMainSingleton::PostMaster().Send({ EMessageType::EnemyFoundPlayer });
+
+						SMessage msg;
+						msg.data = static_cast<void*>(&playerPos);
+						msg.myMessageType = EMessageType::EnemyFoundPlayer;
+						CMainSingleton::PostMaster().Send(msg);
 					}
 				}
 			}
@@ -257,20 +268,35 @@ void CEnemyComponent::Update()//får bestämma vilket behaviour vi vill köra i 
 		else if (myHasFoundPlayer)//Out of View
 		{
 			myDeAggroTimer += CTimer::Dt();
-			//std::cout << __FUNCTION__ << " " << myDeAggroTimer << std::endl;
-			if (myDeAggroTimer >= myDeAggroTime)
-			{
-				myDeAggroTimer = 0.0f;
-				myIdlingTimer = 0.0f;
-				myDetectionTimer = 0.0f;
-				myAggroTimer = 0.0f;
-				myHasFoundPlayer = false;
-				myHasReachedLastPlayerPosition = false;
-				SMessage msg;
-				msg.data = static_cast<void*>(&playerPos);
-				msg.myMessageType = EMessageType::EnemyLostPlayer;
-				CMainSingleton::PostMaster().Send(msg);
-			}
+			std::cout << __FUNCTION__ << " " << __LINE__ << " OUT OF CONE DEAGGROTIMER " << myDeAggroTimer << std::endl;
+			
+			//if (myDeAggroTimer >= myDeAggroTime)
+			//{
+			//	myDeAggroTimer = 0.0f;
+			//	myIdlingTimer = 0.0f;
+			//	myDetectionTimer = 0.0f;
+			//	myAggroTimer = 0.0f;
+			//	myHasFoundPlayer = false;
+			//	myHasReachedLastPlayerPosition = false;
+			//	SMessage msg;
+			//	//msg.data = static_cast<void*>(&playerPos);
+			//	msg.myMessageType = EMessageType::EnemyLostPlayer;
+			//	CMainSingleton::PostMaster().Send(msg);
+			//}
+		}
+
+		if (myDeAggroTimer >= myDeAggroTime)
+		{
+			myDeAggroTimer = 0.0f;
+			myIdlingTimer = 0.0f;
+			myDetectionTimer = 0.0f;
+			myAggroTimer = 0.0f;
+			myHasFoundPlayer = false;
+			myHasReachedLastPlayerPosition = false;
+			SMessage msg;
+			//msg.data = static_cast<void*>(&playerPos);
+			msg.myMessageType = EMessageType::EnemyLostPlayer;
+			CMainSingleton::PostMaster().Send(msg);
 		}
 
 		if (myCurrentState == EBehaviour::Idle) 
