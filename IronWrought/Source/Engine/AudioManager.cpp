@@ -1052,6 +1052,8 @@ std::string CAudioManager::TranslateEnum(ESFX enumerator) const {
 		return "InsertHandle";
 	case ESFX::FastDoorOpen:
 		return "FastDoorOpen";
+	case ESFX::PizzaImpact:
+		return "PizzaImpact";
 	default:
 		return "";
 	}
