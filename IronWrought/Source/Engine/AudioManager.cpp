@@ -1050,6 +1050,8 @@ std::string CAudioManager::TranslateEnum(ESFX enumerator) const {
 		return "MovePainting3";
 	case ESFX::InsertHandle:
 		return "InsertHandle";
+	case ESFX::FastDoorOpen:
+		return "FastDoorOpen";
 	default:
 		return "";
 	}
