@@ -11,7 +11,7 @@ class CAudioChannel;
 
 enum class EMusic { Count };
 enum class EAmbience { Cottage1, Cottage2, Basement1, Basement2, Count };
-enum class EPropAmbience { GrandfatherClock, TVStatic, ElectricalCabinet, Boiler, Refrigerator, Toilet, PhoneCalling, PhoneDead, Count };
+enum class EPropAmbience { GrandfatherClock, TVStatic, ElectricalCabinet, Boiler, Refrigerator, Toilet, WaterFlow, WaterDrip, Count };
 enum class ESFX { Unused, Grab, Throw, LetGo, Unused1, EnemyHit, SwitchPull, PickupGravityGlove, PickupHeal, EnemyAttack, CardboardBox, MovePainting, DoorOpen, PhoneDead, WoodImpactMedium, WoodImpactSmall, CeramicImpactLarge, CeramicImpactMedium, CeramicImpactSmall, PlasticImpact, PaperImpact, SilverwareImpact, AshtrayImpact, CanImpact, BookImpact, ToiletPaperRollImpact, CameraImpact, ViolinImpact, DoorRattle, PuzzleProgress, PuzzleSolved, PuzzleKey, InsertFuse, MechanicalDoorOpen, DoorCreak, DoorClose, ChestCreak, MovePainting2, MovePainting3, InsertHandle, Count };
 enum class ESFXCollection { StepWood, StepWoodFast, StepCarpet, StepCarpetFast, StepConcrete, StepConcreteFast, StepEnemy, StepEnemyFast, Count };
 enum class EUI { ButtonClick, PlayClick, HoverButton, CameraWoosh, Count };
