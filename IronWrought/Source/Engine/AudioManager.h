@@ -143,6 +143,12 @@ private:
 	float myDynamicChannel3;
 	float myDynamicChannel4;
 
+	float myEnemyMinDistance;
+	float myEnemyMaxDistance;
+	float myEnemyMinAngle;
+	float myEnemyMaxAngle;
+	float myEnemyMinVolume;
+
 	struct SDelayedAudio
 	{
 		CAudio* myAudio;
