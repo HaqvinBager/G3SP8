@@ -270,7 +270,7 @@ void CEnemyComponent::Update()//får bestämma vilket behaviour vi vill köra i 
 			myDeAggroTimer += CTimer::Dt();
 			std::cout << __FUNCTION__ << " " << __LINE__ << " OUT OF CONE DEAGGROTIMER " << myDeAggroTimer << std::endl;
 			
-			//if (myDeAggroTimer >= myDeAggroTime)
+			//if (myDeAggroTimer >= myDeAggroTime)// Pre 2021 06 23
 			//{
 			//	myDeAggroTimer = 0.0f;
 			//	myIdlingTimer = 0.0f;
