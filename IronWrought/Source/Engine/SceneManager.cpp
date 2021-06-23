@@ -48,8 +48,10 @@
 #include <DestroyActivation.h>
 #include <RotateActivation.h>
 #include <MoveActivation.h>
+#include <MoveObjectWithIDActivation.h>
 #include <ListenerBehavior.h>
 #include <MoveResponse.h>
+#include <MoveObjectWithIDResponse.h>
 #include <RotateResponse.h>
 #include <PrintResponse.h>
 #include <ToggleResponse.h>
@@ -226,6 +228,8 @@ bool CSceneManager::AddToScene(CScene& aScene, Binary::SLevelData& aBinLevelData
 
 			if (sceneData.HasMember("activationMoves"))
 				AddPuzzleActivationMove(aScene, sceneData["activationMoves"].GetArray());
+			if (sceneData.HasMember("activationMoveObjectWithIDs"))
+				AddPuzzleActivationMoveObjectWithID(aScene, sceneData["activationMoveObjectWithIDs"].GetArray());
 			if (sceneData.HasMember("activationRotates"))
 				AddPuzzleActivationRotate(aScene, sceneData["activationRotates"].GetArray());
 			if (sceneData.HasMember("activationDestroys"))
@@ -255,6 +259,8 @@ bool CSceneManager::AddToScene(CScene& aScene, Binary::SLevelData& aBinLevelData
 				AddNextLevelResponse(aScene, sceneData["responseNextLevel"].GetArray());
 			if (sceneData.HasMember("responsePlayVFXes"))
 				AddPuzzleResponsePlayVFX(aScene, sceneData["responsePlayVFXes"].GetArray());
+			if (sceneData.HasMember("responseMoveObjectIDs"))
+				AddPuzzleResponseMoveOtherGameObject(aScene, sceneData["responseMoveObjectIDs"].GetArray());
 
 			AddDirectionalLights(aScene, sceneData["directionalLights"].GetArray());
 			SetVertexPaintedColors(aScene, sceneData["vertexColors"].GetArray(), vertexPaintData);
@@ -704,6 +710,32 @@ void CSceneManager::AddPuzzleActivationMove(CScene& aScene, RapidArray someData)
 	}
 }
 
+void CSceneManager::AddPuzzleActivationMoveObjectWithID(CScene& aScene, RapidArray someData)
+{
+	for (const auto& response : someData)
+	{
+		CGameObject* gameObject = aScene.FindObjectWithID(response["instanceID"].GetInt());
+		if (!gameObject)
+			continue;
+
+		CMoveObjectWithIDActivation::SSettings settings = {};
+		settings.myDuration = response["duration"].GetFloat();
+
+		settings.myStartPosition = { response["start"]["x"].GetFloat(),
+									 response["start"]["y"].GetFloat(),
+									 response["start"]["z"].GetFloat() };
+
+		settings.myEndPosition = { response["end"]["x"].GetFloat(),
+									response["end"]["y"].GetFloat(),
+									response["end"]["z"].GetFloat() };
+
+		settings.myDelay = response["delay"].GetFloat();
+		settings.myGOIDToMove = response["gameObjectID"].GetInt();
+
+		gameObject->AddComponent<CMoveObjectWithIDActivation>(*gameObject, settings);
+	}
+}
+
 void CSceneManager::AddPuzzleActivationRotate(CScene& aScene, RapidArray someData)
 {
 	for (const auto& activation : someData)
@@ -1120,6 +1152,35 @@ void CSceneManager::AddPuzzleResponseAddForce(CScene& aScene, const std::vector<
 			settings.myDirection = data.myDirection;
 			gameObject->AddComponent<CAddForceResponse>(*gameObject, settings);
 		}
+	}
+}
+
+void CSceneManager::AddPuzzleResponseMoveOtherGameObject(CScene& aScene, RapidArray someData)
+{
+	for (const auto& response : someData)
+	{
+		CGameObject* gameObject = aScene.FindObjectWithID(response["instanceID"].GetInt());
+		if (!gameObject)
+			continue;
+
+		SSettings<Vector3> settings = {};
+
+		settings.myOrigin = gameObject->myTransform->WorldPosition();
+
+		settings.myDuration = response["duration"].GetFloat();
+		settings.myDelay = response["delay"].GetFloat();
+
+		settings.myStart = { response["start"]["x"].GetFloat(),
+									 response["start"]["y"].GetFloat(),
+									 response["start"]["z"].GetFloat() };
+
+		settings.myEnd = { response["end"]["x"].GetFloat(),
+									response["end"]["y"].GetFloat(),
+									response["end"]["z"].GetFloat() };
+
+		int gameObjectID = response["gameObjectID"].GetInt();
+
+		gameObject->AddComponent<CMoveObjectWithIDResponse>(*gameObject, settings, gameObjectID);
 	}
 }
 

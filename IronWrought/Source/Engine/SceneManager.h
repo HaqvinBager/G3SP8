@@ -55,6 +55,7 @@ private:
 
 	static void AddPuzzleKey(CScene& aScene, RapidArray someData);
 	static void AddPuzzleActivationMove(CScene& aScene, RapidArray someData);
+	static void AddPuzzleActivationMoveObjectWithID(CScene& aScene, RapidArray someData);
 	static void AddPuzzleActivationRotate(CScene& aScene, RapidArray someData);
 	static void AddPuzzleActivationDestroy(CScene& aScene, RapidArray someData);
 	static void AddPuzzleActivationAudio(CScene& aScene, RapidArray someData);
@@ -73,6 +74,7 @@ private:
 	static void AddPuzzleResponsePlayVFX(CScene& aScene, RapidArray someData);
 	static void AddPuzzleResponseFlicker(CScene& aScene, const std::vector<Binary::SFlickerData>& someData);
 	static void AddPuzzleResponseAddForce(CScene& aScene, const std::vector<Binary::SAddForceData>& someData);
+	static void AddPuzzleResponseMoveOtherGameObject(CScene& aScene, RapidArray someData);
 
 
 	//static void AddPuzzleResponseTeleporter(CScene& aScene, RapidArray someData);

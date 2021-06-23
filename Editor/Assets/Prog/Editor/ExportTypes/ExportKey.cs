@@ -87,6 +87,17 @@ public struct ActivationPlayVFXData
     public int instanceID;
 }
 
+[System.Serializable]
+public struct ActivationMoveObjectWithIDData
+{
+    public Vector3 start;
+    public Vector3 end;
+    public float duration;
+    public float delay;
+    public int gameObjectID;
+    public int instanceID;
+}
+
 
 [System.Serializable]
 public struct KeyCollection
@@ -99,6 +110,7 @@ public struct KeyCollection
     public List<ActivationNextLevelData> activationNextLevel;
     public List<ActivationLightData> activationLights;
     public List<ActivationPlayVFXData> activationPlayVFXes;
+    public List<ActivationMoveObjectWithIDData> activationMoveObjectWithIDs;
 }
 
 public class ExportKey
@@ -114,6 +126,7 @@ public class ExportKey
         collection.activationNextLevel = new List<ActivationNextLevelData>();
         collection.activationLights = new List<ActivationLightData>();
         collection.activationPlayVFXes = new List<ActivationPlayVFXData>();
+        collection.activationMoveObjectWithIDs = new List<ActivationMoveObjectWithIDData>();
 
         Key[] keys = GameObject.FindObjectsOfType<Key>();
         foreach (Key key in keys)
@@ -135,6 +148,7 @@ public class ExportKey
 
             ExportRotateActivations(ref collection.activationRotates, key);
             ExportMoveActivations(ref collection.activationMoves, key);
+            ExportMoveObjectWithIDActivations(ref collection.activationMoveObjectWithIDs, key);
             ExportPlayAudioActivations(ref collection.activationAudios, key);
             ExportPlayVoiceActivations(ref collection.activationVoices, key);
             ExportNextLevelActivations(ref collection.activationNextLevel, key);
@@ -153,6 +167,21 @@ public class ExportKey
             moveData.start = move.start;
             moveData.end = move.end;
             moveData.duration = move.duration;
+            moveData.instanceID = move.transform.GetInstanceID();
+            moves.Add(moveData);
+        }
+    }
+
+    private static void ExportMoveObjectWithIDActivations(ref List<ActivationMoveObjectWithIDData> moves, Key key)
+    {
+        if (key.TryGetComponent(out ActivationMoveObjectWithID move))
+        {
+            ActivationMoveObjectWithIDData moveData = new ActivationMoveObjectWithIDData();
+            moveData.start = move.start;
+            moveData.end = move.end;
+            moveData.duration = move.duration;
+            moveData.delay = move.delay;
+            moveData.gameObjectID = move.aGameObjectID.GetInstanceID();
             moveData.instanceID = move.transform.GetInstanceID();
             moves.Add(moveData);
         }
