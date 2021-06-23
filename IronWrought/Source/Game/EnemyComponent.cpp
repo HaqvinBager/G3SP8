@@ -282,15 +282,6 @@ void CEnemyComponent::Update()//får bestämma vilket behaviour vi vill köra i 
 		}
 		else {
 
-			// is compared to sqrd distance => != 3m
-			//if ((mySqrdDistanceToPlayer <= myGrabRange && myHasFoundPlayer) || mySqrdDistanceToPlayer <= (myGrabRange * 0.5f)) { // Pre 2021 06 23
-			//	myHasFoundPlayer = false;
-			//	myHeardSound = false;
-			//	myHasReachedAlertedTarget = true;
-			//	myHasReachedLastPlayerPosition = true;
-			//	SetState(EBehaviour::Attack);
-			//	return;
-			//}
 			if (mySqrdDistanceToPlayer <= (myGrabRange * 0.5f)) {
 				myHasFoundPlayer = false;
 				myHeardSound = false;
@@ -305,11 +296,9 @@ void CEnemyComponent::Update()//får bestämma vilket behaviour vi vill köra i 
 					SetState(EBehaviour::Detection);
 			}
 			else if (!myHasFoundPlayer && !myHasReachedLastPlayerPosition /*&& !myHeardSound && myHasReachedAlertedTarget*/) {
-				mySettings.mySpeed = mySeekSpeed;
 				SetState(EBehaviour::Seek);
 			}
 			else if (!myHeardSound && !myHasFoundPlayer && myHasReachedLastPlayerPosition) {
-				mySettings.mySpeed = myWalkSpeed;
 				SetState(EBehaviour::Patrol);
 			}
 			else if (myHasReachedAlertedTarget) {
@@ -319,7 +308,6 @@ void CEnemyComponent::Update()//får bestämma vilket behaviour vi vill köra i 
 			}
 			else // Test to see if it resolves stuck at Idle
 			{
-				mySettings.mySpeed = myWalkSpeed;
 				SetState(EBehaviour::Patrol);
 			}
 		}
@@ -370,7 +358,6 @@ void CEnemyComponent::Update()//får bestämma vilket behaviour vi vill köra i 
 			myCurrentStateBlend = detectedBehaviour->PercentileOfTimer();
 			if (myCurrentStateBlend <= 0.0f)
 			{
-				mySettings.mySpeed = mySeekSpeed;
 				SetState(EBehaviour::Seek);
 				myCurrentStateBlend = 1.0f;
 			}
@@ -448,12 +435,14 @@ void CEnemyComponent::SetState(EBehaviour aState)
 		aggro = false;
 		CMainSingleton::PostMaster().Send({ EMessageType::EnemyAggro, &aggro });
 		msgType = EMessageType::EnemyPatrolState;
+		mySettings.mySpeed = myWalkSpeed;
 	}break;
 
 	case EBehaviour::Seek:
 	{
 		std::cout << "Seek State" << std::endl;
 		msgType = EMessageType::EnemySeekState;
+		mySettings.mySpeed = mySeekSpeed;
 	}break;
 
 	case EBehaviour::Attack:

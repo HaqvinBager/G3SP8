@@ -1197,8 +1197,8 @@ void CSceneManager::AddPlayer(CScene& aScene, RapidObject someData)
 	player->AddComponent<CPlayerComponent>(*player);
 	float speedModifider = 0.7f;
 	float walkSpeed = 0.04f * speedModifider;// was 0.09f before 2021 06 02
-	CPlayerControllerComponent* pcc = player->AddComponent<CPlayerControllerComponent>(*player, walkSpeed, walkSpeed * 0.4f, CEngine::GetInstance()->GetPhysx().GetPlayerReportBack());// CPlayerControllerComponent constructor sets position of camera child object.
-	pcc->SprintSpeedModifier(speedModifider * 2.6f);
+	CPlayerControllerComponent* pcc = player->AddComponent<CPlayerControllerComponent>(*player, walkSpeed, walkSpeed * 0.66f, CEngine::GetInstance()->GetPhysx().GetPlayerReportBack());// CPlayerControllerComponent constructor sets position of camera child object.
+	pcc->SprintSpeedModifier(speedModifider * 2.65f);
 	pcc->StepTime((1.0f / (walkSpeed * 60.0f)));// Short explanation: for SP7 Nico added a steptimer for playback of stepsounds. It was set to walkSpeed * 5.0f. Changing walk speed to something lower does not give desirable results (shorter timer for slower speed sounds odd). Hence this.
 	//camera->AddComponent<CVFXSystemComponent>(*camera, ASSETPATH("Assets/Graphics/VFX/JSON/VFXSystem_Player.json"));
 
