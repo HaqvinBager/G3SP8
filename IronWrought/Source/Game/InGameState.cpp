@@ -64,6 +64,8 @@ CInGameState::CInGameState(CStateStack& aStateStack, const CStateStack::EState a
 	, myEndCreditsShowForTimer(5.0f)
 	, myEndCreditsFadeOutTimer(3.0f)
 	, myMenuFadeInTimer(3.0f)
+	, myGameOverTimer(0.0f)
+	, myGameOverTimerMax(8.0f)
 {
 }
 
@@ -92,6 +94,7 @@ void CInGameState::Awake()
 	myCanvases[EInGameCanvases_HUD]->Init(ASSETPATH("Assets/IronWrought/UI/JSON/UI_HUD.json"));
 	myCanvases[EInGameCanvases_PauseMenu]->Init(ASSETPATH("Assets/IronWrought/UI/JSON/UI_PauseMenu.json"));
 	myCanvases[EInGameCanvases_LoadingScreen]->Init(ASSETPATH("Assets/IronWrought/UI/JSON/UI_LoadingScreen.json"));
+	myCanvases[EInGameCanvases_GameOver]->Init(ASSETPATH("Assets/IronWrought/UI/JSON/UI_GameOver.json"));
 
 #ifdef INGAME_USE_MENU
 
@@ -272,13 +275,32 @@ void CInGameState::Update()
 			CMainSingleton::PostMaster().Send({ EMessageType::PauseMenu, &isPaused });
 		}
 	}
+
 	if (myMenuCamera)
 	{
 		myMenuCamera->myTransform->Position(Vector3::Lerp(myMenuCamera->myTransform->Position(), myMenuCameraTargetPosition, myMenuCameraSpeed * CTimer::Dt()));
 		myMenuCamera->myTransform->Rotation(Quaternion::Slerp(myMenuCamera->myTransform->Rotation(), myMenuCameraTargetRotation, myMenuCameraSpeed * CTimer::Dt()));
 	}
+
+	if (myCurrentCanvas == EInGameCanvases_GameOver)
+	{
+		myGameOverTimer -= CTimer::Dt();
+		if (myGameOverTimer <= 0.0f)
+		{
+			CMainSingleton::PostMaster().Send({ EMessageType::ClearStaticAudioSources });
+			ToggleCanvas(EInGameCanvases_LoadingScreen);
+			IRONWROUGHT->GetActiveScene().MainCamera()->Fade(false, 0.5f);
+			IRONWROUGHT->GetActiveScene().PlayerController()->LockMovementFor(0.5f);
+			CMainSingleton::PostMaster().Send({ PostMaster::SMSG_DISABLE_GLOVE, nullptr });
+			myMenuCamera = nullptr;
+			CSceneFactory::Get()->LoadSceneAsync(myCurrentLevel, myState, [this](std::string aMsg) { CInGameState::OnSceneLoadCompleteInGame(aMsg); });
+			return;
+		}
+	}
 #else
 #endif
+
+
 
 	DEBUGFunctionality();
 
@@ -347,13 +369,17 @@ void CInGameState::Receive(const SMessage& aMessage)
 	{
 		case EMessageType::PlayerDied:
 		{
-			CMainSingleton::PostMaster().Send({ EMessageType::ClearStaticAudioSources });
+#ifdef INGAME_USE_MENU
+			ToggleCanvas(EInGameCanvases_GameOver);
+
+			/*CMainSingleton::PostMaster().Send({ EMessageType::ClearStaticAudioSources });
 			ToggleCanvas(EInGameCanvases_LoadingScreen);
 			IRONWROUGHT->GetActiveScene().MainCamera()->Fade(false, 0.5f);
 			IRONWROUGHT->GetActiveScene().PlayerController()->LockMovementFor(0.5f);
 			CMainSingleton::PostMaster().Send({ PostMaster::SMSG_DISABLE_GLOVE, nullptr });
 			myMenuCamera = nullptr;
-			CSceneFactory::Get()->LoadSceneAsync(myCurrentLevel, myState, [this](std::string aMsg) { CInGameState::OnSceneLoadCompleteInGame(aMsg); });
+			CSceneFactory::Get()->LoadSceneAsync(myCurrentLevel, myState, [this](std::string aMsg) { CInGameState::OnSceneLoadCompleteInGame(aMsg); });*/
+#endif // INGAME_USE_MENU
 		}break;
 
 		case EMessageType::LoadLevel:
@@ -400,6 +426,7 @@ void CInGameState::Receive(const SMessage& aMessage)
 			myCanvases[EInGameCanvases_HUD]->Init(ASSETPATH("Assets/IronWrought/UI/JSON/UI_HUD.json"));
 			myCanvases[EInGameCanvases_PauseMenu]->Init(ASSETPATH("Assets/IronWrought/UI/JSON/UI_PauseMenu.json"));
 			myCanvases[EInGameCanvases_LoadingScreen]->Init(ASSETPATH("Assets/IronWrought/UI/JSON/UI_LoadingScreen.json"));
+			myCanvases[EInGameCanvases_GameOver]->Init(ASSETPATH("Assets/IronWrought/UI/JSON/UI_GameOver.json"));
 		} break;
 		case EMessageType::SetResolution1920x1080:
 		{
@@ -408,6 +435,7 @@ void CInGameState::Receive(const SMessage& aMessage)
 			myCanvases[EInGameCanvases_HUD]->Init(ASSETPATH("Assets/IronWrought/UI/JSON/UI_HUD.json"));
 			myCanvases[EInGameCanvases_PauseMenu]->Init(ASSETPATH("Assets/IronWrought/UI/JSON/UI_PauseMenu.json"));
 			myCanvases[EInGameCanvases_LoadingScreen]->Init(ASSETPATH("Assets/IronWrought/UI/JSON/UI_LoadingScreen.json"));
+			myCanvases[EInGameCanvases_GameOver]->Init(ASSETPATH("Assets/IronWrought/UI/JSON/UI_GameOver.json"));
 		} break;
 		case EMessageType::SetResolution2560x1440:
 		{
@@ -416,6 +444,7 @@ void CInGameState::Receive(const SMessage& aMessage)
 			myCanvases[EInGameCanvases_HUD]->Init(ASSETPATH("Assets/IronWrought/UI/JSON/UI_HUD.json"));
 			myCanvases[EInGameCanvases_PauseMenu]->Init(ASSETPATH("Assets/IronWrought/UI/JSON/UI_PauseMenu.json"));
 			myCanvases[EInGameCanvases_LoadingScreen]->Init(ASSETPATH("Assets/IronWrought/UI/JSON/UI_LoadingScreen.json"));
+			myCanvases[EInGameCanvases_GameOver]->Init(ASSETPATH("Assets/IronWrought/UI/JSON/UI_GameOver.json"));
 		} break;
 
 		case EMessageType::MainMenu:
@@ -579,7 +608,72 @@ void CInGameState::ToggleCanvas(EInGameCanvases anEInGameCanvases)
 	CScene& scene = IRONWROUGHT->GetActiveScene();
 	scene.SetCanvas(myCanvases[myCurrentCanvas]);
 
-	if (myCurrentCanvas == EInGameCanvases_MainMenu)
+	switch (myCurrentCanvas)
+	{
+		case EInGameCanvases_MainMenu:
+		{
+			scene.UpdateOnlyCanvas(false);
+			scene.MainCamera(ESceneCamera::MenuCam);
+			myMenuCamera->myTransform->Position(myMenuCameraPositions[0]);
+			IRONWROUGHT->ShowCursor(false);
+			IRONWROUGHT->SetIsMenu(true);
+			myCanvases[myCurrentCanvas]->DisableWidgets();
+
+			if (myEndCreditsState == EEndCreditsState::Init)
+			{
+				myEndCreditsState = EEndCreditsState::FadeInEndCredits;
+				myEndCreditsTimer = myEndCreditsFadeInTimer;
+				myCanvases[myCurrentCanvas]->EnableWidget(3);
+
+				myMenuCamera->Awake();
+				myMenuCamera->GetComponent<CCameraComponent>()->Fade(true, myEndCreditsFadeInTimer);
+				CFullscreenRenderer::SPostProcessingBufferData data = CEngine::GetInstance()->GetPostProcessingBufferData();
+				data.myVignetteStrength = 0.0f;
+				CEngine::GetInstance()->SetPostProcessingBufferData(data);
+			}
+
+			scene.myPlayer->Active(false);
+		}break;
+
+		case EInGameCanvases_PauseMenu:
+		{
+			scene.UpdateOnlyCanvas(true);
+			scene.CanvasIsHUD(false);
+			scene.MainCamera(ESceneCamera::PlayerFirstPerson);
+			IRONWROUGHT->ShowCursor(false);
+			IRONWROUGHT->SetIsMenu(true);
+		}break;
+
+		case EInGameCanvases_HUD:
+		{
+			scene.UpdateOnlyCanvas(false);
+			scene.CanvasIsHUD(true);
+			scene.MainCamera(ESceneCamera::PlayerFirstPerson);
+			CMainSingleton::PostMaster().Unsubscribe(EMessageType::CanvasButtonIndex, this);
+			IRONWROUGHT->HideCursor(false);
+			IRONWROUGHT->SetIsMenu(false);
+		}break;
+
+		case EInGameCanvases_LoadingScreen:
+		{
+			IRONWROUGHT->HideCursor(false);
+			scene.UpdateOnlyCanvas(true);
+			IRONWROUGHT->SetIsMenu(false);
+		}break;
+
+		case EInGameCanvases_GameOver:
+		{
+			scene.MainCamera()->Fade(false, myGameOverTimerMax + 2.0f);
+			scene.UpdateOnlyCanvas(false);
+			IRONWROUGHT->SetIsMenu(false);
+			myGameOverTimer = myGameOverTimerMax;
+		}break;
+
+		default: break;
+	}
+
+	// Pre 2021 06 23 : Differences: Not switch case, missing GameOver 
+	/*if (myCurrentCanvas == EInGameCanvases_MainMenu)
 	{
 		scene.UpdateOnlyCanvas(false);
 		scene.MainCamera(ESceneCamera::MenuCam);
@@ -626,7 +720,7 @@ void CInGameState::ToggleCanvas(EInGameCanvases anEInGameCanvases)
 		scene.SetCanvas(myCanvases[myCurrentCanvas]);
 		scene.UpdateOnlyCanvas(true);
 		IRONWROUGHT->SetIsMenu(false);
-	}
+	}*/
 #else
 	if (myCurrentCanvas == EInGameCanvases_HUD)
 	{
