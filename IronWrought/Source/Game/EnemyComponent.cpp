@@ -45,7 +45,7 @@ CEnemyComponent::CEnemyComponent(CGameObject& aParent, const SEnemySetting& some
 	, myNavMesh(aNavMesh)
 	, myDetectionTimer(0.0f)
 	, myAggroTimer(0.0f)
-	, myAggroTime(1.0f)
+	, myAggroTime(3.0f)
 	, myDeAggroTimer(0.0f)
 	, myDeAggroTime(2.0f)
 	, myHasScreamed(false)
@@ -273,9 +273,18 @@ void CEnemyComponent::Update()//får bestämma vilket behaviour vi vill köra i 
 			}
 		}
 
-		if (myCurrentState == EBehaviour::Idle) {
+		if (myCurrentState == EBehaviour::Idle) 
+		{
+			if (myHasFoundPlayer)
+			{
+				myIdlingTimer = 0.0f;
+				SetState(EBehaviour::Detection);
+			}
+			
 			myIdlingTimer += CTimer::Dt();
-			if (myIdlingTimer >= 2.0f) {
+			//std::cout << "IDLING Aggro timer: " << myAggroTimer << std::endl;
+
+			if (myIdlingTimer >= 6.0f) {
 				myIdlingTimer = 0.0f;
 				SetState(EBehaviour::Patrol);
 			}
