@@ -1197,6 +1197,12 @@ std::string CAudioManager::TranslateEnum(EVOX enumerator) const
 		return "WakeUpAfterDamage2";
 	case EVOX::WakeUpAfterDamage3:
 		return "WakeUpAfterDamage3";
+	case EVOX::Lee1Tip:
+		return "Lee1Tip";
+	case EVOX::Lee2Tip:
+		return "Lee2Tip";
+	case EVOX::Lee3Tip:
+		return "Lee3Tip";
 	default:
 		return "";
 	}
