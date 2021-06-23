@@ -959,10 +959,10 @@ std::string CAudioManager::TranslateEnum(EPropAmbience enumerator) const
 		return "Refrigerator";
 	case EPropAmbience::Toilet:
 		return "Toilet";
-	case EPropAmbience::PhoneCalling:
-		return "PhoneCalling";
-	case EPropAmbience::PhoneDead:
-		return "PhoneDead";
+	case EPropAmbience::WaterFlow:
+		return "WaterFlow";
+	case EPropAmbience::WaterDrip:
+		return "WaterDrip";
 	default:
 		return "";
 	}
