@@ -38,7 +38,6 @@ CEnemyComponent::CEnemyComponent(CGameObject& aParent, const SEnemySetting& some
 	, myHasReachedAlertedTarget(true)
 	, myHasReachedLastPlayerPosition(true)
 	, myHeardSound(false)
-	, myIsIdle(false)
 	, mySqrdDistanceToPlayer(FLT_MAX)
 	, myCloseToPlayerThreshold(FLT_MAX)
 	, myAttackPlayerTimer(0.0f)
@@ -225,7 +224,6 @@ void CEnemyComponent::Update()//får bestämma vilket behaviour vi vill köra i 
 						aggroTime *= 0.33f;
 					}
 
-					myIsIdle = true;
 					if (myPlayer != nullptr)
 					{
 						myIdleState->SetTarget(myPlayer->myTransform->Position());
@@ -235,9 +233,6 @@ void CEnemyComponent::Update()//får bestämma vilket behaviour vi vill köra i 
 					if (myAggroTimer >= aggroTime)
 					{
 						myAggroTimer = 0.0f;
-
-						if (!myHasReachedLastPlayerPosition)
-							myIsIdle = false;
 
 						myHeardSound = false;
 						myHasReachedAlertedTarget = true;
@@ -267,11 +262,11 @@ void CEnemyComponent::Update()//får bestämma vilket behaviour vi vill köra i 
 			}
 		}
 
-		if (myIsIdle) {
+		if (myCurrentState == EBehaviour::Idle) {
 			myIdlingTimer += CTimer::Dt();
 			if (myIdlingTimer >= 2.0f) {
 				myIdlingTimer = 0.0f;
-				myIsIdle = false;
+				SetState(EBehaviour::Patrol);
 			}
 		}
 		else {
@@ -280,7 +275,6 @@ void CEnemyComponent::Update()//får bestämma vilket behaviour vi vill köra i 
 			if ((mySqrdDistanceToPlayer <= myGrabRange && myHasFoundPlayer) || mySqrdDistanceToPlayer <= (myGrabRange * 0.6f)) {
 				myHasFoundPlayer = false;
 				myHeardSound = false;
-				myIsIdle = false;
 				myHasReachedAlertedTarget = true;
 				myHasReachedLastPlayerPosition = true;
 				SetState(EBehaviour::Attack);
@@ -530,8 +524,7 @@ void CEnemyComponent::Receive(const SMessage& aMsg)
 			if (gameobject) {
 				std::vector<Vector3> path = myNavMesh->CalculatePath(GameObject().myTransform->Position(), gameobject->myTransform->Position(), myNavMesh);
 				if (myNavMesh->PathLength(path, GameObject().myTransform->Position()) <= 20.f && !myHasFoundPlayer && myHasReachedLastPlayerPosition) {
-					/*SetState(EBehaviour::Idle);*/
-					//myIsIdle = true;
+
 					mySettings.mySpeed = mySeekSpeed;
 					//play heardsound sound
 					CAlerted* alertedBehaviour = static_cast<CAlerted*>(myBehaviours[static_cast<int>(EBehaviour::Alerted)]);
@@ -552,8 +545,7 @@ void CEnemyComponent::Receive(const SMessage& aMsg)
 			if (gameobject) {
 				std::vector<Vector3> path = myNavMesh->CalculatePath(GameObject().myTransform->Position(), gameobject->myTransform->Position(), myNavMesh);
 				if (!myHasFoundPlayer && myHasReachedLastPlayerPosition) {
-					/*SetState(EBehaviour::Idle);*/
-					//myIsIdle = true;
+
 					mySettings.mySpeed = mySeekSpeed;
 					//play heardsound sound
 					CAlerted* alertedBehaviour = static_cast<CAlerted*>(myBehaviours[static_cast<int>(EBehaviour::Alerted)]);
@@ -573,13 +565,11 @@ void CEnemyComponent::Receive(const SMessage& aMsg)
 			//std::cout << " REACHED " << std::endl;
 
 			myHasReachedLastPlayerPosition = true;
-			myIsIdle = true;
 			SetState(EBehaviour::Idle);
 		}break;
 
 		case EMessageType::EnemyReachedTarget: 
 		{
-			myIsIdle = true;
 			myHasReachedAlertedTarget = true;
 			myHeardSound = false;
 			SetState(EBehaviour::Idle);
