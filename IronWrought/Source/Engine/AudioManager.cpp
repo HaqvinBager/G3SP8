@@ -105,7 +105,7 @@ CAudioManager::CAudioManager()
 	}
 
 	myDynamicSource = myWrapper.RequestAudioSource("Enemy");
-	myDynamicSource->Set3DMinMaxDistance(10.0f, 1000.0f);
+	myDynamicSource->Set3DMinMaxDistance(2.0f, 1000.0f);
 	//myDynamicSource->SetVolume(0.2f);
 
 	SetDynamicTrack(EAmbience::Cottage1, EAmbience::Cottage2, EAmbience::Basement1, EAmbience::Basement2);
@@ -620,7 +620,7 @@ void CAudioManager::Update()
 	if (myDynamicObject)
 	{
 		myDynamicSource->Set3DAttributes(myDynamicObject->myTransform->WorldPosition(), { 0.0f, 0.0f, 0.0f });
-		myDynamicSource->Set3DConeAttributes(myDynamicObject->myTransform->Transform().Forward(), 90.0f, 300.0f, 0.3f);
+		myDynamicSource->Set3DConeAttributes(myDynamicObject->myTransform->Transform().Forward(), 65.0f, 120.0f, 0.1f);
 	}
 
 	myWrapper.Update();
