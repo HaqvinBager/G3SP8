@@ -55,6 +55,7 @@ CEnemyComponent::CEnemyComponent(CGameObject& aParent, const SEnemySetting& some
 	, myStepTimer(0.0f)
 	, myWalkSpeed(1.5f)//1.5f - 2021 06 22
 	, mySeekSpeed(3.0f)//3.0f - 2021 06 22
+	, myGrabRange(2.0f)// was 3.0f pre 2021 06 23
 {
 	//myController = CEngine::GetInstance()->GetPhysx().CreateCharacterController(GameObject().myTransform->Position(), 0.6f * 0.5f, 1.8f * 0.5f, GameObject().myTransform, aHitReport);
 	//myController->GetController().getActor()->setRigidBodyFlag(PxRigidBodyFlag::eUSE_KINEMATIC_TARGET_FOR_SCENE_QUERIES, true);
@@ -213,6 +214,16 @@ void CEnemyComponent::Update()//får bestämma vilket behaviour vi vill köra i 
 				if (myHasFoundPlayer)
 				{
 					myDeAggroTimer = 0.0f;
+
+					if (mySqrdDistanceToPlayer <= myGrabRange ) 
+					{
+						myHasFoundPlayer = false;
+						myHeardSound = false;
+						myHasReachedAlertedTarget = true;
+						myHasReachedLastPlayerPosition = true;
+						SetState(EBehaviour::Attack);
+						return;
+					}
 				}
 
 				if (!transform && !myHasFoundPlayer) 
@@ -272,7 +283,15 @@ void CEnemyComponent::Update()//får bestämma vilket behaviour vi vill köra i 
 		else {
 
 			// is compared to sqrd distance => != 3m
-			if ((mySqrdDistanceToPlayer <= myGrabRange && myHasFoundPlayer) || mySqrdDistanceToPlayer <= (myGrabRange * 0.6f)) {
+			//if ((mySqrdDistanceToPlayer <= myGrabRange && myHasFoundPlayer) || mySqrdDistanceToPlayer <= (myGrabRange * 0.5f)) { // Pre 2021 06 23
+			//	myHasFoundPlayer = false;
+			//	myHeardSound = false;
+			//	myHasReachedAlertedTarget = true;
+			//	myHasReachedLastPlayerPosition = true;
+			//	SetState(EBehaviour::Attack);
+			//	return;
+			//}
+			if (mySqrdDistanceToPlayer <= (myGrabRange * 0.5f)) {
 				myHasFoundPlayer = false;
 				myHeardSound = false;
 				myHasReachedAlertedTarget = true;
