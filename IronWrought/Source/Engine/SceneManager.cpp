@@ -1179,8 +1179,9 @@ void CSceneManager::AddPuzzleResponseMoveOtherGameObject(CScene& aScene, RapidAr
 									response["end"]["z"].GetFloat() };
 
 		int gameObjectID = response["gameObjectID"].GetInt();
+		int gameObjectIDToCheckIfActive = response["gameObjectIDToCheckIfActive"].GetInt();
 
-		gameObject->AddComponent<CMoveObjectWithIDResponse>(*gameObject, settings, gameObjectID);
+		gameObject->AddComponent<CMoveObjectWithIDResponse>(*gameObject, settings, gameObjectID, gameObjectIDToCheckIfActive);
 	}
 }
 

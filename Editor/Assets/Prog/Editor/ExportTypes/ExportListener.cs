@@ -30,6 +30,7 @@ public struct ResponseMoveObjectWithIDData
     public float duration;
     public float delay;
     public int gameObjectID;
+    public int gameObjectIDToCheckIfActive;
     public int instanceID;
 }
 
@@ -301,6 +302,7 @@ public class ExportListener
             moveData.duration = move.duration;
             moveData.delay = move.delay;
             moveData.gameObjectID = move.anObjectToMove.GetInstanceID();
+            moveData.gameObjectIDToCheckIfActive = move.disableWhenObjectIsActive.GetInstanceID();
             moveData.instanceID = move.transform.GetInstanceID();
             moves.Add(moveData);
         }

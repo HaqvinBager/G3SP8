@@ -1,13 +1,15 @@
 #include "stdafx.h"
 #include "MoveObjectWithIDResponse.h"
+#include "MoveResponse.h"
 #include "TransformComponent.h"
 #include "Scene.h"
 
-CMoveObjectWithIDResponse::CMoveObjectWithIDResponse(CGameObject& aParent, const SSettings<Vector3>& someSettings, const int& aGOID)
+CMoveObjectWithIDResponse::CMoveObjectWithIDResponse(CGameObject& aParent, const SSettings<Vector3>& someSettings, const int& aGOID, const int& aGOIDToCheckIfActive)
 	: IResponseBehavior(aParent)
 	, myTime(0.0f)
 	, mySettings(someSettings)
 	, myGOIDToMove(aGOID)
+	, myGOIDToCheckIfActive(aGOIDToCheckIfActive)
 {
 	HasBeenActivated(false);
 }
@@ -17,7 +19,18 @@ void CMoveObjectWithIDResponse::Update()
 	if (!HasBeenActivated())
 		return;
 
-	CGameObject* gameObject = CEngine::GetInstance()->GetActiveScene().FindObjectWithID(myGOIDToMove);
+	CGameObject* gameObject = CEngine::GetInstance()->GetActiveScene().FindObjectWithID(myGOIDToCheckIfActive);
+	if (gameObject)
+	{
+		if (gameObject->GetComponent<CMoveResponse>())
+		{
+			gameObject->GetComponent<CMoveResponse>()->Enabled(false);
+			//HasBeenActivated(false);
+			//return;
+		}
+	}
+
+	gameObject = CEngine::GetInstance()->GetActiveScene().FindObjectWithID(myGOIDToMove);
 
 	myTime += CTimer::Dt();
 

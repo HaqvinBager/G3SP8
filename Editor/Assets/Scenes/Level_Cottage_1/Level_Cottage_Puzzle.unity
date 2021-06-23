@@ -441,7 +441,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7378230467a50d848a9fd18fdad76f09, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  dialogueScene: 7
+  dialogueScene: 32
   myIs3D: 1
   myConeDirection: {x: 0, y: 0, z: 0}
   myMinAttenuationAngle: 90
@@ -463,6 +463,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   myLock: {fileID: 0}
   activationType: 1
+--- !u!114 &754570495
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 754570491}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8093bf0719793424d8e82fd738dba18d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  myLock: {fileID: 6712031320492017302}
+  responseType: 1
 --- !u!54 &754570496
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -605,9 +619,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   start: {x: 18.98, y: 1.614, z: -38.99}
-  end: {x: 12.973999, y: 1.614, z: -38.99}
+  end: {x: 12.973999, y: 1.614, z: -39.237003}
   duration: 0.01
-  delay: 0
+  delay: 16
 --- !u!114 &841815094
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -620,7 +634,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7378230467a50d848a9fd18fdad76f09, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  dialogueScene: 5
+  dialogueScene: 31
   myIs3D: 1
   myConeDirection: {x: 0, y: 0, z: 0}
   myMinAttenuationAngle: 90
@@ -775,7 +789,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4159421834661305897, guid: a233b1d4d4742794b88a8d807be05e53, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 12.972
+      value: 12.973999
       objectReference: {fileID: 0}
     - target: {fileID: 4159421834661305897, guid: a233b1d4d4742794b88a8d807be05e53, type: 3}
       propertyPath: m_LocalPosition.y
@@ -783,7 +797,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4159421834661305897, guid: a233b1d4d4742794b88a8d807be05e53, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -45.909
+      value: -45
       objectReference: {fileID: 0}
     - target: {fileID: 4159421834661305897, guid: a233b1d4d4742794b88a8d807be05e53, type: 3}
       propertyPath: m_LocalRotation.w
@@ -897,9 +911,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   start: {x: 18.98, y: 1.614, z: -38.99}
-  end: {x: 12.973999, y: 1.614, z: -38.99}
+  end: {x: 12.973999, y: 1.614, z: -39.237003}
   duration: 0.01
-  delay: 0
+  delay: 32.5
   aGameObjectID: {fileID: 754570490}
 --- !u!114 &1103561765
 MonoBehaviour:
@@ -1096,9 +1110,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   start: {x: 18.98, y: 1.614, z: -38.99}
-  end: {x: 12.973999, y: 1.614, z: -38.99}
+  end: {x: 12.973999, y: 1.614, z: -39.237003}
   duration: 0.01
-  delay: 0
+  delay: 51
 --- !u!114 &1344168018
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1111,7 +1125,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7378230467a50d848a9fd18fdad76f09, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  dialogueScene: 3
+  dialogueScene: 30
   myIs3D: 1
   myConeDirection: {x: 0, y: 0, z: 0}
   myMinAttenuationAngle: 90
@@ -1998,23 +2012,6 @@ MonoBehaviour:
   myMaxAttenuationDistance: 10000
   myMinimumVolume: 10
   myDelay: 0
---- !u!114 &525518077682678465
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 525518077682678459}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 1966709238}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  start: {x: 12.973999, y: 1.614, z: -38.99}
-  end: {x: 18.98, y: 1.614, z: -38.99}
-  duration: 0.01
-  delay: 0
-  anObjectToMove: {fileID: 841815091}
 --- !u!1001 &917798536460198707
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2864,7 +2861,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4159421834661305897, guid: a233b1d4d4742794b88a8d807be05e53, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -39.905
+      value: -39.307
       objectReference: {fileID: 0}
     - target: {fileID: 4159421834661305897, guid: a233b1d4d4742794b88a8d807be05e53, type: 3}
       propertyPath: m_LocalRotation.w
@@ -3230,6 +3227,24 @@ MonoBehaviour:
   onKeyInteractNotify: {fileID: 11400000, guid: f7fa4065f1140774794a7fb024fd4f31, type: 2}
   onLockNotify: {fileID: 11400000, guid: bc0f5a8f83c0cac41808d1a8995f8e34, type: 2}
   interactionType: 1
+--- !u!114 &3845085275272583983
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3845085275272583977}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 1966709238}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  start: {x: 12.973999, y: 1.614, z: -38.99}
+  end: {x: 18.98, y: 1.614, z: -38.99}
+  duration: 0.01
+  delay: 0
+  anObjectToMove: {fileID: 841815091}
+  disableWhenObjectIsActive: {fileID: 841815091}
 --- !u!1 &4266603263020844616 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 4002198032986940795, guid: 4773ad1a9313e4b49a62c6d2f15c4b7e, type: 3}
@@ -3515,6 +3530,7 @@ MonoBehaviour:
   duration: 0.01
   delay: 0
   anObjectToMove: {fileID: 1344168015}
+  disableWhenObjectIsActive: {fileID: 1344168015}
 --- !u!1 &6712031322288785459 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 5812742493947345374, guid: 37732feaecf67d24fa037a9f8a7c788b, type: 3}

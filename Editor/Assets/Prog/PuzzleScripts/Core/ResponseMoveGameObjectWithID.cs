@@ -13,6 +13,7 @@ public class ResponseMoveObjectWithID : MonoBehaviour, IListener
     public float duration = 0.5f;
     public float delay;
     public Transform anObjectToMove;
+    public Transform disableWhenObjectIsActive;
 
     public void Remove()
     {
