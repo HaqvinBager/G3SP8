@@ -100,7 +100,6 @@ private:
 	bool myMovementLocked;
 	bool myHasReachedAlertedTarget;
 	bool myHeardSound;
-	bool myIsIdle;
 	bool myHasScreamed;
 	bool myMakesSound;
 
