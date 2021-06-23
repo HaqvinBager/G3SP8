@@ -327,7 +327,7 @@ void CEnemyComponent::Update()//får bestämma vilket behaviour vi vill köra i 
 				targetOrientation = altAngle;
 		}
 		
-		std::cout << __FUNCTION__ << " Angle: " << targetOrientation << std::endl;
+		/*std::cout << __FUNCTION__ << " Angle: " << targetOrientation << std::endl;*/
 		myCurrentOrientation = Lerp(myCurrentOrientation, targetOrientation, 10.0f * CTimer::Dt());
 		GameObject().myTransform->Rotation({ 0, myCurrentOrientation + 180.f, 0 });
 
