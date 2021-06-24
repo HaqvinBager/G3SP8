@@ -342,6 +342,7 @@ void CAudioManager::Receive(const SMessage& aMessage) {
 		myDynamicSource->Stop();
 		myChannels[CAST(EChannel::Enemy2DChannel)]->Stop();
 		myWrapper.Play(myEnemyVoiceSounds[CAST(EEnemyVoiceLine::EnemyHeardNoise)], myChannels[CAST(EChannel::Enemy2DChannel)]);
+		myWrapper.Play(mySFXAudio[CAST(ESFX::EnemyAlerted)], myChannels[CAST(EChannel::Enemy2DChannel)]);
 	}break;
 
 	case EMessageType::EnemyIdleState:
@@ -1050,6 +1051,8 @@ std::string CAudioManager::TranslateEnum(ESFX enumerator) const {
 		return "FastDoorOpen";
 	case ESFX::PizzaImpact:
 		return "PizzaImpact";
+	case ESFX::EnemyAlerted:
+		return "EnemyAlerted";
 	default:
 		return "";
 	}
