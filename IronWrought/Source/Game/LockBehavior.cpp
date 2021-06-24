@@ -59,6 +59,8 @@ void CLockBehavior::RemoveKey(CKeyBehavior* aKey)
 void CLockBehavior::OnKeyActivated(CKeyBehavior* aKey)
 {
 	myAmountOfKeys++;
+	std::cout << __FUNCTION__ << " Keys: " << myAmountOfKeys << std::endl;
+
 	if (myMaxAmountOfKeys == 3)
 	{
 		CAudioActivation* audioActivation = nullptr;
@@ -68,11 +70,13 @@ void CLockBehavior::OnKeyActivated(CKeyBehavior* aKey)
 			{
 				int soundIndex = 29;
 				CMainSingleton::PostMaster().Send({ EMessageType::PlaySFX, &soundIndex });
+				CMainSingleton::PostMaster().Send({ EMessageType::FoundKey, &aKey->GameObject() });
 			}
 			else if (myAmountOfKeys >= myMaxAmountOfKeys)
 			{
 				int soundIndex = 30;
 				CMainSingleton::PostMaster().Send({ EMessageType::PlaySFX, &soundIndex });
+				CMainSingleton::PostMaster().Send({ EMessageType::FoundKey, &aKey->GameObject() });
 			}
 		}
 	}

@@ -85,7 +85,6 @@ void CInteractionBehavior::UpdateEyes()
 					if (key->GameObject().TryGetComponentAny(&boxCollider))
 					{
 						if (boxCollider->Enabled()) {
-							CMainSingleton::PostMaster().SendLate({ EMessageType::FoundKey, &key->GameObject() });
 							key->TriggerActivations();
 						}
 					}
@@ -98,7 +97,6 @@ void CInteractionBehavior::UpdateEyes()
 					if (leftClickDownLock->GameObject().TryGetComponentAny(&boxCollider))
 					{
 						if (boxCollider->Enabled()) {
-							CMainSingleton::PostMaster().SendLate({ EMessageType::FoundKey, &leftClickDownLock->GameObject() });
 							leftClickDownLock->ActivateEvent();
 						}
 					}

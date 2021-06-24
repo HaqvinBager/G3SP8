@@ -18,6 +18,7 @@ public enum KeyType
     Teleport,
     Light,
     PlayVFX,
+    MoveObject
     NotifyLock,
 }
 
@@ -66,6 +67,9 @@ public class Key : MonoBehaviour
                     break;
                 case KeyType.PlayVFX:
                     AddType<ActivationPlayVFX>(gameObject);
+                    break;    
+                case KeyType.MoveObject:
+                    AddType<ActivationMoveObjectWithID>(gameObject);
                     break;
                 case KeyType.NotifyLock:
                     AddType<ActivationNotifyLock>(gameObject);

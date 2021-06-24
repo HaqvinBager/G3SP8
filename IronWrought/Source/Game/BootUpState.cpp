@@ -20,6 +20,7 @@ CBootUpState::CBootUpState(CStateStack& aStateStack, const CStateStack::EState a
 	, myLogoDisplayDuration(6.0f)
 	, myFadeOutStart(4.5f)
 	, myFadeInDuration(1.5f)
+	, myWarningDisplayDuration(12.0f)
 	, myLogoToRender(0)
 {
 }
@@ -55,6 +56,10 @@ void CBootUpState::Start()
 	myLogos.back()->Init(CSpriteFactory::GetInstance()->GetSprite(ASSETPATH(document["Engine Logo Path"].GetString())));
 	myLogos.back()->SetShouldRender(false);
 
+	myLogos.emplace_back(new CSpriteInstance());
+	myLogos.back()->Init(CSpriteFactory::GetInstance()->GetSprite(ASSETPATH(document["Flickering Lights Warning Path"].GetString())));
+	myLogos.back()->SetShouldRender(false);
+
 	CCanvas& canvas = *IRONWROUGHT->GetActiveScene().Canvas();
 	for (auto& sprite : myLogos)
 	{
@@ -87,16 +92,24 @@ void CBootUpState::Update()
 		myLogos[myLogoToRender]->SetColor(color);
 	}
 
-	if (myTimer > myFadeOutStart)
+	if ((myTimer > myFadeOutStart) && (myLogoToRender < myLogos.size() - 1))
 	{
 		auto color = myLogos[myLogoToRender]->GetColor();
-		color.x = 1.0f - (myTimer - myFadeOutStart) / (myLogoDisplayDuration - myFadeOutStart);
-		color.y = 1.0f - (myTimer - myFadeOutStart) / (myLogoDisplayDuration - myFadeOutStart);
-		color.z = 1.0f - (myTimer - myFadeOutStart) / (myLogoDisplayDuration - myFadeOutStart);
+		color.x = 1.0f - (myTimer - myFadeOutStart) / myFadeInDuration;
+		color.y = 1.0f - (myTimer - myFadeOutStart) / myFadeInDuration;
+		color.z = 1.0f - (myTimer - myFadeOutStart) / myFadeInDuration;
+		myLogos[myLogoToRender]->SetColor(color);
+	}
+	else if ((myTimer > (myWarningDisplayDuration - myFadeInDuration)) && (myLogoToRender == myLogos.size() - 1))
+	{
+		auto color = myLogos[myLogoToRender]->GetColor();
+		color.x = 1.0f - (myTimer - (myWarningDisplayDuration - myFadeInDuration)) / myFadeInDuration;
+		color.y = 1.0f - (myTimer - (myWarningDisplayDuration - myFadeInDuration)) / myFadeInDuration;
+		color.z = 1.0f - (myTimer - (myWarningDisplayDuration - myFadeInDuration)) / myFadeInDuration;
 		myLogos[myLogoToRender]->SetColor(color);
 	}
 
-	if (myTimer > myLogoDisplayDuration) {
+	if ((myTimer > myLogoDisplayDuration) && (myLogoToRender < myLogos.size() - 1)) {
 		myTimer -= myLogoDisplayDuration;
 
 		myLogos[myLogoToRender]->SetShouldRender(false);
@@ -115,6 +128,18 @@ void CBootUpState::Update()
 		color.y = myTimer / myFadeInDuration;
 		color.z = myTimer / myFadeInDuration;
 		myLogos[myLogoToRender]->SetColor(color);
+	}
+	else if ((myTimer > myWarningDisplayDuration) && (myLogoToRender == myLogos.size() - 1))
+	{
+		myLogos[myLogoToRender]->SetShouldRender(false);
+		myLogoToRender++;
+
+		if (myLogoToRender >= myLogos.size())
+		{
+			IRONWROUGHT->ShowCursor(false);
+			myStateStack.PopTopAndPush(CStateStack::EState::InGame);
+			return;
+		}
 	}
 
 #ifdef _DEBUG

@@ -4,15 +4,7 @@
 
 class CMoveResponse : public IResponseBehavior
 {
-public:
-	//struct SSettings
-	//{
-	//	Vector3 myStartPosition;
-	//	Vector3 myEndPosition;
-	//	float myDuration;
-	//	float myDelay;
-	//};
-	
+public:	
 	CMoveResponse(CGameObject& aParent, const SSettings<Vector3>& someSettings);
 	~CMoveResponse() override { }
 	void Update() override;

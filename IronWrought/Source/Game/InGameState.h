@@ -35,6 +35,7 @@ private:
 		EInGameCanvases_HUD,
 		EInGameCanvases_PauseMenu,
 		EInGameCanvases_LoadingScreen,
+		EInGameCanvases_GameOver,
 
 		EInGameCanvases_Count
 	};
@@ -82,4 +83,6 @@ private:
 	const float myEndCreditsShowForTimer;
 	const float myEndCreditsFadeOutTimer;
 	const float myMenuFadeInTimer;
+	float myGameOverTimer;
+	const float myGameOverTimerMax;
 };

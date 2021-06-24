@@ -11,6 +11,13 @@ CLeftClickDownLock::~CLeftClickDownLock()
 
 void CLeftClickDownLock::ActivateEvent()
 {
-	if(Enabled())
+	if (Enabled())
+	{
+		if (mySettings.myOnNotifyName.find("OpenBunkerDoor") != std::string::npos)
+		{
+			CMainSingleton::PostMaster().Send({ EMessageType::FoundKey, &GameObject() });
+		}
+
 		RunEvent();
+	}
 }

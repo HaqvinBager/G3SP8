@@ -231,6 +231,12 @@
     <ClInclude Include="NotifyLockActivation.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="MoveObjectWithIDResponse.h">
+      <Filter>Puzzle\Listener\Response\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="MoveObjectWithIDActivation.h">
+      <Filter>Puzzle\Key\Activation\Components</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Game.cpp">
@@ -397,6 +403,12 @@
     </ClCompile>
     <ClCompile Include="NotifyLockActivation.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="MoveObjectWithIDResponse.cpp">
+      <Filter>Puzzle\Listener\Response\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="MoveObjectWithIDActivation.cpp">
+      <Filter>Puzzle\Key\Activation\Components</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

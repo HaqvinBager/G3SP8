@@ -23,6 +23,18 @@ public struct ResponseMoveData
 }
 
 [System.Serializable]
+public struct ResponseMoveObjectWithIDData
+{
+    public Vector3 start;
+    public Vector3 end;
+    public float duration;
+    public float delay;
+    public int gameObjectID;
+    public int gameObjectIDToCheckIfActive;
+    public int instanceID;
+}
+
+[System.Serializable]
 public struct ResponseRotateData
 {
     public Vector3 start;
@@ -139,6 +151,7 @@ public struct ListenerCollection
     public List<ResponsePlayVFXData> responsePlayVFXes;
     public List<ResponseFlickerData> responseFlicker;
     public List<ResponseAddForceData> responseAddForce;
+    public List<ResponseMoveObjectWithIDData> responseMoveObjectIDs;
 
     public void Export(ExporterBin aBin)
     {
@@ -168,6 +181,7 @@ public class ExportListener
         collection.responsePlayVFXes = new List<ResponsePlayVFXData>();
         collection.responseFlicker = new List<ResponseFlickerData>();
         collection.responseAddForce = new List<ResponseAddForceData>();
+        collection.responseMoveObjectIDs = new List<ResponseMoveObjectWithIDData>();
 
         Listener[] listeners = GameObject.FindObjectsOfType<Listener>();
         foreach (Listener listener in listeners)
@@ -200,6 +214,7 @@ public class ExportListener
             ExportPlayVFXResponses(ref collection.responsePlayVFXes, listener);
             ExportFlickerResponses(ref collection.responseFlicker, listener);
             ExportAddForceResponse(ref collection.responseAddForce, listener);
+            ExportMoveObjectWithIDResponses(ref collection.responseMoveObjectIDs, listener);
         }
         return collection;
     }
@@ -272,6 +287,22 @@ public class ExportListener
             moveData.end = move.end;
             moveData.duration = move.duration;
             moveData.delay = move.delay;
+            moveData.instanceID = move.transform.GetInstanceID();
+            moves.Add(moveData);
+        }
+    }
+
+    private static void ExportMoveObjectWithIDResponses(ref List<ResponseMoveObjectWithIDData> moves, Listener listener)
+    {
+        if (listener.TryGetComponent(out ResponseMoveObjectWithID move))
+        {
+            ResponseMoveObjectWithIDData moveData = new ResponseMoveObjectWithIDData();
+            moveData.start = move.start;
+            moveData.end = move.end;
+            moveData.duration = move.duration;
+            moveData.delay = move.delay;
+            moveData.gameObjectID = move.anObjectToMove.GetInstanceID();
+            moveData.gameObjectIDToCheckIfActive = move.disableWhenObjectIsActive.GetInstanceID();
             moveData.instanceID = move.transform.GetInstanceID();
             moves.Add(moveData);
         }

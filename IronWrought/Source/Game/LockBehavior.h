@@ -58,11 +58,11 @@ public:
 protected:
 	size_t myAmountOfKeys;
 	int myMaxAmountOfKeys;
+	SSettings mySettings;
 
 private:
 	void Receive(const SIDMessage& aMessage) override;
 
-	SSettings mySettings;
 	bool myHasSubscribed;
 	std::vector<CListenerBehavior*> myListeners;
 	std::vector<CKeyBehavior*> myKeys;

@@ -93,6 +93,15 @@ public struct ActivationNotifyLockData
     public int instanceID;
     public int lockToNotifyInstanceID;
 }
+public struct ActivationMoveObjectWithIDData
+{
+    public Vector3 start;
+    public Vector3 end;
+    public float duration;
+    public float delay;
+    public int gameObjectID;
+    public int instanceID;
+}
 
 
 [System.Serializable]
@@ -106,6 +115,7 @@ public struct KeyCollection
     public List<ActivationNextLevelData> activationNextLevel;
     public List<ActivationLightData> activationLights;
     public List<ActivationPlayVFXData> activationPlayVFXes;
+    public List<ActivationMoveObjectWithIDData> activationMoveObjectWithIDs;
     public List<ActivationNotifyLockData> activationNotifyLocks;
 
     public void Export(ExporterBin aExporter)
@@ -117,6 +127,7 @@ public struct KeyCollection
             aExporter.binWriter.Write(activation.lockToNotifyInstanceID);
         }
     }
+
 }
 
 public class ExportKey
@@ -132,6 +143,7 @@ public class ExportKey
         collection.activationNextLevel = new List<ActivationNextLevelData>();
         collection.activationLights = new List<ActivationLightData>();
         collection.activationPlayVFXes = new List<ActivationPlayVFXData>();
+        collection.activationMoveObjectWithIDs = new List<ActivationMoveObjectWithIDData>();
         collection.activationNotifyLocks = new List<ActivationNotifyLockData>();
 
         Key[] keys = GameObject.FindObjectsOfType<Key>();
@@ -154,6 +166,7 @@ public class ExportKey
 
             ExportRotateActivations(ref collection.activationRotates, key);
             ExportMoveActivations(ref collection.activationMoves, key);
+            ExportMoveObjectWithIDActivations(ref collection.activationMoveObjectWithIDs, key);
             ExportPlayAudioActivations(ref collection.activationAudios, key);
             ExportPlayVoiceActivations(ref collection.activationVoices, key);
             ExportNextLevelActivations(ref collection.activationNextLevel, key);
@@ -189,6 +202,21 @@ public class ExportKey
             moveData.start = move.start;
             moveData.end = move.end;
             moveData.duration = move.duration;
+            moveData.instanceID = move.transform.GetInstanceID();
+            moves.Add(moveData);
+        }
+    }
+
+    private static void ExportMoveObjectWithIDActivations(ref List<ActivationMoveObjectWithIDData> moves, Key key)
+    {
+        if (key.TryGetComponent(out ActivationMoveObjectWithID move))
+        {
+            ActivationMoveObjectWithIDData moveData = new ActivationMoveObjectWithIDData();
+            moveData.start = move.start;
+            moveData.end = move.end;
+            moveData.duration = move.duration;
+            moveData.delay = move.delay;
+            moveData.gameObjectID = move.aGameObjectID.GetInstanceID();
             moveData.instanceID = move.transform.GetInstanceID();
             moves.Add(moveData);
         }
@@ -261,9 +289,9 @@ public class ExportKey
     {
         if (key.TryGetComponent(out ActivationLight behavior))
         {
-            if(behavior.IsNullPrintWarning(behavior.target, "Fix this by adding a Target =) Hälsningar, Axel Savage"))
+            if(behavior.IsNullPrintWarning(behavior.target, "Fix this by adding a Target =) Hï¿½lsningar, Axel Savage"))
                 return;
-            if (behavior.IsNullPrintWarning(behavior.targetLight, "Fix this by adding a Target Light =) Hälsningar, Axel Savage"))
+            if (behavior.IsNullPrintWarning(behavior.targetLight, "Fix this by adding a Target Light =) Hï¿½lsningar, Axel Savage"))
                 return;
 
             ActivationLightData data = new ActivationLightData();

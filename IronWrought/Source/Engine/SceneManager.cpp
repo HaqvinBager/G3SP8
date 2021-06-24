@@ -49,8 +49,10 @@
 #include <DestroyActivation.h>
 #include <RotateActivation.h>
 #include <MoveActivation.h>
+#include <MoveObjectWithIDActivation.h>
 #include <ListenerBehavior.h>
 #include <MoveResponse.h>
+#include <MoveObjectWithIDResponse.h>
 #include <RotateResponse.h>
 #include <PrintResponse.h>
 #include <ToggleResponse.h>
@@ -228,6 +230,8 @@ bool CSceneManager::AddToScene(CScene& aScene, Binary::SLevelData& aBinLevelData
 
 			if (sceneData.HasMember("activationMoves"))
 				AddPuzzleActivationMove(aScene, sceneData["activationMoves"].GetArray());
+			if (sceneData.HasMember("activationMoveObjectWithIDs"))
+				AddPuzzleActivationMoveObjectWithID(aScene, sceneData["activationMoveObjectWithIDs"].GetArray());
 			if (sceneData.HasMember("activationRotates"))
 				AddPuzzleActivationRotate(aScene, sceneData["activationRotates"].GetArray());
 			if (sceneData.HasMember("activationDestroys"))
@@ -257,6 +261,8 @@ bool CSceneManager::AddToScene(CScene& aScene, Binary::SLevelData& aBinLevelData
 				AddNextLevelResponse(aScene, sceneData["responseNextLevel"].GetArray());
 			if (sceneData.HasMember("responsePlayVFXes"))
 				AddPuzzleResponsePlayVFX(aScene, sceneData["responsePlayVFXes"].GetArray());
+			if (sceneData.HasMember("responseMoveObjectIDs"))
+				AddPuzzleResponseMoveOtherGameObject(aScene, sceneData["responseMoveObjectIDs"].GetArray());
 
 			AddDirectionalLights(aScene, sceneData["directionalLights"].GetArray());
 			SetVertexPaintedColors(aScene, sceneData["vertexColors"].GetArray(), vertexPaintData);
@@ -707,6 +713,32 @@ void CSceneManager::AddPuzzleActivationMove(CScene& aScene, RapidArray someData)
 	}
 }
 
+void CSceneManager::AddPuzzleActivationMoveObjectWithID(CScene& aScene, RapidArray someData)
+{
+	for (const auto& response : someData)
+	{
+		CGameObject* gameObject = aScene.FindObjectWithID(response["instanceID"].GetInt());
+		if (!gameObject)
+			continue;
+
+		CMoveObjectWithIDActivation::SSettings settings = {};
+		settings.myDuration = response["duration"].GetFloat();
+
+		settings.myStartPosition = { response["start"]["x"].GetFloat(),
+									 response["start"]["y"].GetFloat(),
+									 response["start"]["z"].GetFloat() };
+
+		settings.myEndPosition = { response["end"]["x"].GetFloat(),
+									response["end"]["y"].GetFloat(),
+									response["end"]["z"].GetFloat() };
+
+		settings.myDelay = response["delay"].GetFloat();
+		settings.myGOIDToMove = response["gameObjectID"].GetInt();
+
+		gameObject->AddComponent<CMoveObjectWithIDActivation>(*gameObject, settings);
+	}
+}
+
 void CSceneManager::AddPuzzleActivationRotate(CScene& aScene, RapidArray someData)
 {
 	for (const auto& activation : someData)
@@ -1145,6 +1177,36 @@ void CSceneManager::AddPuzzleResponseAddForce(CScene& aScene, const std::vector<
 	}
 }
 
+void CSceneManager::AddPuzzleResponseMoveOtherGameObject(CScene& aScene, RapidArray someData)
+{
+	for (const auto& response : someData)
+	{
+		CGameObject* gameObject = aScene.FindObjectWithID(response["instanceID"].GetInt());
+		if (!gameObject)
+			continue;
+
+		SSettings<Vector3> settings = {};
+
+		settings.myOrigin = gameObject->myTransform->WorldPosition();
+
+		settings.myDuration = response["duration"].GetFloat();
+		settings.myDelay = response["delay"].GetFloat();
+
+		settings.myStart = { response["start"]["x"].GetFloat(),
+									 response["start"]["y"].GetFloat(),
+									 response["start"]["z"].GetFloat() };
+
+		settings.myEnd = { response["end"]["x"].GetFloat(),
+									response["end"]["y"].GetFloat(),
+									response["end"]["z"].GetFloat() };
+
+		int gameObjectID = response["gameObjectID"].GetInt();
+		int gameObjectIDToCheckIfActive = response["gameObjectIDToCheckIfActive"].GetInt();
+
+		gameObject->AddComponent<CMoveObjectWithIDResponse>(*gameObject, settings, gameObjectID, gameObjectIDToCheckIfActive);
+	}
+}
+
 // Removed due to causing too many issues - 2021 06 10 / Aki
 //void CSceneManager::AddPuzzleResponseTeleporter(CScene& aScene, RapidArray someData)
 //{
@@ -1219,7 +1281,7 @@ void CSceneManager::AddPlayer(CScene& aScene, RapidObject someData)
 	player->AddComponent<CPlayerComponent>(*player);
 	float speedModifider = 0.7f;
 	float walkSpeed = 0.04f * speedModifider;// was 0.09f before 2021 06 02
-	CPlayerControllerComponent* pcc = player->AddComponent<CPlayerControllerComponent>(*player, walkSpeed, walkSpeed * 0.66f, CEngine::GetInstance()->GetPhysx().GetPlayerReportBack());// CPlayerControllerComponent constructor sets position of camera child object.
+	CPlayerControllerComponent* pcc = player->AddComponent<CPlayerControllerComponent>(*player, walkSpeed, walkSpeed * 0.5f, CEngine::GetInstance()->GetPhysx().GetPlayerReportBack());// CPlayerControllerComponent constructor sets position of camera child object.
 	pcc->SprintSpeedModifier(speedModifider * 2.65f);
 	pcc->StepTime((1.0f / (walkSpeed * 60.0f)));// Short explanation: for SP7 Nico added a steptimer for playback of stepsounds. It was set to walkSpeed * 5.0f. Changing walk speed to something lower does not give desirable results (shorter timer for slower speed sounds odd). Hence this.
 	//camera->AddComponent<CVFXSystemComponent>(*camera, ASSETPATH("Assets/Graphics/VFX/JSON/VFXSystem_Player.json"));
