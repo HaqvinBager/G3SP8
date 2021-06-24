@@ -134,6 +134,7 @@ private:
 	std::vector<CGameObject*> myDynamicObjects;
 
 	CAudioChannel* myDynamicSource;
+	CAudioChannel* myEnemyFootStepSource;
 	std::vector<CAudioChannel*> myDynamicSources;
 
 	CAudioChannel* my3DVoiceSource;
