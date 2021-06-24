@@ -82,7 +82,7 @@ Binary::SLevelData CBinReader::Load(const std::string& aPath)
 	ptr += CopyBin<SEndEventData>()(data.myEndEventData, ptr);
 	ptr += CopyBin<SFlickerData>()(data.myFlickerData, ptr);
 	ptr += CopyBin<SAddForceData>()(data.myAddForceData, ptr);
-
+	ptr += CopyBin<SActivationNotifyLockData>()(data.myActivationNotifyLockData, ptr);
 	return std::move(data);
 }
 

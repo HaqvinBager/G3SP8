@@ -62,6 +62,7 @@ private:
 	static void AddPuzzleActivationVoice(CScene& aScene, RapidArray someData);
 	static void AddPuzzleActivationLight(CScene& aScene, RapidArray someData);
 	static void AddPuzzleActivationPlayVFX(CScene& aScene, RapidArray someData);
+	static void AddPuzzleActivationNotifyLock(CScene& aScene, const std::vector<Binary::SActivationNotifyLockData>& someData);
 	//static void AddPuzzleActivationTeleporter(CScene& aScene, RapidArray someData);
 	static void AddPuzzleLock(CScene& aScene, RapidArray someData);
 	static void AddPuzzleListener(CScene& aScene, RapidArray someData);

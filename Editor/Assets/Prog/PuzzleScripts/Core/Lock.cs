@@ -4,6 +4,7 @@ public enum LockInteractionType
 {
     OnTriggerEnter,
     OnLeftClickDown,
+    OnInstantActivation,
 }
 
 public class Lock : MonoBehaviour

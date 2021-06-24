@@ -130,6 +130,12 @@ namespace Binary {
 		float myForce;
 		int myInstanceID;
 	};
+
+	struct SActivationNotifyLockData {
+		int myInstanceID;
+		int myLoockToNotifyInstanceID;
+	};
+
 	struct SLevelData {
 		std::vector<SInstanceID> myInstanceIDs;
 		std::vector<STransform> myTransforms;
@@ -140,6 +146,7 @@ namespace Binary {
 		std::vector<SInstancedModel> myInstancedModels;
 		std::vector<SFlickerData> myFlickerData;
 		std::vector<SAddForceData> myAddForceData;
+		std::vector<SActivationNotifyLockData> myActivationNotifyLockData;
 		SEndEventData myEndEventData;
 		//std::vector<SInstanceName> myInstanceNames;
 	};
