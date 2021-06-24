@@ -70,6 +70,10 @@ public class ExportInstanceID
                     }
                 }
             }
+            else if(transform.TryGetComponent(out Lock aLock))
+            {
+                SaveToExport(aLock.gameObject, ref sceneIDCollection);
+            }
         }
 
         sceneIDCollection.sceneName = aSceneName;

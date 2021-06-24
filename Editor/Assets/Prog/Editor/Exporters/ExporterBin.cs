@@ -72,6 +72,9 @@ public class ExporterBin
         ListenerCollection listeners = ExportListener.Export();
         listeners.Export(exporter);
 
+        KeyCollection keys = ExportKey.Export();
+        keys.Export(exporter);
+
         exporter.binWriter.Close();
         Debug.Log(infoLog.ToString(), level);
     }

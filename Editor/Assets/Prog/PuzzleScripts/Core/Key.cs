@@ -18,6 +18,7 @@ public enum KeyType
     Teleport,
     Light,
     PlayVFX,
+    NotifyLock,
 }
 
 public interface IKey
@@ -65,6 +66,9 @@ public class Key : MonoBehaviour
                     break;
                 case KeyType.PlayVFX:
                     AddType<ActivationPlayVFX>(gameObject);
+                    break;
+                case KeyType.NotifyLock:
+                    AddType<ActivationNotifyLock>(gameObject);
                     break;
                 case KeyType.Clear:
                     {

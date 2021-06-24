@@ -87,6 +87,13 @@ public struct ActivationPlayVFXData
     public int instanceID;
 }
 
+[System.Serializable]
+public struct ActivationNotifyLockData
+{
+    public int instanceID;
+    public int lockToNotifyInstanceID;
+}
+
 
 [System.Serializable]
 public struct KeyCollection
@@ -99,6 +106,17 @@ public struct KeyCollection
     public List<ActivationNextLevelData> activationNextLevel;
     public List<ActivationLightData> activationLights;
     public List<ActivationPlayVFXData> activationPlayVFXes;
+    public List<ActivationNotifyLockData> activationNotifyLocks;
+
+    public void Export(ExporterBin aExporter)
+    {
+        aExporter.binWriter.Write(activationNotifyLocks.Count);
+        foreach(var activation in activationNotifyLocks)
+        {
+            aExporter.binWriter.Write(activation.instanceID);
+            aExporter.binWriter.Write(activation.lockToNotifyInstanceID);
+        }
+    }
 }
 
 public class ExportKey
@@ -114,6 +132,7 @@ public class ExportKey
         collection.activationNextLevel = new List<ActivationNextLevelData>();
         collection.activationLights = new List<ActivationLightData>();
         collection.activationPlayVFXes = new List<ActivationPlayVFXData>();
+        collection.activationNotifyLocks = new List<ActivationNotifyLockData>();
 
         Key[] keys = GameObject.FindObjectsOfType<Key>();
         foreach (Key key in keys)
@@ -140,10 +159,27 @@ public class ExportKey
             ExportNextLevelActivations(ref collection.activationNextLevel, key);
             ExportLightActivations(ref collection.activationLights, key);
             ExportPlayVFXActivations(ref collection.activationPlayVFXes, key);
+            ExportNotifyLocks(ref collection.activationNotifyLocks, key);
         }
         return collection;
     }
 
+    private static void ExportNotifyLocks(ref List<ActivationNotifyLockData> activationNotifyLocks, Key key)
+    {
+        if(key.TryGetComponent(out ActivationNotifyLock script))
+        {
+            if(script.aLockToNotify == null)
+            {
+                Debug.LogWarning("This NotifyLock Activation is missing a Lock to notify and will therefore be Ignored. Best Regards, Axel McSavage", script);
+                return;
+            }
+
+            ActivationNotifyLockData data = new ActivationNotifyLockData();
+            data.instanceID = script.transform.GetInstanceID();
+            data.lockToNotifyInstanceID = script.aLockToNotify.transform.GetInstanceID();
+            activationNotifyLocks.Add(data);
+        }
+    }
 
     private static void ExportMoveActivations(ref List<ActivationMoveData> moves, Key key)
     {

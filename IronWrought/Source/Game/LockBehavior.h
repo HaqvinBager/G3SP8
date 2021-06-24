@@ -5,7 +5,8 @@
 enum class ELockInteractionTypes
 {
 	OnTriggerEnter,
-	OnLeftClickDown
+	OnLeftClickDown,
+	InstantActivation
 };
 
 class CListenerBehavior;
@@ -24,15 +25,15 @@ public:
 	};
 
 	CLockBehavior(CGameObject& aParent, const SSettings someSettings);
+	virtual ~CLockBehavior() override;
 
 	void Register(CListenerBehavior* aListener);
 	void Unregister(CListenerBehavior* aListener);
 
-	void AddKey(CKeyBehavior* aKey);
-	void RemoveKey(CKeyBehavior* aKey);
-	void OnKeyActivated(CKeyBehavior* aKey);
+	virtual void AddKey(CKeyBehavior* aKey);
+	virtual void RemoveKey(CKeyBehavior* aKey);
+	virtual void OnKeyActivated(CKeyBehavior* aKey);
 
-	virtual ~CLockBehavior() override;
 	void Destroy() {}
 
 public:
@@ -54,14 +55,15 @@ public:
 
 	const bool IsTriggered() const { return myHasTriggered; }
 
+protected:
+	size_t myAmountOfKeys;
+	int myMaxAmountOfKeys;
 
 private:
 	void Receive(const SIDMessage& aMessage) override;
 
 	SSettings mySettings;
 	bool myHasSubscribed;
-	int myMaxAmountOfKeys;
-	size_t myAmountOfKeys;
 	std::vector<CListenerBehavior*> myListeners;
 	std::vector<CKeyBehavior*> myKeys;
 

@@ -42,6 +42,7 @@
 #include "SpotLightComponent.h"
 
 #include <LockBehavior.h>
+#include <InstantActivationLock.h>
 #include <OnTriggerLock.h>
 #include <LeftClickDownLock.h>
 #include <KeyBehavior.h>
@@ -67,6 +68,7 @@
 #include <EndEventComponent.h>
 #include <LightFlickerResponse.h>
 #include <AddForceResponse.h>
+#include <NotifyLockActivation.h>
 
 CScene* CSceneManager::ourLastInstantiatedScene = nullptr;
 CSceneManager::CSceneManager()
@@ -298,6 +300,7 @@ bool CSceneManager::AddToScene(CScene& aScene, Binary::SLevelData& aBinLevelData
 
 		AddPuzzleResponseAddForce(aScene, aBinLevelData.myAddForceData);
 		AddPuzzleResponseFlicker(aScene, aBinLevelData.myFlickerData);
+		AddPuzzleActivationNotifyLock(aScene, aBinLevelData.myActivationNotifyLockData);
 		AddEndEventComponent(aScene, aBinLevelData.myEndEventData);
 	}
 
@@ -843,6 +846,20 @@ void CSceneManager::AddPuzzleActivationPlayVFX(CScene& aScene, RapidArray someDa
 	}
 }
 
+void CSceneManager::AddPuzzleActivationNotifyLock(CScene& aScene, const std::vector<Binary::SActivationNotifyLockData>& someData)
+{
+	for (const auto& activation : someData)
+	{
+		CGameObject* gameObject = aScene.FindObjectWithID(activation.myInstanceID);
+		if (gameObject != nullptr)
+		{
+			CNotifyLockActivation::SSettings settings = {};
+			settings.myLockToNotifyInstanceID = activation.myLoockToNotifyInstanceID;
+			gameObject->AddComponent<CNotifyLockActivation>(*gameObject, settings);
+		}
+	}
+}
+
 // Removed due to causing too many issues - 2021 06 10 / Aki
 //void CSceneManager::AddPuzzleActivationTeleporter(CScene& aScene, RapidArray someData)
 //{
@@ -897,6 +914,11 @@ void CSceneManager::AddPuzzleLock(CScene& aScene, RapidArray someData)
 		case ELockInteractionTypes::OnLeftClickDown:
 			{
 				gameObject->AddComponent<CLeftClickDownLock>(*gameObject, settings);
+			}
+			break;
+		case ELockInteractionTypes::InstantActivation:
+			{
+				gameObject->AddComponent<CInstantActivationLock>(*gameObject, settings);
 			}
 			break;
 		default:
