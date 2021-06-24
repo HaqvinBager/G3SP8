@@ -54,11 +54,12 @@ public:
 
 	const bool IsTriggered() const { return myHasTriggered; }
 
+protected:
+	SSettings mySettings;
 
 private:
 	void Receive(const SIDMessage& aMessage) override;
 
-	SSettings mySettings;
 	bool myHasSubscribed;
 	int myMaxAmountOfKeys;
 	size_t myAmountOfKeys;
