@@ -53,7 +53,7 @@ CEnemyComponent::CEnemyComponent(CGameObject& aParent, const SEnemySetting& some
 	, myCurrentVignetteBlend(0.0f)
 	, myTargetVignetteBlend(0.0f)
 	, myStepTimer(0.0f)
-	, myWalkSpeed(1.5f)//1.5f - 2021 06 22
+	, myWalkSpeed(0.95f)//1.5f - 2021 06 22
 	, mySeekSpeed(3.0f)//3.0f - 2021 06 22
 	, myGrabRange(2.0f)// was 3.0f pre 2021 06 23
 {
