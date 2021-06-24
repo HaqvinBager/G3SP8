@@ -108,11 +108,13 @@ CAudioManager::CAudioManager()
 	myEnemyMaxDistance = 1000.0f;
 	myEnemyMinAngle = 65.0f;
 	myEnemyMaxAngle = 160.0f;
-	myEnemyMinVolume = 0.4f;
+	myEnemyMinVolume = 0.25f;
 
 	myDynamicSource = myWrapper.RequestAudioSource("Enemy");
+	myEnemyFootStepSource = myWrapper.RequestAudioSource("Enemy");
+
 	myDynamicSource->Set3DMinMaxDistance(myEnemyMinDistance, myEnemyMaxDistance);
-	//myDynamicSource->SetVolume(0.2f);
+	myEnemyFootStepSource->Set3DMinMaxDistance(2.0f, 100.0f);
 
 	SetDynamicTrack(EAmbience::Cottage1, EAmbience::Cottage2, EAmbience::Basement1, EAmbience::Basement2);
 
@@ -332,20 +334,14 @@ void CAudioManager::Receive(const SMessage& aMessage) {
 		myWrapper.Play(myEnemyVoiceSounds[CAST(EEnemyVoiceLine::EnemyPatrol)], myDynamicSource);
 	}break;
 
-	case EMessageType::EnemySeekState:
-	{
-		//myDynamicSource->Stop();
-		//std::cout << "Play Seek" << std::endl;
-		//myWrapper.Play(myEnemyVoiceSounds[CAST(EEnemyVoiceLine::EnemyChasing)], myDynamicSource);
-	}break;
-
 	case EMessageType::EnemyAlertedState:
 	{
 		if (!myDynamicObject->GetComponent<CEnemyComponent>()->MakesSound())
 			return;
 
 		myDynamicSource->Stop();
-		myWrapper.Play(myEnemyVoiceSounds[CAST(EEnemyVoiceLine::EnemyHeardNoise)], myChannels[CAST(EChannel::SFX)]/*myDynamicSource*/);
+		myChannels[CAST(EChannel::Enemy2DChannel)]->Stop();
+		myWrapper.Play(myEnemyVoiceSounds[CAST(EEnemyVoiceLine::EnemyHeardNoise)], myChannels[CAST(EChannel::Enemy2DChannel)]);
 	}break;
 
 	case EMessageType::EnemyIdleState:
@@ -357,14 +353,14 @@ void CAudioManager::Receive(const SMessage& aMessage) {
 		myWrapper.Play(myEnemyVoiceSounds[CAST(EEnemyVoiceLine::EnemyLostPlayer)], myDynamicSource);
 	}break;
 
-	
-
 	case EMessageType::EnemyAggro:
 	{
 		if (!myDynamicObject->GetComponent<CEnemyComponent>()->MakesSound())
 			return;
 
 		myDynamicSource->Stop();
+		myChannels[CAST(EChannel::Enemy2DChannel)]->Stop();
+
 		bool aggro = *static_cast<bool*>(aMessage.data);
 		if (aggro) 
 		{
@@ -381,15 +377,6 @@ void CAudioManager::Receive(const SMessage& aMessage) {
 			FadeChannelOverSeconds(EChannel::DynamicChannel4, 4.0f);
 		}
 		
-	}break;
-
-	case EMessageType::EnemyAttack:
-	{
-		//if (myChannels[CAST(EChannel::VOX)]->IsPlaying())
-		//	return;
-
-		//if (mySFXAudio[CAST(ESFX::EnemyAttack)])
-		//	myWrapper.Play(mySFXAudio[CAST(ESFX::EnemyAttack)], myChannels[CAST(EChannel::SFX)]);
 	}break;
 
 	case EMessageType::GameStarted:
@@ -554,9 +541,9 @@ void CAudioManager::Receive(const SMessage& aMessage) {
 
 		PostMaster::SStepSoundData data = *static_cast<PostMaster::SStepSoundData*>(aMessage.data);
 		if (data.myIsSprint)
-			PlayCyclicRandomSoundFromCollection(myEnemyFastStepSounds, myDynamicSource, myEnemyStepSoundIndices);
+			PlayCyclicRandomSoundFromCollection(myEnemyFastStepSounds, myEnemyFootStepSource, myEnemyStepSoundIndices);
 		else
-			PlayCyclicRandomSoundFromCollection(myEnemyStepSounds, myDynamicSource, myEnemyStepSoundIndices);
+			PlayCyclicRandomSoundFromCollection(myEnemyStepSounds, myEnemyFootStepSource, myEnemyStepSoundIndices);
 	}break;
 
 	case EMessageType::PauseMenu:
@@ -627,6 +614,7 @@ void CAudioManager::Update()
 	{
 		myDynamicSource->Set3DAttributes(myDynamicObject->myTransform->WorldPosition(), { 0.0f, 0.0f, 0.0f });
 		myDynamicSource->Set3DConeAttributes(myDynamicObject->myTransform->Transform().Forward(), myEnemyMinAngle, myEnemyMaxAngle, myEnemyMinVolume);
+		myEnemyFootStepSource->Set3DAttributes(myDynamicObject->myTransform->WorldPosition());
 	}
 
 	myWrapper.Update();
@@ -920,6 +908,8 @@ std::string CAudioManager::TranslateEnum(EChannel enumerator) const
 		return "DynamicChannel3";
 	case EChannel::DynamicChannel4:
 		return "DynamicChannel4";
+	case EChannel::Enemy2DChannel:
+		return "Enemy2DChannel";
 	default:
 		return "";
 	}
