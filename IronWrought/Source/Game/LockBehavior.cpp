@@ -70,13 +70,13 @@ void CLockBehavior::OnKeyActivated(CKeyBehavior* aKey)
 			{
 				int soundIndex = 29;
 				CMainSingleton::PostMaster().Send({ EMessageType::PlaySFX, &soundIndex });
-				CMainSingleton::PostMaster().SendLate({ EMessageType::FoundKey, &aKey->GameObject() });
+				CMainSingleton::PostMaster().Send({ EMessageType::FoundKey, &aKey->GameObject() });
 			}
 			else if (myAmountOfKeys >= myMaxAmountOfKeys)
 			{
 				int soundIndex = 30;
 				CMainSingleton::PostMaster().Send({ EMessageType::PlaySFX, &soundIndex });
-				CMainSingleton::PostMaster().SendLate({ EMessageType::FoundKey, &aKey->GameObject() });
+				CMainSingleton::PostMaster().Send({ EMessageType::FoundKey, &aKey->GameObject() });
 			}
 		}
 	}
