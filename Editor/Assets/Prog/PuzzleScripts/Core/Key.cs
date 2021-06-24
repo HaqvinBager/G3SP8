@@ -18,7 +18,7 @@ public enum KeyType
     Teleport,
     Light,
     PlayVFX,
-    MoveObject
+    MoveObject,
     NotifyLock,
 }
 
