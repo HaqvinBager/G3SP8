@@ -15,7 +15,7 @@ void CLeftClickDownLock::ActivateEvent()
 	{
 		if (mySettings.myOnNotifyName.find("OpenBunkerDoor") != std::string::npos)
 		{
-			CMainSingleton::PostMaster().SendLate({ EMessageType::FoundKey, &GameObject() });
+			CMainSingleton::PostMaster().Send({ EMessageType::FoundKey, &GameObject() });
 		}
 
 		RunEvent();
