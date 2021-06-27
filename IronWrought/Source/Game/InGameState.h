@@ -46,11 +46,20 @@ private:
 
 	void CreateMenuCamera(CScene& aScene);
 
+	void CheckIfExit();
+	void UpdateEndCredits();
+	void PauseMenu();
+	void CheckIfPlay();
+	const bool UpdateGameOverTimer();
+
+	void InitCanvases();
+
 private:
 	enum class EExitTo
 	{
 		None,
 		MainMenu,
+		DelayedWindows,
 		Windows,
 		AnotherLevel
 	};
@@ -58,9 +67,10 @@ private:
 
 	class CEnemyAnimationController* myEnemyAnimationController;
 
+	short myCurrentCameraPositionIndex;
 	CGameObject* myMenuCamera;
-	std::array<Vector3, 4> myMenuCameraPositions;
-	std::array<Vector3, 4> myMenuCameraRotations;
+	std::array<Vector3, 5> myMenuCameraPositions;
+	std::array<Vector3, 5> myMenuCameraRotations;
 	Vector3 myMenuCameraTargetPosition;
 	Quaternion myMenuCameraTargetRotation;
 	std::array<CCanvas*, EInGameCanvases_Count> myCanvases;
@@ -70,6 +80,7 @@ private:
 
 	enum class EEndCreditsState
 	{
+		HasStarted,
 		Init,
 		FadeInEndCredits,
 		ShowCredits,
@@ -85,4 +96,9 @@ private:
 	const float myMenuFadeInTimer;
 	float myGameOverTimer;
 	const float myGameOverTimerMax;
+
+	// Used by both quit and start game :U
+	float myToFirstCameraPosTimer;
+	// Used by both quit and start game :U
+	const float myToFirstCameraPosTimerMax;
 };

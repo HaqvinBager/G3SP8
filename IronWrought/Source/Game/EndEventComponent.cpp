@@ -122,11 +122,12 @@ void CEndEventComponent::StartPostEvent()
 
 void CEndEventComponent::OnEndEventComplete()
 {
-	CMainSingleton::PostMaster().SendLate({ EMessageType::EndOfGameEvent, nullptr });
+	CMainSingleton::PostMaster().SendLate({ EMessageType::FinishEndOfGameEvent, nullptr });
 }
 
 void CEndEventComponent::OnRespond()
 {
+	CMainSingleton::PostMaster().Send({ EMessageType::StartEndOfGameEvent, nullptr });
 	myPlayer->GetComponent<CPlayerControllerComponent>()->LockMovementFor(myData.myLockPlayerDuration);
 	std::cout << __FUNCTION__ << " End Event BEGIN" << std::endl;
 	myPathIndex = 0;
