@@ -483,6 +483,7 @@ void CEnemyComponent::SetState(EBehaviour aState)
 	case EBehaviour::Attack:
 	{
 		std::cout << "Attack State" << std::endl;
+		this->GameObject().myTransform->Move(this->GameObject().myTransform->Transform().Backward() * 0.4f);
 		msgType = EMessageType::EnemyAttackState;
 	}break;
 
@@ -540,7 +541,7 @@ void CEnemyComponent::Receive(const SMessage& aMsg)
 			plCtrl->LockMovementFor(myAttackPlayerTimerMax + 0.75f);
 			//CMainSingleton::PostMaster().Send({ PostMaster::SMSG_DISABLE_GLOVE, nullptr });// Doing this did not work out well
 			CMainSingleton::PostMaster().Send({ PostMaster::SMSG_DISABLE_CANVAS, nullptr });
-
+			
 			Vector3 targetDirection = myPlayer->myTransform->Position() - this->GameObject().myTransform->Position();
 			targetDirection.Normalize();
 			float targetOrientation = WrapAngle(atan2f(targetDirection.x, targetDirection.z));
