@@ -48,7 +48,7 @@ void CModel::SetMaterials(const std::vector<std::array<ID3D11ShaderResourceView*
 
 unsigned int CModel::AddMaterial(const std::array<ID3D11ShaderResourceView*, 3>& aMaterial)
 {
-	myModelData.myMaterials.push_back(aMaterial);
+ 	myModelData.myMaterials.push_back(aMaterial);
 	return static_cast<unsigned int>(myModelData.myMaterials.size() - 1);
 }
 

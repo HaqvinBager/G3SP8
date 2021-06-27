@@ -32,6 +32,8 @@ public:
 
 	void Receive(const SMessage& aMsg) override;
 
+	void SetYaw(const float aYawInAngles) { myYaw = aYawInAngles; }
+
 public:
 	float WrapAngle(float anAngle)
 	{
