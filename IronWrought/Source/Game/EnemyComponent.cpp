@@ -204,8 +204,10 @@ void CEnemyComponent::Update()//får bestämma vilket behaviour vi vill köra i 
 		if (degrees <= viewAngle) {
 			Vector3 direction = playerPos - enemyPos;
 			PxRaycastBuffer hitCenter = CEngine::GetInstance()->GetPhysx().Raycast(enemyPos, direction, range, CPhysXWrapper::ELayerMask::WORLD | CPhysXWrapper::ELayerMask::PLAYER | CPhysXWrapper::ELayerMask::COVER);
+			
 			Vector3 directionToScalp = Vector3(playerPos.x, myPlayer->GetComponent<CPlayerControllerComponent>()->GetScalp(), playerPos.z) - enemyPos;
 			PxRaycastBuffer hitScalp = CEngine::GetInstance()->GetPhysx().Raycast(enemyPos, directionToScalp, range, CPhysXWrapper::ELayerMask::WORLD | CPhysXWrapper::ELayerMask::PLAYER | CPhysXWrapper::ELayerMask::COVER);
+			
 			Vector3 directionToFeet = Vector3(playerPos.x, myPlayer->GetComponent<CPlayerControllerComponent>()->GetFeet(), playerPos.z) - enemyPos;
 			PxRaycastBuffer hitFeet = CEngine::GetInstance()->GetPhysx().Raycast(enemyPos, directionToFeet, range, CPhysXWrapper::ELayerMask::WORLD | CPhysXWrapper::ELayerMask::PLAYER | CPhysXWrapper::ELayerMask::COVER);
 

@@ -144,7 +144,6 @@ private:
 	const float myColliderRadius = 0.6f * 0.5f;
 	// 1.8f is player height from GDD
 
-
 	const float myColliderHeightStanding = (1.8f * 0.5f);// Lowest height player can walk under: 1.9
 	const float myColliderHeightCrouched = 0.035f;//myColliderHeightStanding - 0.85f;// Lowest height player can crouch under: 1.1
 	
@@ -152,8 +151,6 @@ private:
 	const float myCameraPosYCrouching = 0.2f;//0.95f * 0.5f;
 	const float myCameraPosZ = 0.0f;//-0.22f;
 	const float myMaxFallSpeed = -0.36f;
-
-
 
 	/*
 		Standing:
