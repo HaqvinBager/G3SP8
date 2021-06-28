@@ -1,34 +1,5 @@
 {
   "Sprites": [
-    {
-      "Path": "Assets/IronWrought/UI/Menu/UI_Logo_Animated.dds",
-      "Position X": 10.0,
-      "Position Y": -0.6,
-      "Scale X": 1.0,
-      "Scale Y": 1.0,
-      "Animations": [
-        {
-          "Name": "Loading",
-          "FrameWidth": 256.0,
-          "FrameHeight": 256.0,
-          "VerticalStartingPos": 0.0,
-          "FrameOffset": 0,
-          "NumberOfFrames": 3,
-          "FramesPerSecond": 7,
-          "RotationSpeedPerSecond": 0.0,
-          "ShouldLoop": false,
-          "TransitionIndex": 0,
-          "ReverseTransitionIndex": 0
-        }
-      ]
-    },
-    {
-      "Path": "Assets/IronWrought/UI/Menu/UI_Logo.dds",
-      "Position X": -10.55,
-      "Position Y": -0.45,
-      "Scale X": 1.0,
-      "Scale Y": 1.0
-    }
   ],
 
   "Buttons": [
@@ -47,7 +18,8 @@
       "Idle Sprite Path": "Assets/IronWrought/UI/Menu/UI_MainMenu_StartGame_Idle.dds",
       "Hover Sprite Path": "Assets/IronWrought/UI/Menu/UI_MainMenu_StartGame_Hover.dds",
       "Click Sprite Path": "Assets/IronWrought/UI/Menu/UI_MainMenu_StartGame_Click.dds",
-      "Messages": [ 6 ]
+      "Messages": [ 6 ],
+      "Sub Canvas Toggle Index": 0
     },
     {
       "Text Position X": -1.0,
@@ -65,7 +37,7 @@
       "Hover Sprite Path": "Assets/IronWrought/UI/Menu/UI_MainMenu_LevelSelect_Hover.dds",
       "Click Sprite Path": "Assets/IronWrought/UI/Menu/UI_MainMenu_LevelSelect_Click.dds",
       "Messages": [ ],
-      "Sub Canvas Toggle Index": 2
+      "Sub Canvas Toggle Index": 3
     },
     {
       "FontAndFontSize": "Assets/Fonts/MorrisRoman42",
@@ -84,7 +56,7 @@
       "Hover Sprite Path": "Assets/IronWrought/UI/Menu/UI_MainMenu_Settings_Hover.dds",
       "Click Sprite Path": "Assets/IronWrought/UI/Menu/UI_MainMenu_Settings_Click.dds",
       "Messages": [ ],
-      "Sub Canvas Toggle Index": 1
+      "Sub Canvas Toggle Index": 2
     },
     {
       "FontAndFontSize": "Assets/Fonts/MorrisRoman42",
@@ -103,7 +75,7 @@
       "Hover Sprite Path": "Assets/IronWrought/UI/Menu/UI_MainMenu_Credits_Hover.dds",
       "Click Sprite Path": "Assets/IronWrought/UI/Menu/UI_MainMenu_Credits_Click.dds",
       "Messages": [ 3 ],
-      "Sub Canvas Toggle Index": 0
+      "Sub Canvas Toggle Index": 1
     },
     {
       "FontAndFontSize": "Assets/Fonts/MorrisRoman42",
@@ -121,7 +93,8 @@
       "Idle Sprite Path": "Assets/IronWrought/UI/Menu/UI_MainMenu_Quit_Idle.dds",
       "Hover Sprite Path": "Assets/IronWrought/UI/Menu/UI_MainMenu_Quit_Hover.dds",
       "Click Sprite Path": "Assets/IronWrought/UI/Menu/UI_MainMenu_Quit_Click.dds",
-      "Messages": [ 8 ]
+      "Messages": [ 8 ],
+      "Sub Canvas Toggle Index": 5
     }
   ],
 
@@ -133,8 +106,11 @@
   },
 
   "Widgets": [
+    { "Path": "Assets/IronWrought/UI/JSON/UI_Empty.json" },
     { "Path": "Assets/IronWrought/UI/JSON/UI_Credits.json" },
     { "Path": "Assets/IronWrought/UI/JSON/UI_Settings.json" },
-    { "Path": "Assets/IronWrought/UI/JSON/UI_LevelSelect.json" }
+    { "Path": "Assets/IronWrought/UI/JSON/UI_LevelSelect.json" },
+    { "Path": "Assets/IronWrought/UI/JSON/UI_EndCredits.json" },
+    { "Path": "Assets/IronWrought/UI/JSON/UI_Empty.json" }
   ]
 }
