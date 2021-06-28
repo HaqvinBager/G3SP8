@@ -312,6 +312,8 @@ void CGravityGloveComponent::Receive(const SStringMessage& aMessage)
 	}
 }
 
+#include "PopupTextService.h"
+#include "PhysicsPropAudioComponent.h"
 void CGravityGloveComponent::InteractionLogicContinuous()
 {
 	// -4FPS! with continuous raycasts :S (compared to InteractionLogicOnInput() in Cottage) // Aki 2021 05 26
@@ -335,8 +337,13 @@ void CGravityGloveComponent::InteractionLogicContinuous()
 
 			if (myCurrentTarget.myRigidBodyPtr)
 				myCrosshairData.myTargetStatus = PostMaster::SCrossHairData::ETargetStatus::Holding;
-			else if(rigidbody || transform->GameObject().Tag() == "Painting")
+			else if (rigidbody || transform->GameObject().Tag() == "Painting")
+			{
 				myCrosshairData.myTargetStatus = PostMaster::SCrossHairData::ETargetStatus::Targeted;
+				
+				if (transform->GameObject().GetComponent<CPhysicsPropAudioComponent>())
+					CMainSingleton::PopupTextService().SpawnPopup(EPopupType::Info, "Interact");
+			}
 			else
 				myCrosshairData.myTargetStatus = PostMaster::SCrossHairData::ETargetStatus::None;
 
