@@ -1,6 +1,12 @@
 #pragma once
 #include "Component.h"
 #include "Observer.h"
+
+#ifdef _DEBUG
+#include "Hierarchy.h"
+#endif
+
+
 #define PI 3.14159265f
 class CAIController;
 class CCharacterController;
@@ -28,9 +34,17 @@ struct SInterestPoints {
 
 };
 
+namespace ImGui {
+	class CHiearchy;
+}
+
 class CEnemyComponent : public CComponent, public IObserver, public IStringObserver
 {
 public:
+	#ifdef _DEBUG
+	friend class ImGui::CHierarchy;
+	#endif
+
 	enum class EBehaviour {
 		Patrol,
 		Seek,
@@ -61,6 +75,8 @@ public:
 	const float CurrentStateBlendValue() const;
 
 	const bool MakesSound() const;
+
+	
 
 public:
 	float WrapAngle(float anAngleRadians)
@@ -113,8 +129,6 @@ private:
 	//float myLastSeenDistanceToPlayer;// Confusing name? The distance to the player 
 	float myWakeUpTimer;
 	float myIdlingTimer;
-	SNavMesh* myNavMesh;
-	CIdle* myIdleState;
 	float myDetectionTimer;
 	float myAggroTimer;
 	float myAggroTime;
@@ -122,8 +136,29 @@ private:
 	float myDeAggroTime;
 	float myStepTimer;
 
+	SNavMesh* myNavMesh;
+	CIdle* myIdleState;
 	CTransformComponent* myDetachedPlayerHead;
 	const float myGrabRange;
 	const float myWalkSpeed;
 	const float mySeekSpeed;
+
+private:
+	template<class T>
+	inline T* GetController() const
+	{
+		const std::type_info& typeInfo = typeid(T);
+		for (const auto& behavior : myBehaviours)
+		{
+			if (typeid(behavior).hash_code() == typeInfo.hash_code())
+			{
+				return dynamic_cast<T*>(behavior);
+			}
+		}
+		return nullptr;
+	}
+
+	EMessageType myLastMessageRecieved;
+	std::string ToString(const EBehaviour& aBehavior);
+	std::string ToString(const EMessageType& aMessage);
 };

@@ -21,6 +21,7 @@
 #include "OnTriggerLock.h"
 
 #include <EnemyComponent.h>
+#include <AIController.h>
 #include <PlayerComponent.h>
 #include <GravityGloveComponent.h>
 #include <HealthPickupComponent.h>

@@ -312,9 +312,36 @@ void ImGui::CHierarchy::Edit(CCustomEventListenerComponent* /*aComponent*/)
 	ImGui::Text(" WIP CCustomEventListenerComponent");
 }
 
-void ImGui::CHierarchy::Edit(CEnemyComponent* /*aComponent*/)
+void ImGui::CHierarchy::Edit(CEnemyComponent* aComponent)
 {
-	ImGui::Text(" WIP CEnemyComponent");
+	aComponent;
+#ifdef _DEBUG
+	const CEnemyComponent::EBehaviour& currentState = aComponent->myCurrentState;
+	ImGui::Text("Current State: %s", aComponent->ToString(currentState).c_str());
+	Text("Last Recieved Message %s", aComponent->ToString(aComponent->myLastMessageRecieved).c_str());
+
+	Float("Walk Speed", aComponent->myWalkSpeed);
+	Float("Seek Speed", aComponent->mySeekSpeed);
+	Float("Current Speed", aComponent->mySettings.mySpeed);
+
+	Float("Aggro Time", aComponent->myAggroTime);
+	Float("DeAggro Time", aComponent->myDeAggroTime);
+	Float("Aggro Timer", aComponent->myAggroTimer);
+	Float("DeAggro Timer", aComponent->myDeAggroTimer);
+	Float("Wakup Timer", aComponent->myWakeUpTimer);
+	Float("Idling Timer", aComponent->myIdlingTimer);
+	Float("Step Timer", aComponent->myStepTimer);
+	Float("Attack Time Max", aComponent->myAttackPlayerTimerMax);
+	Float("Attack Timer", aComponent->myAttackPlayerTimer);
+	
+	Checkbox("HasFoundPlayer", &aComponent->myHasFoundPlayer);
+	Checkbox("HasReachedLastPlayerPosition", &aComponent->myHasReachedLastPlayerPosition);
+	Checkbox("MovementLocked", &aComponent->myMovementLocked);
+	Checkbox("HasReachedAlertedTarget", &aComponent->myHasReachedAlertedTarget);
+	Checkbox("HeardSound", &aComponent->myHeardSound);
+	Checkbox("HasScreamed", &aComponent->myHasScreamed);
+	Checkbox("MakesSound", &aComponent->myMakesSound);
+#endif
 }
 
 void ImGui::CHierarchy::Edit(CPlayerComponent* /*aComponent*/)
@@ -396,6 +423,22 @@ void ImGui::CHierarchy::Edit(CLightFlickerResponse* aComponent)
 {
 	float noise = aComponent->Noise();
 	ImGui::DragFloat("Noise Value", &noise, 0.01f, -1.0f, 1.0f);
+}
+
+void ImGui::CHierarchy::Float(const std::string& aText, float aValue)
+{
+	std::string txt = aText;
+
+	size_t length = aText.length();
+	if (length < 20)
+	{
+		for (size_t i = 0; i < 20 - length; ++i)
+		{
+			txt.append(" ");
+		}
+	}
+	txt.append(" %f");
+	ImGui::Text(txt.c_str(), aValue);
 }
 
 	//static bool plState = false;
