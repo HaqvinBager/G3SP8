@@ -118,6 +118,7 @@ private:
 	bool myHeardSound;
 	bool myHasScreamed;
 	bool myMakesSound;
+	bool myNoticedPlayer;
 
 	float myCurrentStateBlend;
 	float myCurrentVignetteBlend;

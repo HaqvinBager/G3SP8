@@ -132,6 +132,7 @@ enum class EMessageType
 	EnemyMakesSound,
 
 	StartEndOfGameEvent,
+	EnemyAlerted,
 
 	Count
 };
