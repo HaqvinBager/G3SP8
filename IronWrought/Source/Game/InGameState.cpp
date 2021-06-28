@@ -424,30 +424,43 @@ void CInGameState::OnSceneLoadCompleteInGame(std::string aMsg)
 	myEnemyAnimationController->Activate();
 	CEngine::GetInstance()->SetActiveScene(myState);
 
+	float playerRotation = -90.0f;
+
 	int levelIndex = -1;
 	if (aMsg == "Level_Cottage_1")
 	{
 		levelIndex = 0;
+		playerRotation = -90.0f;
 	}
 	if (aMsg == "Level_Basement1")
 	{
 		levelIndex = 1;
+		playerRotation = -90.0f;
 	}
 	if (aMsg == "Level_Basement2")
 	{
 		levelIndex = 2;
+		playerRotation = 0.0f;
 	}
 	if (aMsg == "Level_Cottage_2")
 	{
 		levelIndex = 3;
+		playerRotation = 180.0f;
 	}
 	if (aMsg == "Level_Basement1_3")
 	{
 		levelIndex = 4;
+		playerRotation = -90.0f;
 	}
 	
 	if (levelIndex > -1)
 	{
+		CCameraControllerComponent* playerCameraController = nullptr;
+		if (IRONWROUGHT->GetActiveScene().myPlayer->myTransform->FetchChildren()[0]->GameObject().TryGetComponent(&playerCameraController))
+		{
+			playerCameraController->SetYaw(playerRotation);
+		}
+
 		CMainSingleton::PostMaster().Send({ EMessageType::SetAmbience, &levelIndex });
 	}
 
