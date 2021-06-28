@@ -577,3 +577,35 @@ void CPlayerControllerComponent::LadderUpdate()
 		}
 	}
 }
+
+const float CPlayerControllerComponent::GetScalp() const
+{
+	float positionY = 0.0f;
+	if (myIsCrouching)
+	{
+		positionY = GameObject().myTransform->Position().y + myColliderHeightCrouched;
+		return positionY;
+	}
+	else
+	{
+		positionY = GameObject().myTransform->Position().y + myColliderHeightStanding;
+		return positionY;
+	}
+	return positionY;
+}
+
+const float CPlayerControllerComponent::GetFeet() const
+{
+	float positionY = 0.0f;
+	if (myIsCrouching)
+	{
+		positionY = GameObject().myTransform->Position().y - myColliderHeightCrouched;
+		return positionY;
+	}
+	else
+	{
+		positionY = GameObject().myTransform->Position().y - myColliderHeightStanding;
+		return positionY;
+	}
+	return positionY;
+}

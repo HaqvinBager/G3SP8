@@ -78,6 +78,9 @@ public:
 	const float GetCameraPosYStanding() const;
 	const float GetCameraPosYCrouching() const;
 
+	const float GetScalp() const;
+	const float GetFeet() const;
+
 private:
 	void RayCastWorld();
 	void UpdateMovementLock();
@@ -108,7 +111,7 @@ private:
 	CCharacterController* myController;
 	CPlayerAnimationController* myAnimationComponentController;
 	CPlayerComponent* myPlayerComponent;
-	// A.k.a the players eyes :U // Shortcut to access for freecam toggle, Aki 12/3/2021
+	// A.k.a the players eyes >:U // Shortcut to access for freecam toggle, Aki 12/3/2021
 	CCameraControllerComponent* myCamera;
 	//CGameObject* myFaceMesh;
 	Vector3 myRespawnPosition;
@@ -140,8 +143,11 @@ private:
 	// 0.6f is player width from GDD
 	const float myColliderRadius = 0.6f * 0.5f;
 	// 1.8f is player height from GDD
+
+
 	const float myColliderHeightStanding = (1.8f * 0.5f);// Lowest height player can walk under: 1.9
 	const float myColliderHeightCrouched = 0.035f;//myColliderHeightStanding - 0.85f;// Lowest height player can crouch under: 1.1
+	
 	const float myCameraPosYStanding = 1.3f * 0.5f;
 	const float myCameraPosYCrouching = 0.2f;//0.95f * 0.5f;
 	const float myCameraPosZ = 0.0f;//-0.22f;
