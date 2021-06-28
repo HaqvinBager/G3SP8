@@ -25,8 +25,6 @@ void CMoveObjectWithIDResponse::Update()
 		if (gameObject->GetComponent<CMoveResponse>())
 		{
 			gameObject->GetComponent<CMoveResponse>()->Enabled(false);
-			//HasBeenActivated(false);
-			//return;
 		}
 	}
 
