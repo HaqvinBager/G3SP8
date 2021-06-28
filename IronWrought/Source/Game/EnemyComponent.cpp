@@ -432,7 +432,7 @@ void CEnemyComponent::Update()//får bestämma vilket behaviour vi vill köra i 
 	switch (myCurrentState)
 	{
 	case CEnemyComponent::EBehaviour::Patrol:
-		timerThreshold = 0.375f;
+		timerThreshold = 0.75f;
 		break;
 	case CEnemyComponent::EBehaviour::Seek:
 		timerThreshold = 0.25f;
