@@ -89,6 +89,9 @@ namespace ImGui {
 
 
 	private:
+
+		void Float(const std::string& aText, float aValue);
+
 		std::unordered_map<std::type_index, std::function<void(CComponent*)>> myComponentMap;
 		std::unordered_map<std::type_index, std::function<void(CComponent*)>> myEditorCallbackMap;
 		

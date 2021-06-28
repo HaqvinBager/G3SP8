@@ -529,6 +529,8 @@ void CEnemyComponent::Receive(const SStringMessage& /*aMsg*/)
 
 void CEnemyComponent::Receive(const SMessage& aMsg)
 {
+	myLastMessageRecieved = aMsg.myMessageType;
+
 	switch(aMsg.myMessageType)
 	{
 		case EMessageType::EnemyAttackedPlayer:
@@ -822,3 +824,46 @@ void CEnemyComponent::UpdateVignette(const float aDotOverload)
 	}
 }
 
+std::string CEnemyComponent::ToString(const EBehaviour& aBehavior)
+{
+	switch (aBehavior)
+	{
+	case EBehaviour::Patrol:
+		return "Patrol";
+	case EBehaviour::Seek:
+		return "Seek";
+	case EBehaviour::Alerted:
+		return "Alerted";
+	case EBehaviour::Idle:
+		return "Idle";
+	case EBehaviour::Attack:
+		return "Attack";
+	case EBehaviour::Detection:
+		return "Detection";
+	default:
+		return "NA";
+	}
+}
+
+std::string CEnemyComponent::ToString(const EMessageType& aMessage)
+{
+	switch (aMessage)
+	{
+	case EMessageType::PlayStepSound:
+		return "PlayStepSound";
+	case EMessageType::EnemyReachedTarget:
+		return "EnemyReachedTarget";
+	case EMessageType::EnemyReachedLastPlayerPosition:
+		return "EnemyReachedLastPlayerPosition";
+	case EMessageType::FoundKey:
+		return "FoundKey";
+	case EMessageType::PropCollided:
+		return "PropCollided";
+	case EMessageType::EnemyAttackedPlayer:
+		return "EnemyAttackedPlayer";
+	case EMessageType::EnemyMakesSound:
+		return "EnemyMakesSound";
+	default:
+		return "NA";
+	}
+}
