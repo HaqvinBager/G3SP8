@@ -590,7 +590,6 @@ const float CPlayerControllerComponent::GetScalp() const
 		positionY = GameObject().myTransform->Position().y + myColliderHeightStanding;
 		return positionY;
 	}
-	return positionY;
 }
 
 const float CPlayerControllerComponent::GetFeet() const
@@ -606,5 +605,4 @@ const float CPlayerControllerComponent::GetFeet() const
 		positionY = GameObject().myTransform->Position().y - myColliderHeightStanding;
 		return positionY;
 	}
-	return positionY;
 }

@@ -211,7 +211,21 @@ void CEnemyComponent::Update()//får bestämma vilket behaviour vi vill köra i 
 
 			if (hitCenter.getNbAnyHits() > 0 || hitScalp.getNbAnyHits() > 0 || hitFeet.getNbAnyHits() > 0) 
 			{
-				CTransformComponent* transform = (CTransformComponent*)hitCenter.getAnyHit(0).actor->userData;
+				CTransformComponent* transform = nullptr;
+
+				if (hitCenter.getNbAnyHits() > 0)
+				{
+					transform = (CTransformComponent*)hitCenter.getAnyHit(0).actor->userData;
+				}
+				else if(hitScalp.getNbAnyHits() > 0)
+				{
+					transform = (CTransformComponent*)hitScalp.getAnyHit(0).actor->userData;
+				}
+				else if(hitFeet.getNbAnyHits() > 0)
+				{
+					transform = (CTransformComponent*)hitFeet.getAnyHit(0).actor->userData;
+				}
+				
 				
 				if (!transform && myHasFoundPlayer)
 				{
