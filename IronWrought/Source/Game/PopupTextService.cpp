@@ -57,7 +57,8 @@ bool CPopupTextService::Init()
 		mySkillIcons.emplace_back(new CSpriteInstance());
 		mySkillIcons.back()->Init(CSpriteFactory::GetInstance()->GetSprite(ASSETPATH(skillIconPaths[i]["Path"].GetString())));
 		mySkillIcons.back()->SetPosition({ document["Skill Icon Position X"].GetFloat(), document["Skill Icon Position Y"].GetFloat() });
-		mySkillIcons.back()->SetColor({ 1.0f, 1.0f, 1.0f, 0.5f });
+		mySkillIcons.back()->SetColor({ 1.0f, 1.0f, 1.0f, 1.0f });
+		mySkillIcons.back()->SetSize({0.5f, 0.5f});
 	}
 
 	//myInfoBoxBackground = new CSpriteInstance();
@@ -72,6 +73,8 @@ bool CPopupTextService::Init()
 	//myInfoBoxText->SetPosition({ -0.22f, document["Info Box Position Y"].GetFloat() });
 	//myInfoBoxText->SetColor({ 1.0f, 1.0f, 1.0f, 0.5f });
 	myInfoAnimationData = new STextAnimationData();
+
+	myShouldSpawnInfo = true;
 
 	return true;
 	//auto skillTexts = document["Skill Info Texts"].GetArray();
@@ -315,30 +318,13 @@ void CPopupTextService::SpawnDamageNumber(void* someData)
 
 void CPopupTextService::SpawnInfoBox(std::string someInfoIdentifier)
 {
+	if (!myShouldSpawnInfo)
+		return;
+
 	unsigned int skillPicker = 0;
-	if (someInfoIdentifier == "Move")
+	if (someInfoIdentifier == "Interact")
 	{
 		skillPicker = 0;
-	}
-	else if (someInfoIdentifier == "Interact") 
-	{
-		skillPicker = 1;
-	}
-	else if (someInfoIdentifier == "Pull") 
-	{
-		skillPicker = 2;
-	}
-	else if (someInfoIdentifier == "Push")
-	{
-		skillPicker = 3;
-	}
-	else if (someInfoIdentifier == "Crouch")
-	{
-		skillPicker = 4;
-	}
-	else if (someInfoIdentifier == "Jump")
-	{
-		skillPicker = 5;
 	}
 
 	myActiveSkillSprite = mySkillIcons[skillPicker];
@@ -348,8 +334,8 @@ void CPopupTextService::SpawnInfoBox(std::string someInfoIdentifier)
 
 	myInfoAnimationData->myStartColor = { 1.0f, 1.0f, 1.0f, 0.5f };
 	myInfoAnimationData->myEndColor = { 0.0f, 0.0f, 0.0f, 0.0f };
-	myInfoAnimationData->myLifespan = 4.5f;
-	myInfoAnimationData->myFadeOutThreshold = 4.0f;
+	myInfoAnimationData->myLifespan = 6.0f;
+	myInfoAnimationData->myFadeOutThreshold = 5.0f;
 	myInfoAnimationData->myTimer = 0.0f;
 
 	//myActiveInfoBoxText = myInfoBoxText;
@@ -497,6 +483,7 @@ void CPopupTextService::UpdateResources()
 		if (myInfoAnimationData->myTimer > myInfoAnimationData->myLifespan)
 		{
 			myActiveInfoBoxText = nullptr;
+			myShouldSpawnInfo = false;
 		}
 	}
 

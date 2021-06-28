@@ -617,6 +617,7 @@ void CEnemyComponent::Receive(const SMessage& aMsg)
 						myHasReachedAlertedTarget = false;
 						myHeardSound = true;
 					}
+					CMainSingleton::PostMaster().Send({ EMessageType::EnemyAlerted, nullptr });
 					SetState(EBehaviour::Alerted);
 				}
 			}

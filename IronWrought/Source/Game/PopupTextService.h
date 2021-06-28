@@ -75,6 +75,8 @@ private:
 
 	std::unordered_map<std::string, CGameObject*> myActiveGameObject;
 
+	bool myShouldSpawnInfo;
+
 private:
 	CPopupTextService();
 	~CPopupTextService();
