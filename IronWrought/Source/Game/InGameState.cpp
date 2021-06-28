@@ -723,7 +723,9 @@ void CInGameState::UpdateEndCredits()
 				myCanvases[myCurrentCanvas]->DisableWidget(END_CREDITS_WIDGET_INDEX);
 			}
 		}break;
-
+		case EEndCreditsState::FadeInMenu:
+			myEndCreditsState = EEndCreditsState::None;
+			break;
 		default:break;
 	}
 }
