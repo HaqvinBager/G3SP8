@@ -110,6 +110,7 @@ void CRenderManager::Render(CScene& aScene)
 {
 	CRenderManager::myNumberOfDrawCallsThisFrame = 0;
 
+#ifndef EXCELSIOR_BUILD
 	if (Input::GetInstance()->IsKeyPressed(VK_F6))	
 	{
 		ToggleRenderPass();
@@ -120,6 +121,7 @@ void CRenderManager::Render(CScene& aScene)
 		ToggleRenderPass(false);
 		myForwardRenderer.ToggleRenderPass(myRenderPassIndex);
 	}
+#endif
 
 	myRenderStateManager.SetAllDefault();
 	myBackbuffer.ClearTexture(myClearColor);

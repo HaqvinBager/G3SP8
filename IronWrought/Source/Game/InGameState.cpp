@@ -187,7 +187,6 @@ void CInGameState::Stop()
 	CMainSingleton::PostMaster().Unsubscribe(EMessageType::FinishEndOfGameEvent, this);
 	CMainSingleton::PostMaster().Unsubscribe(EMessageType::StartEndOfGameEvent, this);
 
-
 	myMenuCamera = nullptr; // Deleted by Scene on IRONWROUGHT->RemoveScene(..), as it is added as a gameobject.
 }
 
@@ -399,6 +398,7 @@ void CInGameState::OnSceneLoadCompleteMenu(std::string /*aMsg*/)
 
 	ToggleCanvas(EInGameCanvases_MainMenu);
 
+	myExitTo = EExitTo::None;
 	myEnemyAnimationController->Activate();
 	CEngine::GetInstance()->SetActiveScene(myState);// Might be redundant.
 
@@ -410,8 +410,6 @@ void CInGameState::OnSceneLoadCompleteMenu(std::string /*aMsg*/)
 
 	int levelIndex = 0;
 	CMainSingleton::PostMaster().Send({ EMessageType::SetAmbience, &levelIndex });
-
-	myExitTo = EExitTo::None;
 }
 
 void CInGameState::OnSceneLoadCompleteInGame(std::string aMsg)
@@ -423,6 +421,9 @@ void CInGameState::OnSceneLoadCompleteInGame(std::string aMsg)
 	
 	myEnemyAnimationController->Activate();
 	CEngine::GetInstance()->SetActiveScene(myState);
+
+	myExitTo = EExitTo::None;
+	myEndCreditsState = EEndCreditsState::None;
 
 	float playerRotation = -90.0f;
 
@@ -463,8 +464,6 @@ void CInGameState::OnSceneLoadCompleteInGame(std::string aMsg)
 
 		CMainSingleton::PostMaster().Send({ EMessageType::SetAmbience, &levelIndex });
 	}
-
-	myExitTo = EExitTo::None;
 }
 
 void CInGameState::DEBUGFunctionality()
@@ -543,7 +542,7 @@ void CInGameState::ToggleCanvas(EInGameCanvases anEInGameCanvases)
 				myEndCreditsState = EEndCreditsState::FadeInEndCredits;
 				myEndCreditsTimer = myEndCreditsFadeInTimer;
 				myCanvases[myCurrentCanvas]->EnableWidget(END_CREDITS_WIDGET_INDEX);
-
+				IRONWROUGHT->HideCursor();
 				myMenuCamera->Awake();
 				myMenuCamera->GetComponent<CCameraComponent>()->Fade(true, myEndCreditsFadeInTimer);
 				CFullscreenRenderer::SPostProcessingBufferData data = CEngine::GetInstance()->GetPostProcessingBufferData();
@@ -721,6 +720,7 @@ void CInGameState::UpdateEndCredits()
 				myEndCreditsTimer = myMenuFadeInTimer;
 				myMenuCamera->GetComponent<CCameraComponent>()->Fade(true, myMenuFadeInTimer);
 				myCanvases[myCurrentCanvas]->DisableWidget(END_CREDITS_WIDGET_INDEX);
+				IRONWROUGHT->ShowCursor();
 			}
 		}break;
 		case EEndCreditsState::FadeInMenu:
