@@ -342,7 +342,7 @@ void CAudioManager::Receive(const SMessage& aMessage) {
 		myDynamicSource->Stop();
 		myChannels[CAST(EChannel::Enemy2DChannel)]->Stop();
 		myWrapper.Play(myEnemyVoiceSounds[CAST(EEnemyVoiceLine::EnemyHeardNoise)], myChannels[CAST(EChannel::Enemy2DChannel)]);
-		myWrapper.Play(mySFXAudio[CAST(ESFX::EnemyAlerted)], myChannels[CAST(EChannel::Enemy2DChannel)]);
+		//myWrapper.Play(mySFXAudio[CAST(ESFX::EnemyAlerted)], myChannels[CAST(EChannel::Enemy2DChannel)]); // Moved to its own receive
 	}break;
 
 	case EMessageType::EnemyIdleState:
@@ -361,6 +361,7 @@ void CAudioManager::Receive(const SMessage& aMessage) {
 
 		myDynamicSource->Stop();
 		myChannels[CAST(EChannel::Enemy2DChannel)]->Stop();
+		myChannels[CAST(EChannel::Enemy2DChannel2)]->Stop();
 
 		bool aggro = *static_cast<bool*>(aMessage.data);
 		if (aggro) 
@@ -384,6 +385,12 @@ void CAudioManager::Receive(const SMessage& aMessage) {
 	{
 		myWrapper.Play(myVoiceEventSounds[CAST(EVOX::Line1)], myChannels[CAST(EChannel::VOX)]);
 
+	}break;
+
+	case EMessageType::EnemyAlerted:
+	{
+		myChannels[CAST(EChannel::Enemy2DChannel2)]->Stop();
+		myWrapper.Play(mySFXAudio[CAST(ESFX::EnemyAlerted)], myChannels[CAST(EChannel::Enemy2DChannel2)]);
 	}break;
 
 	case EMessageType::StartGame:
@@ -736,6 +743,7 @@ void CAudioManager::SubscribeToMessages()
 	CMainSingleton::PostMaster().Subscribe(EMessageType::EnemyFoundPlayer, this);
 	CMainSingleton::PostMaster().Subscribe(EMessageType::EnemyAggro, this);
 	CMainSingleton::PostMaster().Subscribe(EMessageType::EnemyLostPlayer, this);
+	CMainSingleton::PostMaster().Subscribe(EMessageType::EnemyAlerted, this);
 
 	//CMainSingleton::PostMaster().Subscribe(EMessageType::PlayVoiceLine, this);
 	//CMainSingleton::PostMaster().Subscribe(EMessageType::StopDialogue, this);
@@ -804,6 +812,7 @@ void CAudioManager::UnsubscribeToMessages()
 	CMainSingleton::PostMaster().Unsubscribe(EMessageType::EnemyFoundPlayer, this);
 	CMainSingleton::PostMaster().Unsubscribe(EMessageType::EnemyAggro, this);
 	CMainSingleton::PostMaster().Unsubscribe(EMessageType::EnemyLostPlayer, this);
+	CMainSingleton::PostMaster().Unsubscribe(EMessageType::EnemyAlerted, this);
 
 	//CMainSingleton::PostMaster().Unsubscribe(EMessageType::PlayVoiceLine, this);
 	//CMainSingleton::PostMaster().Unsubscribe(EMessageType::StopDialogue, this);
@@ -911,6 +920,8 @@ std::string CAudioManager::TranslateEnum(EChannel enumerator) const
 		return "DynamicChannel4";
 	case EChannel::Enemy2DChannel:
 		return "Enemy2DChannel";
+	case EChannel::Enemy2DChannel2:
+	return "Enemy2DChannel2";
 	default:
 		return "";
 	}

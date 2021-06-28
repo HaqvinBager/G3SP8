@@ -49,6 +49,7 @@ CEnemyComponent::CEnemyComponent(CGameObject& aParent, const SEnemySetting& some
 	, myDeAggroTimer(0.0f)
 	, myDeAggroTime(2.5f)
 	, myHasScreamed(false)
+	, myNoticedPlayer(false)
 	, myDetachedPlayerHead(nullptr)
 	, myCurrentVignetteBlend(0.0f)
 	, myTargetVignetteBlend(0.0f)
@@ -227,6 +228,7 @@ void CEnemyComponent::Update()//får bestämma vilket behaviour vi vill köra i 
 						myHeardSound = false;
 						myHasReachedAlertedTarget = true;
 						myHasReachedLastPlayerPosition = true;
+						myNoticedPlayer = false;
 						SetState(EBehaviour::Attack);
 						return;
 					}
@@ -246,11 +248,18 @@ void CEnemyComponent::Update()//får bestämma vilket behaviour vi vill köra i 
 						aggroTime *= 0.33f;
 					}
 
-					if (myPlayer != nullptr)
+					if (!myNoticedPlayer)
 					{
-						myIdleState->SetTarget(myPlayer->myTransform->Position());
+						myNoticedPlayer = true;
+						myAggroTimer = 0.0f;
+						//myDeAggroTimer = 0.0f;
+						if (myPlayer != nullptr)
+						{
+							myIdleState->SetTarget(myPlayer->myTransform->Position());
+						}
+						CMainSingleton::PostMaster().Send({ EMessageType::EnemyAlerted, nullptr });
+						SetState(EBehaviour::Idle);
 					}
-					SetState(EBehaviour::Idle);
 	
 					if (myAggroTimer >= aggroTime)
 					{
@@ -273,20 +282,6 @@ void CEnemyComponent::Update()//får bestämma vilket behaviour vi vill köra i 
 		{
 			myDeAggroTimer += CTimer::Dt();
 			std::cout << __FUNCTION__ << " " << __LINE__ << " OUT OF CONE DEAGGROTIMER " << myDeAggroTimer << std::endl;
-			
-			//if (myDeAggroTimer >= myDeAggroTime)// Pre 2021 06 23
-			//{
-			//	myDeAggroTimer = 0.0f;
-			//	myIdlingTimer = 0.0f;
-			//	myDetectionTimer = 0.0f;
-			//	myAggroTimer = 0.0f;
-			//	myHasFoundPlayer = false;
-			//	myHasReachedLastPlayerPosition = false;
-			//	SMessage msg;
-			//	//msg.data = static_cast<void*>(&playerPos);
-			//	msg.myMessageType = EMessageType::EnemyLostPlayer;
-			//	CMainSingleton::PostMaster().Send(msg);
-			//}
 		}
 
 		if (myDeAggroTimer >= myDeAggroTime)
@@ -584,6 +579,7 @@ void CEnemyComponent::Receive(const SMessage& aMsg)
 						myHasReachedAlertedTarget = false;
 						myHeardSound = true;
 					}
+					CMainSingleton::PostMaster().Send({ EMessageType::EnemyAlerted, nullptr });
 					SetState(EBehaviour::Alerted);
 				}
 			}
@@ -654,6 +650,7 @@ void CEnemyComponent::Receive(const SMessage& aMsg)
 				if (myCurrentState != EBehaviour::Alerted)
 				{
 					//std::cout << __FUNCTION__ << " Heard Step Sound. Switching to Alerted" << std::endl;
+					CMainSingleton::PostMaster().Send({ EMessageType::EnemyAlerted, nullptr });
 					SetState(EBehaviour::Alerted);
 				}
 				else
